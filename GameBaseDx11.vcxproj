@@ -226,6 +226,8 @@
     <ClCompile Include="Game\Otheres\RankingManager.cpp" />
     <ClCompile Include="Game\Scenes\Scene_DifficultySelect.cpp" />
     <ClCompile Include="Game\Objects\UI\UIInputString.cpp" />
+    <ClCompile Include="Game\Otheres\PlantCollection.cpp" />
+    <ClCompile Include="Game\Objects\Stage\Plant.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game\Objects\UI\Components\Component_UIEasing.h" />
@@ -318,6 +320,8 @@
     <ClInclude Include="Game\Constants.h" />
     <ClInclude Include="Game\Scenes\Scene_DifficultySelect.h" />
     <ClInclude Include="Game\Objects\UI\UIInputString.h" />
+    <ClInclude Include="Game\Otheres\PlantCollection.h" />
+    <ClInclude Include="Game\Objects\Stage\Plant.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Assets\Shader\BillBoard.hlsl">
