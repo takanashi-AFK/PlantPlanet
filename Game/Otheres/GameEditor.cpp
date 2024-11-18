@@ -812,7 +812,7 @@ void GameEditor::CreatePlantWindow()
 				}
 				else {
 					Plant* plant_ = new Plant(this->GetParent());
-					plant_->SetID(PlantCollection::GetPlantsKind().size() + 1);
+					plant_->SetID(PlantCollection::GetPlantsKind().size());
 					plant_->SetName(nameBuffer);
 					plant_->SetRarity(rarity);
 					plant_->SetModelFilePath(modelFilePathBuffer);

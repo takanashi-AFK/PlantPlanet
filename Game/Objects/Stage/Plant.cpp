@@ -1,5 +1,6 @@
 #include "Plant.h"
 #include "../../../Engine/ImGui/imgui.h"
+#include "../../Otheres/PlantCollection.h"
 Plant::Plant(GameObject* _parent)
 	: StageObject("Plant", "Models/DebugCollision/SphereCollider.fbx", _parent), id_(), rarity_(), name_()
 {
@@ -37,6 +38,10 @@ void Plant::Draw()
 
 void Plant::DrawData()
 {
+	if (ImGui::SmallButton("delete"))
+		PlantCollection::RemovePlant(this->id_);
+	ImGui::Separator();
+
 	ImGui::Text("ID : %d", id_);
 	ImGui::Text("Rarity : %d", rarity_);
 	ImGui::Text("Name : %s", name_.c_str());
