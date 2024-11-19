@@ -11,13 +11,15 @@ class UIPanel;
 class UIObject;
 
 class TPSCamera;
+class Plant;
 
 enum EditType
 {
 	NONE,
 	STAGE,
 	UIPANEL,
-	CAMERA
+	CAMERA,
+	PLANT,
 };
 
 enum CameraType
@@ -50,6 +52,9 @@ private:
 
 	XMFLOAT3 threeDCamMove_{};
 
+	bool isShowPlantWindow_;
+	int selectEditPlantIndex_;
+
 public:
 	GameEditor(GameObject* _parent);
 	void Initialize() override;
@@ -72,13 +77,21 @@ private:
 	void DrawWorldOutLiner();
 	void DrawStageOutLiner();
 	void DrawUIPanelOutLiner();
+	void DrawPlantOutLiner();
 
 	void DrawDatails();
 	void DrawStageObjectDatails();
 	void DrawUIObjectDatails();
+	void DrawPlantDatails();
 
 	void DrawDatalsCamera();
 
 	void UIObjectCreateWindow();
+	void CreatePlantWindow();
+
+	void AddPlant();
+
+	void SavePlant();
+	void LoadPlant();
 };
 
