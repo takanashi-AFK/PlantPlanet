@@ -145,6 +145,7 @@
     </FxCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Game\Generators\EnemyGenerator.cpp" />
     <ClCompile Include="Game\Objects\UI\Components\Component_UIEasing.cpp" />
     <ClCompile Include="Engine\DirectX\Easing.cpp" />
     <ClCompile Include="Game\Otheres\AudioController.cpp" />
@@ -232,8 +233,10 @@
     <ClCompile Include="Game\Otheres\RankingManager.cpp" />
     <ClCompile Include="Game\Scenes\Scene_DifficultySelect.cpp" />
     <ClCompile Include="Game\Objects\UI\UIInputString.cpp" />
+    <ClCompile Include="Game\Generators\Generator.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Game\Generators\EnemyGenerator.h" />
     <ClInclude Include="Game\Objects\UI\Components\Component_UIEasing.h" />
     <ClInclude Include="Engine\DirectX\Easing.h" />
     <ClInclude Include="Game\Otheres\AudioController.h" />
@@ -324,6 +327,7 @@
     <ClInclude Include="Game\Constants.h" />
     <ClInclude Include="Game\Scenes\Scene_DifficultySelect.h" />
     <ClInclude Include="Game\Objects\UI\UIInputString.h" />
+    <ClInclude Include="Game\Generators\Generator.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Assets\Shader\BillBoard.hlsl">

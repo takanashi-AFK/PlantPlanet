@@ -304,6 +304,8 @@
     <ClCompile Include="Game\Objects\UI\UIInputString.cpp" />
     <ClCompile Include="Engine\DirectX\Easing.cpp" />
     <ClCompile Include="Game\Objects\UI\Components\Component_UIEasing.cpp" />
+    <ClCompile Include="Game\Generators\Generator.cpp" />
+    <ClCompile Include="Game\Generators\EnemyGenerator.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Collider\BoxCollider.h">
@@ -534,6 +536,8 @@
     <ClInclude Include="Game\Objects\UI\UIInputString.h" />
     <ClInclude Include="Engine\DirectX\Easing.h" />
     <ClInclude Include="Game\Objects\UI\Components\Component_UIEasing.h" />
+    <ClInclude Include="Game\Generators\Generator.h" />
+    <ClInclude Include="Game\Generators\EnemyGenerator.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Assets\Shader\Simple2D.hlsl">
