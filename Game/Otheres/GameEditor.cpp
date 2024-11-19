@@ -715,113 +715,100 @@ void GameEditor::CreatePlantWindow()
 	static int rarity = 0;
 	static string modelFilePathBuffer = "";
 	static string imageFilePathBuffer = "";
-		ImGui::Begin("Create UIObject", &isShowPlantWindow_); {
 
-			// 名前を入力
-			ImGui::InputTextWithHint(":setting name", "Input object name...", nameBuffer, IM_ARRAYSIZE(nameBuffer));
+	// ウィンドウの開始
+	if (ImGui::Begin("Create UIObject", &isShowPlantWindow_)) {
+		// 名前を入力
+		ImGui::InputTextWithHint(":setting name", "Input object name...", nameBuffer, IM_ARRAYSIZE(nameBuffer));
 
-			ImGui::InputInt("rarity", &rarity);
-			if (rarity > 3) rarity = 1;
-			if (rarity <= 0)rarity = 3;
+		// レアリティの入力
+		ImGui::InputInt("rarity", &rarity);
+		if (rarity > 3) rarity = 1;
+		if (rarity <= 0) rarity = 3;
 
-			if (ImGui::Button("ModelPath")) {
-				//現在のカレントディレクトリを覚えておく
-				char defaultCurrentDir[MAX_PATH];
-				GetCurrentDirectory(MAX_PATH, defaultCurrentDir);
-				// 追加するオブジェクトのモデルファイルパスを設定
-				string modelFilePath{}; {
-					// 「ファイルを開く」ダイアログの設定用構造体を設定
-					OPENFILENAME ofn; {
-						TCHAR szFile[MAX_PATH] = {}; // ファイル名を格納するバッファ
-						ZeroMemory(&ofn, sizeof(ofn)); // 構造体の初期化
-						ofn.lStructSize = sizeof(ofn); // 構造体のサイズ
-						ofn.lpstrFile = szFile; // ファイル名を格納するバッファ
-						ofn.lpstrFile[0] = '\0'; // 初期化
-						ofn.nMaxFile = sizeof(szFile); // ファイル名バッファのサイズ
-						ofn.lpstrFilter = TEXT("FBXファイル(*.fbx)\0*.fbx\0すべてのファイル(*.*)\0*.*\0"); // フィルター（FBXファイルのみ表示）
-						ofn.nFilterIndex = 1; // 初期選択するフィルター
-						ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST; // フラグ（ファイルが存在すること、パスが存在することを確認）
-						ofn.lpstrInitialDir = TEXT("."); // カレントディレクトリを初期選択位置として設定
-					}
+		// モデルパス選択
+		if (ImGui::Button("ModelPath")) {
+			char defaultCurrentDir[MAX_PATH];
+			GetCurrentDirectory(MAX_PATH, defaultCurrentDir);
 
-					// ファイルを選択するダイアログの表示
-					if (GetOpenFileName(&ofn) == TRUE) {
-						// ファイルパスを取得
-						modelFilePath = ofn.lpstrFile;
+			string modelFilePath{};
+			OPENFILENAME ofn{};
+			TCHAR szFile[MAX_PATH] = {};
 
-						// カレントディレクトリからの相対パスを取得
-						modelFilePath = GetAssetsRelativePath(modelFilePath);
+			ZeroMemory(&ofn, sizeof(ofn));
+			ofn.lStructSize = sizeof(ofn);
+			ofn.lpstrFile = szFile;
+			ofn.lpstrFile[0] = '\0';
+			ofn.nMaxFile = sizeof(szFile);
+			ofn.lpstrFilter = TEXT("FBXファイル(*.fbx)\0*.fbx\0すべてのファイル(*.*)\0*.*\0");
+			ofn.nFilterIndex = 1;
+			ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST;
+			ofn.lpstrInitialDir = TEXT(".");
 
-						// 文字列内の"\\"を"/"に置換
-						ReplaceBackslashes(modelFilePath);
-
-						// ディレクトリを戻す
-						SetCurrentDirectory(defaultCurrentDir);
-					}
-					else {
-						return;
-					}
-				}
-				modelFilePathBuffer = modelFilePath;
+			if (GetOpenFileName(&ofn) == TRUE) {
+				modelFilePath = ofn.lpstrFile;
+				modelFilePath = GetAssetsRelativePath(modelFilePath);
+				ReplaceBackslashes(modelFilePath);
+				SetCurrentDirectory(defaultCurrentDir);
 			}
-			if (ImGui::Button("ImagePath")) {
-				//現在のカレントディレクトリを覚えておく
-				char defaultCurrentDir[MAX_PATH];
-				GetCurrentDirectory(MAX_PATH, defaultCurrentDir);
-				// 追加するオブジェクトのモデルファイルパスを設定
-				string imageFilePath{}; {
-					// 「ファイルを開く」ダイアログの設定用構造体を設定
-					OPENFILENAME ofn; {
-						TCHAR szFile[MAX_PATH] = {}; // ファイル名を格納するバッファ
-						ZeroMemory(&ofn, sizeof(ofn)); // 構造体の初期化
-						ofn.lStructSize = sizeof(ofn); // 構造体のサイズ
-						ofn.lpstrFile = szFile; // ファイル名を格納するバッファ
-						ofn.lpstrFile[0] = '\0'; // 初期化
-						ofn.nMaxFile = sizeof(szFile); // ファイル名バッファのサイズ
-						ofn.lpstrFilter = TEXT("pngファイル(*.png)\0*.png\0すべてのファイル(*.*)\0*.*\0"); // フィルター（FBXファイルのみ表示）
-						ofn.nFilterIndex = 1; // 初期選択するフィルター
-						ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST; // フラグ（ファイルが存在すること、パスが存在することを確認）
-						ofn.lpstrInitialDir = TEXT("."); // カレントディレクトリを初期選択位置として設定
-					}
-
-					// ファイルを選択するダイアログの表示
-					if (GetOpenFileName(&ofn) == TRUE) {
-						// ファイルパスを取得
-						imageFilePath = ofn.lpstrFile;
-
-						// カレントディレクトリからの相対パスを取得
-						imageFilePath = GetAssetsRelativePath(imageFilePath);
-
-						// 文字列内の"\\"を"/"に置換
-						ReplaceBackslashes(imageFilePath);
-
-						// ディレクトリを戻す
-						SetCurrentDirectory(defaultCurrentDir);
-					}
-					else {
-						return;
-					}
-				}
-				imageFilePathBuffer = imageFilePath;
+			else {
+				return;
 			}
+			modelFilePathBuffer = modelFilePath;
+		}
 
-			// 生成ボタン
-			if (ImGui::Button("Create")) {
-				if (rarity == 0 || std::strlen(nameBuffer) == 0 || std::strlen(modelFilePathBuffer.c_str()) == 0 || std::strlen(imageFilePathBuffer.c_str()) == 0) {
-					ImGui::TextColored(ImVec4(1, 0, 0, 1), "this Plant isn't have data");
-				}
-				else {
-					Plant* plant_ = new Plant(this->GetParent());
-					plant_->SetID(PlantCollection::GetPlantsKind().size());
-					plant_->SetName(nameBuffer);
-					plant_->SetRarity(rarity);
-					plant_->SetModelFilePath(modelFilePathBuffer);
-					plant_->SetImageFilePath(imageFilePathBuffer);
+		// 画像パス選択
+		if (ImGui::Button("ImagePath")) {
+			char defaultCurrentDir[MAX_PATH];
+			GetCurrentDirectory(MAX_PATH, defaultCurrentDir);
 
-					PlantCollection::AddPlant(plant_);
-					isShowPlantWindow_ = false;
-				}
+			string imageFilePath{};
+			OPENFILENAME ofn{};
+			TCHAR szFile[MAX_PATH] = {};
+
+			ZeroMemory(&ofn, sizeof(ofn));
+			ofn.lStructSize = sizeof(ofn);
+			ofn.lpstrFile = szFile;
+			ofn.lpstrFile[0] = '\0';
+			ofn.nMaxFile = sizeof(szFile);
+			ofn.lpstrFilter = TEXT("pngファイル(*.png)\0*.png\0すべてのファイル(*.*)\0*.*\0");
+			ofn.nFilterIndex = 1;
+			ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST;
+			ofn.lpstrInitialDir = TEXT(".");
+
+			if (GetOpenFileName(&ofn) == TRUE) {
+				imageFilePath = ofn.lpstrFile;
+				imageFilePath = GetAssetsRelativePath(imageFilePath);
+				ReplaceBackslashes(imageFilePath);
+				SetCurrentDirectory(defaultCurrentDir);
 			}
-		ImGui::End();
+			else {
+				return;
+			}
+			imageFilePathBuffer = imageFilePath;
+		}
+
+		// 生成ボタン
+		if (ImGui::Button("Create")) {
+			if (rarity == 0 || std::strlen(nameBuffer) == 0 || std::strlen(modelFilePathBuffer.c_str()) == 0 || std::strlen(imageFilePathBuffer.c_str()) == 0) {
+				ImGui::TextColored(ImVec4(1, 0, 0, 1), "this Plant isn't have data");
+			}
+			else {
+				Plant* plant_ = new Plant();
+				plant_->SetID(PlantCollection::GetPlantsKind().size());
+				plant_->SetName(nameBuffer);
+				plant_->SetRarity(rarity);
+				plant_->SetModelFilePath(modelFilePathBuffer);
+				plant_->SetImageFilePath(imageFilePathBuffer);
+
+				modelFilePathBuffer = "";
+				imageFilePathBuffer = "";
+				
+				PlantCollection::AddPlant(plant_);
+				isShowPlantWindow_ = false;
+			}
+		}
 	}
+	ImGui::End(); // ウィンドウを終了
 }
+

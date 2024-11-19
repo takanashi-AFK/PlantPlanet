@@ -8,7 +8,7 @@ namespace PlantCollection
 
 void PlantCollection::AddPlant(Plant* _plant)
 {
-	if (_plant != nullptr) {
+	if (&_plant != nullptr) {
 		plantsKind_.push_back(_plant);
 	}
 }
@@ -16,7 +16,9 @@ void PlantCollection::AddPlant(Plant* _plant)
 void PlantCollection::RemovePlant(int _index)
 {
 	if (_index >= 0 && _index < plantsKind_.size()) {
+		delete plantsKind_[_index];
 		plantsKind_.erase(plantsKind_.begin() + _index);
+		
 	}
 }
 
@@ -33,7 +35,8 @@ vector<Plant*> PlantCollection::GetPlantsKind()
 void PlantCollection::Save(json& _saveObj)
 {
 	// オブジェクト群を保存
-	for (auto obj : plantsKind_)obj->Save(_saveObj[obj->GetID()]);
+	//for (Plant& obj : plantsKind_)obj.Save(_saveObj[obj.GetID()]);
+	
 }
 
 

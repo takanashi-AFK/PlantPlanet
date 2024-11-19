@@ -1,7 +1,7 @@
 #pragma once
-#include "StageObject.h"
-class Plant :
-    public StageObject
+#include<string>
+using std::string;
+class Plant 
 {
 private:
 	int id_;
@@ -14,7 +14,7 @@ public:
 	/// コンストラクタ
 	/// </summary>
 	/// <param name="_parent">親オブジェクト</param>
-	Plant(GameObject* _parent);
+	Plant();
 
 	void SetID(int _id) { id_ = _id; }
 	void SetRarity(int _rarity) { rarity_ = _rarity; }
@@ -26,27 +26,6 @@ public:
 	int GetRarity() { return rarity_; }
 	string GetName() { return name_; }
 
-	void Save(json& _saveObj);
-	void Load(json& _loadObj);
-
-	/// <summary>
-	/// 初期化
-	/// </summary>
-	void Initialize() override;
-
-	/// <summary>
-	/// 更新
-	/// </summary>
-	void Update() override;
-
-	/// <summary>
-	/// 描画
-	/// </summary>
-	void Draw() override;
-
-	/// <summary>
-	/// 詳細をエディタに描画
-	/// </summary>
-	void DrawData() override;
+	void DrawData();
 };
 
