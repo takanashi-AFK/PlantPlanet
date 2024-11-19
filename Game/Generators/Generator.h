@@ -2,6 +2,8 @@
 #include<vector>
 #include"../../Engine/Json/JsonReader.h"
 #include"../../Engine/GameObject/Transform.h"
+#include<cstdint>
+#include"../../Engine/GameObject/GameObject.h"
 
 class Generator
 {
@@ -9,9 +11,11 @@ public:
 
 	Generator(XMFLOAT3 pos);
 	~Generator();
-	virtual void Generate(void* ptrOfVector,json file) = 0;
+	virtual void Generate(string fileDir,GameObject* parent) = 0;
+	virtual void* Pop() = 0;
+	virtual bool isEmpty() = 0;
 
-	enum class RangeType
+	enum class RANGE_TYPE
 	{
 		BOX,
 		SPHERE,
@@ -26,5 +30,15 @@ protected:
 	virtual void BoxGenerate() = 0;
 	virtual void SphereGenerate() = 0;
 	
+	string fileDir_;
+
 };
 
+struct Information
+{
+	Generator::RANGE_TYPE RangeType;
+
+	float RadiusX;
+	float RadiusY;
+	float RadiusZ;
+};
