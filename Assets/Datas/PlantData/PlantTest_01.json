@@ -1,1 +1,16 @@
-[null,{"id_":1,"imageFilePath_":"Images/defaults/Bar_Frame.png","modelFilePath_":"Models/SkySphere/SkySphere.fbx","name_":"sad","rarity_":3},{"id_":2,"imageFilePath_":"Images/defaults/Bar_Frame.png","modelFilePath_":"Models/Player/Female Action Pose.fbx","name_":"sdf","rarity_":3}]
+[
+  {
+    "PlantID": 1,
+    "PlantImageFilePath": "Fonts/char.png",
+    "PlantModelFilePath": "Models/DebugCollision/SphereCollider.fbx",
+    "PlantName": "asdasdsa",
+    "PlantRarity": 3
+  },
+  {
+    "PlantID": 2,
+    "PlantImageFilePath": "Images/defaults/Bar_Frame.png",
+    "PlantModelFilePath": "Models/Player/Female Action Pose.fbx",
+    "PlantName": "asdasdsaasdasd",
+    "PlantRarity": 3
+  }
+]

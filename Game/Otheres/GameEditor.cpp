@@ -10,7 +10,6 @@
 #include "../../Engine/GameObject/Camera.h"
 #include "../Objects/Camera/TPSCamera.h"
 #include "../Otheres/PlantCollection.h"
-#include "../Objects/Stage/Plant.h"
 
 using namespace FileManager;
 
@@ -103,6 +102,7 @@ void GameEditor::DrawWorldOutLiner()
 			if (ImGui::BeginTabItem("Plants")) {
 				if (ImGui::Button("Add")) AddPlant();
 				if (ImGui::Button("Save"))SavePlant();
+				if (ImGui::Button("Load"))LoadPlant();
 				DrawPlantOutLiner();
 
 				editType_ = PLANT;
@@ -217,9 +217,13 @@ void GameEditor::DrawUIObjectDatails()
 
 void GameEditor::DrawPlantDatails()
 {
-	if (selectEditPlantIndex_ >= 0 && selectEditPlantIndex_ < PlantCollection::GetPlantsKind().size()) {
+	if (selectEditPlantIndex_ >= 0 && selectEditPlantIndex_ < PlantCollection::GetPlants().size()) {
 
-		PlantCollection::GetPlantsKind()[selectEditPlantIndex_]->DrawData();
+		ImGui::Text("id:%d",PlantCollection::GetPlants()[selectEditPlantIndex_].id_);
+		ImGui::Text("rarity:%d",PlantCollection::GetPlants()[selectEditPlantIndex_].rarity_);
+		ImGui::Text("name:%s",PlantCollection::GetPlants()[selectEditPlantIndex_].name_.c_str());
+		ImGui::Text("modelFilePath:%s",PlantCollection::GetPlants()[selectEditPlantIndex_].modelFilePath_.c_str());
+		ImGui::Text("imageFilePath:%s",PlantCollection::GetPlants()[selectEditPlantIndex_].imageFilePath_.c_str());
 	}
 	else ImGui::Text("No object selected");
 }
@@ -602,8 +606,8 @@ void GameEditor::DrawPlantOutLiner()
 {
 	ImGui::BeginChild("ObjectList"); {
 		// リストを表示
-		for (int i = 0; i < PlantCollection::GetPlantsKind().size(); ++i)
-			if (ImGui::Selectable(PlantCollection::GetPlantsKind()[i]->GetName().c_str(), selectEditPlantIndex_ == i)) {
+		for (int i = 0; i < PlantCollection::GetPlants().size(); ++i)
+			if (ImGui::Selectable(PlantCollection::GetPlants()[i].name_.c_str(), selectEditPlantIndex_ == i)) {
 				selectEditPlantIndex_ = i;
 			}
 	}
@@ -664,49 +668,49 @@ void GameEditor::SavePlant()
 
 void GameEditor::LoadPlant()
 {
-	//	//現在のカレントディレクトリを覚えておく
-	//char defaultCurrentDir[MAX_PATH];
-	//GetCurrentDirectory(MAX_PATH, defaultCurrentDir);
+		//現在のカレントディレクトリを覚えておく
+	char defaultCurrentDir[MAX_PATH];
+	GetCurrentDirectory(MAX_PATH, defaultCurrentDir);
 
-	//// 読み込むファイルのパスを取得
-	//string filePath{}; {
-	//	// 「ファイルを開く」ダイアログの設定用構造体を設定
-	//	OPENFILENAME ofn; {
-	//		TCHAR szFile[MAX_PATH] = {}; // ファイル名を格納するバッファ
-	//		ZeroMemory(&ofn, sizeof(ofn)); // 構造体の初期化
-	//		ofn.lStructSize = sizeof(ofn); // 構造体のサイズ
-	//		ofn.lpstrFile = szFile; // ファイル名を格納するバッファ
-	//		ofn.lpstrFile[0] = '\0'; // 初期化
-	//		ofn.nMaxFile = sizeof(szFile); // ファイル名バッファのサイズ
-	//		ofn.lpstrFilter = TEXT("JSONファイル(*.json)\0*.json\0すべてのファイル(*.*)\0*.*\0"); // フィルター（FBXファイルのみ表示）
-	//		ofn.nFilterIndex = 1; // 初期選択するフィルター
-	//		ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST; // フラグ（ファイルが存在すること、パスが存在することを確認）
-	//		ofn.lpstrInitialDir = TEXT("."); // カレントディレクトリを初期選択位置として設定
-	//	}
+	// 読み込むファイルのパスを取得
+	string filePath{}; {
+		// 「ファイルを開く」ダイアログの設定用構造体を設定
+		OPENFILENAME ofn; {
+			TCHAR szFile[MAX_PATH] = {}; // ファイル名を格納するバッファ
+			ZeroMemory(&ofn, sizeof(ofn)); // 構造体の初期化
+			ofn.lStructSize = sizeof(ofn); // 構造体のサイズ
+			ofn.lpstrFile = szFile; // ファイル名を格納するバッファ
+			ofn.lpstrFile[0] = '\0'; // 初期化
+			ofn.nMaxFile = sizeof(szFile); // ファイル名バッファのサイズ
+			ofn.lpstrFilter = TEXT("JSONファイル(*.json)\0*.json\0すべてのファイル(*.*)\0*.*\0"); // フィルター（FBXファイルのみ表示）
+			ofn.nFilterIndex = 1; // 初期選択するフィルター
+			ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST; // フラグ（ファイルが存在すること、パスが存在することを確認）
+			ofn.lpstrInitialDir = TEXT("."); // カレントディレクトリを初期選択位置として設定
+		}
 
-	//	// ファイルを選択するダイアログの表示
-	//	if (GetOpenFileName(&ofn) == TRUE) {
-	//		// ファイルパスを取得
-	//		filePath = ofn.lpstrFile;
+		// ファイルを選択するダイアログの表示
+		if (GetOpenFileName(&ofn) == TRUE) {
+			// ファイルパスを取得
+			filePath = ofn.lpstrFile;
 
-	//		// カレントディレクトリからの相対パスを取得
-	//		filePath = GetAssetsRelativePath(filePath);
+			// カレントディレクトリからの相対パスを取得
+			filePath = GetAssetsRelativePath(filePath);
 
-	//		// 文字列内の"\\"を"/"に置換
-	//		ReplaceBackslashes(filePath);
+			// 文字列内の"\\"を"/"に置換
+			ReplaceBackslashes(filePath);
 
-	//		// ディレクトリを戻す
-	//		SetCurrentDirectory(defaultCurrentDir);
-	//	}
-	//	else {
-	//		return;
-	//	}
-	//}
+			// ディレクトリを戻す
+			SetCurrentDirectory(defaultCurrentDir);
+		}
+		else {
+			return;
+		}
+	}
 
-	//// ファイルを読み込みステージを生成
-	//json loadObj;
-	//if (JsonReader::Load(filePath, loadObj) == false) MessageBox(NULL, "読込に失敗しました。", 0, 0);
-	//PlantCollection::Load(loadObj);
+	// ファイルを読み込みステージを生成
+	json loadObj;
+	if (JsonReader::Load(filePath, loadObj) == false) MessageBox(NULL, "読込に失敗しました。", 0, 0);
+	PlantCollection::Load(loadObj);
 }
 
 void GameEditor::CreatePlantWindow()
@@ -794,18 +798,10 @@ void GameEditor::CreatePlantWindow()
 				ImGui::TextColored(ImVec4(1, 0, 0, 1), "this Plant isn't have data");
 			}
 			else {
-				Plant* plant_ = new Plant();
-				plant_->SetID(PlantCollection::GetPlantsKind().size());
-				plant_->SetName(nameBuffer);
-				plant_->SetRarity(rarity);
-				plant_->SetModelFilePath(modelFilePathBuffer);
-				plant_->SetImageFilePath(imageFilePathBuffer);
-
+				PlantCollection::AddPlant({ int(PlantCollection::GetPlants().size()),rarity,nameBuffer,modelFilePathBuffer,imageFilePathBuffer });
+				isShowPlantWindow_ = false;
 				modelFilePathBuffer = "";
 				imageFilePathBuffer = "";
-				
-				PlantCollection::AddPlant(plant_);
-				isShowPlantWindow_ = false;
 			}
 		}
 	}

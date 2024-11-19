@@ -1,42 +1,69 @@
 #include "PlantCollection.h"
-#include "../Objects/Stage/Plant.h"
 
 namespace PlantCollection
 {
-	vector<Plant*> plantsKind_;
+	unordered_map<int, Plant> plants_;
 }
 
-void PlantCollection::AddPlant(Plant* _plant)
+void PlantCollection::AddPlant(Plant _plant)
 {
-	if (&_plant != nullptr) {
-		plantsKind_.push_back(_plant);
+	plants_[_plant.id_] = _plant;
+}
+
+void PlantCollection::RemovePlant(int _id)
+{
+	auto it = plants_.find(_id);
+	if (it != plants_.end()) {
+		// マップからエントリを削除
+		plants_.erase(it);
 	}
 }
 
-void PlantCollection::RemovePlant(int _index)
+void PlantCollection::ClearPlants()
 {
-	if (_index >= 0 && _index < plantsKind_.size()) {
-		delete plantsKind_[_index];
-		plantsKind_.erase(plantsKind_.begin() + _index);
-		
-	}
+	plants_.clear();
 }
 
-void PlantCollection::ClearPlantKind()
+unordered_map<int, Plant> PlantCollection::GetPlants()
 {
-	plantsKind_.clear();
-}
-
-vector<Plant*> PlantCollection::GetPlantsKind()
-{
-	return plantsKind_; 
+	return plants_;
 }
 
 void PlantCollection::Save(json& _saveObj)
 {
-	// オブジェクト群を保存
-	//for (Plant& obj : plantsKind_)obj.Save(_saveObj[obj.GetID()]);
-	
+
+	if (plants_.size() > 0) {
+		int index = 1;
+		for (auto plant : plants_) {
+			_saveObj[index]["PlantID"] = index;
+			_saveObj[index]["PlantRarity"] = plant.second.rarity_;
+			_saveObj[index]["PlantName"] = plant.second.name_;
+			_saveObj[index]["PlantModelFilePath"] = plant.second.modelFilePath_;
+			_saveObj[index]["PlantImageFilePath"] = plant.second.imageFilePath_;
+			index++;
+		}
+	}
 }
+
+void PlantCollection::Load(json& _loadObj)
+{
+	// 現在のplants_をクリアしてから読み込む
+	plants_.clear();
+	int index = 0;
+	// JSONオブジェクトをループしてデータを読み込む
+	for (auto it = _loadObj.begin(); it != _loadObj.end(); ++it) {
+		PlantCollection::AddPlant({
+			index ,
+			it.value()["PlantRarity"],
+			it.value()["PlantName"],
+			it.value()["PlantModelFilePath"],
+			it.value()["PlantImageFilePath"]
+			});
+		index++;
+	}
+}
+
+
+
 
 
