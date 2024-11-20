@@ -9,14 +9,13 @@
 #include "../../Engine/DirectX/Texture.h"
 #include "../../Engine/GameObject/Camera.h"
 #include "../Objects/Camera/TPSCamera.h"
-#include "../Otheres/PlantCollection.h"
+#include "../Plants/PlantCollection.h"
 
 using namespace FileManager;
 
 namespace {
 	Texture* pTexture_camera = nullptr;
 }
-
 
 GameEditor::GameEditor(GameObject* _parent)
 	:GameObject(_parent, "StageEditor"), editStage_(nullptr), selectEditStageObjectIndex_(-1), editUIPanel_(nullptr), selectEditUIObjectIndex_(-1), editType_(NONE),layerNumberCount_(1)
@@ -48,8 +47,6 @@ void GameEditor::Draw()
 
 	// UIオブジェクト作成ウィンドウを描画
 	if(isShowCreateUIObjectWindow_)UIObjectCreateWindow();
-	
-	if (isShowPlantWindow_)CreatePlantWindow();
 }
 
 void GameEditor::Release()
@@ -100,11 +97,7 @@ void GameEditor::DrawWorldOutLiner()
 
 			// 植物用のタブを表示
 			if (ImGui::BeginTabItem("Plants")) {
-				if (ImGui::Button("Add")) AddPlant();
-				if (ImGui::Button("Save"))SavePlant();
-				if (ImGui::Button("Load"))LoadPlant();
 				DrawPlantOutLiner();
-
 				editType_ = PLANT;
 				ImGui::EndTabItem();
 			}
@@ -168,8 +161,6 @@ void GameEditor::DrawUIPanelOutLiner()
 	}
 	ImGui::EndChild();
 }
-
-
 
 void GameEditor::DrawDatails()
 {
@@ -604,19 +595,60 @@ void GameEditor::LoadUIPanel()
 
 void GameEditor::DrawPlantOutLiner()
 {
-	ImGui::BeginChild("ObjectList"); {
-		// リストを表示
-		for (int i = 0; i < PlantCollection::GetPlants().size(); ++i)
-			if (ImGui::Selectable(PlantCollection::GetPlants()[i].name_.c_str(), selectEditPlantIndex_ == i)) {
-				selectEditPlantIndex_ = i;
+	// ファイル操作用のボタンを表示
+	ImGui::Text("file menu"); {
+		// ファイルの保存・読み込みボタン
+		if (ImGui::Button("Save")) SavePlant(); ImGui::SameLine();
+		if (ImGui::Button("Load")) LoadPlant(); ImGui::SameLine();
+		if (ImGui::Button("Clear")) PlantCollection::ClearPlants();
+		ImGui::Separator();
+	}
+
+	// 植物の追加用のボタンを表示
+	ImGui::Text("create menu"); {
+		// 植物名入力ボックス
+		static char plantNameBuffer[256] = "";
+		ImGui::InputTextWithHint("##:setting_name", "Input plant name...", plantNameBuffer, IM_ARRAYSIZE(plantNameBuffer));
+		ImGui::SameLine();
+
+		// 追加ボタン
+		if (ImGui::Button("+")) {
+			if (strlen(plantNameBuffer) > 0) {
+				PlantCollection::AddPlant({
+					((int)PlantCollection::GetPlants().size()),
+					1,
+					plantNameBuffer,
+					3,
+					"defaultPlant.fbx",
+					"dafaultPlant.png"
+					});
 			}
+
+			strcpy_s(plantNameBuffer, sizeof(plantNameBuffer), "");
+		}
+		ImGui::SameLine();
+
+		// 詳細設定追加ボタン
+		if (ImGui::Button(":")) isShowPlantWindow_ = true;
+
+		// 名前が未入力の場合、赤文字で警告
+		if (strlen(plantNameBuffer) == 0) {
+			ImGui::TextColored(ImVec4(1.0f, 0.0f, 0.0f, 1.0f), "Name is required!");
+		}
+
+	} 
+	ImGui::Separator();
+
+	// 植物のリストを表示
+	ImGui::BeginChild("ObjectList"); {
+		for (int i = 0; i < PlantCollection::GetPlants().size(); ++i)
+			if (ImGui::Selectable(PlantCollection::GetPlants()[i].name_.c_str(), selectEditPlantIndex_ == i))
+				selectEditPlantIndex_ = i;
 	}
 	ImGui::EndChild();
-}
 
-void GameEditor::AddPlant()
-{
-	isShowPlantWindow_ = true;
+	// 植物データ詳細設定追加ウィンドウを表示
+	if (isShowPlantWindow_) DrawAddPlantWindow();
 }
 
 void GameEditor::SavePlant()
@@ -668,7 +700,7 @@ void GameEditor::SavePlant()
 
 void GameEditor::LoadPlant()
 {
-		//現在のカレントディレクトリを覚えておく
+	//現在のカレントディレクトリを覚えておく
 	char defaultCurrentDir[MAX_PATH];
 	GetCurrentDirectory(MAX_PATH, defaultCurrentDir);
 
@@ -713,98 +745,163 @@ void GameEditor::LoadPlant()
 	PlantCollection::Load(loadObj);
 }
 
-void GameEditor::CreatePlantWindow()
+void GameEditor::DrawAddPlantWindow()
 {
-	static char nameBuffer[256] = "";
-	static int rarity = 0;
-	static string modelFilePathBuffer = "";
-	static string imageFilePathBuffer = "";
+	bool isValid = true; // バリデーションが通ったかどうかを示すフラグ
 
-	// ウィンドウの開始
-	if (ImGui::Begin("Create UIObject", &isShowPlantWindow_)) {
-		// 名前を入力
-		ImGui::InputTextWithHint(":setting name", "Input object name...", nameBuffer, IM_ARRAYSIZE(nameBuffer));
+	ImGui::Begin("Add Plant!!", &isShowPlantWindow_);
+	ImGui::Text("Please set the information of the plant to be added.");
+	ImGui::Separator();
 
-		// レアリティの入力
-		ImGui::InputInt("rarity", &rarity);
-		if (rarity > 3) rarity = 1;
-		if (rarity <= 0) rarity = 3;
+	// 植物名入力ボックス
+	static char plantNameBuffer[256] = "";
+	ImGui::InputTextWithHint(":setting name", "Input plant name...", plantNameBuffer, IM_ARRAYSIZE(plantNameBuffer));
 
-		// モデルパス選択
-		if (ImGui::Button("ModelPath")) {
-			char defaultCurrentDir[MAX_PATH];
-			GetCurrentDirectory(MAX_PATH, defaultCurrentDir);
-
-			string modelFilePath{};
-			OPENFILENAME ofn{};
-			TCHAR szFile[MAX_PATH] = {};
-
-			ZeroMemory(&ofn, sizeof(ofn));
-			ofn.lStructSize = sizeof(ofn);
-			ofn.lpstrFile = szFile;
-			ofn.lpstrFile[0] = '\0';
-			ofn.nMaxFile = sizeof(szFile);
-			ofn.lpstrFilter = TEXT("FBXファイル(*.fbx)\0*.fbx\0すべてのファイル(*.*)\0*.*\0");
-			ofn.nFilterIndex = 1;
-			ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST;
-			ofn.lpstrInitialDir = TEXT(".");
-
-			if (GetOpenFileName(&ofn) == TRUE) {
-				modelFilePath = ofn.lpstrFile;
-				modelFilePath = GetAssetsRelativePath(modelFilePath);
-				ReplaceBackslashes(modelFilePath);
-				SetCurrentDirectory(defaultCurrentDir);
-			}
-			else {
-				return;
-			}
-			modelFilePathBuffer = modelFilePath;
-		}
-
-		// 画像パス選択
-		if (ImGui::Button("ImagePath")) {
-			char defaultCurrentDir[MAX_PATH];
-			GetCurrentDirectory(MAX_PATH, defaultCurrentDir);
-
-			string imageFilePath{};
-			OPENFILENAME ofn{};
-			TCHAR szFile[MAX_PATH] = {};
-
-			ZeroMemory(&ofn, sizeof(ofn));
-			ofn.lStructSize = sizeof(ofn);
-			ofn.lpstrFile = szFile;
-			ofn.lpstrFile[0] = '\0';
-			ofn.nMaxFile = sizeof(szFile);
-			ofn.lpstrFilter = TEXT("pngファイル(*.png)\0*.png\0すべてのファイル(*.*)\0*.*\0");
-			ofn.nFilterIndex = 1;
-			ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST;
-			ofn.lpstrInitialDir = TEXT(".");
-
-			if (GetOpenFileName(&ofn) == TRUE) {
-				imageFilePath = ofn.lpstrFile;
-				imageFilePath = GetAssetsRelativePath(imageFilePath);
-				ReplaceBackslashes(imageFilePath);
-				SetCurrentDirectory(defaultCurrentDir);
-			}
-			else {
-				return;
-			}
-			imageFilePathBuffer = imageFilePath;
-		}
-
-		// 生成ボタン
-		if (ImGui::Button("Create")) {
-			if (rarity == 0 || std::strlen(nameBuffer) == 0 || std::strlen(modelFilePathBuffer.c_str()) == 0 || std::strlen(imageFilePathBuffer.c_str()) == 0) {
-				ImGui::TextColored(ImVec4(1, 0, 0, 1), "this Plant isn't have data");
-			}
-			else {
-				PlantCollection::AddPlant({ int(PlantCollection::GetPlants().size()),rarity,nameBuffer,modelFilePathBuffer,imageFilePathBuffer });
-				isShowPlantWindow_ = false;
-				modelFilePathBuffer = "";
-				imageFilePathBuffer = "";
-			}
-		}
+	// 必須チェック: 植物名が空でないかをチェック
+	if (strlen(plantNameBuffer) == 0) {
+		isValid = false;
+		ImGui::TextColored(ImVec4(1.0f, 0.0f, 0.0f, 1.0f), "Name is required!");
 	}
-	ImGui::End(); // ウィンドウを終了
+
+	// レアリティ入力ボックス
+	static int rarity = 1;
+	ImGui::InputInt(":setting rarity", &rarity);
+
+	// 必須チェック: レアリティが1以上であること
+	if (rarity <= 0) {
+		isValid = false;
+		ImGui::TextColored(ImVec4(1.0f, 0.0f, 0.0f, 1.0f), "Rarity must be greater than 0!");
+	}
+
+	// エリア番号入力ボックス
+	static int areaNumber = 1;
+	ImGui::InputInt(":setting areaNumber", &areaNumber);
+
+	// 必須チェック: エリア番号が1以上であること
+	if (areaNumber <= 0) {
+		isValid = false;
+		ImGui::TextColored(ImVec4(1.0f, 0.0f, 0.0f, 1.0f), "Area number must be greater than 0!");
+	}
+
+	// モデルファイルパス入力ボックス
+	static string modelFilePath = "defaultPlant.fbx";
+	ImGui::InputText(":setting modelFilePath", &modelFilePath[0], modelFilePath.size());
+	ImGui::SameLine();
+	if (ImGui::Button(":set Model")) modelFilePath = GetFBXFilePath();
+
+	// 画像ファイルパス入力ボックス
+	static string imageFilePath = "defaultPlant.png";
+	ImGui::InputText(":setting imageFilePath", &imageFilePath[0], imageFilePath.size());
+	ImGui::SameLine();
+	if (ImGui::Button(":set Image")) imageFilePath = GetPNGFilePath();
+
+	ImGui::Separator();
+
+	// 「Add」ボタンを無効化する
+	if (isValid && ImGui::Button("Add")) {
+		PlantCollection::AddPlant({
+			(int)PlantCollection::GetPlants().size(),
+			rarity,
+			plantNameBuffer,
+			areaNumber,
+			modelFilePath,
+			imageFilePath
+			});
+	}
+	else if (!isValid) {
+		// 入力エラーがある場合に、ボタンを無効化する
+		ImGui::BeginDisabled();
+		ImGui::Button("Add");
+		ImGui::EndDisabled();
+	}
+	ImGui::End();
 }
 
+string GameEditor::GetFBXFilePath()
+{
+	//現在のカレントディレクトリを覚えておく
+	char defaultCurrentDir[MAX_PATH];
+	GetCurrentDirectory(MAX_PATH, defaultCurrentDir);
+
+	// 追加するオブジェクトのモデルファイルパスを設定
+	string filePath{}; {
+		// 「ファイルを開く」ダイアログの設定用構造体を設定
+		OPENFILENAME ofn; {
+			TCHAR szFile[MAX_PATH] = {}; // ファイル名を格納するバッファ
+			ZeroMemory(&ofn, sizeof(ofn)); // 構造体の初期化
+			ofn.lStructSize = sizeof(ofn); // 構造体のサイズ
+			ofn.lpstrFile = szFile; // ファイル名を格納するバッファ
+			ofn.lpstrFile[0] = '\0'; // 初期化
+			ofn.nMaxFile = sizeof(szFile); // ファイル名バッファのサイズ
+			ofn.lpstrFilter = TEXT("FBXファイル(*.fbx)\0*.fbx\0すべてのファイル(*.*)\0*.*\0"); // フィルター（FBXファイルのみ表示）			ofn.nFilterIndex = 1; // 初期選択するフィルター
+			ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST; // フラグ（ファイルが存在すること、パスが存在することを確認）
+			ofn.lpstrInitialDir = TEXT("."); // カレントディレクトリを初期選択位置として設定
+		}
+
+		// ファイルを選択するダイアログの表示
+		if (GetOpenFileName(&ofn) == TRUE) {
+			// ファイルパスを取得
+			filePath = ofn.lpstrFile;
+
+			// カレントディレクトリからの相対パスを取得
+			filePath = GetAssetsRelativePath(filePath);
+
+			// 文字列内の"\\"を"/"に置換
+			ReplaceBackslashes(filePath);
+
+			// ディレクトリを戻す
+			SetCurrentDirectory(defaultCurrentDir);
+		}
+		else {
+			return "";
+		}
+	}
+
+	// ファイルパスを返す
+	return filePath;
+}
+
+string GameEditor::GetPNGFilePath()
+{
+	//現在のカレントディレクトリを覚えておく
+	char defaultCurrentDir[MAX_PATH];
+	GetCurrentDirectory(MAX_PATH, defaultCurrentDir);
+
+	// 追加するオブジェクトのモデルファイルパスを設定
+	string filePath{}; {
+		// 「ファイルを開く」ダイアログの設定用構造体を設定
+		OPENFILENAME ofn; {
+			TCHAR szFile[MAX_PATH] = {}; // ファイル名を格納するバッファ
+			ZeroMemory(&ofn, sizeof(ofn)); // 構造体の初期化
+			ofn.lStructSize = sizeof(ofn); // 構造体のサイズ
+			ofn.lpstrFile = szFile; // ファイル名を格納するバッファ
+			ofn.lpstrFile[0] = '\0'; // 初期化
+			ofn.nMaxFile = sizeof(szFile); // ファイル名バッファのサイズ
+			ofn.lpstrFilter = TEXT("PNGファイル(*.fbx)\0*.png\0すべてのファイル(*.*)\0*.*\0"); // フィルター（FBXファイルのみ表示）
+			ofn.nFilterIndex = 1; // 初期選択するフィルター
+			ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST; // フラグ（ファイルが存在すること、パスが存在することを確認）
+			ofn.lpstrInitialDir = TEXT("."); // カレントディレクトリを初期選択位置として設定
+		}
+
+		// ファイルを選択するダイアログの表示
+		if (GetOpenFileName(&ofn) == TRUE) {
+			// ファイルパスを取得
+			filePath = ofn.lpstrFile;
+
+			// カレントディレクトリからの相対パスを取得
+			filePath = GetAssetsRelativePath(filePath);
+
+			// 文字列内の"\\"を"/"に置換
+			ReplaceBackslashes(filePath);
+
+			// ディレクトリを戻す
+			SetCurrentDirectory(defaultCurrentDir);
+		}
+		else {
+			return "";
+		}
+	}
+
+	// ファイルパスを返す
+	return filePath;
+}
