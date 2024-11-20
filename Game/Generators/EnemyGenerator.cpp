@@ -1,5 +1,6 @@
 #include "EnemyGenerator.h"
 #include<algorithm>
+#include<random>
 
 EnemyGenerator::EnemyGenerator(XMFLOAT3 pos):Generator(pos)
 {
@@ -40,14 +41,27 @@ void EnemyGenerator::BoxGenerate()
 
 void EnemyGenerator::SphereGenerate()
 {
+	std::random_device random_device{};
+	std::mt19937 engine(random_device());
+
+	auto frand = [&](float min , float max)->float 
+		{
+			std::uniform_real_distribution<float> unireal(min, max);
+			return unireal(engine);
+		};
+
 	for (auto i = 0u; i < information_.EnemyNum; ++i) {
 		
-		float length = fmod(rand(), 1.0f);
-		
-		XMFLOAT3 plantLength = {length,0,0};
+		XMFLOAT3 plantPos = { frand(-1.0f, 1.0f), frand(-1.0f, 1.0f), frand(-1.0f, 1.0f) };
 
-		const float normalRadius = sqrt(1.0f / 3.0f);
+		{
+			auto temporaryVec = XMVector3Normalize(XMLoadFloat3(&plantPos));
+			XMStoreFloat3(&plantPos, temporaryVec);//plantPos‚Ì³‹K‰»
+		}
 
+		plantPos.x *= information_.RadiusX;
+		plantPos.y *= information_.RadiusY;
+		plantPos.z *= information_.RadiusZ;
 	}
 }
 
