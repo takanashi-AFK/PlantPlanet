@@ -139,6 +139,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Game\Objects\Stage\Components\PlantComponents\Component_PlantGenerator.cpp" />
     <ClCompile Include="Game\Objects\UI\Components\Component_UIEasing.cpp" />
     <ClCompile Include="Engine\DirectX\Easing.cpp" />
     <ClCompile Include="Game\Otheres\AudioController.cpp" />
@@ -229,6 +230,7 @@
     <ClCompile Include="Game\Plants\PlantCollection.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Game\Objects\Stage\Components\PlantComponents\Component_PlantGenerator.h" />
     <ClInclude Include="Game\Objects\UI\Components\Component_UIEasing.h" />
     <ClInclude Include="Engine\DirectX\Easing.h" />
     <ClInclude Include="Game\Otheres\AudioController.h" />

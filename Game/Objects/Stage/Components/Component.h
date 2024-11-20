@@ -38,6 +38,7 @@ enum ComponentType
 	WASDInputMove,
 	PlayerMotion,
 	Teleporter,
+	PlantGenerator,
 	// コンポーネント追加時に識別番号を追加
 	Max
 	
@@ -193,7 +194,6 @@ public:
 /// <returns>作成したコンポーネント</returns>
 Component* CreateComponent(string _name,ComponentType _type,StageObject* _holder, Component* _parent);
 Component* CreateComponent(string _name,ComponentType _type,StageObject* _holder);
-
 
 /// <summary>
 /// コンポーネントタイプを文字列に変換する 
