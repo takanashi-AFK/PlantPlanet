@@ -17,6 +17,11 @@ public:
 	void Generate(void* parent) override;
 	void* Pop() override;
 	bool isEmpty() override;
+	void Draw() override;
+
+
+	virtual void Save(json& saveObj, int index);
+	virtual void Load(json& loadObj, int index);
 
 	struct Information
 	{
@@ -28,11 +33,12 @@ public:
 		uint16_t enemyNum;
 		string enemyName;
 		string modelPath;
-		string fileName;
 
 		void Save();
 		void Load();
 
+		Information(Generator* holder);
+		Generator* holder_;
 	}information_;
 
 protected:
@@ -42,4 +48,6 @@ protected:
 
 	std::vector<StageObject*> enemies_;
 	Stage* parent_;
+
 };
+

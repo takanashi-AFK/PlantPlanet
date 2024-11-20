@@ -10,6 +10,7 @@
 #include "../../Engine/GameObject/Camera.h"
 #include "../Objects/Camera/TPSCamera.h"
 #include "../Otheres/PlantCollection.h"
+#include "../Generators/Generator.h"
 
 using namespace FileManager;
 
@@ -50,6 +51,8 @@ void GameEditor::Draw()
 	if(isShowCreateUIObjectWindow_)UIObjectCreateWindow();
 	
 	if (isShowPlantWindow_)CreatePlantWindow();
+
+	if (isShowGeneratorWindow_);
 }
 
 void GameEditor::Release()
@@ -106,6 +109,16 @@ void GameEditor::DrawWorldOutLiner()
 				DrawPlantOutLiner();
 
 				editType_ = PLANT;
+				ImGui::EndTabItem();
+			}
+
+			if (ImGui::BeginTabItem("Generator")) {
+				if (ImGui::Button("Add"));
+				if (ImGui::Button("Save"));
+				if (ImGui::Button("Load"));
+			
+
+				editType_ = GENERATOR;
 				ImGui::EndTabItem();
 			}
 
@@ -187,6 +200,7 @@ void GameEditor::DrawDatails()
 		case UIPANEL:DrawUIObjectDatails();break;
 		case CAMERA:DrawDatalsCamera(); break;
 		case PLANT:DrawPlantDatails(); break;
+		case GENERATOR : 
 		default:ImGui::Text("No information to display");break;
 		}
 	}
@@ -226,6 +240,16 @@ void GameEditor::DrawPlantDatails()
 		ImGui::Text("imageFilePath:%s",PlantCollection::GetPlants()[selectEditPlantIndex_].imageFilePath_.c_str());
 	}
 	else ImGui::Text("No object selected");
+}
+
+void GameEditor::DrawGeneratorDetails()
+{
+	ImGui::BeginChild("ObjectList"); {
+
+
+	}
+	ImGui::EndChild();
+
 }
 
 void GameEditor::DrawDatalsCamera()
@@ -711,6 +735,109 @@ void GameEditor::LoadPlant()
 	json loadObj;
 	if (JsonReader::Load(filePath, loadObj) == false) MessageBox(NULL, "読込に失敗しました。", 0, 0);
 	PlantCollection::Load(loadObj);
+}
+
+void GameEditor::ShowGenerator()
+{
+	isShowGeneratorWindow_ = true;
+}
+
+void GameEditor::SaveGenerator()
+{
+	char defaultCurrentDir[MAX_PATH];
+	GetCurrentDirectory(MAX_PATH, defaultCurrentDir);
+
+	// 保存先のファイルパスを取得
+	string filePath{}; {
+		// 「ファイルを保存」ダイアログの設定用構造体を設定
+		OPENFILENAME ofn; {
+			ZeroMemory(&ofn, sizeof(ofn));
+			ofn.lStructSize = sizeof(OPENFILENAME);
+			ofn.lpstrFilter = TEXT("objectData(*.json)\0*.json\0すべてのファイル(*.*)\0*.*\0\0");
+			char fileName[MAX_PATH] = "無題.json";
+			ofn.lpstrFile = fileName;
+			ofn.nMaxFile = MAX_PATH;
+			ofn.Flags = OFN_OVERWRITEPROMPT;
+			ofn.lpstrDefExt = "json";
+			ofn.nFilterIndex = 1; // 初期選択するフィルター
+			ofn.lpstrInitialDir = TEXT("."); // カレントディレクトリを初期選択位置として設定
+		}
+
+		// ファイルを保存するダイアログの表示
+		if (GetSaveFileName(&ofn) == TRUE) {
+			// ファイルパスを取得
+			filePath = ofn.lpstrFile;
+
+			// カレントディレクトリからの相対パスを取得
+			filePath = GetAssetsRelativePath(filePath);
+
+			// 文字列内の"\\"を"/"に置換
+			ReplaceBackslashes(filePath);
+
+			// ディレクトリを戻す
+			SetCurrentDirectory(defaultCurrentDir);
+		}
+		else {
+			return;
+		}
+	}
+
+	json saveObj;
+
+	Generator::RootSave(saveObj);
+	if (JsonReader::Save(filePath, saveObj) == false) MessageBox(NULL, "保存に失敗しました。", 0, 0);
+
+}
+
+void GameEditor::LoadGenerator()
+{
+	char defaultCurrentDir[MAX_PATH];
+	GetCurrentDirectory(MAX_PATH, defaultCurrentDir);
+
+	// 読み込むファイルのパスを取得
+	string filePath{}; {
+		// 「ファイルを開く」ダイアログの設定用構造体を設定
+		OPENFILENAME ofn; {
+			TCHAR szFile[MAX_PATH] = {}; // ファイル名を格納するバッファ
+			ZeroMemory(&ofn, sizeof(ofn)); // 構造体の初期化
+			ofn.lStructSize = sizeof(ofn); // 構造体のサイズ
+			ofn.lpstrFile = szFile; // ファイル名を格納するバッファ
+			ofn.lpstrFile[0] = '\0'; // 初期化
+			ofn.nMaxFile = sizeof(szFile); // ファイル名バッファのサイズ
+			ofn.lpstrFilter = TEXT("JSONファイル(*.json)\0*.json\0すべてのファイル(*.*)\0*.*\0"); // フィルター（jsonファイルのみ表示）
+			ofn.nFilterIndex = 1; // 初期選択するフィルター
+			ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST; // フラグ（ファイルが存在すること、パスが存在することを確認）
+			ofn.lpstrInitialDir = TEXT("."); // カレントディレクトリを初期選択位置として設定
+		}
+
+		// ファイルを選択するダイアログの表示
+		if (GetOpenFileName(&ofn) == TRUE) {
+			// ファイルパスを取得
+			filePath = ofn.lpstrFile;
+
+			// カレントディレクトリからの相対パスを取得
+			filePath = GetAssetsRelativePath(filePath);
+
+			// 文字列内の"\\"を"/"に置換
+			ReplaceBackslashes(filePath);
+
+			// ディレクトリを戻す
+			SetCurrentDirectory(defaultCurrentDir);
+		}
+		else {
+			return;
+		}
+	}
+
+
+	json loadObj;
+	if (JsonReader::Load(filePath, loadObj) == false) MessageBox(NULL, "読込に失敗しました。", 0, 0);
+	
+	if (!loadObj.contains("GeneratorType"))MessageBox(NULL,
+		"正しくないファイルが選択されました。\nジェネレータ用のファイルを選択してください",
+		0, 0);
+
+	Generator::RootLoad(loadObj);
 }
 
 void GameEditor::CreatePlantWindow()

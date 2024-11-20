@@ -3,8 +3,10 @@
 #include<random>
 #include"../Objects/Stage/StageObject.h"
 #include<format>
+#include"../../Engine/ImGui/imgui.h"
+#include"../../Engine/Global.h"
 
-EnemyGenerator::EnemyGenerator(XMFLOAT3 pos):Generator(pos)
+EnemyGenerator::EnemyGenerator(XMFLOAT3 pos):Generator(pos),parent_(nullptr),information_(this)
 {
 }
 
@@ -22,6 +24,93 @@ void* EnemyGenerator::Pop()
 bool EnemyGenerator::isEmpty()
 {
 	return enemies_.empty();
+}
+
+void EnemyGenerator::Draw()
+{
+	auto SerchInDirectory = [](string& fileName)
+		{
+			char defaultCurrentDir[MAX_PATH];
+			GetCurrentDirectory(MAX_PATH, defaultCurrentDir);
+
+			// 追加するオブジェクトのモデルファイルパスを設定
+			{
+				// 「ファイルを開く」ダイアログの設定用構造体を設定
+				OPENFILENAME ofn; {
+					TCHAR szFile[MAX_PATH] = {}; // ファイル名を格納するバッファ
+					ZeroMemory(&ofn, sizeof(ofn)); // 構造体の初期化
+					ofn.lStructSize = sizeof(ofn); // 構造体のサイズ
+					ofn.lpstrFile = szFile; // ファイル名を格納するバッファ
+					ofn.lpstrFile[0] = '\0'; // 初期化
+					ofn.nMaxFile = sizeof(szFile); // ファイル名バッファのサイズ
+					ofn.lpstrFilter = TEXT("PNGファイル(*.fbx)\0*.png\0すべてのファイル(*.*)\0*.*\0"); // フィルター（FBXファイルのみ表示）
+					ofn.nFilterIndex = 1; // 初期選択するフィルター
+					ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST; // フラグ（ファイルが存在すること、パスが存在することを確認）
+					ofn.lpstrInitialDir = TEXT("."); // カレントディレクトリを初期選択位置として設定
+				}
+
+				// ファイルを選択するダイアログの表示
+				if (GetOpenFileName(&ofn) == TRUE) {
+					// ファイルパスを取得
+					fileName = ofn.lpstrFile;
+
+					// カレントディレクトリからの相対パスを取得
+					fileName = FileManager::GetAssetsRelativePath(fileName);
+
+					// 文字列内の"\\"を"/"に置換
+					FileManager::ReplaceBackslashes(fileName);
+
+					// ディレクトリを戻す
+					SetCurrentDirectory(defaultCurrentDir);
+
+					return;
+				}
+				else {
+					return;
+				}
+			};
+		};
+
+	if (ImGui::TreeNode("Radius"))
+	{
+		ImGui::DragFloat("Radius X", &information_.radiusX, 0.01, 0, 1000.0f);
+		ImGui::DragFloat("Radius Y", &information_.radiusY, 0.01, 0, 1000.0f);
+		ImGui::DragFloat("Radius Z", &information_.radiusZ, 0.01, 0, 1000.0f);
+
+		ImGui::TreePop();
+	}
+
+	if (ImGui::TreeNode("Enemy Information"))
+	{
+		ImGui::DragInt("Enemy Num", reinterpret_cast<int*>(&information_.enemyNum), 1, 0, 0xffff);
+		
+		ImGui::Text("Enemy Name : ", information_.enemyName.c_str());
+		ImGui::Text("Model Path : ", information_.modelPath.c_str()); ImGui::SameLine();
+		if (ImGui::SmallButton("..."))	SerchInDirectory(information_.modelPath);
+		
+		ImGui::Text("File Name : ", informationDir_.c_str());
+		
+		ImGui::TreePop();
+	}
+
+	if (ImGui::TreeNode("Information Settings"))
+	{
+		if (ImGui::Button("Save")) information_.Save();
+		if (ImGui::Button("Load")) information_.Load();
+
+		ImGui::TreePop();
+	}
+}
+
+void EnemyGenerator::Save(json& saveObj, int index)
+{
+
+	information_.Save();
+}
+
+void EnemyGenerator::Load(json& loadObj, int index)
+{
+	information_.Load();
 }
 
 void EnemyGenerator::BoxGenerate()
@@ -118,9 +207,8 @@ void EnemyGenerator::Information::Save()
 	saveObj["EnemyNum"] = this->enemyNum;
 	saveObj["EnemyName"] = this->enemyName;
 	saveObj["ModelPath"] = this->enemyName;
-	saveObj["FileName"] = this->fileName;
 
-	JsonReader::Save(fileName, saveObj);
+	JsonReader::Save(holder_->informationDir_, saveObj);
 }
 
 void EnemyGenerator::Information::Load()
@@ -149,7 +237,8 @@ void EnemyGenerator::Information::Load()
 
 	modelPath = file.contains("ModelPath")
 		? file["ModelPath"].get<string>() : "";
+}
 
-	modelPath = file.contains("FileName")
-		? file["FileName"].get<string>() : "";
+EnemyGenerator::Information::Information(Generator* holder):holder_(holder)
+{
 }
