@@ -54,9 +54,9 @@ void Component_PlantGenerator::Update()
 	//}
 
 	// Collection内の植物を上から抽出
-	/*for (int i = 0; i < plantNum_; i++) {
+	for (int i = 0; i < plantNum_; i++) {
 		randomPlants.push_back(PlantCollection::GetPlants()[i]);
-	}*/
+	}
 
 	// 植物オブジェクトをステージ上に生成
 	for (int i = 0; i < plantNum_; i++) {
