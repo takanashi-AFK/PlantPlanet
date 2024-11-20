@@ -3,7 +3,7 @@
 #include"../../Engine/Json/JsonReader.h"
 #include"../../Engine/GameObject/Transform.h"
 #include<cstdint>
-#include"../../Engine/GameObject/GameObject.h"
+#include"../Objects/Stage/Stage.h"
 
 class Generator
 {
@@ -11,7 +11,8 @@ public:
 
 	Generator(XMFLOAT3 pos);
 	~Generator();
-	virtual void Generate(string fileDir,GameObject* parent) = 0;
+
+	virtual void Generate(void* parent) = 0;
 	virtual void* Pop() = 0;
 	virtual bool isEmpty() = 0;
 

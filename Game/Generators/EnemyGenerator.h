@@ -1,6 +1,5 @@
 #pragma once
 #include"Generator.h"
-#include "../Objects//Stage/StageObject.h"
 
 class Plant;
 
@@ -9,7 +8,13 @@ class EnemyGenerator:public Generator
 public:
 	EnemyGenerator(XMFLOAT3 pos);
 	~EnemyGenerator();
-	void Generate(string fileDir, GameObject* parent) override;
+
+	/// <summary>
+	/// void* ‚É‚ÍStage*‚ğ“ü‚ê‚Ä‚ËB
+	/// </summary>
+	/// <param name="fileDir"></param>
+	/// <param name="parent"></param>
+	void Generate(void* parent) override;
 	void* Pop() override;
 	bool isEmpty() override;
 
@@ -17,10 +22,17 @@ public:
 	{
 		Generator::RANGE_TYPE RangeType;
 
-		float RadiusX;
-		float RadiusY;
-		float RadiusZ;
-		uint16_t EnemyNum;
+		float radiusX;
+		float radiusY;
+		float radiusZ;
+		uint16_t enemyNum;
+		string enemyName;
+		string modelPath;
+		string fileName;
+
+		void Save();
+		void Load();
+
 	}information_;
 
 protected:
@@ -28,8 +40,6 @@ protected:
 	void BoxGenerate();
 	void SphereGenerate();
 
-	string file_;
-	std::vector<StageObject*>* vector_;
-
-	std::vector<Plant*> plants_;
+	std::vector<StageObject*> enemies_;
+	Stage* parent_;
 };
