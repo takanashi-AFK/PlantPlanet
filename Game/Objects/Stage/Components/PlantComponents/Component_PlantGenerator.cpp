@@ -6,6 +6,13 @@
 #include <numbers>
 #include "../../../../../Engine/ImGui/imgui.h"
 
+namespace {
+	const int MAX_RARITY = 3;
+	const int MIN_RARITY = 1;
+	const int MAX_RESERCH_POINT = 100;
+
+}
+
 Component_PlantGenerator::Component_PlantGenerator(string _name, StageObject* _holder, Component* _parent)
 	:Component(_holder, _name, PlantGenerator, _parent)
 {
@@ -44,25 +51,24 @@ void Component_PlantGenerator::Update()
 	// レアリティ
 	
 	vector<Plant> randomPlants;
-	//while (randomPlants.size() < plantNum_ && CalculateTotalResearchPoint(randomPlants) < 100) {
+	while (randomPlants.size() < plantNum_) {
 
-	//	// プラントを重み付けで選択
-	//	randomPlants.push_back(WeightedPickPlants(PlantCollection::GetPlants()));
+		// プラントを重み付けで選択
+		randomPlants.push_back(WeightedPickPlants(PlantCollection::GetPlants()));
 
-	//	// 生成数が最大数を超え、かつ総研究ポイントが100未満の場合、リセット
-	//	if (randomPlants.size() >= plantNum_ && CalculateTotalResearchPoint(randomPlants) < 100)randomPlants.clear();
-	//}
-
-	// Collection内の植物を上から抽出
-	for (int i = 0; i < plantNum_; i++) {
-		randomPlants.push_back(PlantCollection::GetPlants()[i]);
+		
 	}
+
+	//// Collection内の植物を上から抽出
+	//for (int i = 0; i < plantNum_; i++) {
+	//	randomPlants.push_back(PlantCollection::GetPlants()[i]);
+	//}
 
 	// 植物オブジェクトをステージ上に生成
 	for (int i = 0; i < plantNum_; i++) {
 
 		// ステージオブジェクトを生成
-		StageObject* plant = CreateStageObject("plant" + i, randomPlants[i].modelFilePath_, holder_->GetParent());
+		StageObject* plant = CreateStageObject("plant" + std::to_string(i), randomPlants[i].modelFilePath_, holder_->GetParent());
 		
 		// 生成位置を設定
 		plant->SetPosition(ramdomPositions[i]);
@@ -166,7 +172,7 @@ Plant Component_PlantGenerator::WeightedPickPlants(unordered_map<int,Plant> _pla
 		int random = rand() % totalWeight;
 		for (const auto& plant : _plants) {
 			random -= plant.second.rarity_;
-			if (random < 0) return plant.second;
+			if (random <= 0) return plant.second;
 		}
 	}
 
