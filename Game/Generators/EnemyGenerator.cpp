@@ -28,11 +28,11 @@ bool EnemyGenerator::isEmpty()
 
 void EnemyGenerator::Draw()
 {
-	auto SerchInDirectory = [](string& fileName)
+	auto SerchInDirectory = [](string& fileName ,std::string filter)
 		{
 			char defaultCurrentDir[MAX_PATH];
 			GetCurrentDirectory(MAX_PATH, defaultCurrentDir);
-
+			std::string dirWithFilter = TEXT("FBXファイル(*.") + filter + TEXT(")\0 * ." )+ filter + TEXT("\0すべてのファイル(*.*)\0 * .*\0");
 			// 追加するオブジェクトのモデルファイルパスを設定
 			{
 				// 「ファイルを開く」ダイアログの設定用構造体を設定
@@ -43,7 +43,7 @@ void EnemyGenerator::Draw()
 					ofn.lpstrFile = szFile; // ファイル名を格納するバッファ
 					ofn.lpstrFile[0] = '\0'; // 初期化
 					ofn.nMaxFile = sizeof(szFile); // ファイル名バッファのサイズ
-					ofn.lpstrFilter = TEXT("PNGファイル(*.fbx)\0*.png\0すべてのファイル(*.*)\0*.*\0"); // フィルター（FBXファイルのみ表示）
+					ofn.lpstrFilter = TEXT(dirWithFilter.c_str()); // フィルター（FBXファイルのみ表示）
 					ofn.nFilterIndex = 1; // 初期選択するフィルター
 					ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST; // フラグ（ファイルが存在すること、パスが存在することを確認）
 					ofn.lpstrInitialDir = TEXT("."); // カレントディレクトリを初期選択位置として設定
@@ -84,10 +84,15 @@ void EnemyGenerator::Draw()
 	{
 		ImGui::DragInt("Enemy Num", reinterpret_cast<int*>(&information_.enemyNum), 1, 0, 0xffff);
 		
-		ImGui::Text("Enemy Name : ", information_.enemyName.c_str());
-		ImGui::Text("Model Path : ", information_.modelPath.c_str()); ImGui::SameLine();
-		if (ImGui::SmallButton("..."))	SerchInDirectory(information_.modelPath);
+		//ImGui::Text("", information_.enemyName.c_str()); ImGui::SameLine();
+		static char nameBuffer[256] = "";
+		ImGui::InputTextWithHint(": Enemy Name", information_.enemyName.c_str(), nameBuffer, IM_ARRAYSIZE(nameBuffer));
+		information_.enemyName = nameBuffer;
+
+		if (ImGui::SmallButton("..."))	SerchInDirectory(information_.modelPath,"fbx"); ImGui::SameLine();
+		ImGui::Text("Model Path : ", information_.modelPath.c_str()); 
 		
+		if (ImGui::SmallButton("..."))	SerchInDirectory(informationDir_,"json"); ImGui::SameLine();
 		ImGui::Text("File Name : ", informationDir_.c_str());
 		
 		ImGui::TreePop();
@@ -104,7 +109,6 @@ void EnemyGenerator::Draw()
 
 void EnemyGenerator::Save(json& saveObj, int index)
 {
-
 	information_.Save();
 }
 

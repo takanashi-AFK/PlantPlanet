@@ -21,6 +21,7 @@ void Generator::RootSave(json& saveObj)
 		saveObj[i]["Position_Z"] = Generators[i]->GetPosition().z;
 		saveObj[i]["InformationFilePath"] = Generators[i]->informationDir_;
 		saveObj[i]["GeneratorType"] = Generators[i]->GetGeneratorType();
+		saveObj[i]["GeneratorName"] = Generators[i]->GetName();
 
 		Generators[i]->Save(saveObj,i);
 	}
@@ -49,6 +50,8 @@ void Generator::RootLoad(json& loadObj)
 
 		generator->informationDir_ = itr.value()["InformationFilePath"].get<string>();
 		generator->Load(loadObj ,count);
+		generator->SetName(itr.value()["GeneratorName"].get<string>());
+
 		Generators.push_back(generator);
 		++count;
 	}
@@ -87,6 +90,11 @@ void Generator::SetPosition(XMFLOAT3 position_)
 {
 }
 
+void Generator::SetName(const string& name)
+{
+	name_ = name;
+}
+
 XMFLOAT3 Generator::GetPosition()
 {
 	return XMFLOAT3();
@@ -95,6 +103,23 @@ XMFLOAT3 Generator::GetPosition()
 XMFLOAT3* Generator::GetPositionAddress()
 {
 	return &pos_;
+}
+
+const string& Generator::GetName() const
+{
+	return name_;
+}
+
+string Generator::GetTypeString(GENERATOR_TYPE type)
+{
+	switch (type)
+	{
+	case GENERATOR_TYPE::ENEMY: return "ENEMY";
+
+	case GENERATOR_TYPE::AMOUNT: return "AMOUNT";
+
+	default:return "ENEMY";
+	}
 }
 
 Generator::GENERATOR_TYPE Generator::GetGeneratorType()

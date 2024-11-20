@@ -11,6 +11,7 @@
 #include "../Objects/Camera/TPSCamera.h"
 #include "../Otheres/PlantCollection.h"
 #include "../Generators/Generator.h"
+#include"../Generators/EnemyGenerator.h"
 
 using namespace FileManager;
 
@@ -52,7 +53,7 @@ void GameEditor::Draw()
 	
 	if (isShowPlantWindow_)CreatePlantWindow();
 
-	if (isShowGeneratorWindow_);
+	if (isShowGeneratorWindow_) CreateGeneratorWindow();
 }
 
 void GameEditor::Release()
@@ -112,13 +113,11 @@ void GameEditor::DrawWorldOutLiner()
 				ImGui::EndTabItem();
 			}
 
+			//ジェネレータ用のタブを表示
 			if (ImGui::BeginTabItem("Generator")) {
-				if (ImGui::Button("Add"));
-				if (ImGui::Button("Save"));
-				if (ImGui::Button("Load"));
-			
-
 				editType_ = GENERATOR;
+				DrawGeneratorOutLiner();
+
 				ImGui::EndTabItem();
 			}
 
@@ -200,7 +199,7 @@ void GameEditor::DrawDatails()
 		case UIPANEL:DrawUIObjectDatails();break;
 		case CAMERA:DrawDatalsCamera(); break;
 		case PLANT:DrawPlantDatails(); break;
-		case GENERATOR : 
+		case GENERATOR:DrawGeneratorDetails(); break;
 		default:ImGui::Text("No information to display");break;
 		}
 	}
@@ -238,6 +237,7 @@ void GameEditor::DrawPlantDatails()
 		ImGui::Text("name:%s",PlantCollection::GetPlants()[selectEditPlantIndex_].name_.c_str());
 		ImGui::Text("modelFilePath:%s",PlantCollection::GetPlants()[selectEditPlantIndex_].modelFilePath_.c_str());
 		ImGui::Text("imageFilePath:%s",PlantCollection::GetPlants()[selectEditPlantIndex_].imageFilePath_.c_str());
+
 	}
 	else ImGui::Text("No object selected");
 }
@@ -246,6 +246,31 @@ void GameEditor::DrawGeneratorDetails()
 {
 	ImGui::BeginChild("ObjectList"); {
 
+		if (selectEditGeneratorIndex_ >= 0 && selectEditGeneratorIndex_ < Generator::Generators.size()) {
+
+			auto& generator = Generator::Generators[selectEditGeneratorIndex_];
+			
+			XMFLOAT3 position = generator->GetPosition();
+
+			ImGui::Text("name:%s", generator->GetName().c_str());
+			ImGui::DragFloat3(": Position ", &position.x);
+			generator->SetPosition(position);
+
+			generator->Draw();
+		
+			if (ImGui::Button("Generate"))
+			{
+				generator->Generate(editStage_);
+
+				while (!generator->isEmpty()) {
+
+					auto enemy = reinterpret_cast<StageObject*>(generator->Pop());
+					editStage_->AddStageObject(enemy);
+				}
+			}
+
+		}
+		else ImGui::Text("No object selected");
 
 	}
 	ImGui::EndChild();
@@ -638,6 +663,24 @@ void GameEditor::DrawPlantOutLiner()
 	ImGui::EndChild();
 }
 
+void GameEditor::DrawGeneratorOutLiner()
+{
+	if (ImGui::Button("Add")) ShowGenerator();	ImGui::SameLine();
+	if (ImGui::Button("Save")) SaveGenerator();	ImGui::SameLine();
+	if (ImGui::Button("Load")) LoadGenerator();
+
+	ImGui::Separator();
+
+	ImGui::BeginChild("ObjectList"); {
+		// リストを表示
+		for (int i = 0; i < Generator::Generators.size(); ++i)
+			if (ImGui::Selectable(Generator::Generators[i]->GetName().c_str(), selectEditGeneratorIndex_ == i)) {
+				selectEditUIObjectIndex_ = i;
+			}
+	}
+	ImGui::EndChild();
+}
+
 void GameEditor::AddPlant()
 {
 	isShowPlantWindow_ = true;
@@ -933,5 +976,54 @@ void GameEditor::CreatePlantWindow()
 		}
 	}
 	ImGui::End(); // ウィンドウを終了
+}
+
+void GameEditor::CreateGeneratorWindow()
+{
+	static char nameBuffer[256] = "";
+	if (isShowGeneratorWindow_) {
+		ImGui::Begin("Create UIObject", &isShowGeneratorWindow_); {
+
+			ImGui::NewLine();
+			ImGui::Text("Set the details for a Generator. then make a Generator");
+			ImGui::Separator();
+
+			// 名前を入力
+			ImGui::InputTextWithHint(":seting name", "Input object name...", nameBuffer, IM_ARRAYSIZE(nameBuffer));
+
+			// タイプを選択
+			static Generator::GENERATOR_TYPE generatorType = Generator::GENERATOR_TYPE::ENEMY;// 初期選択項目
+
+			//ジェネレータタイプの指定
+			ImGui::Text("Select an option:");
+
+			for (auto i = 0u; i < static_cast<int>(Generator::GENERATOR_TYPE::AMOUNT); ++i) {
+				if(ImGui::RadioButton(Generator::GetTypeString(static_cast<Generator::GENERATOR_TYPE>(i)).c_str(),
+					static_cast<int>(generatorType) == i))
+					generatorType = static_cast<Generator::GENERATOR_TYPE>(i);
+			}
+
+			// 生成ボタン
+			if (ImGui::Button("Create")) {
+
+				Generator* generator = nullptr;
+
+				switch (generatorType)
+				{
+				case Generator::GENERATOR_TYPE::ENEMY: generator = new EnemyGenerator({ 0,0,0 }); break;
+
+				default:break;
+				}
+
+				if (generator != nullptr) {
+					isShowGeneratorWindow_ = false;
+
+					generator->SetName(nameBuffer);
+					Generator::Generators.push_back(generator);
+				}
+			}
+		}
+		ImGui::End();
+	}
 }
 

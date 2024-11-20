@@ -30,9 +30,11 @@ public:
 	static void Remove(Generator* ptr);
 
 	void SetPosition(XMFLOAT3 position_);
-	XMFLOAT3 GetPosition();
+	void SetName(const string& name);
 
+	XMFLOAT3 GetPosition();
 	XMFLOAT3* GetPositionAddress();
+	const string& GetName()const;
 
 	enum class RANGE_TYPE
 	{
@@ -48,7 +50,7 @@ public:
 
 		AMOUNT
 	};
-
+	static string GetTypeString(GENERATOR_TYPE type);
 	string informationDir_;
 
 	GENERATOR_TYPE GetGeneratorType();
@@ -56,12 +58,12 @@ public:
 protected:
 
 	XMFLOAT3 pos_;
+	string name_;
+
 	GENERATOR_TYPE generatorType_;
 
 	virtual void BoxGenerate() = 0;
 	virtual void SphereGenerate() = 0;
-	
-
 };
 
 struct Information

@@ -82,6 +82,7 @@ private:
 	void DrawStageOutLiner();
 	void DrawUIPanelOutLiner();
 	void DrawPlantOutLiner();
+	void DrawGeneratorOutLiner();
 
 	void DrawDatails();
 	void DrawStageObjectDatails();
@@ -93,14 +94,13 @@ private:
 
 	void UIObjectCreateWindow();
 	void CreatePlantWindow();
+	void CreateGeneratorWindow();
 
 	void AddPlant();
-
 	void SavePlant();
 	void LoadPlant();
 
 	void ShowGenerator();
-
 	void SaveGenerator();
 	void LoadGenerator();
 };
