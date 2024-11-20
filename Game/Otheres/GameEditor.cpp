@@ -10,6 +10,9 @@
 #include "../../Engine/GameObject/Camera.h"
 #include "../Objects/Camera/TPSCamera.h"
 #include "../Otheres/PlantCollection.h"
+#include "../../Engine/SceneManager.h"
+#include "../../Engine/magic_enum/magic_enum.hpp"
+
 
 using namespace FileManager;
 
@@ -67,6 +70,25 @@ void GameEditor::DrawWorldOutLiner()
 		ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse| ImGuiWindowFlags_AlwaysHorizontalScrollbar);
 	{
 		ImGui::BeginTabBar("tab Ber");{
+
+
+			// sceneのタブを表示
+			if (ImGui::BeginTabItem("Scene")) {
+
+				SceneManager* sceneManager = (SceneManager*)FindObject("SceneManager");
+
+				for (int i = SCENE_ID_TEST; i < SCENE_ID_MAX; ++i) {
+					const char* sceneName = magic_enum::enum_name(static_cast<SCENE_ID>(i)).data();
+					if (ImGui::Button(sceneName)) {
+						sceneManager->ChangeScene(static_cast<SCENE_ID>(i), TID_BLACKOUT);
+					}
+				}
+
+				ImGui::Separator();
+				ImGui::Text("NowScene : %s", magic_enum::enum_name(sceneManager->GetCurrentSceneID()).data());
+
+				ImGui::EndTabItem();
+			}
 
 			// ステージオブジェクトのタブを表示
 			if(editStage_ != nullptr)
