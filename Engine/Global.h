@@ -54,6 +54,7 @@ namespace FileManager {
 
 /// 臨時のグローバル変数 fix: 本来はここに置くべきではない 
 extern string g_selectedStage;	// 選択されたステージ
+extern int g_selectedGameMode;	// 選択されたゲームモード
 
 // エフェクトデータ
 // fix: 本来はここに置くべきではない

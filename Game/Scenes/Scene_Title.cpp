@@ -23,8 +23,8 @@ void Scene_Title::Initialize()
 	if (JsonReader::Load(TITLE_SCENE_UI_LAYOUT_JSON, loadData)) UIPanel::GetInstance()->Load(loadData);
 
 	// ユーザー名の初期化
-	UIInputString* input = (UIInputString*)UIPanel::GetInstance()->GetUIObject(TITLE_SCENE_USER_NAME_INPUT_NAME);
-	input->SetInputString(ScoreManager::userName);
+	/*UIInputString* input = (UIInputString*)UIPanel::GetInstance()->GetUIObject(TITLE_SCENE_USER_NAME_INPUT_NAME);
+	input->SetInputString(ScoreManager::userName);*/
 }
 
 void Scene_Title::Update()
@@ -39,16 +39,32 @@ void Scene_Title::Update()
 			sceneManager->ChangeScene(SCENE_ID_RANKING, TID_BLACKOUT);
 		}
 
-		// プレイシーンへの遷移
-		UIButton* startButton = (UIButton*)UIPanel::GetInstance()->GetUIObject(TITLE_SCENE_START_BUTTON_NAME);
-		if (startButton->OnClick() == true || Input::IsPadButtonDown(XINPUT_GAMEPAD_A)) {
+		// アドベンチャーへシーン遷移
+		UIButton* adventureStartButton = (UIButton*)UIPanel::GetInstance()->GetUIObject("ADV_StartButton");
+		if (adventureStartButton->OnClick() == true || Input::IsPadButtonDown(XINPUT_GAMEPAD_A)) {
 
 			// ここでユーザー名を取得する
 			UIInputString* input = (UIInputString*)UIPanel::GetInstance()->GetUIObject(TITLE_SCENE_USER_NAME_INPUT_NAME);
 			ScoreManager::userName = input->GetInputString();
 
+			g_selectedGameMode = 1;
+
 			SceneManager* sceneManager = (SceneManager*)FindObject("SceneManager");
-			sceneManager->ChangeScene(SCENE_ID_DIFFICULTYSELECT, TID_BLACKOUT);
+			sceneManager->ChangeScene(SCENE_ID_PLAY, TID_BLACKOUT);
+		}
+
+		// スコアアタックへシーン遷移
+		UIButton* scoreAttackStartButton = (UIButton*)UIPanel::GetInstance()->GetUIObject("SCA_StartButton");
+		if (scoreAttackStartButton->OnClick() == true || Input::IsPadButtonDown(XINPUT_GAMEPAD_A)) {
+
+			// ここでユーザー名を取得する
+			UIInputString* input = (UIInputString*)UIPanel::GetInstance()->GetUIObject(TITLE_SCENE_USER_NAME_INPUT_NAME);
+			ScoreManager::userName = input->GetInputString();
+
+			g_selectedGameMode = 2;
+
+			SceneManager* sceneManager = (SceneManager*)FindObject("SceneManager");
+			sceneManager->ChangeScene(SCENE_ID_PLAY, TID_BLACKOUT);
 		}
 	}
 }

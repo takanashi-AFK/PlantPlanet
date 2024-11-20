@@ -78,7 +78,7 @@ void GameEditor::DrawWorldOutLiner()
 					editType_ = STAGE;
 					ImGui::EndTabItem();
 				}
-
+			
 			// UIオブジェクトのタブを表示
 			if(editUIPanel_ != nullptr)
 				if (ImGui::BeginTabItem("UIPanel")) {
