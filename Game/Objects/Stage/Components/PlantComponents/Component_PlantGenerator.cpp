@@ -5,6 +5,7 @@
 #include "../../StageObject.h"
 #include <numbers>
 #include "../../../../../Engine/ImGui/imgui.h"
+#include <random>
 
 namespace {
 	const int MAX_RARITY = 3;
@@ -56,7 +57,6 @@ void Component_PlantGenerator::Update()
 		// プラントを重み付けで選択
 		randomPlants.push_back(WeightedPickPlants(PlantCollection::GetPlants()));
 
-		
 	}
 
 	//// Collection内の植物を上から抽出
@@ -163,23 +163,40 @@ XMFLOAT3 Component_PlantGenerator::GenerateRandomPosition()
 
 Plant Component_PlantGenerator::WeightedPickPlants(unordered_map<int,Plant> _plants)
 {
-	// 重みの合計を計算
-	int totalWeight = 0;
-	for (const auto& plant : _plants) totalWeight += plant.second.rarity_;
+	// 希望する確率分布をレアリティごとに設定
+	std::vector<double> rarityWeights = { 0.7, 0.25, 0.05 }; // レアリティ1, 2, 3の確率
 
-	// 重みに応じたランダム選択
-	if (totalWeight > 0) {
-		int random = rand() % totalWeight;
-		for (const auto& plant : _plants) {
-			random -= plant.second.rarity_;
-			if (random <= 0) return plant.second;
+	// 確率に基づいてランダムにレアリティを選ぶ
+	std::random_device rd;
+	std::mt19937 gen(rd());
+	int selectedRarity;
+	do {
+
+	std::discrete_distribution<> dist(rarityWeights.begin() , rarityWeights.end());
+
+	selectedRarity = dist(gen) + 1; // レアリティは1~3なので+1
+	} while (selectedRarity < minRarity_ && selectedRarity > maxRarity_);
+
+	// 選ばれたレアリティの中からランダムに1つ選ぶ
+	std::vector<Plant> candidates;
+	for (const auto& plant : _plants) {
+		if (plant.second.rarity_ == selectedRarity) {
+			candidates.push_back(plant.second);
 		}
 	}
 
-	// 万が一、重みがすべて0ならランダムに選択
-	auto it = _plants.begin();
-	std::advance(it, rand() % _plants.size());
-	return it->second;
+	if (!candidates.empty()) {
+		// 候補があればその中からランダムに1つ返す
+		std::uniform_int_distribution<> randomIndex(0, candidates.size() - 1);
+		return candidates[randomIndex(gen)];
+	}
+	else {
+		// 万が一候補がなければランダムに選択
+		auto it = _plants.begin();
+		std::advance(it, rand() % _plants.size());
+		return it->second;
+	}
+
 }
 
 int Component_PlantGenerator::CalculateTotalResearchPoint(vector<Plant>& randomPlants)
