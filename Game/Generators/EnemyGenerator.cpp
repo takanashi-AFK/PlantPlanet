@@ -110,7 +110,7 @@ void EnemyGenerator::Draw()
 		if (ImGui::SmallButton("Model Path"))	SerchInDirectory(information_.modelPath,"fbx"); ImGui::SameLine();
 		ImGui::Text((": "+ information_.modelPath).c_str()); 
 		
-		if (ImGui::SmallButton("File Name"))	SerchInDirectory(informationDir_,"json"); ImGui::SameLine();
+		ImGui::Text("File Name");	ImGui::SameLine();
 		ImGui::Text((": " + informationDir_).c_str());
 		
 		ImGui::TreePop();
@@ -121,7 +121,7 @@ void EnemyGenerator::Draw()
 	if (ImGui::TreeNode("Information for Generator"))
 	{
 		if (ImGui::Button("Save")) information_.Save(); ImGui::SameLine();
-		if (ImGui::Button("Load")) information_.Load(); ImGui::SameLine();
+		if (ImGui::Button("Load")) information_.Load(informationDir_); ImGui::SameLine();
 		if (ImGui::Button("Delete")) KillMe();
 		
 		if (ImGui::RadioButton("Sphere", reinterpret_cast<int*>(&information_.RangeType), static_cast<int>(RANGE_TYPE::SPHERE))); ImGui::SameLine();
@@ -162,11 +162,10 @@ void EnemyGenerator::Save(json& saveObj, int index)
 
 void EnemyGenerator::Load(json& loadObj, int index)
 {
+	auto&& jsonName = loadObj[index]["InformationFilePath"].get<string>();
+	if (jsonName.empty()) return;
 
-	auto str = loadObj[index]["InformationFilePath"].get<string>();
-
-	if (loadObj[index]["InformationFilePath"].get<string>().empty()) return;
-	information_.Load();
+	information_.Load(jsonName);
 }
 
 void EnemyGenerator::BoxGenerate()
@@ -275,11 +274,10 @@ void EnemyGenerator::Information::Save()
 	JsonReader::Save(holder_->informationDir_, saveObj);
 }
 
-void EnemyGenerator::Information::Load()
+void EnemyGenerator::Information::Load(string jsonName)
 {
 	json file;
-	json fileDir;
-	if (!JsonReader::Load(fileDir, file)) return;
+	if (!JsonReader::Load(jsonName, file)) return;
 
 	RangeType = file.contains("RANGE_TYPE")
 		? static_cast<Generator::RANGE_TYPE>(file["RANGE_TYPE"].get<int>()) : Generator::RANGE_TYPE::SPHERE;

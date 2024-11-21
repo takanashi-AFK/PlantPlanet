@@ -36,7 +36,7 @@ public:
 		string modelPath;
 
 		void Save();
-		void Load();
+		void Load(string jsonName);
 
 		Information(Generator* holder);
 		Generator* holder_;
