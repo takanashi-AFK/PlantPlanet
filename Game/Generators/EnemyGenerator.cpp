@@ -16,9 +16,11 @@ EnemyGenerator::~EnemyGenerator()
 
 void* EnemyGenerator::Pop()
 {
-	return enemies_.size() <= 0 ?
-		nullptr:&enemies_[enemies_.size() -1];
-	
+	auto enemy = enemies_.size() <= 0 ?
+		nullptr:enemies_[enemies_.size() -1];
+	enemies_.pop_back();
+
+	return enemy;
 }
 
 bool EnemyGenerator::isEmpty()
@@ -28,11 +30,19 @@ bool EnemyGenerator::isEmpty()
 
 void EnemyGenerator::Draw()
 {
-	auto SerchInDirectory = [](string& fileName ,std::string filter)
+	auto SerchInDirectory = [](string& fileName,string append)
 		{
 			char defaultCurrentDir[MAX_PATH];
 			GetCurrentDirectory(MAX_PATH, defaultCurrentDir);
-			std::string dirWithFilter = TEXT("FBXファイル(*.") + filter + TEXT(")\0 * ." )+ filter + TEXT("\0すべてのファイル(*.*)\0 * .*\0");
+
+			string filter;
+			filter.append(append);
+			filter.push_back('\0');
+			filter.append("*.");
+			filter.append(append);
+			filter.push_back('\0');
+
+
 			// 追加するオブジェクトのモデルファイルパスを設定
 			{
 				// 「ファイルを開く」ダイアログの設定用構造体を設定
@@ -43,7 +53,7 @@ void EnemyGenerator::Draw()
 					ofn.lpstrFile = szFile; // ファイル名を格納するバッファ
 					ofn.lpstrFile[0] = '\0'; // 初期化
 					ofn.nMaxFile = sizeof(szFile); // ファイル名バッファのサイズ
-					ofn.lpstrFilter = TEXT(dirWithFilter.c_str()); // フィルター（FBXファイルのみ表示）
+					ofn.lpstrFilter =filter.c_str(); // フィルター
 					ofn.nFilterIndex = 1; // 初期選択するフィルター
 					ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST; // フラグ（ファイルが存在すること、パスが存在することを確認）
 					ofn.lpstrInitialDir = TEXT("."); // カレントディレクトリを初期選択位置として設定
@@ -89,11 +99,11 @@ void EnemyGenerator::Draw()
 		ImGui::InputTextWithHint(": Enemy Name", information_.enemyName.c_str(), nameBuffer, IM_ARRAYSIZE(nameBuffer));
 		information_.enemyName = nameBuffer;
 
-		if (ImGui::SmallButton("..."))	SerchInDirectory(information_.modelPath,"fbx"); ImGui::SameLine();
-		ImGui::Text("Model Path : ", information_.modelPath.c_str()); 
+		if (ImGui::SmallButton("Model Path"))	SerchInDirectory(information_.modelPath,"fbx"); ImGui::SameLine();
+		ImGui::Text((": "+ information_.modelPath).c_str()); 
 		
-		if (ImGui::SmallButton("..."))	SerchInDirectory(informationDir_,"json"); ImGui::SameLine();
-		ImGui::Text("File Name : ", informationDir_.c_str());
+		if (ImGui::SmallButton("File Name"))	SerchInDirectory(informationDir_,"json"); ImGui::SameLine();
+		ImGui::Text((": " + informationDir_).c_str());
 		
 		ImGui::TreePop();
 	}
@@ -187,7 +197,7 @@ void EnemyGenerator::Generate(void* parent)
 	srand(time(NULL));
 	parent_ = reinterpret_cast<Stage*>(parent);
 
-	information_.enemyNum = information_.enemyNum > 0
+	information_.enemyNum = information_.enemyNum >= 0
 		? information_.enemyNum: 1u;
 
 	switch (information_.RangeType)
