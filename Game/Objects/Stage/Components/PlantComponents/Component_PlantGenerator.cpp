@@ -175,7 +175,7 @@ Plant Component_PlantGenerator::WeightedPickPlants(unordered_map<int,Plant> _pla
 	std::discrete_distribution<> dist(rarityWeights.begin() , rarityWeights.end());
 
 	selectedRarity = dist(gen) + 1; // レアリティは1~3なので+1
-	} while (selectedRarity < minRarity_ && selectedRarity > maxRarity_);
+	} while (selectedRarity < minRarity_ || selectedRarity > maxRarity_);
 
 	// 選ばれたレアリティの中からランダムに1つ選ぶ
 	std::vector<Plant> candidates;
