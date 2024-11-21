@@ -19,7 +19,7 @@ enum PlayerState {
 	PLAYER_STATE_DODGE,		/* 回避 */
 	PLAYER_STATE_DEAD,		/* 死亡 */
 	PLAYER_STATE_MAX
-	};
+};
 
 class Component_PlayerBehavior : public Component
 {
@@ -36,6 +36,9 @@ private:
 
 	bool isShootStart_;					// 射撃開始フラグ
 	bool isDodgeStart_;					// 回避開始フラグ
+
+	float stamina_;						// スタミナ
+	bool isUseStamina_;					// スタミナを使用したか
 public:
 	/// <summary> コンストラクタ </summary>
 	Component_PlayerBehavior(string _name,StageObject* _holder,Component* _parent);

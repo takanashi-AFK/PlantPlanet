@@ -41,6 +41,11 @@ namespace {
 	const int EFFECT_FRAME = 60;
 	const int EFFECT_SPEED = 1;
 	const float BOSS_TACKLE_DISTANCE = 2.0f;
+	const int STAMINA_DECREASE_SHOOT = 10;
+	const int STAMINA_DECREASE_MELEE = 20;
+	const int STAMINA_DECREASE_DODGE = 30;
+	const float STAMINA_RECOVERY = 0.17f;
+	const float STAMINA_MAX = 100.f;
 
 	bool IsXMVectorZero(XMVECTOR _vec) {
 		return XMVector3Equal(_vec, XMVectorZero());
@@ -69,7 +74,9 @@ Component_PlayerBehavior::Component_PlayerBehavior(string _name, StageObject* _h
 	isDodgeStart_(false),
 	bossBehavior(nullptr),
 	effectModelTransform(nullptr),
-	effectData_()
+	effectData_(),
+	stamina_(STAMINA_MAX),
+	isUseStamina_(true)
 {
 }
 
@@ -88,6 +95,7 @@ void Component_PlayerBehavior::Initialize()
 	if (FindChildComponent("PlayerHealthGauge") == false)AddChildComponent(CreateComponent("PlayerHealthGauge", HealthGauge, holder_, this));
 	if (FindChildComponent("PlayerMotion") == false)AddChildComponent(CreateComponent("PlayerMotion", PlayerMotion, holder_, this));
 	if (FindChildComponent("TackleMove") == false)AddChildComponent(CreateComponent("TackleMove", TackleMove, holder_, this));
+	if (FindChildComponent("Timer") == false)AddChildComponent(CreateComponent("Timer", Timer, holder_, this));
 }
 
 void Component_PlayerBehavior::Update()
@@ -136,6 +144,24 @@ void Component_PlayerBehavior::Update()
 		if (hg != nullptr)if (hg->IsDead() == true)SetState(PLAYER_STATE_DEAD);
 	}
 
+	Component_Timer* timer = (Component_Timer*)GetChildComponent("Timer");
+	if (isUseStamina_ == true) {
+		// カウントダウンして3秒後にfalseにする
+		if (timer == nullptr) 
+			return;
+		timer->SetTime(3);
+		timer->Start();
+		if (timer->GetIsEnd()) {
+			isUseStamina_ = false;
+		}
+	}
+	else {
+		if(stamina_ < STAMINA_MAX)
+		//スタミナを回復させる
+		stamina_ += STAMINA_RECOVERY;
+	}
+	ImGui::Text("Stamina:%f", stamina_);
+	ImGui::Text("timer:%\d", timer->GetNowTime());
 	// ＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝
 	// 状態ごとの処理
 	// ＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝
@@ -144,8 +170,8 @@ void Component_PlayerBehavior::Update()
 	case PLAYER_STATE_IDLE:           Idle();         break;  // 現在の状態がIDLEの場合
 	case PLAYER_STATE_WALK:           Walk();         break;  // 現在の状態がWALKの場合
 	case PLAYER_STATE_SHOOT:          Shoot();        break;  // 現在の状態がSHOOTの場合
-	case PLAYER_STATE_DODGE:          Dodge();         break;  // 現在の状態がDASHの場合
-	case PLAYER_STATE_DEAD:            Dead();         break;  // 現在の状態がDEADの場合
+	case PLAYER_STATE_DODGE:          Dodge();        break;  // 現在の状態がDASHの場合
+	case PLAYER_STATE_DEAD:           Dead();         break;  // 現在の状態がDEADの場合
 	}
 }
 
@@ -263,7 +289,11 @@ void Component_PlayerBehavior::Shoot()
 	if (Input::IsKeyDown(DIK_SPACE) || Input::IsPadButtonDown(XINPUT_GAMEPAD_A)) { isEnd = true; SetState(PLAYER_STATE_DODGE); }
 
 	// アニメーションが終わったら...
-	if (motion->IsEnd()) { isEnd = true; SetState(PLAYER_STATE_IDLE); }
+	if (motion->IsEnd()) {
+		stamina_ -= STAMINA_DECREASE_SHOOT;
+		isUseStamina_ = true;
+		isEnd = true; SetState(PLAYER_STATE_IDLE); 
+	}
 
 	if (isEnd == true) {
 		// 射撃フラグをリセット
@@ -421,6 +451,9 @@ void Component_PlayerBehavior::Dodge()
 		//移動を可能にする
 		move->Execute();
 
+		// スタミナをへらす
+		stamina_ -= STAMINA_DECREASE_DODGE;
+		isUseStamina_ = true;
 
 		dodgeDistance = DODGE_DISTANCE;
 
