@@ -2,6 +2,7 @@
 #include"Generator.h"
 
 class Plant;
+class Collider;
 
 class EnemyGenerator:public Generator
 {
@@ -48,6 +49,8 @@ protected:
 
 	std::vector<StageObject*> enemies_;
 	Stage* parent_;
-
+	Collider* collider_;
+	
+	Generator::RANGE_TYPE prevRangeType_;
 };
 

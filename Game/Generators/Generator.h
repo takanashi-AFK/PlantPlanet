@@ -24,10 +24,11 @@ public:
 
 	virtual void Save(json& saveObj,int index) = 0;
 	virtual void Load(json& loadObj,int index) = 0;
+	virtual void KillMe();
 
 	static void Clear();
 	static void Add(Generator* ptr);
-	static void Remove(Generator* ptr);
+	static void Remove();
 
 	void SetPosition(XMFLOAT3 position_);
 	void SetName(const string& name);
@@ -61,9 +62,11 @@ protected:
 	string name_;
 
 	GENERATOR_TYPE generatorType_;
-
+	bool killMe_;
+	inline static bool isNecessaryCheckForRemove_ = false;
 	virtual void BoxGenerate() = 0;
 	virtual void SphereGenerate() = 0;
+
 };
 
 struct Information

@@ -1,7 +1,7 @@
 #include "Generator.h"
 #include "EnemyGenerator.h"
 
-Generator::Generator(XMFLOAT3 pos):pos_(pos),generatorType_(GENERATOR_TYPE::ENEMY)
+Generator::Generator(XMFLOAT3 pos):pos_(pos),generatorType_(GENERATOR_TYPE::ENEMY),killMe_(false)
 {
 }
 
@@ -57,6 +57,12 @@ void Generator::RootLoad(json& loadObj)
 	}
 }
 
+void Generator::KillMe()
+{
+	killMe_ = true;
+	isNecessaryCheckForRemove_ = true;
+}
+
 void Generator::Clear()
 {
 	for (auto pointer : Generators) {
@@ -71,11 +77,13 @@ void Generator::Add(Generator* ptr)
 	Generators.push_back(ptr);
 }
 
-void Generator::Remove(Generator* ptr)
+void Generator::Remove()
 {
+	if (!isNecessaryCheckForRemove_)	return;
+
 	for (auto itr = Generators.begin(); itr != Generators.end();) {
 
-		if (*itr == ptr)
+		if ((*itr)->killMe_)
 		{
 			Generators.erase(itr);
 		}
@@ -84,10 +92,13 @@ void Generator::Remove(Generator* ptr)
 			++itr;
 		}
 	}
+
+	isNecessaryCheckForRemove_ = false;
 }
 
 void Generator::SetPosition(XMFLOAT3 position_)
 {
+	pos_ = position_;
 }
 
 void Generator::SetName(const string& name)
@@ -97,7 +108,7 @@ void Generator::SetName(const string& name)
 
 XMFLOAT3 Generator::GetPosition()
 {
-	return XMFLOAT3();
+	return this->pos_;
 }
 
 XMFLOAT3* Generator::GetPositionAddress()

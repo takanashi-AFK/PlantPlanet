@@ -275,6 +275,7 @@ void GameEditor::DrawGeneratorDetails()
 	}
 	ImGui::EndChild();
 
+	Generator::Remove();
 }
 
 void GameEditor::DrawDatalsCamera()
@@ -665,9 +666,11 @@ void GameEditor::DrawPlantOutLiner()
 
 void GameEditor::DrawGeneratorOutLiner()
 {
-	if (ImGui::Button("Add")) ShowGenerator();	ImGui::SameLine();
-	if (ImGui::Button("Save")) SaveGenerator();	ImGui::SameLine();
-	if (ImGui::Button("Load")) LoadGenerator();
+	if (ImGui::Button("Add")) ShowGenerators();	ImGui::SameLine();
+	if (ImGui::Button("Save")) SaveGenerators();	ImGui::SameLine();
+	if (ImGui::Button("Load")) LoadGenerators();	ImGui::SameLine();
+	if (ImGui::Button("Delete")) DeleteGenerators();
+
 
 	ImGui::Separator();
 
@@ -675,7 +678,7 @@ void GameEditor::DrawGeneratorOutLiner()
 		// リストを表示
 		for (int i = 0; i < Generator::Generators.size(); ++i)
 			if (ImGui::Selectable(Generator::Generators[i]->GetName().c_str(), selectEditGeneratorIndex_ == i)) {
-				selectEditUIObjectIndex_ = i;
+				selectEditGeneratorIndex_ = i;
 			}
 	}
 	ImGui::EndChild();
@@ -780,12 +783,12 @@ void GameEditor::LoadPlant()
 	PlantCollection::Load(loadObj);
 }
 
-void GameEditor::ShowGenerator()
+void GameEditor::ShowGenerators()
 {
 	isShowGeneratorWindow_ = true;
 }
 
-void GameEditor::SaveGenerator()
+void GameEditor::SaveGenerators()
 {
 	char defaultCurrentDir[MAX_PATH];
 	GetCurrentDirectory(MAX_PATH, defaultCurrentDir);
@@ -832,7 +835,7 @@ void GameEditor::SaveGenerator()
 
 }
 
-void GameEditor::LoadGenerator()
+void GameEditor::LoadGenerators()
 {
 	char defaultCurrentDir[MAX_PATH];
 	GetCurrentDirectory(MAX_PATH, defaultCurrentDir);
@@ -876,11 +879,18 @@ void GameEditor::LoadGenerator()
 	json loadObj;
 	if (JsonReader::Load(filePath, loadObj) == false) MessageBox(NULL, "読込に失敗しました。", 0, 0);
 	
-	if (!loadObj.contains("GeneratorType"))MessageBox(NULL,
+	if (!loadObj[0].contains("GeneratorType"))MessageBox(NULL,
 		"正しくないファイルが選択されました。\nジェネレータ用のファイルを選択してください",
 		0, 0);
 
 	Generator::RootLoad(loadObj);
+
+	selectEditGeneratorIndex_ = 0;
+}
+
+void GameEditor::DeleteGenerators()
+{
+	Generator::Clear();
 }
 
 void GameEditor::CreatePlantWindow()
@@ -989,7 +999,7 @@ void GameEditor::CreateGeneratorWindow()
 			ImGui::Separator();
 
 			// 名前を入力
-			ImGui::InputTextWithHint(":seting name", "Input object name...", nameBuffer, IM_ARRAYSIZE(nameBuffer));
+			ImGui::InputTextWithHint(":setting name", "Input object name...", nameBuffer, IM_ARRAYSIZE(nameBuffer));
 
 			// タイプを選択
 			static Generator::GENERATOR_TYPE generatorType = Generator::GENERATOR_TYPE::ENEMY;// 初期選択項目

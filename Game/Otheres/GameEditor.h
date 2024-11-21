@@ -100,8 +100,9 @@ private:
 	void SavePlant();
 	void LoadPlant();
 
-	void ShowGenerator();
-	void SaveGenerator();
-	void LoadGenerator();
+	void ShowGenerators();
+	void SaveGenerators();
+	void LoadGenerators();
+	void DeleteGenerators();
 };
 

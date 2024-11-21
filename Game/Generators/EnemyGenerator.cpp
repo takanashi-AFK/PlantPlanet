@@ -5,13 +5,21 @@
 #include<format>
 #include"../../Engine/ImGui/imgui.h"
 #include"../../Engine/Global.h"
+#include"../../Engine/Collider/SphereCollider.h"
+#include"../../Engine/Collider/BoxCollider.h"
 
 EnemyGenerator::EnemyGenerator(XMFLOAT3 pos):Generator(pos),parent_(nullptr),information_(this)
 {
+	switch (information_.RangeType)
+	{
+	case RANGE_TYPE::BOX: collider_ = new BoxCollider({ 0,0,0 }, { information_.radiusX*2,information_.radiusY*2 ,information_.radiusZ*2 }); break;
+	case RANGE_TYPE::SPHERE: collider_ = new SphereCollider({ 0,0,0 }, 1.0f); break;
+	}
 }
 
 EnemyGenerator::~EnemyGenerator()
 {
+	delete collider_;
 }
 
 void* EnemyGenerator::Pop()
@@ -108,13 +116,43 @@ void EnemyGenerator::Draw()
 		ImGui::TreePop();
 	}
 
-	if (ImGui::TreeNode("Information Settings"))
+	prevRangeType_ = information_.RangeType;
+
+	if (ImGui::TreeNode("Information for Generator"))
 	{
-		if (ImGui::Button("Save")) information_.Save();
-		if (ImGui::Button("Load")) information_.Load();
+		if (ImGui::Button("Save")) information_.Save(); ImGui::SameLine();
+		if (ImGui::Button("Load")) information_.Load(); ImGui::SameLine();
+		if (ImGui::Button("Delete")) KillMe();
+		
+		if (ImGui::RadioButton("Sphere", reinterpret_cast<int*>(&information_.RangeType), static_cast<int>(RANGE_TYPE::SPHERE))); ImGui::SameLine();
+		if (ImGui::RadioButton("Box", reinterpret_cast<int*>(&information_.RangeType), static_cast<int>(RANGE_TYPE::BOX)));
 
 		ImGui::TreePop();
 	}
+	//判定の形チェック
+	float coefficient = 1;
+
+	if (prevRangeType_ != information_.RangeType)
+	{
+		delete collider_;
+
+		switch (information_.RangeType)
+		{
+		case RANGE_TYPE::BOX: collider_ = new BoxCollider({ 0,0,0 }, { information_.radiusX,information_.radiusY ,information_.radiusZ }); break;
+		case RANGE_TYPE::SPHERE: collider_ = new SphereCollider({ 0,0,0 }, 1.0f); break;
+		}
+	}
+
+	//判定の描画
+
+	switch (information_.RangeType)
+	{
+	case RANGE_TYPE::BOX: coefficient = 2; break;
+	case RANGE_TYPE::SPHERE: coefficient = 1; break;
+	}
+
+	collider_->SetSize({ information_.radiusX*coefficient ,information_.radiusY*coefficient ,information_.radiusZ*coefficient });
+	collider_->Draw(GetPosition());
 }
 
 void EnemyGenerator::Save(json& saveObj, int index)
@@ -124,6 +162,10 @@ void EnemyGenerator::Save(json& saveObj, int index)
 
 void EnemyGenerator::Load(json& loadObj, int index)
 {
+
+	auto str = loadObj[index]["InformationFilePath"].get<string>();
+
+	if (loadObj[index]["InformationFilePath"].get<string>().empty()) return;
 	information_.Load();
 }
 
@@ -131,6 +173,8 @@ void EnemyGenerator::BoxGenerate()
 {
 	std::random_device random_device{};
 	std::mt19937 engine(random_device());
+
+	auto&& position = GetPosition();
 
 	auto frand = [&](float min, float max)->float
 		{
@@ -140,9 +184,9 @@ void EnemyGenerator::BoxGenerate()
 
 	for (auto i = 0u; i < information_.enemyNum; ++i) {
 		XMFLOAT3 plantPos = {};
-		plantPos.x = frand(-information_.radiusX, information_.radiusX);
-		plantPos.y = frand(-information_.radiusY, information_.radiusY);
-		plantPos.z = frand(-information_.radiusZ, information_.radiusZ);
+		plantPos.x = frand(-information_.radiusX + position.x, information_.radiusX + position.x);
+		plantPos.y = frand(-information_.radiusY + position.y, information_.radiusY + position.y);
+		plantPos.z = frand(-information_.radiusZ + position.z, information_.radiusZ + position.z);
 
 		auto enemy = CreateStageObject(information_.enemyName + std::to_string(i), information_.modelPath, parent_);
 		
@@ -158,6 +202,8 @@ void EnemyGenerator::SphereGenerate()
 {
 	std::random_device random_device{};
 	std::mt19937 engine(random_device());
+
+	auto&& position = GetPosition();
 
 	auto frand = [&](float min , float max)->float 
 		{
@@ -181,6 +227,10 @@ void EnemyGenerator::SphereGenerate()
 		plantPos.x *= information_.radiusX;
 		plantPos.y *= information_.radiusY;
 		plantPos.z *= information_.radiusZ;
+
+		plantPos.x += position.x;
+		plantPos.y += position.y;
+		plantPos.z += position.z;
 
 		auto enemy = CreateStageObject(information_.enemyName + std::to_string(i), information_.modelPath, parent_);
 
