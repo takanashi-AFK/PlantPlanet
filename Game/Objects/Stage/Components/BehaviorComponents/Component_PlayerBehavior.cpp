@@ -27,6 +27,7 @@
 #include "../MoveComponents/Component_TackleMove.h"
 #include "../MoveComponents/Component_WASDInputMove.h"
 #include "../TimerComponent/Component_Timer.h"
+#include "../GaugeComponents/Component_StaminaGauge.h"
 
 using namespace Constants;
 
@@ -74,9 +75,7 @@ Component_PlayerBehavior::Component_PlayerBehavior(string _name, StageObject* _h
 	isDodgeStart_(false),
 	bossBehavior(nullptr),
 	effectModelTransform(nullptr),
-	effectData_(),
-	stamina_(STAMINA_MAX),
-	isUseStamina_(true)
+	effectData_()
 {
 }
 
@@ -95,7 +94,7 @@ void Component_PlayerBehavior::Initialize()
 	if (FindChildComponent("PlayerHealthGauge") == false)AddChildComponent(CreateComponent("PlayerHealthGauge", HealthGauge, holder_, this));
 	if (FindChildComponent("PlayerMotion") == false)AddChildComponent(CreateComponent("PlayerMotion", PlayerMotion, holder_, this));
 	if (FindChildComponent("TackleMove") == false)AddChildComponent(CreateComponent("TackleMove", TackleMove, holder_, this));
-	if (FindChildComponent("Timer") == false)AddChildComponent(CreateComponent("Timer", Timer, holder_, this));
+	if (FindChildComponent("StaminaGauge") == false)AddChildComponent(CreateComponent("StaminaGauge", StaminaGauge, holder_, this));
 }
 
 void Component_PlayerBehavior::Update()
@@ -144,24 +143,22 @@ void Component_PlayerBehavior::Update()
 		if (hg != nullptr)if (hg->IsDead() == true)SetState(PLAYER_STATE_DEAD);
 	}
 
-	Component_Timer* timer = (Component_Timer*)GetChildComponent("Timer");
-	if (isUseStamina_ == true) {
-		// カウントダウンして3秒後にfalseにする
-		if (timer == nullptr) 
-			return;
-		timer->SetTime(3);
-		timer->Start();
-		if (timer->GetIsEnd()) {
-			isUseStamina_ = false;
-		}
+	// スタミナ関連処理
+	{
+		// プレイヤーのスタミナゲージコンポーネントを取得
+		Component_StaminaGauge* sg = (Component_StaminaGauge*)(GetChildComponent("StaminaGauge"));
+
+		// UIProgressBarを取得
+		UIProgressBar* staminaBar = (UIProgressBar*)UIPanel::GetInstance()->FindObject("staminaGauge");
+
+		// スタミナバーの値を設定
+		if (staminaBar != nullptr && sg != nullptr)staminaBar->SetProgress(&sg->now_, &sg->max_);
+
+		ImGui::Text("Stamina : %f", sg->now_);
+
 	}
-	else {
-		if(stamina_ < STAMINA_MAX)
-		//スタミナを回復させる
-		stamina_ += STAMINA_RECOVERY;
-	}
-	ImGui::Text("Stamina:%f", stamina_);
-	ImGui::Text("timer:%\d", timer->GetNowTime());
+
+
 	// ＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝
 	// 状態ごとの処理
 	// ＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝
@@ -241,6 +238,17 @@ void Component_PlayerBehavior::Walk()
 
 void Component_PlayerBehavior::Shoot()
 {
+
+	Component_StaminaGauge* sg = (Component_StaminaGauge*)(GetChildComponent("StaminaGauge"));
+	if (sg == nullptr)return;
+
+	//// スタミナが足りなかったら演出して終わり
+	//if (!sg->CanUseStamina(STAMINA_DECREASE_SHOOT)) {
+	//	SetState(PLAYER_STATE_IDLE);
+	//	return;
+	//}
+
+
 	// モーションコンポーネントの取得 & 有無の確認
 	Component_PlayerMotion* motion = (Component_PlayerMotion*)(GetChildComponent("PlayerMotion"));
 	if (motion == nullptr)return;
@@ -290,14 +298,15 @@ void Component_PlayerBehavior::Shoot()
 
 	// アニメーションが終わったら...
 	if (motion->IsEnd()) {
-		stamina_ -= STAMINA_DECREASE_SHOOT;
-		isUseStamina_ = true;
 		isEnd = true; SetState(PLAYER_STATE_IDLE); 
 	}
 
 	if (isEnd == true) {
+
 		// 射撃フラグをリセット
 		isShootStart_ = false;
+
+		sg->UseStamina(STAMINA_DECREASE_SHOOT);
 
 		// 移動コンポーネントの再開
 		if (move != nullptr) move->Execute();
@@ -306,6 +315,19 @@ void Component_PlayerBehavior::Shoot()
 
 void Component_PlayerBehavior::Dodge()
 {
+
+	Component_StaminaGauge* sg = (Component_StaminaGauge*)(GetChildComponent("StaminaGauge"));
+	if (sg == nullptr)return;
+
+	//// スタミナが足りなかったら演出して終わり
+	//if (!sg->CanUseStamina(STAMINA_DECREASE_DODGE)) {
+
+	//	// スタミナ足りないよーみたいな演出
+	//	// 状態を遷移
+	//	IsWASDKey() ? SetState(PLAYER_STATE_WALK) : SetState(PLAYER_STATE_IDLE);
+	//	return;
+	//}
+
 	static float frameCount = 0;
 	static float dodgeDistance = DODGE_DISTANCE;
 
@@ -451,11 +473,9 @@ void Component_PlayerBehavior::Dodge()
 		//移動を可能にする
 		move->Execute();
 
-		// スタミナをへらす
-		stamina_ -= STAMINA_DECREASE_DODGE;
-		isUseStamina_ = true;
-
 		dodgeDistance = DODGE_DISTANCE;
+
+		sg->UseStamina(STAMINA_DECREASE_DODGE);
 
 		// 状態を遷移
 		IsWASDKey() ? SetState(PLAYER_STATE_WALK) : SetState(PLAYER_STATE_IDLE);

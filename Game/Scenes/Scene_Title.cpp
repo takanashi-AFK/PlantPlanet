@@ -44,8 +44,8 @@ void Scene_Title::Update()
 		if (adventureStartButton->OnClick() == true || Input::IsPadButtonDown(XINPUT_GAMEPAD_A)) {
 
 			// ここでユーザー名を取得する
-			UIInputString* input = (UIInputString*)UIPanel::GetInstance()->GetUIObject(TITLE_SCENE_USER_NAME_INPUT_NAME);
-			ScoreManager::userName = input->GetInputString();
+		//	UIInputString* input = (UIInputString*)UIPanel::GetInstance()->GetUIObject(TITLE_SCENE_USER_NAME_INPUT_NAME);
+		//	ScoreManager::userName = input->GetInputString();
 
 			g_selectedGameMode = 1;
 
@@ -58,8 +58,8 @@ void Scene_Title::Update()
 		if (scoreAttackStartButton->OnClick() == true || Input::IsPadButtonDown(XINPUT_GAMEPAD_A)) {
 
 			// ここでユーザー名を取得する
-			UIInputString* input = (UIInputString*)UIPanel::GetInstance()->GetUIObject(TITLE_SCENE_USER_NAME_INPUT_NAME);
-			ScoreManager::userName = input->GetInputString();
+		//	UIInputString* input = (UIInputString*)UIPanel::GetInstance()->GetUIObject(TITLE_SCENE_USER_NAME_INPUT_NAME);
+		//	ScoreManager::userName = input->GetInputString();
 
 			g_selectedGameMode = 2;
 
