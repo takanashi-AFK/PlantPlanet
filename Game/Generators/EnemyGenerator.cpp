@@ -372,6 +372,6 @@ void EnemyGenerator::Information::Load(string& jsonName ,bool isInit)
 		? file["ModelPath"].get<string>() : "";
 }
 
-EnemyGenerator::Information::Information(Generator* holder)
+EnemyGenerator::Information::Information()
 {
 }

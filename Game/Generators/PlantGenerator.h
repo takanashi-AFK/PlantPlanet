@@ -1,13 +1,14 @@
 #pragma once
-#include"Generator.h"
+#include"../../Game/Otheres/PlantCollection.h"
+#include "Generator.h"
 
 class Collider;
 
-class EnemyGenerator:public Generator
+class PlantGenerator : public Generator
 {
 public:
-	EnemyGenerator(XMFLOAT3 pos);
-	~EnemyGenerator();
+	PlantGenerator(XMFLOAT3 pos);
+	~PlantGenerator();
 
 	/// <summary>
 	/// void* Ç…ÇÕStage*Çì¸ÇÍÇƒÇÀÅB
@@ -30,12 +31,16 @@ public:
 		float radiusX;
 		float radiusY;
 		float radiusZ;
-		uint16_t enemyNum;
-		string enemyName;
-		string modelPath;
 
-		void Save(string& jsonName , bool isFinish);
-		void Load(string& jsonName , bool isInit);
+		float rare1probability;
+		float rare2probability;
+		float rare3probability;
+
+		uint16_t plantNum;
+		uint8_t areaID;
+
+		void Save(string& jsonName, bool isFinish);
+		void Load(string& jsonName, bool isInit);
 
 		Information();
 	}information_;
@@ -45,10 +50,10 @@ protected:
 	void BoxGenerate();
 	void SphereGenerate();
 
-	std::vector<StageObject*> enemies_;
+	std::vector<Plant> plants_ ;
 	Stage* parent_;
 	Collider* collider_;
-	
+
 	Generator::RANGE_TYPE prevRangeType_;
 };
 
