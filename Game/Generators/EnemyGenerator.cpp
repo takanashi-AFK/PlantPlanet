@@ -8,6 +8,108 @@
 #include"../../Engine/Collider/SphereCollider.h"
 #include"../../Engine/Collider/BoxCollider.h"
 
+auto SerchInDirectory = [](string& fileName, string append)
+	{
+		char defaultCurrentDir[MAX_PATH];
+		GetCurrentDirectory(MAX_PATH, defaultCurrentDir);
+
+		string filter;
+		filter.append(append);
+		filter.push_back('\0');
+		filter.append("*.");
+		filter.append(append);
+		filter.push_back('\0');
+
+
+		// 追加するオブジェクトのモデルファイルパスを設定
+		{
+			// 「ファイルを開く」ダイアログの設定用構造体を設定
+			OPENFILENAME ofn; {
+				TCHAR szFile[MAX_PATH] = {}; // ファイル名を格納するバッファ
+				ZeroMemory(&ofn, sizeof(ofn)); // 構造体の初期化
+				ofn.lStructSize = sizeof(ofn); // 構造体のサイズ
+				ofn.lpstrFile = szFile; // ファイル名を格納するバッファ
+				ofn.lpstrFile[0] = '\0'; // 初期化
+				ofn.nMaxFile = sizeof(szFile); // ファイル名バッファのサイズ
+				ofn.lpstrFilter = filter.c_str(); // フィルター
+				ofn.nFilterIndex = 1; // 初期選択するフィルター
+				ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST; // フラグ（ファイルが存在すること、パスが存在することを確認）
+				ofn.lpstrInitialDir = TEXT("."); // カレントディレクトリを初期選択位置として設定
+			}
+
+			// ファイルを選択するダイアログの表示
+			if (GetOpenFileName(&ofn) == TRUE) {
+				// ファイルパスを取得
+				fileName = ofn.lpstrFile;
+
+				// カレントディレクトリからの相対パスを取得
+				fileName = FileManager::GetAssetsRelativePath(fileName);
+
+				// 文字列内の"\\"を"/"に置換
+				FileManager::ReplaceBackslashes(fileName);
+
+				// ディレクトリを戻す
+				SetCurrentDirectory(defaultCurrentDir);
+
+				return;
+			}
+			else {
+				return;
+			}
+		};
+	};
+
+auto SaveInDirectory = [](string& fileName, string append)
+	{
+		char defaultCurrentDir[MAX_PATH];
+		GetCurrentDirectory(MAX_PATH, defaultCurrentDir);
+
+		string filter;
+		filter.append(append);
+		filter.push_back('\0');
+		filter.append("*.");
+		filter.append(append);
+		filter.push_back('\0');
+
+		// 追加するオブジェクトのモデルファイルパスを設定
+		{
+			// 「ファイルを開く」ダイアログの設定用構造体を設定
+			OPENFILENAME ofn; {
+				TCHAR szFile[MAX_PATH] = {}; // ファイル名を格納するバッファ
+				ZeroMemory(&ofn, sizeof(ofn));
+				ofn.lStructSize = sizeof(OPENFILENAME);
+				ofn.lpstrFilter = filter.c_str();
+				char fileName[MAX_PATH] = "";
+				ofn.lpstrFile = fileName;
+				ofn.nMaxFile = MAX_PATH;
+				ofn.Flags = OFN_OVERWRITEPROMPT;
+				ofn.lpstrDefExt = append.c_str();
+				ofn.nFilterIndex = 1; // 初期選択するフィルター
+				ofn.lpstrInitialDir = TEXT("."); // カレントディレクトリを初期選択位置として設定
+			}
+
+			// ファイルを選択するダイアログの表示
+			if (GetSaveFileName(&ofn) == TRUE) {
+				// ファイルパスを取得
+				fileName = ofn.lpstrFile;
+
+				// カレントディレクトリからの相対パスを取得
+				fileName = FileManager::GetAssetsRelativePath(fileName);
+
+				// 文字列内の"\\"を"/"に置換
+				FileManager::ReplaceBackslashes(fileName);
+
+				// ディレクトリを戻す
+				SetCurrentDirectory(defaultCurrentDir);
+
+				return;
+			}
+			else {
+				return;
+			}
+		};
+	};
+
 EnemyGenerator::EnemyGenerator(XMFLOAT3 pos):Generator(pos),parent_(nullptr),information_(this)
 {
 	switch (information_.RangeType)
@@ -38,57 +140,6 @@ bool EnemyGenerator::isEmpty()
 
 void EnemyGenerator::Draw()
 {
-	auto SerchInDirectory = [](string& fileName,string append)
-		{
-			char defaultCurrentDir[MAX_PATH];
-			GetCurrentDirectory(MAX_PATH, defaultCurrentDir);
-
-			string filter;
-			filter.append(append);
-			filter.push_back('\0');
-			filter.append("*.");
-			filter.append(append);
-			filter.push_back('\0');
-
-
-			// 追加するオブジェクトのモデルファイルパスを設定
-			{
-				// 「ファイルを開く」ダイアログの設定用構造体を設定
-				OPENFILENAME ofn; {
-					TCHAR szFile[MAX_PATH] = {}; // ファイル名を格納するバッファ
-					ZeroMemory(&ofn, sizeof(ofn)); // 構造体の初期化
-					ofn.lStructSize = sizeof(ofn); // 構造体のサイズ
-					ofn.lpstrFile = szFile; // ファイル名を格納するバッファ
-					ofn.lpstrFile[0] = '\0'; // 初期化
-					ofn.nMaxFile = sizeof(szFile); // ファイル名バッファのサイズ
-					ofn.lpstrFilter =filter.c_str(); // フィルター
-					ofn.nFilterIndex = 1; // 初期選択するフィルター
-					ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST; // フラグ（ファイルが存在すること、パスが存在することを確認）
-					ofn.lpstrInitialDir = TEXT("."); // カレントディレクトリを初期選択位置として設定
-				}
-
-				// ファイルを選択するダイアログの表示
-				if (GetOpenFileName(&ofn) == TRUE) {
-					// ファイルパスを取得
-					fileName = ofn.lpstrFile;
-
-					// カレントディレクトリからの相対パスを取得
-					fileName = FileManager::GetAssetsRelativePath(fileName);
-
-					// 文字列内の"\\"を"/"に置換
-					FileManager::ReplaceBackslashes(fileName);
-
-					// ディレクトリを戻す
-					SetCurrentDirectory(defaultCurrentDir);
-
-					return;
-				}
-				else {
-					return;
-				}
-			};
-		};
-
 	if (ImGui::TreeNode("Radius"))
 	{
 		ImGui::DragFloat("Radius X", &information_.radiusX, 0.01, 0, 1000.0f);
@@ -120,8 +171,8 @@ void EnemyGenerator::Draw()
 
 	if (ImGui::TreeNode("Information for Generator"))
 	{
-		if (ImGui::Button("Save")) information_.Save(); ImGui::SameLine();
-		if (ImGui::Button("Load")) information_.Load(informationDir_); ImGui::SameLine();
+		if (ImGui::Button("Save")) information_.Save(informationDir_, false); ImGui::SameLine();
+		if (ImGui::Button("Load")) information_.Load(informationDir_, false); ImGui::SameLine();
 		if (ImGui::Button("Delete")) KillMe();
 		
 		if (ImGui::RadioButton("Sphere", reinterpret_cast<int*>(&information_.RangeType), static_cast<int>(RANGE_TYPE::SPHERE))); ImGui::SameLine();
@@ -157,15 +208,12 @@ void EnemyGenerator::Draw()
 
 void EnemyGenerator::Save(json& saveObj, int index)
 {
-	information_.Save();
+	information_.Save(this->informationDir_ ,true);
 }
 
 void EnemyGenerator::Load(json& loadObj, int index)
 {
-	auto&& jsonName = loadObj[index]["InformationFilePath"].get<string>();
-	if (jsonName.empty()) return;
-
-	information_.Load(jsonName);
+	information_.Load(this->informationDir_ ,true);
 }
 
 void EnemyGenerator::BoxGenerate()
@@ -259,8 +307,10 @@ void EnemyGenerator::Generate(void* parent)
 	}
 }
 
-void EnemyGenerator::Information::Save()
+void EnemyGenerator::Information::Save(string& jsonName, bool isFinish)
 {
+	json file;
+
 	json saveObj = {};
 	saveObj["RANGE_TYPE"] = this->RangeType;
 	saveObj["RadiusX"] = this->radiusX;
@@ -271,13 +321,34 @@ void EnemyGenerator::Information::Save()
 	saveObj["EnemyName"] = this->enemyName;
 	saveObj["ModelPath"] = this->enemyName;
 
-	JsonReader::Save(holder_->informationDir_, saveObj);
+	if (isFinish)
+	{
+		if (JsonReader::Save(jsonName, saveObj)) return;
+		SaveInDirectory(jsonName, "json");
+		JsonReader::Save(jsonName, saveObj);
+	}
+
+	else
+	{
+		SaveInDirectory(jsonName, "json");
+		JsonReader::Save(jsonName, saveObj);
+	}
 }
 
-void EnemyGenerator::Information::Load(string jsonName)
+void EnemyGenerator::Information::Load(string& jsonName ,bool isInit)
 {
 	json file;
-	if (!JsonReader::Load(jsonName, file)) return;
+
+	if (isInit)
+	{
+		if (!JsonReader::Load(jsonName, file)) return;
+	}
+
+	else
+	{
+		SerchInDirectory(jsonName, "json");
+		if (!JsonReader::Load(jsonName, file)) return;
+	}
 
 	RangeType = file.contains("RANGE_TYPE")
 		? static_cast<Generator::RANGE_TYPE>(file["RANGE_TYPE"].get<int>()) : Generator::RANGE_TYPE::SPHERE;
@@ -301,6 +372,6 @@ void EnemyGenerator::Information::Load(string jsonName)
 		? file["ModelPath"].get<string>() : "";
 }
 
-EnemyGenerator::Information::Information(Generator* holder):holder_(holder)
+EnemyGenerator::Information::Information(Generator* holder)
 {
 }

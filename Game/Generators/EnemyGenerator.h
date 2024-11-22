@@ -35,11 +35,10 @@ public:
 		string enemyName;
 		string modelPath;
 
-		void Save();
-		void Load(string jsonName);
+		void Save(string& jsonName , bool isFinish);
+		void Load(string& jsonName , bool isInit);
 
 		Information(Generator* holder);
-		Generator* holder_;
 	}information_;
 
 protected:
