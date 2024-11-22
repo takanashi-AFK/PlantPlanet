@@ -306,6 +306,8 @@
     <ClCompile Include="Game\Objects\UI\Components\Component_UIEasing.cpp" />
     <ClCompile Include="Game\Generators\Generator.cpp" />
     <ClCompile Include="Game\Generators\EnemyGenerator.cpp" />
+    <ClCompile Include="Game\Generators\PlantGenerator.cpp" />
+    <ClCompile Include="Game\Otheres\PlantCollection.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Collider\BoxCollider.h">
@@ -538,6 +540,8 @@
     <ClInclude Include="Game\Objects\UI\Components\Component_UIEasing.h" />
     <ClInclude Include="Game\Generators\Generator.h" />
     <ClInclude Include="Game\Generators\EnemyGenerator.h" />
+    <ClInclude Include="Game\Generators\PlantGenerator.h" />
+    <ClInclude Include="Game\Otheres\PlantCollection.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Assets\Shader\Simple2D.hlsl">

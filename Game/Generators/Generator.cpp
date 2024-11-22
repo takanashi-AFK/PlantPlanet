@@ -127,9 +127,11 @@ string Generator::GetTypeString(GENERATOR_TYPE type)
 	{
 	case GENERATOR_TYPE::ENEMY: return "ENEMY";
 
+	case GENERATOR_TYPE::PLANT:return "PLANT";
+
 	case GENERATOR_TYPE::AMOUNT: return "AMOUNT";
 
-	default:return "ENEMY";
+	default:return "Ç±ÇÍÇ™å©ÇÍÇÈÇ¡ÇƒÇ±Ç∆ÇÕÅAÇ»ÇÒÇ©Ç®Ç©ÇµÇ¢ÇÊ";
 	}
 }
 

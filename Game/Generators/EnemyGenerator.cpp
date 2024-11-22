@@ -2,7 +2,6 @@
 #include<algorithm>
 #include<random>
 #include"../Objects/Stage/StageObject.h"
-#include<format>
 #include"../../Engine/ImGui/imgui.h"
 #include"../../Engine/Global.h"
 #include"../../Engine/Collider/SphereCollider.h"
@@ -110,7 +109,7 @@ auto SaveInDirectory = [](string& fileName, string append)
 		};
 	};
 
-EnemyGenerator::EnemyGenerator(XMFLOAT3 pos):Generator(pos),parent_(nullptr),information_(this)
+EnemyGenerator::EnemyGenerator(XMFLOAT3 pos):Generator(pos),parent_(nullptr),information_()
 {
 	switch (information_.RangeType)
 	{

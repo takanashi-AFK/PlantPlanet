@@ -52,7 +52,6 @@ protected:
 
 	std::vector<Plant> plants_ ;
 	Stage* parent_;
-	Collider* collider_;
 
 	Generator::RANGE_TYPE prevRangeType_;
 };
