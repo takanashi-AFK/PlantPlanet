@@ -31,7 +31,7 @@ void Component_StaminaGauge::Update()
 		timer->Start();
 
 		if (timer->GetIsEnd()) {
-			RecovorUnlock();
+			RecoverUnlock();
 			timer->Reset();
 		}
 	}
@@ -49,7 +49,7 @@ void Component_StaminaGauge::Release()
 
 void Component_StaminaGauge::UseStamina(float _useValue)
 {
-	RecovorLock();
+	RecoverLock();
 	timer->Reset();
 	if (now_ >= _useValue) {
 		now_ -= _useValue;

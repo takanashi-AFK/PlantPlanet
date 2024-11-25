@@ -36,10 +36,10 @@ class Component_StaminaGauge :public Component_Gauge
 		void RecoverStamina(float _recoverValue);
 
 		/// <summary> ロック </summary>
-		void RecovorLock() { isLock_ = true; }
+		void RecoverLock() { isLock_ = true; }
 
 		/// <summary> アンロック </summary>
-		void RecovorUnlock() { isLock_ = false; }
+		void RecoverUnlock() { isLock_ = false; }
 
 
 };
