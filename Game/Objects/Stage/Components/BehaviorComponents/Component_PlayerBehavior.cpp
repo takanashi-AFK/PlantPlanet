@@ -162,6 +162,24 @@ void Component_PlayerBehavior::Update()
 	// ＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝
 	// 状態ごとの処理
 	// ＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝
+
+	if (nowState_ == PLAYER_STATE_DODGE) {
+		// プレイヤーのスタミナゲージコンポーネントを取得
+		Component_StaminaGauge* sg = (Component_StaminaGauge*)(GetChildComponent("StaminaGauge"));
+		if (!sg->CanUseStamina(STAMINA_DECREASE_DODGE)) {
+			// 状態を遷移
+			IsWASDKey() ? SetState(PLAYER_STATE_WALK) : SetState(PLAYER_STATE_IDLE);
+		}
+	}
+	if (nowState_ == PLAYER_STATE_SHOOT) {
+		// プレイヤーのスタミナゲージコンポーネントを取得
+		Component_StaminaGauge* sg = (Component_StaminaGauge*)(GetChildComponent("StaminaGauge"));
+		if (!sg->CanUseStamina(STAMINA_DECREASE_SHOOT)) {
+			// 状態を遷移
+			IsWASDKey() ? SetState(PLAYER_STATE_WALK) : SetState(PLAYER_STATE_IDLE);
+		}
+	}
+
 	switch (nowState_)
 	{
 	case PLAYER_STATE_IDLE:           Idle();         break;  // 現在の状態がIDLEの場合
@@ -242,13 +260,6 @@ void Component_PlayerBehavior::Shoot()
 	Component_StaminaGauge* sg = (Component_StaminaGauge*)(GetChildComponent("StaminaGauge"));
 	if (sg == nullptr)return;
 
-	//// スタミナが足りなかったら演出して終わり
-	//if (!sg->CanUseStamina(STAMINA_DECREASE_SHOOT)) {
-	//	SetState(PLAYER_STATE_IDLE);
-	//	return;
-	//}
-
-
 	// モーションコンポーネントの取得 & 有無の確認
 	Component_PlayerMotion* motion = (Component_PlayerMotion*)(GetChildComponent("PlayerMotion"));
 	if (motion == nullptr)return;
@@ -318,15 +329,6 @@ void Component_PlayerBehavior::Dodge()
 
 	Component_StaminaGauge* sg = (Component_StaminaGauge*)(GetChildComponent("StaminaGauge"));
 	if (sg == nullptr)return;
-
-	//// スタミナが足りなかったら演出して終わり
-	//if (!sg->CanUseStamina(STAMINA_DECREASE_DODGE)) {
-
-	//	// スタミナ足りないよーみたいな演出
-	//	// 状態を遷移
-	//	IsWASDKey() ? SetState(PLAYER_STATE_WALK) : SetState(PLAYER_STATE_IDLE);
-	//	return;
-	//}
 
 	static float frameCount = 0;
 	static float dodgeDistance = DODGE_DISTANCE;

@@ -12,7 +12,7 @@ namespace {
 }
 
 Component_StaminaGauge::Component_StaminaGauge(string _name, StageObject* _holder, Component* _parent)
-	:Component_Gauge(_holder, _name, HealthGauge, _parent)
+	:Component_Gauge(_holder, _name, StaminaGauge, _parent)
 {
 }
 
@@ -56,6 +56,11 @@ void Component_StaminaGauge::UseStamina(float _useValue)
 		return ;
 	}
 	return;
+}
+
+bool Component_StaminaGauge::CanUseStamina(float _useValue)
+{
+	return now_ >= _useValue; 
 }
 
 void Component_StaminaGauge::RecoverStamina(float _recoverValue)

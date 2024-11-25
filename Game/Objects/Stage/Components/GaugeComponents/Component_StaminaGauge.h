@@ -30,7 +30,7 @@ class Component_StaminaGauge :public Component_Gauge
 		/// <returns>消費できたらtrue </returns>
 		void UseStamina(float _useValue);
 
-		bool CanUseStamina(float _useValue) { return stamina_ >= _useValue; }
+		bool CanUseStamina(float _useValue);
 
 		/// <summary> スタミナを回復する </summary>
 		void RecoverStamina(float _recoverValue);
