@@ -2,10 +2,10 @@
 
 namespace PlantCollection
 {
-	unordered_map<int, Plant> plants_;
+	unordered_map<int, PlantData> plants_;
 }
 
-void PlantCollection::AddPlant(Plant _plant)
+void PlantCollection::AddPlant(PlantData _plant)
 {
 	plants_[_plant.id_] = _plant;
 }
@@ -20,7 +20,7 @@ void PlantCollection::ClearPlants()
 	plants_.clear();
 }
 
-unordered_map<int, Plant> PlantCollection::GetPlants()
+unordered_map<int, PlantData> PlantCollection::GetPlants()
 {
 	return plants_;
 }

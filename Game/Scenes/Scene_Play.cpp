@@ -14,7 +14,7 @@
 #include "../Objects/UI/CountDown.h"
 #include "../Objects/UI/UIPanel.h"
 #include "../Objects/UI/UITimer.h"
-
+#include "../Plants/PlantCollection.h"
 
 using namespace Constants;
 
@@ -72,7 +72,7 @@ void Scene_Play::Update()
 		for (auto playerBehavior : pStage_->FindComponents(ComponentType::PlayerBehavior))if (((Component_PlayerBehavior*)playerBehavior)->IsDead()) {ScoreManager::isClear = false; isSceneChange = true;}
 		
 		// ボスが死んだ場合、切替フラグを立てる
-		for (auto bossBehavior : pStage_->FindComponents(ComponentType::BossBehavior)) if (((Component_BossBehavior*)bossBehavior)->IsDead()){ScoreManager::isClear = true;isSceneChange = true;}
+		//for (auto bossBehavior : pStage_->FindComponents(ComponentType::BossBehavior)) if (((Component_BossBehavior*)bossBehavior)->IsDead()){ScoreManager::isClear = true;isSceneChange = true;}
 		
 		// タイマーが終了した場合、切替フラグを立てる
 		if(uiTimer!=nullptr)if (uiTimer->IsEnd()) { ScoreManager::isClear = false; isSceneChange = true; }
@@ -115,13 +115,25 @@ void Scene_Play::InitStage()
 
 	// ステージデータの読み込み
 	json loadData;
-	if (JsonReader::Load(g_selectedStage, loadData)) {
+	if (JsonReader::Load("Datas/debug/testStage_Intract.json", loadData)) {
 
 		// ステージを生成
 		pStage_ = Instantiate<Stage>(this);
 		
 		// ステージの読み込み
 		pStage_->Load(loadData);
+	}
+
+	// 植物の生成
+	{
+		// 植物データの読み込み
+		json loadData;
+		JsonReader::Load("Datas/PlantData/plant.json", loadData);
+		PlantCollection::Load(loadData);
+
+		// generatorの起動
+		for (auto pg : (pStage_->GetStageObject("generator"))->FindComponent(ComponentType::PlantGenerator)) 
+			pg->Execute();
 	}
 }
 

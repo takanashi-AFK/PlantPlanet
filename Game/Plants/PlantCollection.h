@@ -12,7 +12,7 @@ using std::unordered_map;
 namespace PlantCollection
 {
 	/// <summary> A•¨î•ñ‚ğ’Ç‰Á </summary>
-	void AddPlant(Plant _plant);
+	void AddPlant(PlantData _plant);
 
 	/// <summary> A•¨î•ñ‚ğíœ </summary>
 	void RemovePlant(int _id);
@@ -27,6 +27,6 @@ namespace PlantCollection
 	void Load(json &_loadObj);
 
 	/// <summary> ‘S‚Ä‚ÌA•¨î•ñ‚ğæ“¾ </summary>
-	unordered_map<int, Plant> GetPlants();
+	unordered_map<int, PlantData> GetPlants();
 };
 

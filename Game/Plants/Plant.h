@@ -3,7 +3,7 @@
 using std::string;
 
 // A•¨\‘¢‘Ì
-struct Plant {
+struct PlantData {
 	int id_;				// ¯•Ê”Ô†
 	int rarity_;			// ‹H­“x
 	string name_;			// –¼‘O

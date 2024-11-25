@@ -40,9 +40,9 @@ private:
 	XMFLOAT3 GenerateRandomPosition();
 
 	/// <summary> 重み付けされた選択 </summary>
-	Plant WeightedPickPlants(unordered_map<int,Plant> _plants);
+	PlantData WeightedPickPlants(unordered_map<int,PlantData> _plants);
 
 	/// <summary> レアリティの合計値を取得 </summary>
-	int CalculateTotalResearchPoint(vector<Plant>& randomPlants);
+	int CalculateTotalResearchPoint(vector<PlantData>& randomPlants);
 };
 

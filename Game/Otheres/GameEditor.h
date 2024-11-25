@@ -13,7 +13,7 @@ class UIPanel;
 class UIObject;
 
 class TPSCamera;
-class Plant;
+class PlantData;
 
 enum EditType
 {

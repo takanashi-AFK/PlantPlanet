@@ -27,6 +27,8 @@
 #include "../MoveComponents/Component_TackleMove.h"
 #include "../MoveComponents/Component_WASDInputMove.h"
 #include "../TimerComponent/Component_Timer.h"
+#include "../DetectorComponents/Component_CircleRangeDetector.h"
+#include "../PlantComponents/Component_Plant.h"
 
 using namespace Constants;
 
@@ -88,6 +90,8 @@ void Component_PlayerBehavior::Initialize()
 	if (FindChildComponent("PlayerHealthGauge") == false)AddChildComponent(CreateComponent("PlayerHealthGauge", HealthGauge, holder_, this));
 	if (FindChildComponent("PlayerMotion") == false)AddChildComponent(CreateComponent("PlayerMotion", PlayerMotion, holder_, this));
 	if (FindChildComponent("TackleMove") == false)AddChildComponent(CreateComponent("TackleMove", TackleMove, holder_, this));
+	if (FindChildComponent("IntractTimer") == false)AddChildComponent(CreateComponent("IntractTimer", Timer, holder_, this));
+	if (FindChildComponent("IsInteractableDetector") == false)AddChildComponent(CreateComponent("IsInteractableDetector", CircleRangeDetector, holder_, this));
 }
 
 void Component_PlayerBehavior::Update()
@@ -146,6 +150,7 @@ void Component_PlayerBehavior::Update()
 	case PLAYER_STATE_SHOOT:          Shoot();        break;  // 現在の状態がSHOOTの場合
 	case PLAYER_STATE_DODGE:          Dodge();         break;  // 現在の状態がDASHの場合
 	case PLAYER_STATE_DEAD:            Dead();         break;  // 現在の状態がDEADの場合
+	case PLAYER_STATE_INTRACT:        Intract();      break;  // 現在の状態がINTRACTの場合
 	}
 }
 
@@ -191,6 +196,9 @@ void Component_PlayerBehavior::Idle()
 
 	// スペースキーが押されていたら...ダッシュ状態に遷移
 	else if (Input::IsKeyDown(DIK_SPACE) || Input::IsPadButtonDown(XINPUT_GAMEPAD_A)) SetState(PLAYER_STATE_DODGE);
+	
+	// Aボタン もしくは Eキー が押されていたら...インタラクト状態に遷移
+	else if (Input::IsKeyDown(DIK_E) || Input::IsPadButtonDown(XINPUT_GAMEPAD_A)) SetState(PLAYER_STATE_INTRACT);
 }
 
 void Component_PlayerBehavior::Walk()
@@ -211,6 +219,9 @@ void Component_PlayerBehavior::Walk()
 
 	// マウスの左ボタンが押されていたかつ、マウスの右ボタンが押されてたら、射撃状態に遷移
 	else if (Input::IsMouseButtonDown(0) || Input::GetPadTriggerR(0)) SetState(PLAYER_STATE_SHOOT);
+
+	// Aボタン もしくは Eキー が押されていたら...インタラクト状態に遷移
+	else if (Input::IsKeyDown(DIK_E) || Input::IsPadButtonDown(XINPUT_GAMEPAD_A)) SetState(PLAYER_STATE_INTRACT);
 }
 
 void Component_PlayerBehavior::Shoot()
@@ -436,12 +447,60 @@ void Component_PlayerBehavior::Dead()
 	if (move != nullptr)move->Stop();
 }
 
+void Component_PlayerBehavior::Intract()
+{
+	// 必要情報の取得 & 宣言定義
+	Component_Timer* intractTimer = (Component_Timer*)(GetChildComponent("IntractTimer"));
+	bool isInteractNow = true;
+
+	//ImGui::Text("InteractTimer: %f", intractTimer->GetNowTime());
+
+	// タイマーコンポーネントが存在する場合、カウントを開始
+	if (intractTimer != nullptr)intractTimer->Start();
+
+	// Aボタン もしくは Eキー が押されている場合...
+	if (Input::IsKey(DIK_E) || Input::IsPadButton(XINPUT_GAMEPAD_A)) {
+
+		// カウントが 5秒 経過していたら...
+		if (intractTimer->IsOnTime(5)) {
+
+			// 最も近い植物オブジェクトを取得
+			PlantData plantData;
+			StageObject* nearestPlant = GetNearestPlant(plantData);
+			if (nearestPlant != nullptr) myPlants_.push_back(plantData);
+
+			// 植物オブジェクトを削除
+			if (nearestPlant != nullptr) nearestPlant->KillMe();
+
+			// インタラクト状態を終了
+			isInteractNow = false;
+		}
+	}
+	// それ以外の場合... インタラクト状態を終了
+	else isInteractNow = false;
+
+	// 終了処理
+	if (isInteractNow == false) {
+		// タイマーをリセット
+		intractTimer->Reset();
+
+		// 待機状態に遷移
+		SetState(PLAYER_STATE_IDLE);
+	}
+}
+
 bool Component_PlayerBehavior::IsDead()
 {
 	Component_PlayerMotion* motion = (Component_PlayerMotion*)(GetChildComponent("PlayerMotion"));
 
 	if (motion != nullptr) return motion->IsEnd() && nowState_ == PLAYER_STATE_DEAD;
 	return false;
+}
+
+bool Component_PlayerBehavior::IsInteractable()
+{
+	PlantData plantData;
+	return (GetNearestPlant(plantData) != nullptr);
 }
 
 XMVECTOR Component_PlayerBehavior::CalcShootDirection()
@@ -500,4 +559,58 @@ XMVECTOR Component_PlayerBehavior::CalcShootDirection()
 
 	// レイキャストデータリストが空だったら
 	return Camera::GetSightLine();
+}
+
+StageObject* Component_PlayerBehavior::GetNearestPlant(PlantData& _plantData)
+{
+	// 範囲チェックコンポーネントの取得
+	Component_CircleRangeDetector* detector = (Component_CircleRangeDetector*)(GetChildComponent("IsInteractableDetector"));
+	if (detector == nullptr)return nullptr;
+
+	// 全植物オブジェクトを取得
+	vector<StageObject*> plantObjects; {
+
+		// ステージ情報の取得
+		Stage* pStage = (Stage*)(holder_->FindObject("Stage"));
+		if (pStage == nullptr)return nullptr;
+
+		// ステージオブジェクトの取得
+		for (StageObject* object : pStage->GetStageObjects()) {
+
+			// 植物オブジェクトだったらリストに追加
+			for (auto plant : object->FindComponent(Plant))
+				plantObjects.push_back(object);
+		}
+	}
+
+	// コンポーネント保有者と一番近い植物オブジェクトを取得
+	StageObject* nearPlant = nullptr; {
+
+		// 一番近い植物オブジェクトを取得
+		float minDist = FLT_MAX;
+		for (StageObject* plant : plantObjects) {
+
+			detector->SetRadius(1.2f);
+			detector->SetTarget(plant);
+			if(detector->IsContains()) nearPlant = plant;
+
+			//// 植物オブジェクトの位置を取得
+			//XMFLOAT3 plantPos = plant->GetPosition();
+
+			//// コンポーネント保有者と植物オブジェクトの距離を計算
+			//float dist = XMVectorGetX(XMVector3Length(XMLoadFloat3(&plantPos) - XMLoadFloat3(&holder_->GetPosition())));
+
+			//// 一番近い植物オブジェクトを取得
+			//if (dist < minDist) {
+			//	minDist = dist;
+			//	nearPlant = plant;
+			//}
+		}
+	}
+
+	// 植物コンポーネント情報から植物データを取得
+	for(auto plant : nearPlant->FindComponent(Plant)) _plantData = ((Component_Plant*)plant)->GetData();
+
+	// 一番近い植物オブジェクトを返す
+	return nearPlant;
 }

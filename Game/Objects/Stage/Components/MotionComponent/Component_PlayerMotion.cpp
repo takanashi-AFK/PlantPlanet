@@ -18,6 +18,7 @@ void Component_PlayerMotion::Initialize()
     modelHandleList_[PLAYER_STATE_IDLE] = MotionData(PLAYER_STATE_IDLE_FBX, 0, 200, 1,true);
     modelHandleList_[PLAYER_STATE_DODGE] = MotionData(PLAYER_STATE_DODGE_FBX, 0, 60, 1,false);
     modelHandleList_[PLAYER_STATE_DEAD] = MotionData(PLAYER_STATE_DEAD_FBX, 0, 182, 1,false);
+    modelHandleList_[PLAYER_STATE_INTRACT] = MotionData(PLAYER_STATE_INTRACT_FBX, 0, 280, 1,false);
 }
 
 void Component_PlayerMotion::Update()

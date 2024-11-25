@@ -6,6 +6,7 @@
 #include <numbers>
 #include "../../../../../Engine/ImGui/imgui.h"
 #include <random>
+#include "Component_Plant.h"
 
 namespace {
 	const int MAX_RARITY = 3;
@@ -50,19 +51,13 @@ void Component_PlantGenerator::Update()
 	}
 
 	// レアリティ
-	
-	vector<Plant> randomPlants;
+	vector<PlantData> randomPlants;
 	while (randomPlants.size() < plantNum_) {
 
 		// プラントを重み付けで選択
 		randomPlants.push_back(WeightedPickPlants(PlantCollection::GetPlants()));
 
 	}
-
-	//// Collection内の植物を上から抽出
-	//for (int i = 0; i < plantNum_; i++) {
-	//	randomPlants.push_back(PlantCollection::GetPlants()[i]);
-	//}
 
 	// 植物オブジェクトをステージ上に生成
 	for (int i = 0; i < plantNum_; i++) {
@@ -73,8 +68,13 @@ void Component_PlantGenerator::Update()
 		// 生成位置を設定
 		plant->SetPosition(ramdomPositions[i]);
 
-		// プラントコンポーネントを追加
-		// plant->AddComponent(CreateComponent("Plant", Plant, plant, this));
+		// プラントコンポーネントを作成
+		Component_Plant* plantComponent = (Component_Plant*)plant->AddComponent(CreateComponent("Plant", Plant, plant, this));
+		//plantComponent->SetData();
+		plant->AddComponent(CreateComponent("Plant", Plant, plant, this));
+
+		// サイズを設定
+		plant->SetScale({ 0.3f,0.3f,0.3f });
 
 		// ステージに追加
 		((Stage*)holder_->GetParent())->AddStageObject(plant);
@@ -161,7 +161,7 @@ XMFLOAT3 Component_PlantGenerator::GenerateRandomPosition()
 	};
 }
 
-Plant Component_PlantGenerator::WeightedPickPlants(unordered_map<int,Plant> _plants)
+PlantData Component_PlantGenerator::WeightedPickPlants(unordered_map<int,PlantData> _plants)
 {
 	// 希望する確率分布をレアリティごとに設定
 	std::vector<double> rarityWeights = { 0.7, 0.25, 0.05 }; // レアリティ1, 2, 3の確率
@@ -178,7 +178,7 @@ Plant Component_PlantGenerator::WeightedPickPlants(unordered_map<int,Plant> _pla
 	} while (selectedRarity < minRarity_ || selectedRarity > maxRarity_);
 
 	// 選ばれたレアリティの中からランダムに1つ選ぶ
-	std::vector<Plant> candidates;
+	std::vector<PlantData> candidates;
 	for (const auto& plant : _plants) {
 		if (plant.second.rarity_ == selectedRarity) {
 			candidates.push_back(plant.second);
@@ -199,7 +199,7 @@ Plant Component_PlantGenerator::WeightedPickPlants(unordered_map<int,Plant> _pla
 
 }
 
-int Component_PlantGenerator::CalculateTotalResearchPoint(vector<Plant>& randomPlants)
+int Component_PlantGenerator::CalculateTotalResearchPoint(vector<PlantData>& randomPlants)
 {
 	int totalResearchPoint = 0;
 	for (const auto& plant : randomPlants) {
