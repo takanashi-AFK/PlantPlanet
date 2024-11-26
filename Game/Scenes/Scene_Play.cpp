@@ -64,28 +64,66 @@ void Scene_Play::Update()
 	}
 
 	// シーン切替処理
+	switch (g_selectedGameMode)
 	{
-		// シーン切替フラグを用意
-		bool isSceneChange = false;
+	case 1:// adv
+		{
+			// シーン切替フラグを用意
+			bool isSceneChange = false;
 
-		// プレイヤーが死んだ場合、切替フラグを立てる
-		for (auto playerBehavior : pStage_->FindComponents(ComponentType::PlayerBehavior))if (((Component_PlayerBehavior*)playerBehavior)->IsDead()) {ScoreManager::isClear = false; isSceneChange = true;}
-		
-		// ボスが死んだ場合、切替フラグを立てる
-		for (auto bossBehavior : pStage_->FindComponents(ComponentType::BossBehavior)) if (((Component_BossBehavior*)bossBehavior)->IsDead()){ScoreManager::isClear = true;isSceneChange = true;}
-		
-		// タイマーが終了した場合、切替フラグを立てる
-		if(uiTimer!=nullptr)if (uiTimer->IsEnd()) { ScoreManager::isClear = false; isSceneChange = true; }
+			// プレイヤーが死んだ場合、切替フラグを立てる
+			for (auto playerBehavior : pStage_->FindComponents(ComponentType::PlayerBehavior))if (((Component_PlayerBehavior*)playerBehavior)->IsDead()) { ScoreManager::isClear = false; isSceneChange = true; }
 
-		// シーン切替フラグが立っている場合
-		if (isSceneChange == true) {
-			
-			// タイマーの最終値を取得
-			ScoreManager::time = uiTimer->GetSeconds();
-			
-			// シーンを切り替える
-			SceneManager* sceneManager = (SceneManager*)FindObject("SceneManager");
-			sceneManager->ChangeScene(SCENE_ID_RESULT, TID_BLACKOUT);
+			// ボスが死んだ場合、切替フラグを立てる
+			for (auto bossBehavior : pStage_->FindComponents(ComponentType::BossBehavior)) if (((Component_BossBehavior*)bossBehavior)->IsDead()) { ScoreManager::isClear = true; isSceneChange = true; }
+
+			// タイマーが終了した場合、切替フラグを立てる
+			if (uiTimer != nullptr)if (uiTimer->IsEnd()) { ScoreManager::isClear = false; isSceneChange = true; }
+
+			// シーン切替フラグが立っている場合
+			if (isSceneChange == true) {
+
+				// タイマーの最終値を取得
+				ScoreManager::time = uiTimer->GetSeconds();
+
+				// モードをリセット
+				g_selectedGameMode = 0;
+
+				// シーンを切り替える
+				SceneManager* sceneManager = (SceneManager*)FindObject("SceneManager");
+				sceneManager->ChangeScene(SCENE_ID_RESULT, TID_BLACKOUT);
+			}
+			break;
+		}
+
+	case 2:// sca
+		{
+			// シーン切替フラグを用意
+			bool isSceneChange = false;
+
+			// プレイヤーが死んだ場合、切替フラグを立てる
+			for (auto playerBehavior : pStage_->FindComponents(ComponentType::PlayerBehavior))if (((Component_PlayerBehavior*)playerBehavior)->IsDead()) { ScoreManager::isClear = false; isSceneChange = true; }
+
+			// ボスが死んだ場合、切替フラグを立てる
+			for (auto bossBehavior : pStage_->FindComponents(ComponentType::BossBehavior)) if (((Component_BossBehavior*)bossBehavior)->IsDead()) { ScoreManager::isClear = true; isSceneChange = true; }
+
+			// タイマーが終了した場合、切替フラグを立てる
+			if (uiTimer != nullptr)if (uiTimer->IsEnd()) { ScoreManager::isClear = false; isSceneChange = true; }
+
+			// シーン切替フラグが立っている場合
+			if (isSceneChange == true) {
+
+				// タイマーの最終値を取得
+				ScoreManager::time = uiTimer->GetSeconds();
+
+				// モードをリセット
+				g_selectedGameMode = 0;
+
+				// シーンを切り替える
+				SceneManager* sceneManager = (SceneManager*)FindObject("SceneManager");
+				sceneManager->ChangeScene(SCENE_ID_RESULT, TID_BLACKOUT);
+			}
+			break;
 		}
 	}
 
@@ -115,13 +153,30 @@ void Scene_Play::InitStage()
 
 	// ステージデータの読み込み
 	json loadData;
-	if (JsonReader::Load(g_selectedStage, loadData)) {
+	switch (g_selectedGameMode) {
 
-		// ステージを生成
-		pStage_ = Instantiate<Stage>(this);
-		
-		// ステージの読み込み
-		pStage_->Load(loadData);
+	case 1:
+		if (JsonReader::Load(STAGE_EASY_JSON, loadData)) {
+
+			// ステージを生成
+			pStage_ = Instantiate<Stage>(this);
+
+			// ステージの読み込み
+			pStage_->Load(loadData);
+		}
+		break;
+
+
+	case 2:
+		if (JsonReader::Load(STAGE_NORMAL_JSON, loadData)) {
+
+			// ステージを生成
+			pStage_ = Instantiate<Stage>(this);
+
+			// ステージの読み込み
+			pStage_->Load(loadData);
+		}
+		break;
 	}
 }
 

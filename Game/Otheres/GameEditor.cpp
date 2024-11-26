@@ -10,6 +10,9 @@
 #include "../../Engine/GameObject/Camera.h"
 #include "../Objects/Camera/TPSCamera.h"
 #include "../Otheres/PlantCollection.h"
+#include "../../Engine/SceneManager.h"
+#include "../../Engine/magic_enum/magic_enum.hpp"
+
 
 using namespace FileManager;
 
@@ -75,7 +78,7 @@ void GameEditor::DrawWorldOutLiner()
 					editType_ = STAGE;
 					ImGui::EndTabItem();
 				}
-
+			
 			// UIオブジェクトのタブを表示
 			if(editUIPanel_ != nullptr)
 				if (ImGui::BeginTabItem("UIPanel")) {

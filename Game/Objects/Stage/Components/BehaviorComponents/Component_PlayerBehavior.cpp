@@ -27,6 +27,7 @@
 #include "../MoveComponents/Component_TackleMove.h"
 #include "../MoveComponents/Component_WASDInputMove.h"
 #include "../TimerComponent/Component_Timer.h"
+#include "../GaugeComponents/Component_StaminaGauge.h"
 
 using namespace Constants;
 
@@ -41,6 +42,11 @@ namespace {
 	const int EFFECT_FRAME = 60;
 	const int EFFECT_SPEED = 1;
 	const float BOSS_TACKLE_DISTANCE = 2.0f;
+	const int STAMINA_DECREASE_SHOOT = 10;
+	const int STAMINA_DECREASE_MELEE = 20;
+	const int STAMINA_DECREASE_DODGE = 30;
+	const float STAMINA_RECOVERY = 0.17f;
+	const float STAMINA_MAX = 100.f;
 
 	bool IsXMVectorZero(XMVECTOR _vec) {
 		return XMVector3Equal(_vec, XMVectorZero());
@@ -88,6 +94,7 @@ void Component_PlayerBehavior::Initialize()
 	if (FindChildComponent("PlayerHealthGauge") == false)AddChildComponent(CreateComponent("PlayerHealthGauge", HealthGauge, holder_, this));
 	if (FindChildComponent("PlayerMotion") == false)AddChildComponent(CreateComponent("PlayerMotion", PlayerMotion, holder_, this));
 	if (FindChildComponent("TackleMove") == false)AddChildComponent(CreateComponent("TackleMove", TackleMove, holder_, this));
+	if (FindChildComponent("StaminaGauge") == false)AddChildComponent(CreateComponent("StaminaGauge", StaminaGauge, holder_, this));
 }
 
 void Component_PlayerBehavior::Update()
@@ -136,16 +143,50 @@ void Component_PlayerBehavior::Update()
 		if (hg != nullptr)if (hg->IsDead() == true)SetState(PLAYER_STATE_DEAD);
 	}
 
+	// スタミナ関連処理
+	{
+		// プレイヤーのスタミナゲージコンポーネントを取得
+		Component_StaminaGauge* sg = (Component_StaminaGauge*)(GetChildComponent("StaminaGauge"));
+
+		// UIProgressBarを取得
+		UIProgressBar* staminaBar = (UIProgressBar*)UIPanel::GetInstance()->FindObject("staminaGauge");
+
+		// スタミナバーの値を設定
+		if (staminaBar != nullptr && sg != nullptr)staminaBar->SetProgress(&sg->now_, &sg->max_);
+
+		ImGui::Text("Stamina : %f", sg->now_);
+
+	}
+
+
 	// ＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝
 	// 状態ごとの処理
 	// ＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝
+
+	if (nowState_ == PLAYER_STATE_DODGE) {
+		// プレイヤーのスタミナゲージコンポーネントを取得
+		Component_StaminaGauge* sg = (Component_StaminaGauge*)(GetChildComponent("StaminaGauge"));
+		if (!sg->CanUseStamina(STAMINA_DECREASE_DODGE)) {
+			// 状態を遷移
+			IsWASDKey() ? SetState(PLAYER_STATE_WALK) : SetState(PLAYER_STATE_IDLE);
+		}
+	}
+	if (nowState_ == PLAYER_STATE_SHOOT) {
+		// プレイヤーのスタミナゲージコンポーネントを取得
+		Component_StaminaGauge* sg = (Component_StaminaGauge*)(GetChildComponent("StaminaGauge"));
+		if (!sg->CanUseStamina(STAMINA_DECREASE_SHOOT)) {
+			// 状態を遷移
+			IsWASDKey() ? SetState(PLAYER_STATE_WALK) : SetState(PLAYER_STATE_IDLE);
+		}
+	}
+
 	switch (nowState_)
 	{
 	case PLAYER_STATE_IDLE:           Idle();         break;  // 現在の状態がIDLEの場合
 	case PLAYER_STATE_WALK:           Walk();         break;  // 現在の状態がWALKの場合
 	case PLAYER_STATE_SHOOT:          Shoot();        break;  // 現在の状態がSHOOTの場合
-	case PLAYER_STATE_DODGE:          Dodge();         break;  // 現在の状態がDASHの場合
-	case PLAYER_STATE_DEAD:            Dead();         break;  // 現在の状態がDEADの場合
+	case PLAYER_STATE_DODGE:          Dodge();        break;  // 現在の状態がDASHの場合
+	case PLAYER_STATE_DEAD:           Dead();         break;  // 現在の状態がDEADの場合
 	}
 }
 
@@ -215,6 +256,10 @@ void Component_PlayerBehavior::Walk()
 
 void Component_PlayerBehavior::Shoot()
 {
+
+	Component_StaminaGauge* sg = (Component_StaminaGauge*)(GetChildComponent("StaminaGauge"));
+	if (sg == nullptr)return;
+
 	// モーションコンポーネントの取得 & 有無の確認
 	Component_PlayerMotion* motion = (Component_PlayerMotion*)(GetChildComponent("PlayerMotion"));
 	if (motion == nullptr)return;
@@ -263,11 +308,16 @@ void Component_PlayerBehavior::Shoot()
 	if (Input::IsKeyDown(DIK_SPACE) || Input::IsPadButtonDown(XINPUT_GAMEPAD_A)) { isEnd = true; SetState(PLAYER_STATE_DODGE); }
 
 	// アニメーションが終わったら...
-	if (motion->IsEnd()) { isEnd = true; SetState(PLAYER_STATE_IDLE); }
+	if (motion->IsEnd()) {
+		isEnd = true; SetState(PLAYER_STATE_IDLE); 
+	}
 
 	if (isEnd == true) {
+
 		// 射撃フラグをリセット
 		isShootStart_ = false;
+
+		sg->UseStamina(STAMINA_DECREASE_SHOOT);
 
 		// 移動コンポーネントの再開
 		if (move != nullptr) move->Execute();
@@ -276,6 +326,10 @@ void Component_PlayerBehavior::Shoot()
 
 void Component_PlayerBehavior::Dodge()
 {
+
+	Component_StaminaGauge* sg = (Component_StaminaGauge*)(GetChildComponent("StaminaGauge"));
+	if (sg == nullptr)return;
+
 	static float frameCount = 0;
 	static float dodgeDistance = DODGE_DISTANCE;
 
@@ -421,8 +475,9 @@ void Component_PlayerBehavior::Dodge()
 		//移動を可能にする
 		move->Execute();
 
-
 		dodgeDistance = DODGE_DISTANCE;
+
+		sg->UseStamina(STAMINA_DECREASE_DODGE);
 
 		// 状態を遷移
 		IsWASDKey() ? SetState(PLAYER_STATE_WALK) : SetState(PLAYER_STATE_IDLE);
