@@ -105,6 +105,7 @@ private:
 	/// <summary> ËŒ‚•ûŒü‚ÌŒvZ </summary>
 	XMVECTOR CalcShootDirection();
 
+	/// <summary> •t‹ß‚ÌA•¨‚ğæ“¾ </summary>
 	StageObject* GetNearestPlant(PlantData& _plantData);
 /*
 state :*/

@@ -298,16 +298,7 @@ void Component_PlayerBehavior::Dodge()
 	Component_WASDInputMove* move = (Component_WASDInputMove*)(GetChildComponent("InputMove"));
 	if (move == nullptr)return;
 
-	BossState bossState = BOSS_STATE_MAX;
-
-	vector<Component*> bb = (((Stage*)holder_->FindObject("Stage"))->FindComponents(BossBehavior));
-
-
-	for (auto boss : bb) {
-		bossBehavior = (Component_BossBehavior*)boss;
-		bossState = (BossState)((Component_BossBehavior*)boss)->GetState();
-	}
-
+	
 	// 突進コンポーネントの取得 & 有無の確認
 	Component_TackleMove* tackle = (Component_TackleMove*)(GetChildComponent("TackleMove"));
 	if (tackle != nullptr && isDodgeStart_ == false) {
@@ -398,28 +389,48 @@ void Component_PlayerBehavior::Dodge()
 		}
 	}
 
-	XMFLOAT3 holderPos = holder_->GetPosition();
-	XMFLOAT3 bossPos = bossBehavior->GetHolder()->GetPosition();
-	XMFLOAT3 bossToPlayer = bossPos - holderPos;
-	XMVECTOR vBossToPlayer = XMLoadFloat3(&bossToPlayer);
+	
 
+	// ボス衝突判定
+	BossState bossState = BOSS_STATE_MAX;
+	if(bossBehavior != nullptr){
 
-	// ボスが突進してきたら且つ、ボスとプレイヤーの距離が2以下だったら跳ね返る
-	if (bossState == BossState::BOSS_STATE_TACKLE && XMVectorGetZ(XMVector3Length(vBossToPlayer)) < BOSS_TACKLE_DISTANCE) {
+		// 情報の取得
+		XMFLOAT3 holderPos = holder_->GetPosition();
+		XMFLOAT3 bossPos = bossBehavior->GetHolder()->GetPosition();
+		XMFLOAT3 bossToPlayer = bossPos - holderPos;
+		XMVECTOR vBossToPlayer = XMLoadFloat3(&bossToPlayer);
 
-		Component_TackleMove* a = (Component_TackleMove*)bossBehavior->GetChildComponent("TackleMove");
-		a->SetDistance(0);
-		
-		tackle->SetDistance(0);
+		// ボスが突進してきたら且つ、ボスとプレイヤーの距離が2以下だったら跳ね返る
+		if (bossState == BossState::BOSS_STATE_TACKLE && XMVectorGetZ(XMVector3Length(vBossToPlayer)) < BOSS_TACKLE_DISTANCE) {
 
-		// エフェクトの再生処理
-		{
-			EFFEKSEERLIB::EFKTransform effectTransform;
-			DirectX::XMStoreFloat4x4(&(effectTransform.matrix), holder_->GetWorldMatrix());
-			effectTransform.isLoop = false;
-			effectTransform.maxFrame = EFFECT_FRAME;
-			effectTransform.speed = EFFECT_SPEED;
-			effectModelTransform = EFFEKSEERLIB::gEfk->Play("impact", effectTransform);
+			Component_TackleMove* a = (Component_TackleMove*)bossBehavior->GetChildComponent("TackleMove");
+			a->SetDistance(0);
+
+			tackle->SetDistance(0);
+
+			// エフェクトの再生処理
+			{
+				EFFEKSEERLIB::EFKTransform effectTransform;
+				DirectX::XMStoreFloat4x4(&(effectTransform.matrix), holder_->GetWorldMatrix());
+				effectTransform.isLoop = false;
+				effectTransform.maxFrame = EFFECT_FRAME;
+				effectTransform.speed = EFFECT_SPEED;
+				effectModelTransform = EFFEKSEERLIB::gEfk->Play("impact", effectTransform);
+			}
+		}
+
+	}
+	else {
+		// ボスが存在しない場合は、ボスがいないか探し情報を取得
+		BossState bossState = BOSS_STATE_MAX;
+		for (auto boss : (((Stage*)holder_->FindObject("Stage"))->FindComponents(BossBehavior))) {
+
+			// ボスの情報を取得
+			bossBehavior = (Component_BossBehavior*)boss;
+
+			// ボスの状態を取得
+			bossState = (BossState)((Component_BossBehavior*)boss)->GetState();
 		}
 	}
 
@@ -453,6 +464,12 @@ void Component_PlayerBehavior::Intract()
 	Component_Timer* intractTimer = (Component_Timer*)(GetChildComponent("IntractTimer"));
 	bool isInteractNow = true;
 
+	// 移動コンポーネントの取得 & 有無の確認
+	Component_WASDInputMove* move = (Component_WASDInputMove*)(GetChildComponent("InputMove"));
+	if (move != nullptr) move->Stop();
+
+	StageObject* nearestPlant = nullptr;
+
 	//ImGui::Text("InteractTimer: %f", intractTimer->GetNowTime());
 
 	// タイマーコンポーネントが存在する場合、カウントを開始
@@ -466,7 +483,7 @@ void Component_PlayerBehavior::Intract()
 
 			// 最も近い植物オブジェクトを取得
 			PlantData plantData;
-			StageObject* nearestPlant = GetNearestPlant(plantData);
+			nearestPlant = GetNearestPlant(plantData);
 			if (nearestPlant != nullptr) myPlants_.push_back(plantData);
 
 			// 植物オブジェクトを削除
@@ -481,8 +498,12 @@ void Component_PlayerBehavior::Intract()
 
 	// 終了処理
 	if (isInteractNow == false) {
+
 		// タイマーをリセット
 		intractTimer->Reset();
+
+		// 移動を可能にする
+		if (move != nullptr) move->Execute();
 
 		// 待機状態に遷移
 		SetState(PLAYER_STATE_IDLE);
@@ -609,7 +630,7 @@ StageObject* Component_PlayerBehavior::GetNearestPlant(PlantData& _plantData)
 	}
 
 	// 植物コンポーネント情報から植物データを取得
-	for(auto plant : nearPlant->FindComponent(Plant)) _plantData = ((Component_Plant*)plant)->GetData();
+	//for(auto plant : nearPlant->FindComponent(Plant)) _plantData = ((Component_Plant*)plant)->GetData();
 
 	// 一番近い植物オブジェクトを返す
 	return nearPlant;
