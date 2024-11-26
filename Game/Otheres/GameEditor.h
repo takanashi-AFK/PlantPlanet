@@ -20,6 +20,7 @@ enum EditType
 	UIPANEL,
 	CAMERA,
 	PLANT,
+	GENERATOR
 };
 
 enum CameraType
@@ -55,6 +56,9 @@ private:
 	bool isShowPlantWindow_;
 	int selectEditPlantIndex_;
 
+	bool isShowGeneratorWindow_;
+	int selectEditGeneratorIndex_;
+
 public:
 	GameEditor(GameObject* _parent);
 	void Initialize() override;
@@ -78,20 +82,27 @@ private:
 	void DrawStageOutLiner();
 	void DrawUIPanelOutLiner();
 	void DrawPlantOutLiner();
+	void DrawGeneratorOutLiner();
 
 	void DrawDatails();
 	void DrawStageObjectDatails();
 	void DrawUIObjectDatails();
 	void DrawPlantDatails();
+	void DrawGeneratorDetails();
 
 	void DrawDatalsCamera();
 
 	void UIObjectCreateWindow();
 	void CreatePlantWindow();
+	void CreateGeneratorWindow();
 
 	void AddPlant();
-
 	void SavePlant();
 	void LoadPlant();
+
+	void ShowCreateGeneratorWindow();
+	void SaveGenerators();
+	void LoadGenerators();
+	void DeleteGenerators();
 };
 

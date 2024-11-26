@@ -175,7 +175,7 @@ public:
 	StageObject* GetHolder() const{ return holder_; }
 
 	/// <returns>
-	/// コンポーネント名を取得
+	/// ジェネレータ名を取得
 	/// </returns>
 	string GetName() { return name_; }
 
