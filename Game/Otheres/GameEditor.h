@@ -100,7 +100,7 @@ private:
 	void SavePlant();
 	void LoadPlant();
 
-	void ShowGenerators();
+	void ShowCreateGeneratorWindow();
 	void SaveGenerators();
 	void LoadGenerators();
 	void DeleteGenerators();

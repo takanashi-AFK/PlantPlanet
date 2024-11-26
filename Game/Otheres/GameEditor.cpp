@@ -666,7 +666,7 @@ void GameEditor::DrawPlantOutLiner()
 
 void GameEditor::DrawGeneratorOutLiner()
 {
-	if (ImGui::Button("Add")) ShowGenerators();	ImGui::SameLine();
+	if (ImGui::Button("Add")) ShowCreateGeneratorWindow();	ImGui::SameLine();
 	if (ImGui::Button("Save")) SaveGenerators();	ImGui::SameLine();
 	if (ImGui::Button("Load")) LoadGenerators();	ImGui::SameLine();
 	if (ImGui::Button("Delete")) DeleteGenerators();
@@ -783,7 +783,7 @@ void GameEditor::LoadPlant()
 	PlantCollection::Load(loadObj);
 }
 
-void GameEditor::ShowGenerators()
+void GameEditor::ShowCreateGeneratorWindow()
 {
 	isShowGeneratorWindow_ = true;
 }

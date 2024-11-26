@@ -48,7 +48,7 @@ public:
 	enum class GENERATOR_TYPE
 	{
 		ENEMY,
-		PLANT,
+		//PLANT,
 
 		AMOUNT
 	};
