@@ -146,7 +146,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Game\Generators\EnemyGenerator.cpp" />
-    <ClCompile Include="Game\Generators\PlantGenerator.cpp" />
     <ClCompile Include="Game\Objects\UI\Components\Component_UIEasing.cpp" />
     <ClCompile Include="Engine\DirectX\Easing.cpp" />
     <ClCompile Include="Game\Otheres\AudioController.cpp" />
@@ -209,6 +208,7 @@
     <ClCompile Include="Game\Objects\Stage\Components\RotationComponents\Component_RotationY.cpp" />
     <ClCompile Include="Game\Objects\Stage\StageObject.cpp" />
     <ClCompile Include="Game\Objects\UI\UIProgressBar.cpp" />
+    <ClCompile Include="Game\Otheres\PlantCollection.cpp" />
     <ClCompile Include="Game\Scenes\Scene_Result.cpp" />
     <ClCompile Include="Game\Scenes\Scene_Play.cpp" />
     <ClCompile Include="Game\Scenes\Scene_Test.cpp" />
@@ -238,7 +238,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game\Generators\EnemyGenerator.h" />
-    <ClInclude Include="Game\Generators\PlantGenerator.h" />
     <ClInclude Include="Game\Objects\UI\Components\Component_UIEasing.h" />
     <ClInclude Include="Engine\DirectX\Easing.h" />
     <ClInclude Include="Game\Otheres\AudioController.h" />
@@ -304,6 +303,7 @@
     <ClInclude Include="Game\Objects\Stage\Components\TimerComponent\Component_Timer.h" />
     <ClInclude Include="Game\Objects\Stage\StageObject.h" />
     <ClInclude Include="Game\Objects\UI\UIProgressBar.h" />
+    <ClInclude Include="Game\Otheres\PlantCollection.h" />
     <ClInclude Include="Game\Scenes\Scene_Test.h" />
     <ClInclude Include="Game\Objects\Stage\Stage.h" />
     <ClInclude Include="Game\Objects\Stage\Components\RotationComponents\Component_Rotation.h" />

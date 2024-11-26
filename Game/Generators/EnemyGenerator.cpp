@@ -229,14 +229,14 @@ void EnemyGenerator::BoxGenerate()
 		};
 
 	for (auto i = 0u; i < information_.enemyNum; ++i) {
-		XMFLOAT3 plantPos = {};
-		plantPos.x = frand(-information_.radiusX + position.x, information_.radiusX + position.x);
-		plantPos.y = frand(-information_.radiusY + position.y, information_.radiusY + position.y);
-		plantPos.z = frand(-information_.radiusZ + position.z, information_.radiusZ + position.z);
+		XMFLOAT3 enemyPos = {};
+		enemyPos.x = frand(-information_.radiusX + position.x, information_.radiusX + position.x);
+		enemyPos.y = frand(-information_.radiusY + position.y, information_.radiusY + position.y);
+		enemyPos.z = frand(-information_.radiusZ + position.z, information_.radiusZ + position.z);
 
 		auto enemy = CreateStageObject(information_.enemyName + std::to_string(i), information_.modelPath, parent_);
 		
-		enemy->SetPosition(plantPos);
+		enemy->SetPosition(enemyPos);
 		enemy->SetRotate({0,frand(0,360),0 });
 		enemy->AddComponent(CreateComponent("bossComp", BossBehavior, enemy));
 
@@ -259,28 +259,28 @@ void EnemyGenerator::SphereGenerate()
 
 	for (auto i = 0u; i < information_.enemyNum; ++i) {
 		
-		XMFLOAT3 plantPos = { frand(-1.0f, 1.0f), frand(-1.0f, 1.0f), frand(-1.0f, 1.0f) };
+		XMFLOAT3 enemyPos = { frand(-1.0f, 1.0f), frand(-1.0f, 1.0f), frand(-1.0f, 1.0f) };
 		float length = frand(.0f, 1.0f);
 		{
-			auto temporaryVec = XMVector3Normalize(XMLoadFloat3(&plantPos));
-			XMStoreFloat3(&plantPos, temporaryVec);//plantPos‚Ì³‹K‰»
+			auto temporaryVec = XMVector3Normalize(XMLoadFloat3(&enemyPos));
+			XMStoreFloat3(&enemyPos, temporaryVec);//enemyPos‚Ì³‹K‰»
 
-			plantPos.x *= length;
-			plantPos.y *= length;
-			plantPos.z *= length;//length‚Ì’·‚³‚É‚·‚éB
+			enemyPos.x *= length;
+			enemyPos.y *= length;
+			enemyPos.z *= length;//length‚Ì’·‚³‚É‚·‚éB
 		}
 
-		plantPos.x *= information_.radiusX;
-		plantPos.y *= information_.radiusY;
-		plantPos.z *= information_.radiusZ;
+		enemyPos.x *= information_.radiusX;
+		enemyPos.y *= information_.radiusY;
+		enemyPos.z *= information_.radiusZ;
 
-		plantPos.x += position.x;
-		plantPos.y += position.y;
-		plantPos.z += position.z;
+		enemyPos.x += position.x;
+		enemyPos.y += position.y;
+		enemyPos.z += position.z;
 
 		auto enemy = CreateStageObject(information_.enemyName + std::to_string(i), information_.modelPath, parent_);
 
-		enemy->SetPosition(plantPos);
+		enemy->SetPosition(enemyPos);
 		enemy->SetRotate({ 0,frand(0,360),0 });
 		enemy->AddComponent(CreateComponent("bossComp", BossBehavior, enemy));
 
