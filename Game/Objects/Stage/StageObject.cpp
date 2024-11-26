@@ -6,6 +6,8 @@
 #include "../../../Engine/ResourceManager/Model.h"
 #include "Stage.h"
 
+#include"atlstr.h"
+
 namespace {
 	static bool isShowAddComponentWindow_ = false; // コンポーネント追加ウィンドウの表示フラグ
 	static bool isShowSetComponentNameWindow_ = false; // コンポーネント追加ウィンドウの表示フラグ
@@ -378,6 +380,7 @@ void StageObject::DrawData()
 		constexpr uint8_t shader3d_MAX = Direct3D::SHADER_TYPE::SHADER_MAX;
 
 #ifdef _DEBUG
+
 		mutex_.lock();
 		{
 			ImGui::InputInt("shaderType_", (int*)&shaderType_);
@@ -385,9 +388,10 @@ void StageObject::DrawData()
 		}
 		mutex_.unlock();
 
-
 #endif
 
+		CString shaderString(Direct3D::GetShaderName(shaderType_).c_str());
+		ImGui::Text(shaderString.GetString());
 		ImGui::TreePop();
 	}
 
