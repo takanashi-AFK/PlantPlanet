@@ -306,6 +306,9 @@
     <ClCompile Include="Game\Objects\UI\Components\Component_UIEasing.cpp" />
     <ClCompile Include="Game\Otheres\PlantCollection.cpp" />
     <ClCompile Include="Game\Objects\Stage\Components\GaugeComponents\Component_StaminaGauge.cpp" />
+    <ClCompile Include="Game\Generators\Generator.cpp" />
+    <ClCompile Include="Game\Generators\EnemyGenerator.cpp" />
+    <ClCompile Include="Game\Otheres\PlantCollection.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Collider\BoxCollider.h">
@@ -538,6 +541,9 @@
     <ClInclude Include="Game\Objects\UI\Components\Component_UIEasing.h" />
     <ClInclude Include="Game\Otheres\PlantCollection.h" />
     <ClInclude Include="Game\Objects\Stage\Components\GaugeComponents\Component_StaminaGauge.h" />
+    <ClInclude Include="Game\Generators\Generator.h" />
+    <ClInclude Include="Game\Generators\EnemyGenerator.h" />
+    <ClInclude Include="Game\Otheres\PlantCollection.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Assets\Shader\Simple2D.hlsl">
@@ -565,6 +571,12 @@
       <Filter>02Shader</Filter>
     </FxCompile>
     <FxCompile Include="Assets\Shader\Timer.hlsl">
+      <Filter>02Shader</Filter>
+    </FxCompile>
+    <FxCompile Include="Assets\Shader\Enemy_BOSS.hlsl">
+      <Filter>02Shader</Filter>
+    </FxCompile>
+    <FxCompile Include="Assets\Shader\RareFlower.hlsl">
       <Filter>02Shader</Filter>
     </FxCompile>
   </ItemGroup>

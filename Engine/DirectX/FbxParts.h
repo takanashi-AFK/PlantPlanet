@@ -124,10 +124,9 @@ public:
 	//戻値：結果
 	HRESULT Init(FbxNode * pNode);
 
-
 	//描画
-	//引数：world	ワールド行列
-	void Draw(Transform& transform);
+	//引数：world	ワールド行列	コンスタントバッファのval0,val1へ渡す数値
+	void Draw(Transform& transform , float v0,float v1);
 
 	//ボーン有りのモデルを描画
 	//引数：transform	行列情報

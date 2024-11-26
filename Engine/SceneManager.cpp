@@ -16,6 +16,8 @@
 #include "../Game/Scenes/Scene_Ranking.h"
 #include "../Game/Scenes/Scene_DifficultySelect.h"
 
+#include"../Game/Generators/Generator.h"
+
 //コンストラクタ
 SceneManager::SceneManager(GameObject * parent)
 	: GameObject(parent, "SceneManager"),currentSceneID_(),nextSceneID_(),tmpID_()
@@ -57,6 +59,7 @@ void SceneManager::Update()
 		Audio::Release();
 		Model::AllRelease();
 		Image::AllRelease();
+		Generator::Clear();
 
 		//次のシーンを作成
 		switch (nextSceneID_)
