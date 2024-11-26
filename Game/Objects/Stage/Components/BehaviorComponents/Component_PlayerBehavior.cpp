@@ -163,23 +163,6 @@ void Component_PlayerBehavior::Update()
 	// 状態ごとの処理
 	// ＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝
 
-	if (nowState_ == PLAYER_STATE_DODGE) {
-		// プレイヤーのスタミナゲージコンポーネントを取得
-		Component_StaminaGauge* sg = (Component_StaminaGauge*)(GetChildComponent("StaminaGauge"));
-		if (!sg->CanUseStamina(STAMINA_DECREASE_DODGE)) {
-			// 状態を遷移
-			IsWASDKey() ? SetState(PLAYER_STATE_WALK) : SetState(PLAYER_STATE_IDLE);
-		}
-	}
-	if (nowState_ == PLAYER_STATE_SHOOT) {
-		// プレイヤーのスタミナゲージコンポーネントを取得
-		Component_StaminaGauge* sg = (Component_StaminaGauge*)(GetChildComponent("StaminaGauge"));
-		if (!sg->CanUseStamina(STAMINA_DECREASE_SHOOT)) {
-			// 状態を遷移
-			IsWASDKey() ? SetState(PLAYER_STATE_WALK) : SetState(PLAYER_STATE_IDLE);
-		}
-	}
-
 	switch (nowState_)
 	{
 	case PLAYER_STATE_IDLE:           Idle();         break;  // 現在の状態がIDLEの場合
@@ -222,16 +205,30 @@ void Component_PlayerBehavior::Idle()
 	// 移動コンポーネントの取得 & 有無の確認
 	Component_WASDInputMove* move = (Component_WASDInputMove*)(GetChildComponent("InputMove"));
 	if (move == nullptr)return;
-
+	Component_StaminaGauge* sg = (Component_StaminaGauge*)(GetChildComponent("StaminaGauge"));
+	if (sg == nullptr)return;
 	// 状態優先度：歩行 > 射撃
 	// `InputMove`コンポーネントの移動フラグが立っていたら...歩行状態に遷移
 	if (move->IsMove()) SetState(PLAYER_STATE_WALK);
 
-	// マウスの左ボタンが押されていたかつ、マウスの右ボタンが押されてたら、射撃状態に遷移
-	else if (Input::IsMouseButtonDown(0) || Input::GetPadTriggerR(0)) SetState(PLAYER_STATE_SHOOT);
-
+	// マウスの左ボタンが押されていたかつ、マウスの左ボタンが押されてたら、射撃状態に遷移
+	else if (Input::IsMouseButtonDown(0) || Input::GetPadTriggerR(0)) {
+		if (!sg->CanUseStamina(STAMINA_DECREASE_SHOOT)) {
+			// 状態を遷移
+			IsWASDKey() ? SetState(PLAYER_STATE_WALK) : SetState(PLAYER_STATE_IDLE);
+			return;
+		}
+		SetState(PLAYER_STATE_SHOOT);
+	}
 	// スペースキーが押されていたら...ダッシュ状態に遷移
-	else if (Input::IsKeyDown(DIK_SPACE) || Input::IsPadButtonDown(XINPUT_GAMEPAD_A)) SetState(PLAYER_STATE_DODGE);
+	else if (Input::IsKeyDown(DIK_SPACE) || Input::IsPadButtonDown(XINPUT_GAMEPAD_A)) {
+		if (!sg->CanUseStamina(STAMINA_DECREASE_DODGE)) {
+			// 状態を遷移
+			IsWASDKey() ? SetState(PLAYER_STATE_WALK) : SetState(PLAYER_STATE_IDLE);
+			return;
+		}
+		SetState(PLAYER_STATE_DODGE);
+	}
 }
 
 void Component_PlayerBehavior::Walk()
@@ -239,6 +236,8 @@ void Component_PlayerBehavior::Walk()
 	// 移動コンポーネントの取得 & 有無の確認
 	Component_WASDInputMove* move = (Component_WASDInputMove*)(GetChildComponent("InputMove"));
 	if (move == nullptr)return;
+	Component_StaminaGauge* sg = (Component_StaminaGauge*)(GetChildComponent("StaminaGauge"));
+	if (sg == nullptr)return;
 
 	// 移動コンポーネントが移動していなかったら...IDLE状態に遷移
 	if (move->IsMove() == false) {
@@ -246,12 +245,24 @@ void Component_PlayerBehavior::Walk()
 		return; // ここで処理を終了
 	}
 
-	// 状態優先度：ダッシュ > 射撃
+	// マウスの左ボタンが押されていたかつ、マウスの左ボタンが押されてたら、射撃状態に遷移
+	else if (Input::IsMouseButtonDown(0) || Input::GetPadTriggerR(0)) {
+		if (!sg->CanUseStamina(STAMINA_DECREASE_SHOOT)) {
+			// 状態を遷移
+			IsWASDKey() ? SetState(PLAYER_STATE_WALK) : SetState(PLAYER_STATE_IDLE);
+			return;
+		}
+		SetState(PLAYER_STATE_SHOOT);
+	}
 	// スペースキーが押されていたら...ダッシュ状態に遷移
-	if (Input::IsKeyDown(DIK_SPACE) || Input::IsPadButtonDown(XINPUT_GAMEPAD_A)) SetState(PLAYER_STATE_DODGE);
-
-	// マウスの左ボタンが押されていたかつ、マウスの右ボタンが押されてたら、射撃状態に遷移
-	else if (Input::IsMouseButtonDown(0) || Input::GetPadTriggerR(0)) SetState(PLAYER_STATE_SHOOT);
+	else if (Input::IsKeyDown(DIK_SPACE) || Input::IsPadButtonDown(XINPUT_GAMEPAD_A)) {
+		if (!sg->CanUseStamina(STAMINA_DECREASE_DODGE)) {
+			// 状態を遷移
+			IsWASDKey() ? SetState(PLAYER_STATE_WALK) : SetState(PLAYER_STATE_IDLE);
+			return;
+		}
+		SetState(PLAYER_STATE_DODGE);
+	}
 }
 
 void Component_PlayerBehavior::Shoot()
