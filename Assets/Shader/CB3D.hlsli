@@ -27,5 +27,8 @@ struct VS_OUT
     float4 normal : TEXCOORD2; //法線
     float2 uv : TEXCOORD0; //UV座標
     float4 eye : TEXCOORD1; //視線
+    float4 globalPos : TEXCOORD3;//ワールド座標
+    float4 localPos : TEXCOORD4;
+	
     //float4 shadowPos : TEXCOORD3;	//影の位置	
 };

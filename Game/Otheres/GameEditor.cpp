@@ -10,6 +10,8 @@
 #include "../../Engine/GameObject/Camera.h"
 #include "../Objects/Camera/TPSCamera.h"
 #include "../Otheres/PlantCollection.h"
+#include "../Generators/Generator.h"
+#include"../Generators/EnemyGenerator.h"
 
 using namespace FileManager;
 
@@ -50,6 +52,8 @@ void GameEditor::Draw()
 	if(isShowCreateUIObjectWindow_)UIObjectCreateWindow();
 	
 	if (isShowPlantWindow_)CreatePlantWindow();
+
+	if (isShowGeneratorWindow_) CreateGeneratorWindow();
 }
 
 void GameEditor::Release()
@@ -106,6 +110,14 @@ void GameEditor::DrawWorldOutLiner()
 				DrawPlantOutLiner();
 
 				editType_ = PLANT;
+				ImGui::EndTabItem();
+			}
+
+			//ジェネレータ用のタブを表示
+			if (ImGui::BeginTabItem("Generator")) {
+				editType_ = GENERATOR;
+				DrawGeneratorOutLiner();
+
 				ImGui::EndTabItem();
 			}
 
@@ -187,6 +199,7 @@ void GameEditor::DrawDatails()
 		case UIPANEL:DrawUIObjectDatails();break;
 		case CAMERA:DrawDatalsCamera(); break;
 		case PLANT:DrawPlantDatails(); break;
+		case GENERATOR:DrawGeneratorDetails(); break;
 		default:ImGui::Text("No information to display");break;
 		}
 	}
@@ -224,8 +237,45 @@ void GameEditor::DrawPlantDatails()
 		ImGui::Text("name:%s",PlantCollection::GetPlants()[selectEditPlantIndex_].name_.c_str());
 		ImGui::Text("modelFilePath:%s",PlantCollection::GetPlants()[selectEditPlantIndex_].modelFilePath_.c_str());
 		ImGui::Text("imageFilePath:%s",PlantCollection::GetPlants()[selectEditPlantIndex_].imageFilePath_.c_str());
+
 	}
 	else ImGui::Text("No object selected");
+}
+
+void GameEditor::DrawGeneratorDetails()
+{
+	ImGui::BeginChild("ObjectList"); {
+
+		if (selectEditGeneratorIndex_ >= 0 && selectEditGeneratorIndex_ < Generator::Generators.size()) {
+
+			auto& generator = Generator::Generators[selectEditGeneratorIndex_];
+			
+			XMFLOAT3 position = generator->GetPosition();
+
+			ImGui::Text("name:%s", generator->GetName().c_str());
+			ImGui::DragFloat3(": Position ", &position.x);
+			generator->SetPosition(position);
+
+			generator->Draw();
+		
+			if (ImGui::Button("Generate"))
+			{
+				generator->Generate(editStage_);
+
+				while (!generator->isEmpty()) {
+
+					auto enemy = reinterpret_cast<StageObject*>(generator->Pop());
+					editStage_->AddStageObject(enemy);
+				}
+			}
+
+		}
+		else ImGui::Text("No object selected");
+
+	}
+	ImGui::EndChild();
+
+	Generator::Remove();
 }
 
 void GameEditor::DrawDatalsCamera()
@@ -614,6 +664,26 @@ void GameEditor::DrawPlantOutLiner()
 	ImGui::EndChild();
 }
 
+void GameEditor::DrawGeneratorOutLiner()
+{
+	if (ImGui::Button("Add")) ShowCreateGeneratorWindow();	ImGui::SameLine();
+	if (ImGui::Button("Save")) SaveGenerators();	ImGui::SameLine();
+	if (ImGui::Button("Load")) LoadGenerators();	ImGui::SameLine();
+	if (ImGui::Button("Delete")) DeleteGenerators();
+
+
+	ImGui::Separator();
+
+	ImGui::BeginChild("ObjectList"); {
+		// リストを表示
+		for (int i = 0; i < Generator::Generators.size(); ++i)
+			if (ImGui::Selectable(Generator::Generators[i]->GetName().c_str(), selectEditGeneratorIndex_ == i)) {
+				selectEditGeneratorIndex_ = i;
+			}
+	}
+	ImGui::EndChild();
+}
+
 void GameEditor::AddPlant()
 {
 	isShowPlantWindow_ = true;
@@ -713,6 +783,116 @@ void GameEditor::LoadPlant()
 	PlantCollection::Load(loadObj);
 }
 
+void GameEditor::ShowCreateGeneratorWindow()
+{
+	isShowGeneratorWindow_ = true;
+}
+
+void GameEditor::SaveGenerators()
+{
+	char defaultCurrentDir[MAX_PATH];
+	GetCurrentDirectory(MAX_PATH, defaultCurrentDir);
+
+	// 保存先のファイルパスを取得
+	string filePath{}; {
+		// 「ファイルを保存」ダイアログの設定用構造体を設定
+		OPENFILENAME ofn; {
+			ZeroMemory(&ofn, sizeof(ofn));
+			ofn.lStructSize = sizeof(OPENFILENAME);
+			ofn.lpstrFilter = TEXT("objectData(*.json)\0*.json\0すべてのファイル(*.*)\0*.*\0\0");
+			char fileName[MAX_PATH] = "無題.json";
+			ofn.lpstrFile = fileName;
+			ofn.nMaxFile = MAX_PATH;
+			ofn.Flags = OFN_OVERWRITEPROMPT;
+			ofn.lpstrDefExt = "json";
+			ofn.nFilterIndex = 1; // 初期選択するフィルター
+			ofn.lpstrInitialDir = TEXT("."); // カレントディレクトリを初期選択位置として設定
+		}
+
+		// ファイルを保存するダイアログの表示
+		if (GetSaveFileName(&ofn) == TRUE) {
+			// ファイルパスを取得
+			filePath = ofn.lpstrFile;
+
+			// カレントディレクトリからの相対パスを取得
+			filePath = GetAssetsRelativePath(filePath);
+
+			// 文字列内の"\\"を"/"に置換
+			ReplaceBackslashes(filePath);
+
+			// ディレクトリを戻す
+			SetCurrentDirectory(defaultCurrentDir);
+		}
+		else {
+			return;
+		}
+	}
+
+	json saveObj;
+
+	Generator::RootSave(saveObj);
+	if (JsonReader::Save(filePath, saveObj) == false) MessageBox(NULL, "保存に失敗しました。", 0, 0);
+
+}
+
+void GameEditor::LoadGenerators()
+{
+	char defaultCurrentDir[MAX_PATH];
+	GetCurrentDirectory(MAX_PATH, defaultCurrentDir);
+
+	// 読み込むファイルのパスを取得
+	string filePath{}; {
+		// 「ファイルを開く」ダイアログの設定用構造体を設定
+		OPENFILENAME ofn; {
+			TCHAR szFile[MAX_PATH] = {}; // ファイル名を格納するバッファ
+			ZeroMemory(&ofn, sizeof(ofn)); // 構造体の初期化
+			ofn.lStructSize = sizeof(ofn); // 構造体のサイズ
+			ofn.lpstrFile = szFile; // ファイル名を格納するバッファ
+			ofn.lpstrFile[0] = '\0'; // 初期化
+			ofn.nMaxFile = sizeof(szFile); // ファイル名バッファのサイズ
+			ofn.lpstrFilter = TEXT("JSONファイル(*.json)\0*.json\0すべてのファイル(*.*)\0*.*\0"); // フィルター（jsonファイルのみ表示）
+			ofn.nFilterIndex = 1; // 初期選択するフィルター
+			ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST; // フラグ（ファイルが存在すること、パスが存在することを確認）
+			ofn.lpstrInitialDir = TEXT("."); // カレントディレクトリを初期選択位置として設定
+		}
+
+		// ファイルを選択するダイアログの表示
+		if (GetOpenFileName(&ofn) == TRUE) {
+			// ファイルパスを取得
+			filePath = ofn.lpstrFile;
+
+			// カレントディレクトリからの相対パスを取得
+			filePath = GetAssetsRelativePath(filePath);
+
+			// 文字列内の"\\"を"/"に置換
+			ReplaceBackslashes(filePath);
+
+			// ディレクトリを戻す
+			SetCurrentDirectory(defaultCurrentDir);
+		}
+		else {
+			return;
+		}
+	}
+
+
+	json loadObj;
+	if (JsonReader::Load(filePath, loadObj) == false) MessageBox(NULL, "読込に失敗しました。", 0, 0);
+	
+	if (!loadObj[0].contains("GeneratorType"))MessageBox(NULL,
+		"正しくないファイルが選択されました。\nジェネレータ用のファイルを選択してください",
+		0, 0);
+
+	Generator::RootLoad(loadObj);
+
+	selectEditGeneratorIndex_ = 0;
+}
+
+void GameEditor::DeleteGenerators()
+{
+	Generator::Clear();
+}
+
 void GameEditor::CreatePlantWindow()
 {
 	static char nameBuffer[256] = "";
@@ -806,5 +986,54 @@ void GameEditor::CreatePlantWindow()
 		}
 	}
 	ImGui::End(); // ウィンドウを終了
+}
+
+void GameEditor::CreateGeneratorWindow()
+{
+	static char nameBuffer[256] = "";
+	if (isShowGeneratorWindow_) {
+		ImGui::Begin("Create UIObject", &isShowGeneratorWindow_); {
+
+			ImGui::NewLine();
+			ImGui::Text("Set the details for a Generator. then make a Generator");
+			ImGui::Separator();
+
+			// 名前を入力
+			ImGui::InputTextWithHint(":setting name", "Input object name...", nameBuffer, IM_ARRAYSIZE(nameBuffer));
+
+			// タイプを選択
+			static Generator::GENERATOR_TYPE generatorType = Generator::GENERATOR_TYPE::ENEMY;// 初期選択項目
+
+			//ジェネレータタイプの指定
+			ImGui::Text("Select an option:");
+
+			for (auto i = 0u; i < static_cast<int>(Generator::GENERATOR_TYPE::AMOUNT); ++i) {
+				if(ImGui::RadioButton(Generator::GetTypeString(static_cast<Generator::GENERATOR_TYPE>(i)).c_str(),
+					static_cast<int>(generatorType) == i))
+					generatorType = static_cast<Generator::GENERATOR_TYPE>(i);
+			}
+
+			// 生成ボタン
+			if (ImGui::Button("Create")) {
+
+				Generator* generator = nullptr;
+
+				switch (generatorType)
+				{
+				case Generator::GENERATOR_TYPE::ENEMY: generator = new EnemyGenerator({ 0,0,0 }); break;
+
+				default:break;
+				}
+
+				if (generator != nullptr) {
+					isShowGeneratorWindow_ = false;
+
+					generator->SetName(nameBuffer);
+					Generator::Generators.push_back(generator);
+				}
+			}
+		}
+		ImGui::End();
+	}
 }
 

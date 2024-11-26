@@ -10,6 +10,7 @@
 #include "../Objects/Stage/Stage.h"
 #include "../Objects/UI/UIPanel.h"
 #include "../Otheres/GameEditor.h"
+#include"../Generators/EnemyGenerator.h"
 
 using namespace Constants;
 
