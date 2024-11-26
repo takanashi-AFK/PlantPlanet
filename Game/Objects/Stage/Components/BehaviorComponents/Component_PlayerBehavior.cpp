@@ -501,3 +501,4 @@ XMVECTOR Component_PlayerBehavior::CalcShootDirection()
 	// レイキャストデータリストが空だったら
 	return Camera::GetSightLine();
 }
+
