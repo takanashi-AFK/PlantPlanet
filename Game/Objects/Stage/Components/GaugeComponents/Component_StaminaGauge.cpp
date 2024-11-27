@@ -39,8 +39,6 @@ void Component_StaminaGauge::Update()
 	{
 		RecoverStamina(STAMINA_RECOVERY);
 	}
-
-	ImGui::Text("Time : %f", timer->GetNowTime());
 }
 
 void Component_StaminaGauge::Release()

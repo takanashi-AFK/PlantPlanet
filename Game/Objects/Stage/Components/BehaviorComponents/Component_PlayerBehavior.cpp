@@ -30,6 +30,8 @@
 #include "../DetectorComponents/Component_CircleRangeDetector.h"
 #include "../PlantComponents/Component_Plant.h"
 #include "../GaugeComponents/Component_StaminaGauge.h"
+#include "../../../UI/UIProgressCircle.h"
+#include "../../../UI/UIImage.h"
 
 using namespace Constants;
 
@@ -50,6 +52,10 @@ namespace {
 	const float STAMINA_RECOVERY = 0.17f;
 	const float STAMINA_MAX = 100.f;
 
+	const int INCLEACE_RESEARCH_POINT_RARITY_3 = 30;
+	const int INCLEACE_RESEARCH_POINT_RARITY_2 = 15;
+	const int INCLEACE_RESEARCH_POINT_RARITY_1 = 5;
+
 	bool IsXMVectorZero(XMVECTOR _vec) {
 		return XMVector3Equal(_vec, XMVectorZero());
 	}
@@ -68,11 +74,11 @@ namespace {
 
 Component_PlayerBehavior::Component_PlayerBehavior(string _name, StageObject* _holder, Component* _parent)
 	: Component(_holder, _name, PlayerBehavior, _parent),
-	shootHeight_(1.0f), 
+	shootHeight_(1.0f),
 	isGameStart_(false),
 	nowState_(PLAYER_STATE_IDLE),
-	prevState_(PLAYER_STATE_IDLE), 
-	invincibilityFrame_(60), 
+	prevState_(PLAYER_STATE_IDLE),
+	invincibilityFrame_(60),
 	isShootStart_(false),
 	isDodgeStart_(false),
 	bossBehavior(nullptr),
@@ -96,7 +102,7 @@ void Component_PlayerBehavior::Initialize()
 	if (FindChildComponent("PlayerHealthGauge") == false)AddChildComponent(CreateComponent("PlayerHealthGauge", HealthGauge, holder_, this));
 	if (FindChildComponent("PlayerMotion") == false)AddChildComponent(CreateComponent("PlayerMotion", PlayerMotion, holder_, this));
 	if (FindChildComponent("TackleMove") == false)AddChildComponent(CreateComponent("TackleMove", TackleMove, holder_, this));
-	if (FindChildComponent("IntractTimer") == false)AddChildComponent(CreateComponent("IntractTimer", Timer, holder_, this));
+	if (FindChildComponent("InteractTimer") == false)AddChildComponent(CreateComponent("InteractTimer", Timer, holder_, this));
 	if (FindChildComponent("IsInteractableDetector") == false)AddChildComponent(CreateComponent("IsInteractableDetector", CircleRangeDetector, holder_, this));
 	if (FindChildComponent("StaminaGauge") == false)AddChildComponent(CreateComponent("StaminaGauge", StaminaGauge, holder_, this));
 
@@ -136,9 +142,16 @@ void Component_PlayerBehavior::Update()
 
 		// スタミナバーの値を設定
 		if (staminaBar != nullptr && sg != nullptr)staminaBar->SetProgress(&sg->now_, &sg->max_);
+	}
 
-		ImGui::Text("Stamina : %f", sg->now_);
+	// 調査度ゲージ処理
+	{
+		// UIProgressBarを取得
+		UIProgressCircle* researchPointCircle = (UIProgressCircle*)UIPanel::GetInstance()->FindObject("researchPointCircle");
 
+		// 調査度バーの値を設定
+		researchPointCircle->SetProgress(researchPoint_,100);
+	
 	}
 
 
@@ -153,7 +166,7 @@ void Component_PlayerBehavior::Update()
 	case PLAYER_STATE_SHOOT:          Shoot();        break;  // 現在の状態がSHOOTの場合
 	case PLAYER_STATE_DODGE:          Dodge();         break;  // 現在の状態がDASHの場合
 	case PLAYER_STATE_DEAD:            Dead();         break;  // 現在の状態がDEADの場合
-	case PLAYER_STATE_INTRACT:        Intract();      break;  // 現在の状態がINTRACTの場合
+	case PLAYER_STATE_INTRACT:        Interact();      break;  // 現在の状態がINTRACTの場合
 	}
 }
 
@@ -213,8 +226,8 @@ void Component_PlayerBehavior::Idle()
 		}
 		SetState(PLAYER_STATE_DODGE);
 	}
-  	// Aボタン もしくは Eキー が押されていたら...インタラクト状態に遷移
-  	else if (Input::IsKeyDown(DIK_E) || Input::IsPadButtonDown(XINPUT_GAMEPAD_A)) SetState(PLAYER_STATE_INTRACT);
+	// Aボタン もしくは Eキー が押されていたら...インタラクト状態に遷移
+	else if (Input::IsKeyDown(DIK_E) || Input::IsPadButtonDown(XINPUT_GAMEPAD_A)) SetState(PLAYER_STATE_INTRACT);
 }
 
 void Component_PlayerBehavior::Walk()
@@ -249,7 +262,7 @@ void Component_PlayerBehavior::Walk()
 		}
 		SetState(PLAYER_STATE_DODGE);
 	}
-  // Aボタン もしくは Eキー が押されていたら...インタラクト状態に遷移
+	// Aボタン もしくは Eキー が押されていたら...インタラクト状態に遷移
 	else if (Input::IsKeyDown(DIK_E) || Input::IsPadButtonDown(XINPUT_GAMEPAD_A)) SetState(PLAYER_STATE_INTRACT);
 }
 
@@ -307,9 +320,9 @@ void Component_PlayerBehavior::Shoot()
 	if (Input::IsKeyDown(DIK_SPACE) || Input::IsPadButtonDown(XINPUT_GAMEPAD_A)) { isEnd = true; SetState(PLAYER_STATE_DODGE); }
 
 	// アニメーションが終わったら...
-	if (motion->IsEnd()) 
+	if (motion->IsEnd())
 	{
-		isEnd = true; SetState(PLAYER_STATE_IDLE); 
+		isEnd = true; SetState(PLAYER_STATE_IDLE);
 	}
 
 	if (isEnd == true) {
@@ -341,7 +354,7 @@ void Component_PlayerBehavior::Dodge()
 	Component_WASDInputMove* move = (Component_WASDInputMove*)(GetChildComponent("InputMove"));
 	if (move == nullptr)return;
 
-	
+
 	// 突進コンポーネントの取得 & 有無の確認
 	Component_TackleMove* tackle = (Component_TackleMove*)(GetChildComponent("TackleMove"));
 	if (tackle != nullptr && isDodgeStart_ == false) {
@@ -353,7 +366,7 @@ void Component_PlayerBehavior::Dodge()
 
 			// 移動方向がゼロベクトルでなければ、移動方向を取得
 			if (IsXMVectorZero(move->GetMoveDirection()) == false)dir = move->GetMoveDirection();
-			else dir = XMVector3Normalize(XMVectorSetY(Camera::GetSightLine(),0));
+			else dir = XMVector3Normalize(XMVectorSetY(Camera::GetSightLine(), 0));
 		}
 
 		// 突進方向を設定
@@ -432,11 +445,11 @@ void Component_PlayerBehavior::Dodge()
 		}
 	}
 
-	
+
 
 	// ボス衝突判定
 	BossState bossState = BOSS_STATE_MAX;
-	if(bossBehavior != nullptr){
+	if (bossBehavior != nullptr) {
 
 		// 情報の取得
 		XMFLOAT3 holderPos = holder_->GetPosition();
@@ -502,44 +515,65 @@ void Component_PlayerBehavior::Dead()
 	if (move != nullptr)move->Stop();
 }
 
-void Component_PlayerBehavior::Intract()
+void Component_PlayerBehavior::Interact()
 {
 	// 必要情報の取得 & 宣言定義
-	Component_Timer* intractTimer = (Component_Timer*)(GetChildComponent("IntractTimer"));
+	Component_Timer* intractTimer = (Component_Timer*)(GetChildComponent("InteractTimer"));
 	bool isInteractNow = true;
 
 	// 移動コンポーネントの取得 & 有無の確認
 	Component_WASDInputMove* move = (Component_WASDInputMove*)(GetChildComponent("InputMove"));
 	if (move != nullptr) move->Stop();
 
+	// UIProgressBarを取得
+	UIProgressCircle* interactTimeCircle = (UIProgressCircle*)UIPanel::GetInstance()->FindObject("interactTimeCircle");
+	interactTimeCircle->SetProgress(intractTimer->GetNowTime(), 5.0f);
+
+	UIImage* interactTimeCircleFrame = (UIImage*)UIPanel::GetInstance()->FindObject("interactTimeCircleFrame");
+
 	StageObject* nearestPlant = nullptr;
 
 	//ImGui::Text("InteractTimer: %f", intractTimer->GetNowTime());
+
+
 
 	// タイマーコンポーネントが存在する場合、カウントを開始
 	if (intractTimer != nullptr)intractTimer->Start();
 
 	// Aボタン もしくは Eキー が押されている場合...
 	if (Input::IsKey(DIK_E) || Input::IsPadButton(XINPUT_GAMEPAD_A)) {
-
+		interactTimeCircle->SetVisible(true);
+		interactTimeCircleFrame->SetVisible(true);
 		// カウントが 5秒 経過していたら...
 		if (intractTimer->IsOnTime(5)) {
 
 			// 最も近い植物オブジェクトを取得
 			PlantData plantData;
 			nearestPlant = GetNearestPlant(plantData);
-			if (nearestPlant != nullptr) myPlants_.push_back(plantData);
+			if (nearestPlant != nullptr) {
+				// 所持植物リストに追加
+				myPlants_.push_back(plantData);
 
-			// 植物オブジェクトを削除
-			if (nearestPlant != nullptr) nearestPlant->KillMe();
+				researchPoint_ += GetResearchPointByRarity(plantData);
+
+				// 植物オブジェクトを削除
+				nearestPlant->KillMe();
+
+				interactTimeCircle->SetVisible(false);
+				interactTimeCircleFrame->SetVisible(false);
+			}
 
 			// インタラクト状態を終了
 			isInteractNow = false;
 		}
 	}
 	// それ以外の場合... インタラクト状態を終了
-	else isInteractNow = false;
+	else {
+		isInteractNow = false;
 
+		interactTimeCircle->SetVisible(false);
+		interactTimeCircleFrame->SetVisible(false);
+	}
 	// 終了処理
 	if (isInteractNow == false) {
 
@@ -552,6 +586,20 @@ void Component_PlayerBehavior::Intract()
 		// 待機状態に遷移
 		SetState(PLAYER_STATE_IDLE);
 	}
+}
+
+int Component_PlayerBehavior::GetResearchPointByRarity(PlantData _plantData)
+{
+	if (_plantData.rarity_ == 3) {
+		return INCLEACE_RESEARCH_POINT_RARITY_3;
+	}
+	else if (_plantData.rarity_ == 2) {
+		return INCLEACE_RESEARCH_POINT_RARITY_2;
+	}
+	else if (_plantData.rarity_ == 1) {
+		return INCLEACE_RESEARCH_POINT_RARITY_1;
+	}
+	return 0;
 }
 
 bool Component_PlayerBehavior::IsDead()
@@ -657,7 +705,7 @@ StageObject* Component_PlayerBehavior::GetNearestPlant(PlantData& _plantData)
 
 			detector->SetRadius(1.2f);
 			detector->SetTarget(plant);
-			if(detector->IsContains()) nearPlant = plant;
+			if (detector->IsContains()) nearPlant = plant;
 
 			//// 植物オブジェクトの位置を取得
 			//XMFLOAT3 plantPos = plant->GetPosition();
@@ -674,7 +722,7 @@ StageObject* Component_PlayerBehavior::GetNearestPlant(PlantData& _plantData)
 	}
 
 	// 植物コンポーネント情報から植物データを取得
-	//for(auto plant : nearPlant->FindComponent(Plant)) _plantData = ((Component_Plant*)plant)->GetData();
+	for (auto plant : nearPlant->FindComponent(Plant)) _plantData = ((Component_Plant*)plant)->GetData();
 
 	// 一番近い植物オブジェクトを返す
 	return nearPlant;
