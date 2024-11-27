@@ -99,35 +99,14 @@ void Component_PlayerBehavior::Initialize()
 	if (FindChildComponent("IntractTimer") == false)AddChildComponent(CreateComponent("IntractTimer", Timer, holder_, this));
 	if (FindChildComponent("IsInteractableDetector") == false)AddChildComponent(CreateComponent("IsInteractableDetector", CircleRangeDetector, holder_, this));
 	if (FindChildComponent("StaminaGauge") == false)AddChildComponent(CreateComponent("StaminaGauge", StaminaGauge, holder_, this));
+
 }
 
 void Component_PlayerBehavior::Update()
 {
-	// ＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝
-	// カウント制御されている場合の処理
-	// ＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝
-	CountDown* countDown = (CountDown*)(holder_->FindObject("CountDown"));
-	if (countDown != nullptr && isGameStart_ == false) {
-
-		// 移動コンポーネントの取得 & 有無の確認
-		Component_WASDInputMove* move = (Component_WASDInputMove*)(GetChildComponent("InputMove"));
-		if (GetChildComponent("InputMove") == nullptr)return;
-
-		// カウントダウンが終了した場合
-		if (countDown->IsFinished()) {
-
-			//移動を可能にする
-			move->Execute();
-
-			// ゲームスタートフラグを立てる
-			isGameStart_ = true;
-		}
-		else {
-			// 移動を不可能にする
-			move->Stop();
-			return;
-		}
-	}
+	// 移動コンポーネントの取得 & 有無の確認
+	Component_WASDInputMove* move = (Component_WASDInputMove*)(GetChildComponent("InputMove"));
+	if (GetChildComponent("InputMove") != nullptr)move->Execute();
 
 	// HP関連処理
 	{
