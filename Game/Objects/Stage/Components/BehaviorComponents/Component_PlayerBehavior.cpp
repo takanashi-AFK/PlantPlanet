@@ -271,7 +271,7 @@ void Component_PlayerBehavior::Shoot()
 	float nowFrame = motion->GetNowFrame();
 
 	// 現在のフレームが射撃アニメーションのちょうどいいタイミングを過ぎたら...
-	if (/*nowFrame >= SHOOT_FRAME &&*/ isShootStart_ == false) {
+	if (nowFrame >= SHOOT_FRAME && isShootStart_ == false) {
 
 		// 発射オプションを設定
 		Component_ShootAttack* shoot = (Component_ShootAttack*)(GetChildComponent("ShootAttack"));
@@ -307,7 +307,7 @@ void Component_PlayerBehavior::Shoot()
 	if (Input::IsKeyDown(DIK_SPACE) || Input::IsPadButtonDown(XINPUT_GAMEPAD_A)) { isEnd = true; SetState(PLAYER_STATE_DODGE); }
 
 	// アニメーションが終わったら...
-	//if (motion->IsEnd()) 
+	if (motion->IsEnd()) 
 	{
 		isEnd = true; SetState(PLAYER_STATE_IDLE); 
 	}
