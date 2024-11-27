@@ -95,6 +95,9 @@ public:
 	/// <returns> プレイヤーのリサーチポイント </returns>
 	int GetResearchPoint() const { return researchPoint_; }
 
+	/// <returns> プレイヤーの植物データ </returns>
+	vector<PlantData> GetMyPlants() { return myPlants_; }
+
 /*
 predicate :*/
 	/// <returns> プレイヤーが死んでいるか </returns>

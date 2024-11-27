@@ -2,6 +2,8 @@
 #include "DirectX/Direct3D.h"
 #include <filesystem>
 #include <string>
+#include <vector>
+#include "../Game/Plants/Plant.h"
 
 // ＝＝ マクロ ＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝ //
 
@@ -55,6 +57,8 @@ namespace FileManager {
 /// 臨時のグローバル変数 fix: 本来はここに置くべきではない 
 extern string g_selectedStage;	// 選択されたステージ
 extern int g_selectedGameMode;	// 選択されたゲームモード
+extern std::vector<PlantData> g_playerPlantData;	// 植物データ
+
 
 // エフェクトデータ
 // fix: 本来はここに置くべきではない

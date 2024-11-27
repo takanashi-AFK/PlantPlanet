@@ -1,0 +1,110 @@
+{
+  "Result_Background": {
+    "imageFilePath_": "Images/titleScene/Prottype_TitleScene_Background.png",
+    "isVisible_": true,
+    "layerNumber_": 1,
+    "objectName_": "Result_Background",
+    "position_": [ 0.0, 0.0, 0.0 ],
+    "rotate_": [ 0.0, 0.0, 0.0 ],
+    "scale_": [ 1.0, 1.0, 1.0 ],
+    "type_": 2
+  },
+  "Result_Background2": {
+    "imageFilePath_": "Images/resultScene/prototype_ResultScene_background.png",
+    "isVisible_": true,
+    "layerNumber_": 2,
+    "objectName_": "Result_Background2",
+    "position_": [ 0.0, 0.0, 0.0 ],
+    "rotate_": [ 0.0, 0.0, 0.0 ],
+    "scale_": [ 1.0, 1.0, 1.0 ],
+    "type_": 2
+  },
+  "flower1": {
+    "imageFilePath_": "Images/resultScene/flower_red.png",
+    "isVisible_": true,
+    "layerNumber_": 4,
+    "objectName_": "flower1",
+    "position_": [ -0.5, 0.0, 0.0 ],
+    "rotate_": [ 0.0, 0.0, 0.0 ],
+    "scale_": [ 1.0, 1.0, 1.0 ],
+    "type_": 2
+  },
+  "flower1Count": {
+    "FontData": {
+      "charSize": [ 16, 32 ],
+      "filePath": "Fonts/char.png",
+      "rowLength": 16
+    },
+    "isVisible_": true,
+    "layerNumber_": 7,
+    "objectName_": "flower1Count",
+    "position_": [ -0.44999998807907104, 0.4000000059604645, 0.0 ],
+    "rotate_": [ 0.0, 0.0, 0.0 ],
+    "scale_": [ 1.0, 1.0, 1.0 ],
+    "size": 2.0,
+    "text": "x00",
+    "type_": 3
+  },
+  "flower2": {
+    "imageFilePath_": "Images/resultScene/flower_yerrow.png",
+    "isVisible_": true,
+    "layerNumber_": 5,
+    "objectName_": "flower2",
+    "position_": [ 0.0, 0.0, 0.0 ],
+    "rotate_": [ 0.0, 0.0, 0.0 ],
+    "scale_": [ 1.0, 1.0, 1.0 ],
+    "type_": 2
+  },
+  "flower2Count": {
+    "FontData": {
+      "charSize": [ 16, 32 ],
+      "filePath": "Fonts/char.png",
+      "rowLength": 16
+    },
+    "isVisible_": true,
+    "layerNumber_": 8,
+    "objectName_": "flower2Count",
+    "position_": [ 0.05000000074505806, 0.4000000059604645, 0.0 ],
+    "rotate_": [ 0.0, 0.0, 0.0 ],
+    "scale_": [ 1.0, 1.0, 1.0 ],
+    "size": 2.0,
+    "text": "x00",
+    "type_": 3
+  },
+  "flower3": {
+    "imageFilePath_": "Images/resultScene/flower_blue.png",
+    "isVisible_": true,
+    "layerNumber_": 6,
+    "objectName_": "flower3",
+    "position_": [ 0.5, 0.0, 0.0 ],
+    "rotate_": [ 0.0, 0.0, 0.0 ],
+    "scale_": [ 1.0, 1.0, 1.0 ],
+    "type_": 2
+  },
+  "flower3Count": {
+    "FontData": {
+      "charSize": [ 16, 32 ],
+      "filePath": "Fonts/char.png",
+      "rowLength": 16
+    },
+    "isVisible_": true,
+    "layerNumber_": 9,
+    "objectName_": "flower3Count",
+    "position_": [ 0.550000011920929, 0.4000000059604645, 0.0 ],
+    "rotate_": [ 0.0, 0.0, 0.0 ],
+    "scale_": [ 1.0, 1.0, 1.0 ],
+    "size": 2.0,
+    "text": "x00",
+    "type_": 3
+  },
+  "returnButton": {
+    "imageFilePath_": "Images/resultScene/returnButton.png",
+    "isVisible_": true,
+    "layerNumber_": 10,
+    "objectName_": "returnButton",
+    "position_": [ 0.8799999952316284, -0.800000011920929, 0.0 ],
+    "rotate_": [ 0.0, 0.0, 0.0 ],
+    "scale_": [ 0.5, 0.5, 1.0 ],
+    "type_": 1
+  }
+}
