@@ -45,8 +45,8 @@ void UIProgressBar::Initialize()
 void UIProgressBar::Update()
 {
     // 描画用transformをオブジェクトのtransformで更新
-    frameImage_.transform_ = transform_;
-    gaugeImage_.transform_ = transform_;
+    frameImage_.transform_ = GetCalcTransform();
+    gaugeImage_.transform_ = GetCalcTransform();
 
     // ゲージのスケールを参照した値を基に設定
     {
@@ -64,20 +64,20 @@ void UIProgressBar::Draw()
   
     if (gaugeImage_.IsAvailable()) {
 
-        this->transform_ = gaugeImage_.transform_;
+        //this->transform_ = gaugeImage_.transform_;
         auto t = GetCalcTransform();
 		// ゲージの画像を描画
-        Image::SetTransform(gaugeImage_.handle_, gaugeImage_.transform_);
+        Image::SetTransform(gaugeImage_.handle_, t);
         Image::Draw(gaugeImage_.handle_, Direct3D::SHADER_BAR, gaugeImage_.color_);
     }
 
     // フレーム画像が読み込まれている場合
     if (frameImage_.IsAvailable()) {
 
-        this->transform_ = frameImage_.transform_;
+       // this->transform_ = frameImage_.transform_;
         auto t = GetCalcTransform();
         // フレームの画像を描画
-		Image::SetTransform(frameImage_.handle_, frameImage_.transform_);
+		Image::SetTransform(frameImage_.handle_, t);
 		Image::Draw(frameImage_.handle_);
     }
 }
