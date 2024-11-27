@@ -10,7 +10,7 @@ using namespace Constants;
 
 // 定数
 namespace {
-	const float LIMIT_TIME = 1.f;				// シーンを切り替えるまでに掛かる時間（秒）
+	const float LIMIT_TIME = 3.f;				// シーンを切り替えるまでに掛かる時間（秒）
 }
 
 Scene_Splash::Scene_Splash(GameObject* _parent)
@@ -22,7 +22,7 @@ void Scene_Splash::Initialize()
 {
 	// UIパネル & レイアウトの読み込み
 	json loadData;
-	if (JsonReader::Load(SPLASH_SCENE_UI_LAYOUT_JSON, loadData))UIPanel::GetInstance()->Load(loadData);
+	if (JsonReader::Load("Datas/Test/Prottype_SplashScene_Layout.json", loadData))UIPanel::GetInstance()->Load(loadData);
 }
 
 void Scene_Splash::Update()

@@ -54,7 +54,7 @@ void Scene_Play::Update()
 	//if (countDown_->IsFinished() && isGameStart_ == false) {
 
 	//	// カメラのアクティブ化
-		tpsCamera_->SetActive(true);
+	tpsCamera_->SetActive(true);
 
 	//	// ゲーム開始フラグを立てる
 	//	isGameStart_ = true;
@@ -154,33 +154,33 @@ void Scene_Play::InitStage()
 
 	// ステージデータの読み込み
 	json loadData;
+	if (JsonReader::Load("Datas/Test/testStage_Intract.json", loadData)) {
 
-	switch (g_selectedGameMode) {
+		// ステージを生成
+		pStage_ = Instantiate<Stage>(this);
 
-
-	case 1:
-		if (JsonReader::Load("Datas/Test/testStage_Intract.json", loadData)) {
-
-			// ステージを生成
-			pStage_ = Instantiate<Stage>(this);
-
-			// ステージの読み込み
-			pStage_->Load(loadData);
-		}
-		break;
-
-
-	case 2:
-		if (JsonReader::Load(STAGE_NORMAL_JSON, loadData)) {
-
-			// ステージを生成
-			pStage_ = Instantiate<Stage>(this);
-
-			// ステージの読み込み
-			pStage_->Load(loadData);
-		}
-		break;
+		// ステージの読み込み
+		pStage_->Load(loadData);
 	}
+	//switch (g_selectedGameMode) {
+
+
+	//case 1:
+	//	
+	//	break;
+
+
+	//case 2:
+	//	if (JsonReader::Load(STAGE_NORMAL_JSON, loadData)) {
+
+	//		// ステージを生成
+	//		pStage_ = Instantiate<Stage>(this);
+
+	//		// ステージの読み込み
+	//		pStage_->Load(loadData);
+	//	}
+	//	break;
+	//}
 
 	// 植物の生成
 	{
