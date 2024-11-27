@@ -536,6 +536,7 @@
     <ClInclude Include="Game\Objects\UI\UIInputString.h" />
     <ClInclude Include="Engine\DirectX\Easing.h" />
     <ClInclude Include="Game\Objects\UI\Components\Component_UIEasing.h" />
+    <ClInclude Include="Game\Plants\Plant.h" />
     <ClInclude Include="Game\Otheres\PlantCollection.h" />
     <ClInclude Include="Game\Objects\Stage\Components\GaugeComponents\Component_StaminaGauge.h" />
   </ItemGroup>

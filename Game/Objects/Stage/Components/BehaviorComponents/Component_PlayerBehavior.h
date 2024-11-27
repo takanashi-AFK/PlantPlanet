@@ -6,7 +6,7 @@
 #include "../../../../../Engine/ResourceManager/Model.h"
 #include "../../../EffekseeLib/EffekseerVFX.h"/*★★★*/
 #include "../../../../../Engine/Global.h"
-
+#include "../../../../Plants/Plant.h"
 
 // 前方宣言
 class CountDown;
@@ -18,6 +18,7 @@ enum PlayerState {
 	PLAYER_STATE_SHOOT,		/* 射撃 */
 	PLAYER_STATE_DODGE,		/* 回避 */
 	PLAYER_STATE_DEAD,		/* 死亡 */
+	PLAYER_STATE_INTRACT,	/* インタラクト */
 	PLAYER_STATE_MAX
 };
 
@@ -29,6 +30,7 @@ private:
 	bool isGameStart_;					// ゲーム開始フラグ
 	int invincibilityFrame_;			// 無敵フレーム
 	Component_BossBehavior* bossBehavior;
+	vector<PlantData> myPlants_;
 
 	// effekseer: 変形行列
 	std::shared_ptr<EFFEKSEERLIB::EFKTransform> effectModelTransform;/*★★★*/
@@ -90,6 +92,9 @@ predicate :*/
 	/// <returns> プレイヤーが死んでいるか </returns>
 	bool IsDead();
 
+	/// <returns> 付近にインタラクト可能なオブジェクトがあるかどうか </returns>
+	bool IsInteractable();
+
 	/// <returns> 射撃を開始したか </returns>
 	bool IsShootStart() const { return isShootStart_; }
 
@@ -98,10 +103,15 @@ predicate :*/
 
 	/// <returns> 現在の状態が指定した状態か </returns>
 	bool IsState(PlayerState _state) const { return nowState_ == _state; }
+
 private:
 	/// <summary> 射撃方向の計算 </summary>
 	XMVECTOR CalcShootDirection();
 
+	/// <summary> 付近の植物を取得 </summary>
+	StageObject* GetNearestPlant(PlantData& _plantData);
+/*
+state :*/
 	/// <summary> 待機状態時の処理 </summary>
 	void Idle();
 	
@@ -116,5 +126,8 @@ private:
 
 	/// <summary> 死亡状態時の処理 </summary>
 	void Dead();
+
+	/// <summary> インタラクト状態時の処理 </summary>
+	void Intract();
 };
 

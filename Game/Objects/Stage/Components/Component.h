@@ -1,18 +1,18 @@
 #pragma once
 
-// ƒCƒ“ƒNƒ‹[ƒh
+// ã‚¤ãƒ³ã‚¯ãƒ«ãƒ¼ãƒ‰
 #include "../../../../Engine/Json/JsonReader.h"
 #include "../../../../Engine/Collider/Collider.h"
 
-// ‘O•ûéŒ¾
+// å‰æ–¹å®£è¨€
 class StageObject;
 class GameObject;
 
 
-// usingéŒ¾
+// usingå®£è¨€
 using std::vector;
 
-// ƒRƒ“ƒ|[ƒlƒ“ƒgƒ^ƒCƒv
+// ã‚³ãƒ³ãƒãƒ¼ãƒãƒ³ãƒˆã‚¿ã‚¤ãƒ—
 enum ComponentType 
 {
 	BossBehavior,
@@ -38,145 +38,147 @@ enum ComponentType
 	WASDInputMove,
 	PlayerMotion,
 	Teleporter,
-	StaminaGauge,
-	// ƒRƒ“ƒ|[ƒlƒ“ƒg’Ç‰Á‚É¯•Ê”Ô†‚ğ’Ç‰Á
+	PlantGenerator,
+	Plant,
+	StaminaGauge, 
+	// ã‚³ãƒ³ãƒãƒ¼ãƒãƒ³ãƒˆè¿½åŠ æ™‚ã«è­˜åˆ¥ç•ªå·ã‚’è¿½åŠ 
 	Max
 	
 };
 
 
 
-// ƒRƒ“ƒ|\ƒlƒ“ƒgŠî’êƒNƒ‰ƒX
+// ã‚³ãƒ³ãƒâ€•ãƒãƒ³ãƒˆåŸºåº•ã‚¯ãƒ©ã‚¹
 class Component
 {
 protected:
-	string name_;                           // ƒRƒ“ƒ|[ƒlƒ“ƒg–¼
-	ComponentType type_;                    // ƒRƒ“ƒ|[ƒlƒ“ƒgƒ^ƒCƒv
-	StageObject* holder_;                   // ƒRƒ“ƒ|\ƒlƒ“ƒg•Û—LÒ‚Ìƒ|ƒCƒ“ƒ^
-	vector<Component*> childComponents_;    // qƒRƒ“ƒ|[ƒlƒ“ƒgŒQ
-	Component* parent_;                     // eƒRƒ“ƒ|[ƒlƒ“ƒg
-	bool isActive_;                         // ƒAƒNƒeƒBƒuó‘Ô‚©‚Ç‚¤‚©
+	string name_;                           // ã‚³ãƒ³ãƒãƒ¼ãƒãƒ³ãƒˆå
+	ComponentType type_;                    // ã‚³ãƒ³ãƒãƒ¼ãƒãƒ³ãƒˆã‚¿ã‚¤ãƒ—
+	StageObject* holder_;                   // ã‚³ãƒ³ãƒâ€•ãƒãƒ³ãƒˆä¿æœ‰è€…ã®ãƒã‚¤ãƒ³ã‚¿
+	vector<Component*> childComponents_;    // å­ã‚³ãƒ³ãƒãƒ¼ãƒãƒ³ãƒˆç¾¤
+	Component* parent_;                     // è¦ªã‚³ãƒ³ãƒãƒ¼ãƒãƒ³ãƒˆ
+	bool isActive_;                         // ã‚¢ã‚¯ãƒ†ã‚£ãƒ–çŠ¶æ…‹ã‹ã©ã†ã‹
 
 public:
 	/// <summary>
-	/// ƒRƒ“ƒXƒgƒ‰ƒNƒ^
+	/// ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 	/// </summary>
-	/// <param name="_holder">•Û—LÒ</param>
-	/// <param name="_name">–¼‘O</param>
+	/// <param name="_holder">ä¿æœ‰è€…</param>
+	/// <param name="_name">åå‰</param>
 	Component(StageObject* _holder, string _name, ComponentType _type);
 	Component(StageObject* _holder, string _name,ComponentType _type,Component* _parent);
 
 	/// <summary>
-	/// ‰Šú‰»
+	/// åˆæœŸåŒ–
 	/// </summary>
 	virtual void Initialize() = 0;
 
 	/// <summary>
-	/// XV
+	/// æ›´æ–°
 	/// </summary>
 	virtual void Update() = 0;
 
 	/// <summary>
-	/// ŠJ•ú
+	/// é–‹æ”¾
 	/// </summary>
 	virtual void Release() = 0;
 
 	/// <summary>
-	/// Õ“Ëˆ—
+	/// è¡çªå‡¦ç†
 	/// </summary>
 	virtual void OnCollision(GameObject* _target, Collider* _collider) {};
 
 	/// <summary>
-	/// •Û‘¶
+	/// ä¿å­˜
 	/// </summary>
-	/// <param name="_saveObj">•Û‘¶î•ñ</param>
+	/// <param name="_saveObj">ä¿å­˜æƒ…å ±</param>
 	virtual void Save(json& _saveObj) {};
 
 	/// <summary>
-	/// “Ç
+	/// èª­è¾¼
 	/// </summary>
-	/// <param name="_saveObj">“Çî•ñ</param>
+	/// <param name="_saveObj">èª­è¾¼æƒ…å ±</param>
 	virtual void Load(json& _loadObj) {};
 
 	/// <summary>
-	/// ImGuiƒpƒlƒ‹•\¦
+	/// ImGuiãƒ‘ãƒãƒ«è¡¨ç¤º
 	/// </summary>
 	virtual void DrawData() {};
 
 	/// <summary>
-	/// ©g•qƒRƒ“ƒ|[ƒlƒ“ƒg‚ğ‰Šú‰»
+	/// è‡ªèº«ï¼†å­ã‚³ãƒ³ãƒãƒ¼ãƒãƒ³ãƒˆã‚’åˆæœŸåŒ–
 	/// </summary>
 	void ChildIntialize();
 
 	/// <summary>
-	/// ©g•qƒRƒ“ƒ|[ƒlƒ“ƒg‚ğXV
+	/// è‡ªèº«ï¼†å­ã‚³ãƒ³ãƒãƒ¼ãƒãƒ³ãƒˆã‚’æ›´æ–°
 	/// </summary>
 	void ChildUpdate();
 
 	/// <summary>
-	/// ©g•qƒRƒ“ƒ|[ƒlƒ“ƒg‚ğ‰ğ•ú
+	/// è‡ªèº«ï¼†å­ã‚³ãƒ³ãƒãƒ¼ãƒãƒ³ãƒˆã‚’è§£æ”¾
 	/// </summary>
 	void ChildRelease();
 
 	/// <summary>
-	/// Õ“Ëˆ—
+	/// è¡çªå‡¦ç†
 	/// </summary>
 	void ChildOnCollision(GameObject* _target, Collider* _collider);
 
 	/// <summary>
-	/// ©g•qƒRƒ“ƒ|[ƒlƒ“ƒg‚ğ•`‰æ
+	/// è‡ªèº«ï¼†å­ã‚³ãƒ³ãƒãƒ¼ãƒãƒ³ãƒˆã‚’æç”»
 	/// </summary>
 	void ChildDrawData();
 
 	/// <summary>
-	/// ©g•qƒRƒ“ƒ|[ƒlƒ“ƒg‚ğ•Û‘¶
+	/// è‡ªèº«ï¼†å­ã‚³ãƒ³ãƒãƒ¼ãƒãƒ³ãƒˆã‚’ä¿å­˜
 	/// </summary>
 	void ChildSave(json& _saveObj);
 
 	/// <summary>
-	/// ©g•qƒRƒ“ƒ|[ƒlƒ“ƒg‚ğ“Ç
+	/// è‡ªèº«ï¼†å­ã‚³ãƒ³ãƒãƒ¼ãƒãƒ³ãƒˆã‚’èª­è¾¼
 	/// </summary>
 	void ChildLoad(json& _loadObj);
 
 	/// <summary>
-	/// qƒRƒ“ƒ|[ƒlƒ“ƒg‚ğƒŠƒXƒg‚É’Ç‰Á
+	/// å­ã‚³ãƒ³ãƒãƒ¼ãƒãƒ³ãƒˆã‚’ãƒªã‚¹ãƒˆã«è¿½åŠ 
 	/// </summary>
-	/// <param name="comp">ƒRƒ“ƒ|[ƒlƒ“ƒgƒ^ƒCƒv</param>
+	/// <param name="comp">ã‚³ãƒ³ãƒãƒ¼ãƒãƒ³ãƒˆã‚¿ã‚¤ãƒ—</param>
 	bool AddChildComponent(Component* _comp);
 
 	/// <summary>
-	/// qƒRƒ“ƒ|[ƒlƒ“ƒg‚ğƒŠƒXƒg‚©‚çíœ
+	/// å­ã‚³ãƒ³ãƒãƒ¼ãƒãƒ³ãƒˆã‚’ãƒªã‚¹ãƒˆã‹ã‚‰å‰Šé™¤
 	/// </summary>
-	/// <param name="comp">ƒRƒ“ƒ|[ƒlƒ“ƒgƒ^ƒCƒv</param>
+	/// <param name="comp">ã‚³ãƒ³ãƒãƒ¼ãƒãƒ³ãƒˆã‚¿ã‚¤ãƒ—</param>
 	bool DeleteChildComponent(string _name);
 
 	/// <summary>
-	/// ƒRƒ“ƒ|[ƒlƒ“ƒg‚ğƒŠƒXƒg“à‚ ‚é‚©‚É’T‚·
+	/// ã‚³ãƒ³ãƒãƒ¼ãƒãƒ³ãƒˆã‚’ãƒªã‚¹ãƒˆå†…ã‚ã‚‹ã‹ã«æ¢ã™
 	/// </summary>
-	/// <param name="_name">ƒRƒ“ƒ|[ƒlƒ“ƒg–¼</param>
-	/// <returns>ƒRƒ“ƒ|[ƒlƒ“ƒg‚ª‚ ‚é‚©‚Ç‚¤‚©</returns>
+	/// <param name="_name">ã‚³ãƒ³ãƒãƒ¼ãƒãƒ³ãƒˆå</param>
+	/// <returns>ã‚³ãƒ³ãƒãƒ¼ãƒãƒ³ãƒˆãŒã‚ã‚‹ã‹ã©ã†ã‹</returns>
 	bool FindChildComponent(string _name);
 
 	/// <returns>
-	/// qƒRƒ“ƒ|[ƒlƒ“ƒg‚ğæ“¾
+	/// å­ã‚³ãƒ³ãƒãƒ¼ãƒãƒ³ãƒˆã‚’å–å¾—
 	/// </returns>
-	/// <param name="_type">ƒRƒ“ƒ|[ƒlƒ“ƒgƒ^ƒCƒv</param>
+	/// <param name="_type">ã‚³ãƒ³ãƒãƒ¼ãƒãƒ³ãƒˆã‚¿ã‚¤ãƒ—</param>
 	Component* GetChildComponent(string _name);
 	
 	/// <returns>
-	/// qƒRƒ“ƒ|[ƒlƒ“ƒg‚ğæ“¾
+	/// å­ã‚³ãƒ³ãƒãƒ¼ãƒãƒ³ãƒˆã‚’å–å¾—
 	/// </returns>
 	vector<Component*> GetChildComponent(ComponentType _type);
 
 	/// <returns>
-	/// ƒRƒ“ƒ|[ƒlƒ“ƒgƒ^ƒCƒv‚ğæ“¾
+	/// ã‚³ãƒ³ãƒãƒ¼ãƒãƒ³ãƒˆã‚¿ã‚¤ãƒ—ã‚’å–å¾—
 	/// </returns>
 	ComponentType GetType() const { return type_; }
 
 	StageObject* GetHolder() const{ return holder_; }
 
 	/// <returns>
-	/// ƒRƒ“ƒ|[ƒlƒ“ƒg–¼‚ğæ“¾
+	/// ã‚³ãƒ³ãƒãƒ¼ãƒãƒ³ãƒˆåã‚’å–å¾—
 	/// </returns>
 	string GetName() { return name_; }
 
@@ -187,16 +189,15 @@ public:
 };
 
 /// <summary>
-/// ƒRƒ“ƒ|[ƒlƒ“ƒg‚ğì¬‚·‚é
+/// ã‚³ãƒ³ãƒãƒ¼ãƒãƒ³ãƒˆã‚’ä½œæˆã™ã‚‹
 /// </summary>
-/// <param name="_type">ƒRƒ“ƒ|[ƒlƒ“ƒgƒ^ƒCƒv</param>
-/// <param name="_holder">•Û—LÒ</param>
-/// <returns>ì¬‚µ‚½ƒRƒ“ƒ|[ƒlƒ“ƒg</returns>
+/// <param name="_type">ã‚³ãƒ³ãƒãƒ¼ãƒãƒ³ãƒˆã‚¿ã‚¤ãƒ—</param>
+/// <param name="_holder">ä¿æœ‰è€…</param>
+/// <returns>ä½œæˆã—ãŸã‚³ãƒ³ãƒãƒ¼ãƒãƒ³ãƒˆ</returns>
 Component* CreateComponent(string _name,ComponentType _type,StageObject* _holder, Component* _parent);
 Component* CreateComponent(string _name,ComponentType _type,StageObject* _holder);
 
-
 /// <summary>
-/// ƒRƒ“ƒ|[ƒlƒ“ƒgƒ^ƒCƒv‚ğ•¶š—ñ‚É•ÏŠ·‚·‚é 
+/// ã‚³ãƒ³ãƒãƒ¼ãƒãƒ³ãƒˆã‚¿ã‚¤ãƒ—ã‚’æ–‡å­—åˆ—ã«å¤‰æ›ã™ã‚‹ 
 /// </summary>
 string ComponentTypeToString(ComponentType _type);

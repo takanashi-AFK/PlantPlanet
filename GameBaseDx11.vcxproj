@@ -139,6 +139,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Game\Objects\Stage\Components\PlantComponents\Component_Plant.cpp" />
     <ClCompile Include="Game\Objects\Stage\Components\GaugeComponents\Component_StaminaGauge.cpp" />
     <ClCompile Include="Game\Objects\UI\Components\Component_UIEasing.cpp" />
     <ClCompile Include="Engine\DirectX\Easing.cpp" />
@@ -227,9 +228,11 @@
     <ClCompile Include="Game\Otheres\RankingManager.cpp" />
     <ClCompile Include="Game\Scenes\Scene_DifficultySelect.cpp" />
     <ClCompile Include="Game\Objects\UI\UIInputString.cpp" />
-    <ClCompile Include="Game\Otheres\PlantCollection.cpp" />
+    <ClCompile Include="Game\Plants\PlantCollection.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Game\Objects\Stage\Components\PlantComponents\Component_Plant.h" />
+    <ClInclude Include="Game\Objects\Stage\Components\PlantComponents\Component_PlantGenerator.h" />
     <ClInclude Include="Game\Objects\Stage\Components\GaugeComponents\Component_StaminaGauge.h" />
     <ClInclude Include="Game\Objects\UI\Components\Component_UIEasing.h" />
     <ClInclude Include="Engine\DirectX\Easing.h" />
@@ -296,6 +299,7 @@
     <ClInclude Include="Game\Objects\Stage\Components\TimerComponent\Component_Timer.h" />
     <ClInclude Include="Game\Objects\Stage\StageObject.h" />
     <ClInclude Include="Game\Objects\UI\UIProgressBar.h" />
+    <ClInclude Include="Game\Plants\Plant.h" />
     <ClInclude Include="Game\Scenes\Scene_Test.h" />
     <ClInclude Include="Game\Objects\Stage\Stage.h" />
     <ClInclude Include="Game\Objects\Stage\Components\RotationComponents\Component_Rotation.h" />
@@ -321,7 +325,7 @@
     <ClInclude Include="Game\Constants.h" />
     <ClInclude Include="Game\Scenes\Scene_DifficultySelect.h" />
     <ClInclude Include="Game\Objects\UI\UIInputString.h" />
-    <ClInclude Include="Game\Otheres\PlantCollection.h" />
+    <ClInclude Include="Game\Plants\PlantCollection.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Assets\Shader\BillBoard.hlsl">

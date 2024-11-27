@@ -1,10 +1,10 @@
 #include "Component.h"
 
-// ƒCƒ“ƒNƒ‹[ƒh
+// ã‚¤ãƒ³ã‚¯ãƒ«ãƒ¼ãƒ‰
 #include "../../../../Engine/ImGui/imgui.h"
 #include "../StageObject.h"
 
-// ì¬‚µ‚½ƒRƒ“ƒ|[ƒlƒ“ƒg‚ÌƒCƒ“ƒNƒ‹[ƒh
+// ä½œæˆã—ãŸã‚³ãƒ³ãƒãƒ¼ãƒãƒ³ãƒˆã®ã‚¤ãƒ³ã‚¯ãƒ«ãƒ¼ãƒ‰
 #include "AttackComponents/Component_MeleeAttack.h"
 #include "AttackComponents/Component_ShootAttack.h"
 #include "BehaviorComponents/Component_BossBehavior.h"
@@ -28,6 +28,8 @@
 #include "TimerComponent/Component_Timer.h"
 #include "MotionComponent/Component_PlayerMotion.h"
 #include "TeleporterComponent/Component_Teleporter.h"
+#include "PlantComponents/Component_PlantGenerator.h"
+#include "PlantComponents/Component_Plant.h"
 #include "GaugeComponents/Component_StaminaGauge.h"
 
 Component::Component(StageObject* _holder, string _name,ComponentType _type)
@@ -42,41 +44,41 @@ Component::Component(StageObject* _holder, string _name, ComponentType _type, Co
 
 void Component::ChildIntialize()
 {
-	// ©g‚Ì‰Šú‰»
+	// è‡ªèº«ã®åˆæœŸåŒ–
 	this->Initialize();
 
-	// qƒRƒ“ƒ|[ƒlƒ“ƒg‚Ì‰Šú‰»
+	// å­ã‚³ãƒ³ãƒãƒ¼ãƒãƒ³ãƒˆã®åˆæœŸåŒ–
 	for (auto comp : childComponents_)comp->ChildIntialize();
 }
 
 void Component::ChildUpdate()
 {
-	// ©g‚ÌXV
+	// è‡ªèº«ã®æ›´æ–°
 	this->Update();
 
-	// qƒRƒ“ƒ|[ƒlƒ“ƒg‚ÌXV
+	// å­ã‚³ãƒ³ãƒãƒ¼ãƒãƒ³ãƒˆã®æ›´æ–°
 	for (auto comp : childComponents_)comp->ChildUpdate();
 }
 
 void Component::ChildRelease()
 {
-	// qƒRƒ“ƒ|[ƒlƒ“ƒg‚ÌŠJ•ú
+	// å­ã‚³ãƒ³ãƒãƒ¼ãƒãƒ³ãƒˆã®é–‹æ”¾
 	for (auto comp : childComponents_) {
 		comp->ChildRelease();
 		delete comp;
 	}
 	childComponents_.clear();
 	
-	// ©g‚ÌŠJ•ú
+	// è‡ªèº«ã®é–‹æ”¾
 	this->Release();
 }
 
 void Component::ChildOnCollision(GameObject* _target, Collider* _collider)
 {
-	// ©g‚ÌÕ“Ëˆ—
+	// è‡ªèº«ã®è¡çªå‡¦ç†
 	this->OnCollision(_target,_collider);
 
-	// qƒRƒ“ƒ|[ƒlƒ“ƒg‚ÌÕ“Ëˆ—
+	// å­ã‚³ãƒ³ãƒãƒ¼ãƒãƒ³ãƒˆã®è¡çªå‡¦ç†
 	for (auto comp : childComponents_)comp->ChildOnCollision(_target,_collider);
 }
 
@@ -86,7 +88,7 @@ void Component::ChildDrawData()
 		
 		ImGui::SameLine();
 		
-		// ƒRƒ“ƒ|[ƒlƒ“ƒg‚Ìíœ
+		// ã‚³ãƒ³ãƒãƒ¼ãƒãƒ³ãƒˆã®å‰Šé™¤
 		if (ImGui::SmallButton("Delete")) {
 
 			if(parent_ != nullptr)parent_->DeleteChildComponent(this->name_);
@@ -94,13 +96,13 @@ void Component::ChildDrawData()
 		}
 		
 
-		// ©g‚Ìî•ñ‚ğ•`‰æ
+		// è‡ªèº«ã®æƒ…å ±ã‚’æç”»
 		this->DrawData();
 
-		// qƒRƒ“ƒ|[ƒlƒ“ƒg‚Ìî•ñ‚ğ•`‰æ
+		// å­ã‚³ãƒ³ãƒãƒ¼ãƒãƒ³ãƒˆã®æƒ…å ±ã‚’æç”»
 		if (childComponents_.empty() == false) {
 			if (ImGui::TreeNode("childComponents_")) {
-				// qƒRƒ“ƒ|[ƒlƒ“ƒg‚Ìî•ñ‚ğ•`‰æ
+				// å­ã‚³ãƒ³ãƒãƒ¼ãƒãƒ³ãƒˆã®æƒ…å ±ã‚’æç”»
 				for (auto comp : childComponents_) comp->ChildDrawData();
 
 				ImGui::TreePop();
@@ -112,48 +114,48 @@ void Component::ChildDrawData()
 
 void Component::ChildSave(json& _saveObj)
 {
-	// ©g‚Ìî•ñ‚ğ•Û‘¶
+	// è‡ªèº«ã®æƒ…å ±ã‚’ä¿å­˜
 	_saveObj["type_"] = type_;
 	_saveObj["name_"] = name_;
 
 	this->Save(_saveObj);
 
-	// qƒRƒ“ƒ|[ƒlƒ“ƒg‚Ìî•ñ‚ğ•Û‘¶
+	// å­ã‚³ãƒ³ãƒãƒ¼ãƒãƒ³ãƒˆã®æƒ…å ±ã‚’ä¿å­˜
 	for (auto comp : childComponents_)comp->ChildSave(_saveObj["childComponents_"][comp->GetName()]);
 }
 
 void Component::ChildLoad(json& _loadObj)
 {
-	// ©g‚Ìî•ñ‚ğ•Û‘¶
+	// è‡ªèº«ã®æƒ…å ±ã‚’ä¿å­˜
 	this->Load(_loadObj);
 
-	// qƒRƒ“ƒ|[ƒlƒ“ƒg‚Ìî•ñ‚ğ“Ç
+	// å­ã‚³ãƒ³ãƒãƒ¼ãƒãƒ³ãƒˆã®æƒ…å ±ã‚’èª­è¾¼
 	for (auto comp : childComponents_)comp->ChildLoad(_loadObj["childComponents_"][comp->GetName()]);
 }
 
 bool Component::AddChildComponent(Component* _comp)
 {
-	// ƒkƒ‹ƒ`ƒFƒbƒN
+	// ãƒŒãƒ«ãƒã‚§ãƒƒã‚¯
 	if (_comp == nullptr)
 		return false;
 
-	// ‰Šú‰»
+	// åˆæœŸåŒ–
 	_comp->ChildIntialize();
 
-	// ƒRƒ“ƒ|[ƒlƒ“ƒg‚ÌƒŠƒXƒg‚É’Ç‰Á‚·‚é
+	// ã‚³ãƒ³ãƒãƒ¼ãƒãƒ³ãƒˆã®ãƒªã‚¹ãƒˆã«è¿½åŠ ã™ã‚‹
 	childComponents_.push_back(_comp);
 	return true;
 }
 bool Component::DeleteChildComponent(string _name)
 {
-    // ƒŠƒXƒg“à‚ÌƒRƒ“ƒ|[ƒlƒ“ƒg‚ğ’T‚·
+    // ãƒªã‚¹ãƒˆå†…ã®ã‚³ãƒ³ãƒãƒ¼ãƒãƒ³ãƒˆã‚’æ¢ã™
     for (auto it = childComponents_.begin(); it != childComponents_.end(); ++it)
     {
         if ((*it)->name_ == _name)
         {
-            // qƒRƒ“ƒ|[ƒlƒ“ƒg‚ğŠJ•ú
+            // å­ã‚³ãƒ³ãƒãƒ¼ãƒãƒ³ãƒˆã‚’é–‹æ”¾
             (*it)->ChildRelease();
-            // ƒŠƒXƒg‚©‚çíœ
+            // ãƒªã‚¹ãƒˆã‹ã‚‰å‰Šé™¤
             childComponents_.erase(it);
             return true;
         }
@@ -163,7 +165,7 @@ bool Component::DeleteChildComponent(string _name)
 
 bool Component::FindChildComponent(string _name)
 {
-    // ƒŠƒXƒg“à‚ÌƒRƒ“ƒ|[ƒlƒ“ƒg‚ğ’T‚·
+    // ãƒªã‚¹ãƒˆå†…ã®ã‚³ãƒ³ãƒãƒ¼ãƒãƒ³ãƒˆã‚’æ¢ã™
     for (auto comp : childComponents_)
     {
         if (comp->name_ == _name)
@@ -176,7 +178,7 @@ bool Component::FindChildComponent(string _name)
 
 Component* Component::GetChildComponent(string _name)
 {
-    // ƒŠƒXƒg“à‚ÌƒRƒ“ƒ|[ƒlƒ“ƒg‚ğ’T‚·
+    // ãƒªã‚¹ãƒˆå†…ã®ã‚³ãƒ³ãƒãƒ¼ãƒãƒ³ãƒˆã‚’æ¢ã™
     for (auto comp : childComponents_)
     {
         if (comp->name_ == _name)
@@ -191,7 +193,7 @@ vector<Component*> Component::GetChildComponent(ComponentType _type)
 {
 	vector<Component*> result;
 
-	// ƒŠƒXƒg“à‚ÌƒRƒ“ƒ|[ƒlƒ“ƒg‚ğ’T‚·
+	// ãƒªã‚¹ãƒˆå†…ã®ã‚³ãƒ³ãƒãƒ¼ãƒãƒ³ãƒˆã‚’æ¢ã™
 	for (auto comp : childComponents_)
 	{
 		if (comp->type_ == _type)
@@ -206,7 +208,7 @@ Component* CreateComponent(string _name, ComponentType _type, StageObject* _hold
 {
     Component* comp = nullptr;
 
-    // ƒ^ƒCƒv(¯•Ê”Ô†‚É‚µ‚½‚ª‚Á‚ÄƒRƒ“ƒ|[ƒlƒ“ƒg‚ğì¬)
+    // ã‚¿ã‚¤ãƒ—(è­˜åˆ¥ç•ªå·ã«ã—ãŸãŒã£ã¦ã‚³ãƒ³ãƒãƒ¼ãƒãƒ³ãƒˆã‚’ä½œæˆ)
     switch (_type)
     {
         case BossBehavior: comp = new Component_BossBehavior(_name, _holder, _parent); break;
@@ -230,10 +232,12 @@ Component* CreateComponent(string _name, ComponentType _type, StageObject* _hold
         case TackleMove: comp = new Component_TackleMove(_name, _holder, _parent); break;
         case Timer: comp = new Component_Timer(_name, _holder, _parent); break;
         case WASDInputMove: comp = new Component_WASDInputMove(_name, _holder, _parent); break;
-		case PlayerMotion: comp = new Component_PlayerMotion(_name, _holder, _parent); break;
-		case Teleporter: comp = new Component_Teleporter(_name, _holder, _parent); break;
-		case StaminaGauge: comp = new Component_StaminaGauge(_name, _holder, _parent); break;
-        default: /* ‚»‚Ì‘¼ƒRƒ“ƒ|[ƒlƒ“ƒg‚ğ’Ç‰Á‚·‚é‚Íã‹L‚Ì‚æ‚¤‚É’Ç‰Á */ break;
+		    case PlayerMotion: comp = new Component_PlayerMotion(_name, _holder, _parent); break;
+		    case Teleporter: comp = new Component_Teleporter(_name, _holder, _parent); break;
+	    	case PlantGenerator: comp = new Component_PlantGenerator(_name, _holder, _parent); break;
+       	case Plant: comp = new Component_Plant(_name, _holder, _parent); break;
+		    case StaminaGauge: comp = new Component_StaminaGauge(_name, _holder, _parent); break;
+        default: /* ãã®ä»–ã‚³ãƒ³ãƒãƒ¼ãƒãƒ³ãƒˆã‚’è¿½åŠ ã™ã‚‹æ™‚ã¯ä¸Šè¨˜ã®ã‚ˆã†ã«è¿½åŠ  */ break;
     }
     return comp;
 }
@@ -270,8 +274,10 @@ string ComponentTypeToString(ComponentType _type)
 	case WASDInputMove: return "WASDInputMoveComponent";
 	case PlayerMotion: return "PlayerMotionComponent";
 	case Teleporter: return "TeleporterComponent";
+	case PlantGenerator: return "PlantGeneratorComponent";
+	case Plant: return "PlantComponent";
 	case StaminaGauge: return "StaminaGaugeComponent";
-		// ‚»‚Ì‘¼ƒRƒ“ƒ|[ƒlƒ“ƒg‚ğ’Ç‰Á‚·‚é‚Íã‹L‚Ì‚æ‚¤‚É’Ç‰Á
+		// ãã®ä»–ã‚³ãƒ³ãƒãƒ¼ãƒãƒ³ãƒˆã‚’è¿½åŠ ã™ã‚‹æ™‚ã¯ä¸Šè¨˜ã®ã‚ˆã†ã«è¿½åŠ 
 
 	default: return "None";
 	}	

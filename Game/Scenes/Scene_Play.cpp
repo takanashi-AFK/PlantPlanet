@@ -1,6 +1,6 @@
 #include "Scene_Play.h"
 
-// ƒCƒ“ƒNƒ‹[ƒh
+// ã‚¤ãƒ³ã‚¯ãƒ«ãƒ¼ãƒ‰
 #include "../../Engine/DirectX/Input.h"
 #include "../../Engine/Global.h"
 #include"../../Engine/SceneManager.h"
@@ -14,7 +14,7 @@
 #include "../Objects/UI/CountDown.h"
 #include "../Objects/UI/UIPanel.h"
 #include "../Objects/UI/UITimer.h"
-
+#include "../Plants/PlantCollection.h"
 
 using namespace Constants;
 
@@ -25,71 +25,71 @@ Scene_Play::Scene_Play(GameObject* parent)
 
 void Scene_Play::Initialize()
 {
-	// UIƒpƒlƒ‹‚Ì‰Šú‰»
+	// UIãƒ‘ãƒãƒ«ã®åˆæœŸåŒ–
 	InitUIPanel();
 
-	// ƒXƒe[ƒW‚Ì‰Šú‰»
+	// ã‚¹ãƒ†ãƒ¼ã‚¸ã®åˆæœŸåŒ–
 	InitStage();
 
-	// ƒJƒƒ‰‚Ì‰Šú‰»
+	// ã‚«ãƒ¡ãƒ©ã®åˆæœŸåŒ–
 	InitCamera();
 
-	// ƒJƒEƒ“ƒgƒ_ƒEƒ“‚Ì¶¬
+	// ã‚«ã‚¦ãƒ³ãƒˆãƒ€ã‚¦ãƒ³ã®ç”Ÿæˆ
 	countDown_ = Instantiate<CountDown>(this);
 	countDown_->Start();
 
-	// ƒJ[ƒ\ƒ‹‚Ì”ñ•\¦‰»
+	// ã‚«ãƒ¼ã‚½ãƒ«ã®éè¡¨ç¤ºåŒ–
 	ShowCursor(false);
 }
 
 void Scene_Play::Update()
 {
-	// ƒ^ƒCƒ}[‚Ìæ“¾
+	// ã‚¿ã‚¤ãƒãƒ¼ã®å–å¾—
 	UITimer* uiTimer = (UITimer*)UIPanel::GetInstance()->FindObject(PLAY_SCENE_TIMER_NAME);
 
-	// ƒJ[ƒ\ƒ‹ŒÅ’è‰»ˆ—
+	// ã‚«ãƒ¼ã‚½ãƒ«å›ºå®šåŒ–å‡¦ç†
 	SetCursorMode();
 
-	// ƒQ[ƒ€ŠJnˆ—
+	// ã‚²ãƒ¼ãƒ é–‹å§‹å‡¦ç†
 	if (countDown_->IsFinished() && isGameStart_ == false) {
 		
-		// ƒJƒƒ‰‚ÌƒAƒNƒeƒBƒu‰»
+		// ã‚«ãƒ¡ãƒ©ã®ã‚¢ã‚¯ãƒ†ã‚£ãƒ–åŒ–
 		tpsCamera_->SetActive(true);
 
-		// ƒQ[ƒ€ŠJnƒtƒ‰ƒO‚ğ—§‚Ä‚é
+		// ã‚²ãƒ¼ãƒ é–‹å§‹ãƒ•ãƒ©ã‚°ã‚’ç«‹ã¦ã‚‹
 		isGameStart_ = true;
 
-		// ƒ^ƒCƒ}[‚ÌŠJn
+		// ã‚¿ã‚¤ãƒãƒ¼ã®é–‹å§‹
 		if (uiTimer != nullptr) uiTimer->StartTimer();
 	}
 
-	// ƒV[ƒ“Ø‘Öˆ—
+	// ã‚·ãƒ¼ãƒ³åˆ‡æ›¿å‡¦ç†
 	switch (g_selectedGameMode)
 	{
 	case 1:// adv
 		{
-			// ƒV[ƒ“Ø‘Öƒtƒ‰ƒO‚ğ—pˆÓ
+			// ã‚·ãƒ¼ãƒ³åˆ‡æ›¿ãƒ•ãƒ©ã‚°ã‚’ç”¨æ„
 			bool isSceneChange = false;
 
-			// ƒvƒŒƒCƒ„[‚ª€‚ñ‚¾ê‡AØ‘Öƒtƒ‰ƒO‚ğ—§‚Ä‚é
+			// ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ãŒæ­»ã‚“ã å ´åˆã€åˆ‡æ›¿ãƒ•ãƒ©ã‚°ã‚’ç«‹ã¦ã‚‹
 			for (auto playerBehavior : pStage_->FindComponents(ComponentType::PlayerBehavior))if (((Component_PlayerBehavior*)playerBehavior)->IsDead()) { ScoreManager::isClear = false; isSceneChange = true; }
 
-			// ƒ{ƒX‚ª€‚ñ‚¾ê‡AØ‘Öƒtƒ‰ƒO‚ğ—§‚Ä‚é
+			// ãƒœã‚¹ãŒæ­»ã‚“ã å ´åˆã€åˆ‡æ›¿ãƒ•ãƒ©ã‚°ã‚’ç«‹ã¦ã‚‹
 			for (auto bossBehavior : pStage_->FindComponents(ComponentType::BossBehavior)) if (((Component_BossBehavior*)bossBehavior)->IsDead()) { ScoreManager::isClear = true; isSceneChange = true; }
 
-			// ƒ^ƒCƒ}[‚ªI—¹‚µ‚½ê‡AØ‘Öƒtƒ‰ƒO‚ğ—§‚Ä‚é
+			// ã‚¿ã‚¤ãƒãƒ¼ãŒçµ‚äº†ã—ãŸå ´åˆã€åˆ‡æ›¿ãƒ•ãƒ©ã‚°ã‚’ç«‹ã¦ã‚‹
 			if (uiTimer != nullptr)if (uiTimer->IsEnd()) { ScoreManager::isClear = false; isSceneChange = true; }
 
-			// ƒV[ƒ“Ø‘Öƒtƒ‰ƒO‚ª—§‚Á‚Ä‚¢‚éê‡
+			// ã‚·ãƒ¼ãƒ³åˆ‡æ›¿ãƒ•ãƒ©ã‚°ãŒç«‹ã£ã¦ã„ã‚‹å ´åˆ
 			if (isSceneChange == true) {
 
-				// ƒ^ƒCƒ}[‚ÌÅI’l‚ğæ“¾
+				// ã‚¿ã‚¤ãƒãƒ¼ã®æœ€çµ‚å€¤ã‚’å–å¾—
 				ScoreManager::time = uiTimer->GetSeconds();
 
-				// ƒ‚[ƒh‚ğƒŠƒZƒbƒg
+				// ãƒ¢ãƒ¼ãƒ‰ã‚’ãƒªã‚»ãƒƒãƒˆ
 				g_selectedGameMode = 0;
 
-				// ƒV[ƒ“‚ğØ‚è‘Ö‚¦‚é
+				// ã‚·ãƒ¼ãƒ³ã‚’åˆ‡ã‚Šæ›¿ãˆã‚‹
 				SceneManager* sceneManager = (SceneManager*)FindObject("SceneManager");
 				sceneManager->ChangeScene(SCENE_ID_RESULT, TID_BLACKOUT);
 			}
@@ -98,28 +98,28 @@ void Scene_Play::Update()
 
 	case 2:// sca
 		{
-			// ƒV[ƒ“Ø‘Öƒtƒ‰ƒO‚ğ—pˆÓ
+			// ã‚·ãƒ¼ãƒ³åˆ‡æ›¿ãƒ•ãƒ©ã‚°ã‚’ç”¨æ„
 			bool isSceneChange = false;
 
-			// ƒvƒŒƒCƒ„[‚ª€‚ñ‚¾ê‡AØ‘Öƒtƒ‰ƒO‚ğ—§‚Ä‚é
+			// ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ãŒæ­»ã‚“ã å ´åˆã€åˆ‡æ›¿ãƒ•ãƒ©ã‚°ã‚’ç«‹ã¦ã‚‹
 			for (auto playerBehavior : pStage_->FindComponents(ComponentType::PlayerBehavior))if (((Component_PlayerBehavior*)playerBehavior)->IsDead()) { ScoreManager::isClear = false; isSceneChange = true; }
 
-			// ƒ{ƒX‚ª€‚ñ‚¾ê‡AØ‘Öƒtƒ‰ƒO‚ğ—§‚Ä‚é
+			// ãƒœã‚¹ãŒæ­»ã‚“ã å ´åˆã€åˆ‡æ›¿ãƒ•ãƒ©ã‚°ã‚’ç«‹ã¦ã‚‹
 			for (auto bossBehavior : pStage_->FindComponents(ComponentType::BossBehavior)) if (((Component_BossBehavior*)bossBehavior)->IsDead()) { ScoreManager::isClear = true; isSceneChange = true; }
 
-			// ƒ^ƒCƒ}[‚ªI—¹‚µ‚½ê‡AØ‘Öƒtƒ‰ƒO‚ğ—§‚Ä‚é
+			// ã‚¿ã‚¤ãƒãƒ¼ãŒçµ‚äº†ã—ãŸå ´åˆã€åˆ‡æ›¿ãƒ•ãƒ©ã‚°ã‚’ç«‹ã¦ã‚‹
 			if (uiTimer != nullptr)if (uiTimer->IsEnd()) { ScoreManager::isClear = false; isSceneChange = true; }
 
-			// ƒV[ƒ“Ø‘Öƒtƒ‰ƒO‚ª—§‚Á‚Ä‚¢‚éê‡
+			// ã‚·ãƒ¼ãƒ³åˆ‡æ›¿ãƒ•ãƒ©ã‚°ãŒç«‹ã£ã¦ã„ã‚‹å ´åˆ
 			if (isSceneChange == true) {
 
-				// ƒ^ƒCƒ}[‚ÌÅI’l‚ğæ“¾
+				// ã‚¿ã‚¤ãƒãƒ¼ã®æœ€çµ‚å€¤ã‚’å–å¾—
 				ScoreManager::time = uiTimer->GetSeconds();
 
-				// ƒ‚[ƒh‚ğƒŠƒZƒbƒg
+				// ãƒ¢ãƒ¼ãƒ‰ã‚’ãƒªã‚»ãƒƒãƒˆ
 				g_selectedGameMode = 0;
 
-				// ƒV[ƒ“‚ğØ‚è‘Ö‚¦‚é
+				// ã‚·ãƒ¼ãƒ³ã‚’åˆ‡ã‚Šæ›¿ãˆã‚‹
 				SceneManager* sceneManager = (SceneManager*)FindObject("SceneManager");
 				sceneManager->ChangeScene(SCENE_ID_RESULT, TID_BLACKOUT);
 			}
@@ -127,7 +127,7 @@ void Scene_Play::Update()
 		}
 	}
 
-	// ƒvƒŒƒCƒ„[‚ğƒJƒƒ‰‚Ìƒ^[ƒQƒbƒg‚Éİ’è
+	// ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã‚’ã‚«ãƒ¡ãƒ©ã®ã‚¿ãƒ¼ã‚²ãƒƒãƒˆã«è¨­å®š
 	for (auto playerBehavior : pStage_->FindComponents(ComponentType::PlayerBehavior))tpsCamera_->SetTarget(playerBehavior->GetHolder());
 }
 
@@ -141,27 +141,29 @@ void Scene_Play::Release()
 
 void Scene_Play::InitUIPanel()
 {
-	// UIƒpƒlƒ‹ & ƒŒƒCƒAƒEƒg‚Ì“Ç‚İ‚İ
+	// UIãƒ‘ãƒãƒ« & ãƒ¬ã‚¤ã‚¢ã‚¦ãƒˆã®èª­ã¿è¾¼ã¿
 	json loadData;
 	if (JsonReader::Load(PLAY_SCENE_UI_LAYOUT_JSON, loadData)) UIPanel::GetInstance()->Load(loadData);
 }
 
 void Scene_Play::InitStage()
 {
-	// ƒXƒJƒCƒXƒtƒBƒA‚Ì¶¬
+	// ã‚¹ã‚«ã‚¤ã‚¹ãƒ•ã‚£ã‚¢ã®ç”Ÿæˆ
 	Instantiate<SkySphere>(this);
 
-	// ƒXƒe[ƒWƒf[ƒ^‚Ì“Ç‚İ‚İ
+	// ã‚¹ãƒ†ãƒ¼ã‚¸ãƒ‡ãƒ¼ã‚¿ã®èª­ã¿è¾¼ã¿
 	json loadData;
+
 	switch (g_selectedGameMode) {
 
-	case 1:
-		if (JsonReader::Load(STAGE_EASY_JSON, loadData)) {
 
-			// ƒXƒe[ƒW‚ğ¶¬
+	case 1:
+		if (JsonReader::Load("Datas/Test/testStage_Intract.json", loadData)) {
+
+			// ã‚¹ãƒ†ãƒ¼ã‚¸ã‚’ç”Ÿæˆ
 			pStage_ = Instantiate<Stage>(this);
 
-			// ƒXƒe[ƒW‚Ì“Ç‚İ‚İ
+			// ã‚¹ãƒ†ãƒ¼ã‚¸ã®èª­ã¿è¾¼ã¿
 			pStage_->Load(loadData);
 		}
 		break;
@@ -170,47 +172,59 @@ void Scene_Play::InitStage()
 	case 2:
 		if (JsonReader::Load(STAGE_NORMAL_JSON, loadData)) {
 
-			// ƒXƒe[ƒW‚ğ¶¬
+			// ã‚¹ãƒ†ãƒ¼ã‚¸ã‚’ç”Ÿæˆ
 			pStage_ = Instantiate<Stage>(this);
 
-			// ƒXƒe[ƒW‚Ì“Ç‚İ‚İ
+			// ã‚¹ãƒ†ãƒ¼ã‚¸ã®èª­ã¿è¾¼ã¿
 			pStage_->Load(loadData);
 		}
 		break;
+	}
+
+	// æ¤ç‰©ã®ç”Ÿæˆ
+	{
+		// æ¤ç‰©ãƒ‡ãƒ¼ã‚¿ã®èª­ã¿è¾¼ã¿
+		json loadData;
+		JsonReader::Load("Datas/PlantData/plant.json", loadData);
+		PlantCollection::Load(loadData);
+
+		// generatorã®èµ·å‹•
+		for (auto pg : (pStage_->GetStageObject("generator"))->FindComponent(ComponentType::PlantGenerator)) 
+			pg->Execute();
 	}
 }
 
 void Scene_Play::InitCamera()
 {
-	// ƒJƒƒ‰î•ñ‚Ì“Ç‚İ‚İ
+	// ã‚«ãƒ¡ãƒ©æƒ…å ±ã®èª­ã¿è¾¼ã¿
 	json loadData;
 	if (JsonReader::Load(PLAY_SCENE_CAMERA_LAYOUT_JSON, loadData)) {
 
-		// ƒJƒƒ‰‚Ì¶¬
+		// ã‚«ãƒ¡ãƒ©ã®ç”Ÿæˆ
 		tpsCamera_ = Instantiate<TPSCamera>(this);
 		
-		// ƒJƒƒ‰‚Ì“Ç‚İ‚İ
+		// ã‚«ãƒ¡ãƒ©ã®èª­ã¿è¾¼ã¿
 		tpsCamera_->Load(loadData);
 
-		// ƒJƒƒ‰‚ÌƒAƒNƒeƒBƒu‰»
+		// ã‚«ãƒ¡ãƒ©ã®ã‚¢ã‚¯ãƒ†ã‚£ãƒ–åŒ–
 		tpsCamera_->SetActive(false);
 	}
 }
 
 void Scene_Play::SetCursorMode()
 {
-	// F3ƒL[‚ª‰Ÿ‚³‚ê‚½‚ç
+	// F3ã‚­ãƒ¼ãŒæŠ¼ã•ã‚ŒãŸã‚‰
 	if (Input::IsKeyDown(DIK_F3)) {
 
-		// ƒJ[ƒ\ƒ‹ŒÅ’è‰»‚ÌØ‚è‘Ö‚¦
+		// ã‚«ãƒ¼ã‚½ãƒ«å›ºå®šåŒ–ã®åˆ‡ã‚Šæ›¿ãˆ
 		fixedCursorPos = !fixedCursorPos;
 
-		// ƒJ[ƒ\ƒ‹‚Ì•\¦ó‘Ô‚ğØ‚è‘Ö‚¦‚é
+		// ã‚«ãƒ¼ã‚½ãƒ«ã®è¡¨ç¤ºçŠ¶æ…‹ã‚’åˆ‡ã‚Šæ›¿ãˆã‚‹
 		cursorVisible = !fixedCursorPos;
 		ShowCursor(cursorVisible);
 	}
 
-	// ƒJ[ƒ\ƒ‹‚ÌˆÊ’u‚ğ’†‰›‚ÉŒÅ’è
+	// ã‚«ãƒ¼ã‚½ãƒ«ã®ä½ç½®ã‚’ä¸­å¤®ã«å›ºå®š
 	if (fixedCursorPos) {
 		SetCursorPos(Direct3D::screenWidth_ / 2, Direct3D::screenHeight_ / 2);
 	}
