@@ -52,7 +52,7 @@ Component_BossBehavior::Component_BossBehavior(string _name, StageObject* _holde
 #ifdef _DEBUG
 	isActive_ = false;
 #else
-	isActive_ = true;
+	//isActive_ = true;
 #endif // DEBUG
 
 }
@@ -64,7 +64,7 @@ void Component_BossBehavior::Initialize()
 	if (!FindChildComponent("Timer")) AddChildComponent(CreateComponent("Timer", Timer, holder_, this));
 	if (!FindChildComponent("TackleMove")) AddChildComponent(CreateComponent("TackleMove", TackleMove, holder_, this));
 	if (!FindChildComponent("HealthGauge")) AddChildComponent(CreateComponent("HealthGauge", HealthGauge, holder_, this));
-
+	if (!FindChildComponent("ExecuteRange")) AddChildComponent(CreateComponent("ExecuteRange", CircleRangeDetector, holder_, this));
 	// effekseer: :Effectの読み込み
 	EFFEKSEERLIB::gEfk->AddEffect("sword", "Effects/Salamander12.efk");/*★★★*/
 	EFFEKSEERLIB::gEfk->AddEffect("fire", "Effects/Fire3.efk");/*★★★*/
@@ -78,6 +78,17 @@ void Component_BossBehavior::Update()
 {
 	// ターゲットの取得
 	if (target_ == nullptr) target_ = (StageObject*)holder_->FindObject(targetName_);
+
+	Component_CircleRangeDetector* executeRange = (Component_CircleRangeDetector*)GetChildComponent("ExecuteRange");
+	if (executeRange != nullptr) {
+		executeRange->SetTarget(target_);
+		executeRange->SetRadius(20);
+		if (executeRange->IsContains()) {
+			Execute();
+		}
+	}
+
+
 
 	// 対象が存在しない または アクティブでない場合は処理を行わない
 	if (target_ == nullptr || !isActive_) return;

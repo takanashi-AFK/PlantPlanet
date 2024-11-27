@@ -9,6 +9,8 @@
 #include "../Objects/Stage/Components/BehaviorComponents/Component_BossBehavior.h"
 #include"../Objects/Stage/Components/BehaviorComponents/Component_PlayerBehavior.h"
 #include"../Objects/Stage/Components/GaugeComponents/Component_HealthGauge.h"
+#include "../Objects/Stage/Components/GaugeComponents/Component_StaminaGauge.h"
+#include "../Objects/Stage/Components/Component.h"
 #include"../Objects/Stage/SkySphere.h"
 #include"../Objects/Stage/Stage.h"
 #include "../Objects/UI/CountDown.h"
@@ -17,7 +19,6 @@
 #include "../Plants/PlantCollection.h"
 
 #include "../Objects/UI/UIProgressBar.h"
-#include "../Objects/Stage/Components/GaugeComponents/Component_StaminaGauge.h"
 #include "../Objects/UI/UIProgressCircle.h"
 
 using namespace Constants;
@@ -44,17 +45,30 @@ void Scene_Play::Initialize()
 
 void Scene_Play::Update()
 {
+	
 	// カーソル固定化処理
 	SetCursorMode();
+
+	// playerBehaviorを持っているオブジェクトのポインタを取得
+	Component_PlayerBehavior* playerBehavior = nullptr;
+	for (auto pb : pStage_->FindComponents(ComponentType::PlayerBehavior))
+		playerBehavior = (Component_PlayerBehavior*)pb;
 
 	//	// カメラのアクティブ化
 	tpsCamera_->SetActive(true);
 
 	// プレイヤーをカメラのターゲットに設定
-	for (auto playerBehavior : pStage_->FindComponents(ComponentType::PlayerBehavior))tpsCamera_->SetTarget(playerBehavior->GetHolder());
+	tpsCamera_->SetTarget(playerBehavior->GetHolder());
 
 	// プレイ情報の表示処理
 	SetPlayInfo();
+
+	static bool isBossSpawn = false;
+	if (playerBehavior->GetResearchPoint() >= 100 && isBossSpawn == false) {
+		// ボス敵の生成
+		SpawnBossEnemy();
+		isBossSpawn = true;
+	}
 }
 
 void Scene_Play::Draw()
@@ -160,4 +174,22 @@ void Scene_Play::SetPlayInfo()
 		if (playerResearchPointCircle != nullptr)playerResearchPointCircle->SetProgress(playerBehavior->GetResearchPoint(), 100);
 	}
 
+}
+
+void Scene_Play::SpawnBossEnemy()
+{
+	json loadData;
+	JsonReader::Load("Datas/Test/Boss.json", loadData);
+
+	for (auto it = loadData.begin(); it != loadData.end(); ++it) {
+
+		// オブジェクトのインスタンスを生成
+		StageObject* obj = CreateStageObject(it.key(), it.value()["modelFilePath_"], pStage_);
+
+		// オブジェクト情報を読込
+		obj->Load(it.value());
+
+		// オブジェクトをリストに追加
+		pStage_->AddStageObject(obj);
+	}
 }

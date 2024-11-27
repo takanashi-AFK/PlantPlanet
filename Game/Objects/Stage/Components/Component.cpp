@@ -232,11 +232,11 @@ Component* CreateComponent(string _name, ComponentType _type, StageObject* _hold
         case TackleMove: comp = new Component_TackleMove(_name, _holder, _parent); break;
         case Timer: comp = new Component_Timer(_name, _holder, _parent); break;
         case WASDInputMove: comp = new Component_WASDInputMove(_name, _holder, _parent); break;
-		    case PlayerMotion: comp = new Component_PlayerMotion(_name, _holder, _parent); break;
-		    case Teleporter: comp = new Component_Teleporter(_name, _holder, _parent); break;
-	    	case PlantGenerator: comp = new Component_PlantGenerator(_name, _holder, _parent); break;
+		case PlayerMotion: comp = new Component_PlayerMotion(_name, _holder, _parent); break;
+		case Teleporter: comp = new Component_Teleporter(_name, _holder, _parent); break;
+	    case PlantGenerator: comp = new Component_PlantGenerator(_name, _holder, _parent); break;
        	case Plant: comp = new Component_Plant(_name, _holder, _parent); break;
-		    case StaminaGauge: comp = new Component_StaminaGauge(_name, _holder, _parent); break;
+		case StaminaGauge: comp = new Component_StaminaGauge(_name, _holder, _parent); break;
         default: /* その他コンポーネントを追加する時は上記のように追加 */ break;
     }
     return comp;

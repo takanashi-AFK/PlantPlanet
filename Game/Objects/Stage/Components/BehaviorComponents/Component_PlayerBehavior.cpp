@@ -83,7 +83,8 @@ Component_PlayerBehavior::Component_PlayerBehavior(string _name, StageObject* _h
 	isDodgeStart_(false),
 	bossBehavior(nullptr),
 	effectModelTransform(nullptr),
-	effectData_()
+	effectData_(),
+	researchPoint_(90)
 {
 }
 
