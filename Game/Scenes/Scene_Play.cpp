@@ -75,7 +75,7 @@ void Scene_Play::Update()
 			for (auto playerBehavior : pStage_->FindComponents(ComponentType::PlayerBehavior))if (((Component_PlayerBehavior*)playerBehavior)->IsDead()) { ScoreManager::isClear = false; isSceneChange = true; }
 
 			// ボスが死んだ場合、切替フラグを立てる
-			for (auto bossBehavior : pStage_->FindComponents(ComponentType::BossBehavior)) if (((Component_BossBehavior*)bossBehavior)->IsDead()) { ScoreManager::isClear = true; isSceneChange = true; }
+			// for (auto bossBehavior : pStage_->FindComponents(ComponentType::BossBehavior)) if (((Component_BossBehavior*)bossBehavior)->IsDead()) { ScoreManager::isClear = true; isSceneChange = true; }
 
 			// タイマーが終了した場合、切替フラグを立てる
 			if (uiTimer != nullptr)if (uiTimer->IsEnd()) { ScoreManager::isClear = false; isSceneChange = true; }
@@ -141,9 +141,10 @@ void Scene_Play::Release()
 
 void Scene_Play::InitUIPanel()
 {
-	// UIパネル & レイアウトの読み込み
-	json loadData;
-	if (JsonReader::Load(PLAY_SCENE_UI_LAYOUT_JSON, loadData)) UIPanel::GetInstance()->Load(loadData);
+	//// UIパネル & レイアウトの読み込み
+	//json loadData;
+	//if (JsonReader::Load("Datas/UILayouts/concept_PlayUI.json", loadData))
+	//	UIPanel::GetInstance()->Load(loadData);
 }
 
 void Scene_Play::InitStage()

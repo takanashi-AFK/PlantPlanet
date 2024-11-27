@@ -12,6 +12,7 @@
 #include "../Plants/PlantCollection.h"
 #include "../../Engine/SceneManager.h"
 #include "../../Engine/magic_enum/magic_enum.hpp"
+#include "WinUser.h"
 using namespace FileManager;
 
 namespace {
@@ -444,7 +445,7 @@ void GameEditor::SaveStage()
 	// ファイルにステージ情報を保存
 	json saveObj;
 	editStage_->Save(saveObj);
-	if (JsonReader::Save(filePath, saveObj) == false) MessageBox(NULL, "保存に失敗しました。", 0, 0);
+	JsonReader::Save(filePath, saveObj);
 	
 }
 
@@ -491,7 +492,7 @@ void GameEditor::LoadStage()
 
 	// ファイルを読み込みステージを生成
 	json loadObj;
-	if (JsonReader::Load(filePath, loadObj) == false) MessageBox(NULL, "読込に失敗しました。", 0, 0);
+	JsonReader::Load(filePath, loadObj);
 	editStage_->Load(loadObj);
 }
 
@@ -544,7 +545,7 @@ void GameEditor::SaveUIPanel()
 	// ファイルにステージ情報を保存
 	json saveObj;
 	editUIPanel_->Save(saveObj);
-	if (JsonReader::Save(filePath, saveObj) == false) MessageBox(NULL, "保存に失敗しました。", 0, 0);
+	JsonReader::Save(filePath, saveObj);
 }
 
 void GameEditor::LoadUIPanel()
@@ -590,7 +591,7 @@ void GameEditor::LoadUIPanel()
 
 	// ファイルを読み込みステージを生成
 	json loadObj;
-	if (JsonReader::Load(filePath, loadObj) == false) MessageBox(NULL, "読込に失敗しました。", 0, 0);
+	JsonReader::Load(filePath, loadObj);
 	editUIPanel_->Load(loadObj);
 }
 
@@ -696,7 +697,7 @@ void GameEditor::SavePlant()
 	// ファイルにステージ情報を保存
 	json saveObj;
 	PlantCollection::Save(saveObj);
-	if (JsonReader::Save(filePath, saveObj) == false) MessageBox(NULL, "保存に失敗しました。", 0, 0);
+	JsonReader::Save(filePath, saveObj);
 }
 
 void GameEditor::LoadPlant()
@@ -742,7 +743,7 @@ void GameEditor::LoadPlant()
 
 	// ファイルを読み込みステージを生成
 	json loadObj;
-	if (JsonReader::Load(filePath, loadObj) == false) MessageBox(NULL, "読込に失敗しました。", 0, 0);
+	JsonReader::Load(filePath, loadObj);
 	PlantCollection::Load(loadObj);
 }
 

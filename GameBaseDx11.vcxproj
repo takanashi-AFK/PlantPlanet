@@ -141,6 +141,7 @@
   <ItemGroup>
     <ClCompile Include="Game\Objects\Stage\Components\PlantComponents\Component_Plant.cpp" />
     <ClCompile Include="Game\Objects\Stage\Components\GaugeComponents\Component_StaminaGauge.cpp" />
+    <ClCompile Include="Game\Objects\Stage\Components\PlantComponents\Component_PlantGenerator.cpp" />
     <ClCompile Include="Game\Objects\UI\Components\Component_UIEasing.cpp" />
     <ClCompile Include="Engine\DirectX\Easing.cpp" />
     <ClCompile Include="Game\Otheres\AudioController.cpp" />
