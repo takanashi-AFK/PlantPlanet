@@ -186,6 +186,8 @@ void Component_PlayerBehavior::Update()
 		--lockRotateTime_;
 		
 		holder_->SetRotate(prevAngles_);
+
+
 	}
 }
 

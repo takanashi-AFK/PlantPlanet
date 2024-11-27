@@ -89,6 +89,8 @@ getter :*/
 
 	/// <returns> ゲーム開始フラグ </returns>
 	bool GetGameStart() const { return isGameStart_; }
+
+	float GetLockRotateTime()const { return lockRotateTime_; };
 /*
 predicate :*/
 	/// <returns> プレイヤーが死んでいるか </returns>

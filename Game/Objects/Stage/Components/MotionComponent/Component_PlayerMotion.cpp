@@ -3,6 +3,8 @@
 #include "../../Stage.h"
 #include "../../../../../Engine/ImGui/imgui.h"
 #include "../../../../Constants.h"
+#include"../MoveComponents/Component_WASDInputMove.h"
+
 using namespace Constants;
 
 Component_PlayerMotion::Component_PlayerMotion(string _name, StageObject* _holder, Component* _parent)
@@ -24,7 +26,22 @@ void Component_PlayerMotion::Update()
 {
     // プレイヤーの状態を取得 FIX: playerBehaviorが複数持たせないようにする
     PlayerState state = PLAYER_STATE_MAX;
-    for (auto playerBehavior : holder_->FindComponent(PlayerBehavior)) state = ((Component_PlayerBehavior*)playerBehavior)->GetState();
+    Component_PlayerBehavior* p_playerBehavior = nullptr;
+
+    for (auto playerBehavior : holder_->FindComponent(PlayerBehavior)) p_playerBehavior = (Component_PlayerBehavior*)(playerBehavior);
+        
+    state = (p_playerBehavior)->GetState();
+    auto lockRotateTimeLeft = (p_playerBehavior)->GetLockRotateTime();
+    //攻撃を撃った後なら複数のアニメーションに分岐する
+    if (lockRotateTimeLeft)
+    {
+       // auto direction = ((Component_WASDInputMove*)(holder_->FindComponent("InputMove")))->GetDirectionType();
+
+       // switch (direction)
+    //    {
+     //   case Component_WASDInputMove::DIRECTION::LEFT:
+     //   }
+    }
 
     // 現在のモデル番号が、現在の状態のモデル番号と一致していない時.
     if (holder_->GetModelHandle() != modelHandleList_[state].modelHandle) {
