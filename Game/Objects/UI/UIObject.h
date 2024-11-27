@@ -163,6 +163,7 @@ getter :*/
 
 	inline Transform GetTransform() { return this->transform_; }
 
+	Transform GetCalcTransform(Transform _transform);
 	Transform GetCalcTransform();
 
 /*

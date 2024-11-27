@@ -40,8 +40,8 @@ private:
 	bool isShootStart_;					// 射撃開始フラグ
 	bool isDodgeStart_;					// 回避開始フラグ
 
-	float stamina_;						// スタミナ
-	bool isUseStamina_;					// スタミナを使用したか
+	//float stamina_;						// スタミナ
+	//bool isUseStamina_;					// スタミナを使用したか
 public:
 	/// <summary> コンストラクタ </summary>
 	Component_PlayerBehavior(string _name, StageObject* _holder, Component* _parent);
@@ -89,9 +89,14 @@ public:
 	/// <returns> ゲーム開始フラグ </returns>
 	bool GetGameStart() const { return isGameStart_; }
 
+	/// <returns> レアリティごとにリサーチポイントを判別して取得 </returns>
 	int GetResearchPointByRarity(PlantData _plantData);
-	/*
-	predicate :*/
+
+	/// <returns> プレイヤーのリサーチポイント </returns>
+	int GetResearchPoint() const { return researchPoint_; }
+
+/*
+predicate :*/
 	/// <returns> プレイヤーが死んでいるか </returns>
 	bool IsDead();
 

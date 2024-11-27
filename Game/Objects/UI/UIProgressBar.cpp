@@ -14,7 +14,7 @@ namespace {
 }
 
 UIProgressBar::UIProgressBar(string _name, UIObject* parent,int _layerNum)
-    :UIObject(_name, UIType::UI_PROGRESSBAR, parent, _layerNum), max_(nullptr), now_(nullptr)
+    :UIObject(_name, UIType::UI_PROGRESSBAR, parent, _layerNum)
 {
 }
 
@@ -51,7 +51,7 @@ void UIProgressBar::Update()
     // ゲージのスケールを参照した値を基に設定
     {
 		// ゲージのスケールを設定 ※現在値/最大値
-        if (max_ != nullptr || now_ != nullptr)gaugeImage_.transform_.scale_.x = frameImage_.transform_.scale_.x * (*now_ / *max_);
+        gaugeImage_.transform_.scale_.x = frameImage_.transform_.scale_.x * (now_ / max_);
 
 		// ゲージのスケールが0以下の場合は、0に設定
 		if (gaugeImage_.transform_.scale_.x <= 0)gaugeImage_.transform_.scale_.x = 0;
@@ -64,8 +64,9 @@ void UIProgressBar::Draw()
   
     if (gaugeImage_.IsAvailable()) {
 
-        Transform localTransform = gaugeImage_.transform_;
-        auto t = GetCalcTransform();
+        Transform LoaclTransform = gaugeImage_.transform_;
+        auto t = GetCalcTransform(LoaclTransform);
+
 		// ゲージの画像を描画
         Image::SetTransform(gaugeImage_.handle_, t);
         Image::Draw(gaugeImage_.handle_, Direct3D::SHADER_BAR, gaugeImage_.color_);
@@ -74,8 +75,9 @@ void UIProgressBar::Draw()
     // フレーム画像が読み込まれている場合
     if (frameImage_.IsAvailable()) {
 
-        Transform localTransform = frameImage_.transform_;
-        auto t = GetCalcTransform();
+        Transform LoaclTransform = frameImage_.transform_;
+        auto t = GetCalcTransform(LoaclTransform);
+
         // フレームの画像を描画
 		Image::SetTransform(frameImage_.handle_, t);
 		Image::Draw(frameImage_.handle_);
@@ -160,8 +162,8 @@ void UIProgressBar::DrawData()
     if (ImGui::TreeNode("value")) {
         
 		// 最大値と現在値を設定
-		if(max_ != nullptr)ImGui::DragFloat("Max", max_);
-		if(now_ != nullptr)ImGui::DragFloat("Now", now_);
+		ImGui::DragFloat("max", &max_);
+		ImGui::DragFloat("now", &now_);
 
 		ImGui::TreePop();
     }

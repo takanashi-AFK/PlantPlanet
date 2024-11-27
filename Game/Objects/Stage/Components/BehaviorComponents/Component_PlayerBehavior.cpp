@@ -114,45 +114,45 @@ void Component_PlayerBehavior::Update()
 	Component_WASDInputMove* move = (Component_WASDInputMove*)(GetChildComponent("InputMove"));
 	if (GetChildComponent("InputMove") != nullptr)move->Execute();
 
-	// HP関連処理
-	{
-		// プレイヤーのHPゲージコンポーネントを取得
-		Component_HealthGauge* hg = (Component_HealthGauge*)(GetChildComponent("PlayerHealthGauge"));
+	//// HP関連処理
+	//{
+	//	// プレイヤーのHPゲージコンポーネントを取得
+	//	Component_HealthGauge* hg = (Component_HealthGauge*)(GetChildComponent("PlayerHealthGauge"));
 
-		// UIProgressBarを取得
-		UIProgressBar* hpBar = (UIProgressBar*)UIPanel::GetInstance()->FindObject(PLAY_SCENE_PLAYER_HP_GAUGE_NAME);
+	//	// UIProgressBarを取得
+	//	UIProgressBar* hpBar = (UIProgressBar*)UIPanel::GetInstance()->FindObject(PLAY_SCENE_PLAYER_HP_GAUGE_NAME);
 
-		// HPの値を移動
-		ScoreManager::playerHp = (int)hg->now_;
+	//	// HPの値を移動
+	//	ScoreManager::playerHp = (int)hg->now_;
 
-		// HPバーの値を設定
-		if (hpBar != nullptr && hg != nullptr)hpBar->SetProgress(&hg->now_, &hg->max_);
+	//	// HPバーの値を設定
+	//	if (hpBar != nullptr && hg != nullptr)hpBar->SetProgress(&hg->now_, &hg->max_);
 
-		// HPが0以下になったら... DEAD状態に遷移
-		if (hg != nullptr)if (hg->IsDead() == true)SetState(PLAYER_STATE_DEAD);
-	}
+	//	// HPが0以下になったら... DEAD状態に遷移
+	//	if (hg != nullptr)if (hg->IsDead() == true)SetState(PLAYER_STATE_DEAD);
+	//}
 
-	// スタミナ関連処理
-	{
-		// プレイヤーのスタミナゲージコンポーネントを取得
-		Component_StaminaGauge* sg = (Component_StaminaGauge*)(GetChildComponent("StaminaGauge"));
+	//// スタミナ関連処理
+	//{
+	//	// プレイヤーのスタミナゲージコンポーネントを取得
+	//	Component_StaminaGauge* sg = (Component_StaminaGauge*)(GetChildComponent("StaminaGauge"));
 
-		// UIProgressBarを取得
-		UIProgressBar* staminaBar = (UIProgressBar*)UIPanel::GetInstance()->FindObject("staminaGauge");
+	//	// UIProgressBarを取得
+	//	UIProgressBar* staminaBar = (UIProgressBar*)UIPanel::GetInstance()->FindObject("staminaGauge");
 
-		// スタミナバーの値を設定
-		if (staminaBar != nullptr && sg != nullptr)staminaBar->SetProgress(&sg->now_, &sg->max_);
-	}
+	//	// スタミナバーの値を設定
+	//	if (staminaBar != nullptr && sg != nullptr)staminaBar->SetProgress(&sg->now_, &sg->max_);
+	//}
 
-	// 調査度ゲージ処理
-	{
-		// UIProgressBarを取得
-		UIProgressCircle* researchPointCircle = (UIProgressCircle*)UIPanel::GetInstance()->FindObject("researchPointCircle");
+	//// 調査度ゲージ処理
+	//{
+	//	// UIProgressBarを取得
+	//	UIProgressCircle* researchPointCircle = (UIProgressCircle*)UIPanel::GetInstance()->FindObject("researchPointCircle");
 
-		// 調査度バーの値を設定
-		researchPointCircle->SetProgress(researchPoint_,100);
-	
-	}
+	//	// 調査度バーの値を設定
+	//	researchPointCircle->SetProgress(researchPoint_,100);
+	//
+	//}
 
 
 	// ＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝

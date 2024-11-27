@@ -21,10 +21,6 @@ void Scene_Title::Initialize()
 	// UIパネル & レイアウトの読み込み
 	json loadData;
 	if (JsonReader::Load("Datas/Test/Prottype_titleScene_Layout.json", loadData)) UIPanel::GetInstance()->Load(loadData);
-
-	// ユーザー名の初期化
-	/*UIInputString* input = (UIInputString*)UIPanel::GetInstance()->GetUIObject(TITLE_SCENE_USER_NAME_INPUT_NAME);
-	input->SetInputString(ScoreManager::userName);*/
 }
 
 void Scene_Title::Update()

@@ -364,14 +364,19 @@ string UIObject::GetUITypeString(UIType _type)
 	}
 }
 
-Transform UIObject::GetCalcTransform()
+Transform UIObject::GetCalcTransform(Transform _transform)
 {
 	if (this->easing_.get())
 	{
 		easing_.get()->GetEasing()->val1_ = 1;
 		return this->easing_.get()->GetValue();
 	}
-	return transform_;
+	return _transform;
+}
+
+Transform UIObject::GetCalcTransform()
+{
+	return GetCalcTransform(transform_);
 }
 
 void UIObject::UpdateSub()

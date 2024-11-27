@@ -79,44 +79,8 @@ void Component_BossBehavior::Update()
 	// ターゲットの取得
 	if (target_ == nullptr) target_ = (StageObject*)holder_->FindObject(targetName_);
 
-	// カウント制御されている場合の処理
-	CountDown* countDown = (CountDown*)(holder_->FindObject("CountDown"));
-	if (countDown != nullptr && isGameStart_ == false) {
-
-		// カウントダウンが終了した場合
-		if (countDown->IsFinished()) {
-
-			//移動を可能にする
-			isActive_ = true;
-
-			// ゲームスタートフラグを立てる
-			isGameStart_ = true;
-		}
-		else {
-			// 移動を不可能にする
-			isActive_ = false;
-			return;
-		}
-	}
-
 	// 対象が存在しない または アクティブでない場合は処理を行わない
 	if (target_ == nullptr || !isActive_) return;
-
-
-	// HP関連処理
-	{
-		// ボスのHPゲージコンポーネントを取得
-		Component_HealthGauge* hg = (Component_HealthGauge*)(GetChildComponent("HealthGauge"));
-
-		// UIProgressBarを取得
-		UIProgressBar* hpBar = (UIProgressBar*)UIPanel::GetInstance()->FindObject(PLAY_SCENE_BOSS_HP_GAUGE_NAME);
-
-		// HPバーの値を設定
-		if (hpBar != nullptr && hg != nullptr)hpBar->SetProgress(&hg->now_, &hg->max_);
-
-		// HPが0以下になったら... DEAD状態に遷移
-		if (hg != nullptr)if (hg->IsDead() == true)SetState(BOSS_STATE_DEAD);
-	}
 
 	// 状態によって処理を分岐
 	switch (bNowState_)

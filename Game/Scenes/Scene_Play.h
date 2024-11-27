@@ -47,5 +47,7 @@ private:
 	/// <summary> カーソルの状態を設定 </summary>
 	void SetCursorMode();
 
+	/// <summary> プレイ情報の表示設定 </summary>
+	void SetPlayInfo();
 };
 
