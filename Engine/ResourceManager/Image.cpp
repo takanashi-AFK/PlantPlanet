@@ -94,12 +94,17 @@ namespace Image
 
 	void Draw(int handle, float _startAngle, float _endAngle)
 	{
+		Draw(handle, _startAngle, _endAngle, XMFLOAT3(1, 1, 1));
+	}
+
+	void Draw(int handle, float _startAngle, float _endAngle, XMFLOAT3 _color)
+	{
 		if (handle < 0 || handle >= _datas.size() || _datas[handle] == nullptr)
 		{
 			return;
 		}
 		_datas[handle]->transform.Calclation();
-		_datas[handle]->pSprite->Draw(_datas[handle]->transform, _datas[handle]->rect, _datas[handle]->alpha, _startAngle, _endAngle);
+		_datas[handle]->pSprite->Draw(_datas[handle]->transform, _datas[handle]->rect, _datas[handle]->alpha, _startAngle, _endAngle,_color);
 	}
 
 

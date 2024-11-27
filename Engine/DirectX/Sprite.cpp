@@ -174,6 +174,11 @@ void Sprite::Draw(Transform& transform, RECT rect, float alpha, Direct3D::SHADER
 
 void Sprite::Draw(Transform& transform, RECT rect, float alpha, float startAngle, float endAngle)
 {
+	Draw(transform, rect, alpha, startAngle, endAngle, XMFLOAT3(1, 1, 1));
+}
+
+void Sprite::Draw(Transform& transform, RECT rect, float alpha, float startAngle, float endAngle, XMFLOAT3 _color)
+{
 	//Ç¢ÇÎÇ¢ÇÎê›íË
 	Direct3D::SetShader(Direct3D::SHADER_TIMER);
 	Direct3D::SetBlendMode(Direct3D::BLEND_DEFAULT);
@@ -213,7 +218,7 @@ void Sprite::Draw(Transform& transform, RECT rect, float alpha, float startAngle
 
 	cb.world = XMMatrixTranspose(world);
 	cb.uvTrans = XMMatrixTranspose(mTexel);
-	cb.color = XMFLOAT4(1,1,1, alpha);
+	cb.color = XMFLOAT4(_color.x , _color.y, _color.z, alpha);
 
 	cb.angle = XMFLOAT2(startAngle, endAngle);
 
