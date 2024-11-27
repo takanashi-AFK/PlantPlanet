@@ -7,6 +7,7 @@
 #include <map>
 #include <functional>
 #include <string>
+#include<array>
 
 using std::map;
 using std::function;
@@ -129,6 +130,8 @@ namespace Direct3D
 	void SetViewport(int width, int height);
 
 	void GetFullScreenSize(int& width, int& height);
+
+	std::wstring GetShaderName(int index);
 };
 
 namespace HLSLInclude

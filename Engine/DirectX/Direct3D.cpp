@@ -40,6 +40,7 @@ namespace Direct3D
 	ID3D11Device*           pDevice_ = nullptr;
 	ID3D11DeviceContext*    pContext_ = nullptr;
 	SHADER_BUNDLE			shaderBundle[SHADER_MAX] = { 0 };
+	std::array<std::wstring, SHADER_MAX>shaderName = {};
 	int						screenWidth_ = 0;
 	int						screenHeight_ = 0;
 	bool					isFullScreen_ = false;
@@ -292,6 +293,8 @@ namespace Direct3D
 				pCompilePS->Release();
 
 				pDevice_->CreateRasterizerState(&r_desc, &shaderBundle[index].pRasterizerState);
+
+				shaderName[index] = file;
 			};
 		
 		//3D
@@ -418,9 +421,11 @@ namespace Direct3D
 			hlsl_layout = temp;
 			compile_fxc(L"Shader/Timer.hlsl", Direct3D::SHADER_TIMER, sizeof(temp) / sizeof(D3D11_INPUT_ELEMENT_DESC));
 		}
+		
+		shaderName;
 	}
 
-
+	
 	//ç°Ç©ÇÁï`âÊÇ∑ÇÈShaderBundleÇê›íË
 	void SetShader(SHADER_TYPE type)
 	{
@@ -603,6 +608,11 @@ namespace Direct3D
 
 		width = GetSystemMetrics(SM_CXSCREEN);
 		height = GetSystemMetrics(SM_CYSCREEN);
+	}
+
+	std::wstring GetShaderName(int index)
+	{
+		return shaderName[index];
 	}
 
 }

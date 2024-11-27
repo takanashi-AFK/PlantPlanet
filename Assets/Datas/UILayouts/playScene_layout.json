@@ -1,1 +1,113 @@
-{"aPadButton":{"imageFilePath_":"Images/playScene/xbox_button_color_a.png","isVisible_":true,"layerNumber_":10,"objectName_":"aPadButton","position_":[0.75,-0.8999999761581421,0.0],"rotate_":[0.0,0.0,0.0],"scale_":[1.0,1.0,1.0],"type_":2},"attackIcon":{"imageFilePath_":"Images/playScene/attackIcon.png","isVisible_":true,"layerNumber_":7,"objectName_":"attackIcon","position_":[0.8999999761581421,-0.699999988079071,0.0],"rotate_":[0.0,0.0,0.0],"scale_":[0.07000000029802322,0.07000000029802322,1.0],"type_":2},"bossIcon":{"imageFilePath_":"Images/playScene/bossIcon.png","isVisible_":true,"layerNumber_":6,"objectName_":"bossIcon","position_":[0.8999999761581421,0.8399999737739563,0.0],"rotate_":[0.0,0.0,0.0],"scale_":[0.07000000029802322,0.07000000029802322,1.0],"type_":2},"boss_hpGauge":{"frameImage_":{"filePath_":"Images/playScene/hpGauge_front.png"},"gaugeImage_":{"color_":[1.0,1.0,1.0],"filePath_":"Images/playScene/hpGauge_back.png"},"isVisible_":true,"layerNumber_":4,"objectName_":"boss_hpGauge","position_":[0.0860000029206276,0.8399999737739563,0.0],"rotate_":[0.0,0.0,0.0],"scale_":[1.7999999523162842,0.699999988079071,1.0],"type_":4},"dodgeIcon":{"imageFilePath_":"Images/playScene/dodgeIcon.png","isVisible_":true,"layerNumber_":8,"objectName_":"dodgeIcon","position_":[0.75,-0.699999988079071,0.0],"rotate_":[0.0,0.0,0.0],"scale_":[0.07000000029802322,0.07000000029802322,1.0],"type_":2},"playerIcon":{"imageFilePath_":"Images/playScene/playerIcon.png","isVisible_":true,"layerNumber_":5,"objectName_":"playerIcon","position_":[-0.8999999761581421,0.8399999737739563,0.0],"rotate_":[0.0,0.0,0.0],"scale_":[0.07000000029802322,0.07000000029802322,1.0],"type_":2},"player_hpGauge":{"frameImage_":{"filePath_":"Images/playScene/hpGauge_front.png"},"gaugeImage_":{"color_":[1.0,1.0,1.0],"filePath_":"Images/playScene/hpGauge_back.png"},"isVisible_":true,"layerNumber_":3,"objectName_":"player_hpGauge","position_":[-0.800000011920929,0.8399999737739563,0.0],"rotate_":[0.0,0.0,0.0],"scale_":[1.7999999523162842,0.699999988079071,1.0],"type_":4},"rtPadButton":{"imageFilePath_":"Images/playScene/xbox_rt.png","isVisible_":true,"layerNumber_":9,"objectName_":"rtPadButton","position_":[0.8999999761581421,-0.8999999761581421,0.0],"rotate_":[0.0,0.0,0.0],"scale_":[1.0,1.0,1.0],"type_":2},"timer":{"circleGaugeImage":"Images/playScene/circleGauge_back.png","drawType":1,"isVisible_":true,"layerNumber_":1,"max":7200.0,"objectName_":"timer","position_":[0.0,0.8500000238418579,0.0],"rotate_":[0.0,0.0,90.0],"scale_":[0.10000000149011612,0.10000000149011612,1.0],"size":1.0,"type_":6},"timer_front":{"imageFilePath_":"Images/playScene/circleGauge_front.png","isVisible_":true,"layerNumber_":2,"objectName_":"timer_front","position_":[0.0,0.8500000238418579,0.0],"rotate_":[0.0,0.0,0.0],"scale_":[0.10000000149011612,0.10000000149011612,1.0],"type_":2}}
+{
+  "aPadButton": {
+    "imageFilePath_": "Images/playScene/xbox_button_color_a.png",
+    "isVisible_": true,
+    "layerNumber_": 10,
+    "objectName_": "aPadButton",
+    "position_": [ 0.75, -0.8999999761581421, 0.0 ],
+    "rotate_": [ 0.0, 0.0, 0.0 ],
+    "scale_": [ 1.0, 1.0, 1.0 ],
+    "type_": 2
+  },
+  "attackIcon": {
+    "imageFilePath_": "Images/playScene/attackIcon.png",
+    "isVisible_": true,
+    "layerNumber_": 7,
+    "objectName_": "attackIcon",
+    "position_": [ 0.8999999761581421, -0.699999988079071, 0.0 ],
+    "rotate_": [ 0.0, 0.0, 0.0 ],
+    "scale_": [ 0.07000000029802322, 0.07000000029802322, 1.0 ],
+    "type_": 2
+  },
+  "bossIcon": {
+    "imageFilePath_": "Images/playScene/bossIcon.png",
+    "isVisible_": true,
+    "layerNumber_": 6,
+    "objectName_": "bossIcon",
+    "position_": [ 0.8999999761581421, 0.8399999737739563, 0.0 ],
+    "rotate_": [ 0.0, 0.0, 0.0 ],
+    "scale_": [ 0.07000000029802322, 0.07000000029802322, 1.0 ],
+    "type_": 2
+  },
+  "boss_hpGauge": {
+    "frameImage_": { "filePath_": "Images/playScene/hpGauge_front.png" },
+    "gaugeImage_": {
+      "color_": [ 1.0, 1.0, 1.0 ],
+      "filePath_": "Images/playScene/hpGauge_back.png"
+    },
+    "isVisible_": true,
+    "layerNumber_": 4,
+    "objectName_": "boss_hpGauge",
+    "position_": [ 0.0860000029206276, 0.8399999737739563, 0.0 ],
+    "rotate_": [ 0.0, 0.0, 0.0 ],
+    "scale_": [ 1.7999999523162842, 0.699999988079071, 1.0 ],
+    "type_": 4
+  },
+  "dodgeIcon": {
+    "imageFilePath_": "Images/playScene/dodgeIcon.png",
+    "isVisible_": true,
+    "layerNumber_": 8,
+    "objectName_": "dodgeIcon",
+    "position_": [ 0.75, -0.699999988079071, 0.0 ],
+    "rotate_": [ 0.0, 0.0, 0.0 ],
+    "scale_": [ 0.07000000029802322, 0.07000000029802322, 1.0 ],
+    "type_": 2
+  },
+  "playerIcon": {
+    "imageFilePath_": "Images/playScene/playerIcon.png",
+    "isVisible_": true,
+    "layerNumber_": 5,
+    "objectName_": "playerIcon",
+    "position_": [ -0.8999999761581421, 0.8399999737739563, 0.0 ],
+    "rotate_": [ 0.0, 0.0, 0.0 ],
+    "scale_": [ 0.07000000029802322, 0.07000000029802322, 1.0 ],
+    "type_": 2
+  },
+  "player_hpGauge": {
+    "frameImage_": { "filePath_": "Images/playScene/hpGauge_front.png" },
+    "gaugeImage_": {
+      "color_": [ 1.0, 1.0, 1.0 ],
+      "filePath_": "Images/playScene/hpGauge_back.png"
+    },
+    "isVisible_": true,
+    "layerNumber_": 3,
+    "objectName_": "player_hpGauge",
+    "position_": [ -0.800000011920929, 0.8399999737739563, 0.0 ],
+    "rotate_": [ 0.0, 0.0, 0.0 ],
+    "scale_": [ 1.7999999523162842, 0.699999988079071, 1.0 ],
+    "type_": 4
+  },
+  "rtPadButton": {
+    "imageFilePath_": "Images/playScene/xbox_rt.png",
+    "isVisible_": true,
+    "layerNumber_": 9,
+    "objectName_": "rtPadButton",
+    "position_": [ 0.8999999761581421, -0.8999999761581421, 0.0 ],
+    "rotate_": [ 0.0, 0.0, 0.0 ],
+    "scale_": [ 1.0, 1.0, 1.0 ],
+    "type_": 2
+  },
+  "timer": {
+    "circleGaugeImage": "Images/playScene/circleGauge_back.png",
+    "drawType": 1,
+    "isVisible_": true,
+    "layerNumber_": 1,
+    "max": 7200.0,
+    "objectName_": "timer",
+    "position_": [ 0.0, 0.8500000238418579, 0.0 ],
+    "rotate_": [ 0.0, 0.0, 90.0 ],
+    "scale_": [ 0.10000000149011612, 0.10000000149011612, 1.0 ],
+    "size": 1.0,
+    "type_": 6
+  },
+  "timer_front": {
+    "imageFilePath_": "Images/playScene/circleGauge_front.png",
+    "isVisible_": true,
+    "layerNumber_": 2,
+    "objectName_": "timer_front",
+    "position_": [ 0.0, 0.8500000238418579, 0.0 ],
+    "rotate_": [ 0.0, 0.0, 0.0 ],
+    "scale_": [ 0.10000000149011612, 0.10000000149011612, 1.0 ],
+    "type_": 2
+  }
+}

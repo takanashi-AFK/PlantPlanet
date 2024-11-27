@@ -10,7 +10,8 @@
 #include "../../Engine/GameObject/Camera.h"
 #include "../Objects/Camera/TPSCamera.h"
 #include "../Plants/PlantCollection.h"
-
+#include "../../Engine/SceneManager.h"
+#include "../../Engine/magic_enum/magic_enum.hpp"
 using namespace FileManager;
 
 namespace {
@@ -24,11 +25,11 @@ GameEditor::GameEditor(GameObject* _parent)
 
 void GameEditor::Initialize()
 {
-	// ƒJƒƒ‰‰æ‘œ‚ÌƒeƒNƒXƒ`ƒƒ‚ğ“Ç‚İ‚Ş
+	// ã‚«ãƒ¡ãƒ©ç”»åƒã®ãƒ†ã‚¯ã‚¹ãƒãƒ£ã‚’èª­ã¿è¾¼ã‚€
 	pTexture_camera = new Texture();
 	pTexture_camera->Load("Images/defaults/GUI_Camera.png");
 
-	// ƒJƒƒ‰‚ÌˆÊ’u‚ğæ“¾
+	// ã‚«ãƒ¡ãƒ©ã®ä½ç½®ã‚’å–å¾—
 	cameraPosition_ = Camera::GetPosition();
 	cameraTarget_ = Camera::GetTarget();
 }
@@ -39,13 +40,13 @@ void GameEditor::Update()
 
 void GameEditor::Draw()
 {
-	// ƒ[ƒ‹ƒhƒAƒEƒgƒ‰ƒCƒi[‚ğ•`‰æ
+	// ãƒ¯ãƒ¼ãƒ«ãƒ‰ã‚¢ã‚¦ãƒˆãƒ©ã‚¤ãƒŠãƒ¼ã‚’æç”»
 	DrawWorldOutLiner();
 
-	// Ú×ƒEƒBƒ“ƒhƒE‚ğ•`‰æ
+	// è©³ç´°ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ã‚’æç”»
 	DrawDatails();
 
-	// UIƒIƒuƒWƒFƒNƒgì¬ƒEƒBƒ“ƒhƒE‚ğ•`‰æ
+	// UIã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆä½œæˆã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ã‚’æç”»
 	if(isShowCreateUIObjectWindow_)UIObjectCreateWindow();
 }
 
@@ -55,25 +56,25 @@ void GameEditor::Release()
 
 void GameEditor::DrawWorldOutLiner()
 {
-	// ImGui‚Å•\¦‚·‚éƒEƒBƒ“ƒhƒE‚Ìİ’è‚ğs‚¤
+	// ImGuiã§è¡¨ç¤ºã™ã‚‹ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ã®è¨­å®šã‚’è¡Œã†
 	ImGui::SetNextWindowPos(ImVec2(Direct3D::screenWidth_ * 0.7f, 0));
 	ImGui::SetNextWindowSize(ImVec2(Direct3D::screenWidth_ * 0.3f, Direct3D::screenHeight_ * 0.5f));
 
-	// ŒÅ’èƒEƒBƒ“ƒhƒE‚ğ•\¦
+	// å›ºå®šã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ã‚’è¡¨ç¤º
 	ImGui::Begin("World Outliner", NULL,
 		ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse| ImGuiWindowFlags_AlwaysHorizontalScrollbar);
 	{
 		ImGui::BeginTabBar("tab Ber");{
 
-			// ƒXƒe[ƒWƒIƒuƒWƒFƒNƒg‚Ìƒ^ƒu‚ğ•\¦
+			// ã‚¹ãƒ†ãƒ¼ã‚¸ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®ã‚¿ãƒ–ã‚’è¡¨ç¤º
 			if(editStage_ != nullptr)
 				if (ImGui::BeginTabItem("StageObject")) {
 					DrawStageOutLiner();
 					editType_ = STAGE;
 					ImGui::EndTabItem();
 				}
-
-			// UIƒIƒuƒWƒFƒNƒg‚Ìƒ^ƒu‚ğ•\¦
+			
+			// UIã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®ã‚¿ãƒ–ã‚’è¡¨ç¤º
 			if(editUIPanel_ != nullptr)
 				if (ImGui::BeginTabItem("UIPanel")) {
 					DrawUIPanelOutLiner();
@@ -81,12 +82,12 @@ void GameEditor::DrawWorldOutLiner()
 					ImGui::EndTabItem();
 				}
 
-			// ƒJƒƒ‰‚Ìƒ^ƒu‚ğ•\¦
+			// ã‚«ãƒ¡ãƒ©ã®ã‚¿ãƒ–ã‚’è¡¨ç¤º
 			if (ImGui::BeginTabItem("Camera")) {
 				ImGui::Image(pTexture_camera->GetSRV(), ImVec2(16*23, 9*23));
 
 				ImGui::Dummy(ImVec2(0, 10));
-				// ƒ‰ƒWƒIƒ{ƒ^ƒ“
+				// ãƒ©ã‚¸ã‚ªãƒœã‚¿ãƒ³
 				ImGui::Text("Camera type");
 				if (ImGui::RadioButton("default camera", cameraType_ == DEFAULT))cameraType_ = DEFAULT;
 				if (ImGui::RadioButton("tps camera", cameraType_ == TPS))cameraType_ = TPS;
@@ -95,7 +96,7 @@ void GameEditor::DrawWorldOutLiner()
 				ImGui::EndTabItem();
 			}
 
-			// A•¨—p‚Ìƒ^ƒu‚ğ•\¦
+			// æ¤ç‰©ç”¨ã®ã‚¿ãƒ–ã‚’è¡¨ç¤º
 			if (ImGui::BeginTabItem("Plants")) {
 				DrawPlantOutLiner();
 				editType_ = PLANT;
@@ -126,7 +127,7 @@ void GameEditor::DrawStageOutLiner()
 	ImGui::Separator();
 
 	ImGui::BeginChild("ObjectList"); {
-		// ƒŠƒXƒg‚ğ•\¦
+		// ãƒªã‚¹ãƒˆã‚’è¡¨ç¤º
 		for (int i = 0; i < editStage_->GetStageObjects().size(); ++i)
 			if (ImGui::Selectable(editStage_->GetStageObjects()[i]->GetObjectName().c_str(), selectEditStageObjectIndex_ == i)) {
 				selectEditStageObjectIndex_ = i;
@@ -153,7 +154,7 @@ void GameEditor::DrawUIPanelOutLiner()
 	ImGui::Separator();
 
 	ImGui::BeginChild("ObjectList"); {
-		// ƒŠƒXƒg‚ğ•\¦
+		// ãƒªã‚¹ãƒˆã‚’è¡¨ç¤º
 		for (int i = 0; i < editUIPanel_->GetUIObjects().size(); ++i)
 			if (ImGui::Selectable(editUIPanel_->GetUIObjects()[i]->GetObjectName().c_str(), selectEditUIObjectIndex_ == i)) {
 				selectEditUIObjectIndex_ = i;
@@ -164,11 +165,11 @@ void GameEditor::DrawUIPanelOutLiner()
 
 void GameEditor::DrawDatails()
 {
-	// ImGui‚Å•\¦‚·‚éƒEƒBƒ“ƒhƒE‚Ìİ’è‚ğs‚¤
+	// ImGuiã§è¡¨ç¤ºã™ã‚‹ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ã®è¨­å®šã‚’è¡Œã†
 	ImGui::SetNextWindowPos(ImVec2(Direct3D::screenWidth_ * 0.7f, Direct3D::screenHeight_ * 0.5f));
 	ImGui::SetNextWindowSize(ImVec2(Direct3D::screenWidth_ * 0.3f, Direct3D::screenHeight_ * 0.5f));
 
-	// ŒÅ’èƒEƒBƒ“ƒhƒE‚ğ•\¦
+	// å›ºå®šã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ã‚’è¡¨ç¤º
 	ImGui::Begin("Details", NULL,
 				ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_AlwaysHorizontalScrollbar);
 	{
@@ -226,13 +227,13 @@ void GameEditor::DrawDatalsCamera()
 	{
 	case DEFAULT:
 		tpsCamera_->SetActive(false);
-		// ƒJƒƒ‰‚ÌˆÊ’u‚ğİ’è
+		// ã‚«ãƒ¡ãƒ©ã®ä½ç½®ã‚’è¨­å®š
 		ImGui::DragFloat3("Camera position", &cameraPosition_.x);
-		// ƒJƒƒ‰‚ÌÅ“_‚ğİ’è
+		// ã‚«ãƒ¡ãƒ©ã®ç„¦ç‚¹ã‚’è¨­å®š
 		ImGui::DragFloat3("Camera target", &cameraTarget_.x);
 
 		ImGui::DragFloat3("3D CamMove", &threeDCamMove_.x);
-		// ‰Šú‰»ƒ{ƒ^ƒ“
+		// åˆæœŸåŒ–ãƒœã‚¿ãƒ³
 		if (ImGui::Button("Default")){
 			cameraPosition_ = { 0,30,-20 };
 			cameraTarget_   = { 0,-20,20 };
@@ -240,15 +241,15 @@ void GameEditor::DrawDatalsCamera()
 		}
 		
 		
-		// ƒJƒƒ‰‚ÌˆÊ’u‚ğİ’è
+		// ã‚«ãƒ¡ãƒ©ã®ä½ç½®ã‚’è¨­å®š
 		Camera::SetPosition(cameraPosition_ + threeDCamMove_);
-		// ƒJƒƒ‰‚ÌÅ“_‚ğİ’è
+		// ã‚«ãƒ¡ãƒ©ã®ç„¦ç‚¹ã‚’è¨­å®š
 		Camera::SetTarget(cameraTarget_ + threeDCamMove_);
 
 		break;
 
 	case TPS:
-		// •Û‘¶ƒ{ƒ^ƒ“
+		// ä¿å­˜ãƒœã‚¿ãƒ³
 		if (ImGui::Button("save")) {
 			json saveObj;
 			tpsCamera_->Save(saveObj);
@@ -256,7 +257,7 @@ void GameEditor::DrawDatalsCamera()
 		}
 		ImGui::SameLine();
 
-		// “Ç‚İ‚İƒ{ƒ^ƒ“
+		// èª­ã¿è¾¼ã¿ãƒœã‚¿ãƒ³
 		if (ImGui::Button("load")) {
 			json loadObj;
 			JsonReader::Load("Datas/CameraLayouts/TPSCamera.json", loadObj);
@@ -265,7 +266,7 @@ void GameEditor::DrawDatalsCamera()
 
 		ImGui::Separator();
 
-		// İ’è—p‚ÌƒEƒBƒ“ƒhƒE‚ğ•\¦
+		// è¨­å®šç”¨ã®ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ã‚’è¡¨ç¤º
 		tpsCamera_->DrawData();
 
 		break;
@@ -282,17 +283,17 @@ void GameEditor::UIObjectCreateWindow()
 			ImGui::Text("Set the details of the object to be generated!!");
 			ImGui::Separator();
 
-			// –¼‘O‚ğ“ü—Í
+			// åå‰ã‚’å…¥åŠ›
 			ImGui::InputTextWithHint(":seting name", "Input object name...", nameBuffer, IM_ARRAYSIZE(nameBuffer));
 
-			// ƒ^ƒCƒv‚ğ‘I‘ğ
-			static UIType uitype = UIType::UI_NONE;	// ‰Šú‘I‘ğ€–Ú
-			static std::string type = "NONE";		// ‰Šú‘I‘ğ€–Ú
+			// ã‚¿ã‚¤ãƒ—ã‚’é¸æŠ
+			static UIType uitype = UIType::UI_NONE;	// åˆæœŸé¸æŠé …ç›®
+			static std::string type = "NONE";		// åˆæœŸé¸æŠé …ç›®
 
 			if (ImGui::BeginCombo(":seting type", type.c_str())) {
 				for (int i = 0; i < UIType::UI_MAX; i++) {
 					std::string uiTypeString = UIObject::GetUITypeString((UIType)i);
-					if (uiTypeString.empty()) continue; // ‹ó•¶š—ñ‚ğ–³‹
+					if (uiTypeString.empty()) continue; // ç©ºæ–‡å­—åˆ—ã‚’ç„¡è¦–
 
 					bool isSelected = (type == UIObject::GetUITypeString((UIType)i));
 					if (ImGui::Selectable(UIObject::GetUITypeString((UIType)i).c_str(), isSelected)) {
@@ -308,11 +309,11 @@ void GameEditor::UIObjectCreateWindow()
 			static bool isEasing = false;
 			ImGui::Checkbox(":Is using Easing?",&isEasing);
 
-			//ƒŒƒCƒ„[”Ô†‚ğ“ü—Í
-			static int beforeLayerNumber = -1; //’¼‘O‚ÌƒŒƒCƒ„[”Ô†
-			bool isLayerNumberDuplicate = false; //ƒŒƒCƒ„[”Ô†‚ªd•¡‚µ‚Ä‚¢‚é‚©
+			//ãƒ¬ã‚¤ãƒ¤ãƒ¼ç•ªå·ã‚’å…¥åŠ›
+			static int beforeLayerNumber = -1; //ç›´å‰ã®ãƒ¬ã‚¤ãƒ¤ãƒ¼ç•ªå·
+			bool isLayerNumberDuplicate = false; //ãƒ¬ã‚¤ãƒ¤ãƒ¼ç•ªå·ãŒé‡è¤‡ã—ã¦ã„ã‚‹ã‹
 			ImGui::InputInt("LayerNumber", &layerNumberCount_);
-			//d•¡ƒ`ƒFƒbƒN
+			//é‡è¤‡ãƒã‚§ãƒƒã‚¯
 			for (const auto& uiObject : editUIPanel_->GetUIObjects()) {
 				if (uiObject->GetLayerNumber() == layerNumberCount_) {
 					isLayerNumberDuplicate = true;
@@ -324,25 +325,25 @@ void GameEditor::UIObjectCreateWindow()
 				layerNumberCount_ = 1;
 			}
 
-			//Œx•\¦
+			//è­¦å‘Šè¡¨ç¤º
 			if (isLayerNumberDuplicate) {
 				ImGui::TextColored(ImVec4(1, 0, 0, 1), "LayerNumber is duplicated");
 			}
 
-			// ¶¬ƒ{ƒ^ƒ“
+			// ç”Ÿæˆãƒœã‚¿ãƒ³
 			if (ImGui::Button("Create") && !isLayerNumberDuplicate) {
-				// UIƒIƒuƒWƒFƒNƒg‚ğì¬E’Ç‰Á
+				// UIã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’ä½œæˆãƒ»è¿½åŠ 
 				UIObject* obj = UIObject::CreateUIObject(nameBuffer, uitype, editUIPanel_,layerNumberCount_);
 
-				//ƒC[ƒWƒ“ƒO‚Ì¶¬
+				//ã‚¤ãƒ¼ã‚¸ãƒ³ã‚°ã®ç”Ÿæˆ
 				if (isEasing)	obj->CreateEasing();
 
-				// ‰Šú‰»‚ğs‚¤
+				// åˆæœŸåŒ–ã‚’è¡Œã†
 				obj->Initialize();
 
 				if (obj != nullptr) {
 					isShowCreateUIObjectWindow_ = false;
-					//ƒŒƒCƒ„[”Ô†‚ÌXV
+					//ãƒ¬ã‚¤ãƒ¤ãƒ¼ç•ªå·ã®æ›´æ–°
 					layerNumberCount_++;
 				}
 			}
@@ -353,41 +354,41 @@ void GameEditor::UIObjectCreateWindow()
 
 void GameEditor::AddStageObject()
 {
-	// ’Ç‰Á‚·‚éƒIƒuƒWƒFƒNƒg‚Ì‰Šú–¼‚ğİ’è
+	// è¿½åŠ ã™ã‚‹ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®åˆæœŸåã‚’è¨­å®š
 	string name = "object" + std::to_string(editStage_->objects_.size());
 
-	//Œ»İ‚ÌƒJƒŒƒ“ƒgƒfƒBƒŒƒNƒgƒŠ‚ğŠo‚¦‚Ä‚¨‚­
+	//ç¾åœ¨ã®ã‚«ãƒ¬ãƒ³ãƒˆãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªã‚’è¦šãˆã¦ãŠã
 	char defaultCurrentDir[MAX_PATH];
 	GetCurrentDirectory(MAX_PATH, defaultCurrentDir);
 
-	// ’Ç‰Á‚·‚éƒIƒuƒWƒFƒNƒg‚Ìƒ‚ƒfƒ‹ƒtƒ@ƒCƒ‹ƒpƒX‚ğİ’è
+	// è¿½åŠ ã™ã‚‹ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®ãƒ¢ãƒ‡ãƒ«ãƒ•ã‚¡ã‚¤ãƒ«ãƒ‘ã‚¹ã‚’è¨­å®š
 	string filePath{}; {
-		// uƒtƒ@ƒCƒ‹‚ğŠJ‚­vƒ_ƒCƒAƒƒO‚Ìİ’è—p\‘¢‘Ì‚ğİ’è
+		// ã€Œãƒ•ã‚¡ã‚¤ãƒ«ã‚’é–‹ãã€ãƒ€ã‚¤ã‚¢ãƒ­ã‚°ã®è¨­å®šç”¨æ§‹é€ ä½“ã‚’è¨­å®š
 		OPENFILENAME ofn; {
-			TCHAR szFile[MAX_PATH] = {}; // ƒtƒ@ƒCƒ‹–¼‚ğŠi”[‚·‚éƒoƒbƒtƒ@
-			ZeroMemory(&ofn, sizeof(ofn)); // \‘¢‘Ì‚Ì‰Šú‰»
-			ofn.lStructSize = sizeof(ofn); // \‘¢‘Ì‚ÌƒTƒCƒY
-			ofn.lpstrFile = szFile; // ƒtƒ@ƒCƒ‹–¼‚ğŠi”[‚·‚éƒoƒbƒtƒ@
-			ofn.lpstrFile[0] = '\0'; // ‰Šú‰»
-			ofn.nMaxFile = sizeof(szFile); // ƒtƒ@ƒCƒ‹–¼ƒoƒbƒtƒ@‚ÌƒTƒCƒY
-			ofn.lpstrFilter = TEXT("FBXƒtƒ@ƒCƒ‹(*.fbx)\0*.fbx\0‚·‚×‚Ä‚Ìƒtƒ@ƒCƒ‹(*.*)\0*.*\0"); // ƒtƒBƒ‹ƒ^[iFBXƒtƒ@ƒCƒ‹‚Ì‚İ•\¦j
-			ofn.nFilterIndex = 1; // ‰Šú‘I‘ğ‚·‚éƒtƒBƒ‹ƒ^[
-			ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST; // ƒtƒ‰ƒOiƒtƒ@ƒCƒ‹‚ª‘¶İ‚·‚é‚±‚ÆAƒpƒX‚ª‘¶İ‚·‚é‚±‚Æ‚ğŠm”Fj
-			ofn.lpstrInitialDir = TEXT("."); // ƒJƒŒƒ“ƒgƒfƒBƒŒƒNƒgƒŠ‚ğ‰Šú‘I‘ğˆÊ’u‚Æ‚µ‚Äİ’è
+			TCHAR szFile[MAX_PATH] = {}; // ãƒ•ã‚¡ã‚¤ãƒ«åã‚’æ ¼ç´ã™ã‚‹ãƒãƒƒãƒ•ã‚¡
+			ZeroMemory(&ofn, sizeof(ofn)); // æ§‹é€ ä½“ã®åˆæœŸåŒ–
+			ofn.lStructSize = sizeof(ofn); // æ§‹é€ ä½“ã®ã‚µã‚¤ã‚º
+			ofn.lpstrFile = szFile; // ãƒ•ã‚¡ã‚¤ãƒ«åã‚’æ ¼ç´ã™ã‚‹ãƒãƒƒãƒ•ã‚¡
+			ofn.lpstrFile[0] = '\0'; // åˆæœŸåŒ–
+			ofn.nMaxFile = sizeof(szFile); // ãƒ•ã‚¡ã‚¤ãƒ«åãƒãƒƒãƒ•ã‚¡ã®ã‚µã‚¤ã‚º
+			ofn.lpstrFilter = TEXT("FBXãƒ•ã‚¡ã‚¤ãƒ«(*.fbx)\0*.fbx\0ã™ã¹ã¦ã®ãƒ•ã‚¡ã‚¤ãƒ«(*.*)\0*.*\0"); // ãƒ•ã‚£ãƒ«ã‚¿ãƒ¼ï¼ˆFBXãƒ•ã‚¡ã‚¤ãƒ«ã®ã¿è¡¨ç¤ºï¼‰
+			ofn.nFilterIndex = 1; // åˆæœŸé¸æŠã™ã‚‹ãƒ•ã‚£ãƒ«ã‚¿ãƒ¼
+			ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST; // ãƒ•ãƒ©ã‚°ï¼ˆãƒ•ã‚¡ã‚¤ãƒ«ãŒå­˜åœ¨ã™ã‚‹ã“ã¨ã€ãƒ‘ã‚¹ãŒå­˜åœ¨ã™ã‚‹ã“ã¨ã‚’ç¢ºèªï¼‰
+			ofn.lpstrInitialDir = TEXT("."); // ã‚«ãƒ¬ãƒ³ãƒˆãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªã‚’åˆæœŸé¸æŠä½ç½®ã¨ã—ã¦è¨­å®š
 		}
 
-		// ƒtƒ@ƒCƒ‹‚ğ‘I‘ğ‚·‚éƒ_ƒCƒAƒƒO‚Ì•\¦
+		// ãƒ•ã‚¡ã‚¤ãƒ«ã‚’é¸æŠã™ã‚‹ãƒ€ã‚¤ã‚¢ãƒ­ã‚°ã®è¡¨ç¤º
 		if (GetOpenFileName(&ofn) == TRUE) {
-			// ƒtƒ@ƒCƒ‹ƒpƒX‚ğæ“¾
+			// ãƒ•ã‚¡ã‚¤ãƒ«ãƒ‘ã‚¹ã‚’å–å¾—
 			filePath = ofn.lpstrFile;
 
-			// ƒJƒŒƒ“ƒgƒfƒBƒŒƒNƒgƒŠ‚©‚ç‚Ì‘Š‘ÎƒpƒX‚ğæ“¾
+			// ã‚«ãƒ¬ãƒ³ãƒˆãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªã‹ã‚‰ã®ç›¸å¯¾ãƒ‘ã‚¹ã‚’å–å¾—
 			filePath = GetAssetsRelativePath(filePath);
 
-			// •¶š—ñ“à‚Ì"\\"‚ğ"/"‚É’uŠ·
+			// æ–‡å­—åˆ—å†…ã®"\\"ã‚’"/"ã«ç½®æ›
 			ReplaceBackslashes(filePath);
 
-			// ƒfƒBƒŒƒNƒgƒŠ‚ğ–ß‚·
+			// ãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªã‚’æˆ»ã™
 			SetCurrentDirectory(defaultCurrentDir);
 		}
 		else {
@@ -395,44 +396,44 @@ void GameEditor::AddStageObject()
 		}
 	}
 
-	// ƒIƒuƒWƒFƒNƒg‚ğì¬E’Ç‰Á
+	// ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’ä½œæˆãƒ»è¿½åŠ 
 	editStage_->AddStageObject(CreateStageObject(name, filePath, editStage_));
 }
 
 void GameEditor::SaveStage()
 {
-	//Œ»İ‚ÌƒJƒŒƒ“ƒgƒfƒBƒŒƒNƒgƒŠ‚ğŠo‚¦‚Ä‚¨‚­
+	//ç¾åœ¨ã®ã‚«ãƒ¬ãƒ³ãƒˆãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªã‚’è¦šãˆã¦ãŠã
 	char defaultCurrentDir[MAX_PATH];
 	GetCurrentDirectory(MAX_PATH, defaultCurrentDir);
 
-	// •Û‘¶æ‚Ìƒtƒ@ƒCƒ‹ƒpƒX‚ğæ“¾
+	// ä¿å­˜å…ˆã®ãƒ•ã‚¡ã‚¤ãƒ«ãƒ‘ã‚¹ã‚’å–å¾—
 	string filePath{}; {
-		// uƒtƒ@ƒCƒ‹‚ğ•Û‘¶vƒ_ƒCƒAƒƒO‚Ìİ’è—p\‘¢‘Ì‚ğİ’è
+		// ã€Œãƒ•ã‚¡ã‚¤ãƒ«ã‚’ä¿å­˜ã€ãƒ€ã‚¤ã‚¢ãƒ­ã‚°ã®è¨­å®šç”¨æ§‹é€ ä½“ã‚’è¨­å®š
 		OPENFILENAME ofn; {
 			ZeroMemory(&ofn, sizeof(ofn));
 			ofn.lStructSize = sizeof(OPENFILENAME);
-			ofn.lpstrFilter = TEXT("objectData(*.json)\0*.json\0‚·‚×‚Ä‚Ìƒtƒ@ƒCƒ‹(*.*)\0*.*\0\0");
-			char fileName[MAX_PATH] = "–³‘è.json";
+			ofn.lpstrFilter = TEXT("objectData(*.json)\0*.json\0ã™ã¹ã¦ã®ãƒ•ã‚¡ã‚¤ãƒ«(*.*)\0*.*\0\0");
+			char fileName[MAX_PATH] = "ç„¡é¡Œ.json";
 			ofn.lpstrFile = fileName;
 			ofn.nMaxFile = MAX_PATH;
 			ofn.Flags = OFN_OVERWRITEPROMPT;
 			ofn.lpstrDefExt = "json";
-			ofn.nFilterIndex = 1; // ‰Šú‘I‘ğ‚·‚éƒtƒBƒ‹ƒ^[
-			ofn.lpstrInitialDir = TEXT("."); // ƒJƒŒƒ“ƒgƒfƒBƒŒƒNƒgƒŠ‚ğ‰Šú‘I‘ğˆÊ’u‚Æ‚µ‚Äİ’è
+			ofn.nFilterIndex = 1; // åˆæœŸé¸æŠã™ã‚‹ãƒ•ã‚£ãƒ«ã‚¿ãƒ¼
+			ofn.lpstrInitialDir = TEXT("."); // ã‚«ãƒ¬ãƒ³ãƒˆãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªã‚’åˆæœŸé¸æŠä½ç½®ã¨ã—ã¦è¨­å®š
 		}
 
-		// ƒtƒ@ƒCƒ‹‚ğ•Û‘¶‚·‚éƒ_ƒCƒAƒƒO‚Ì•\¦
+		// ãƒ•ã‚¡ã‚¤ãƒ«ã‚’ä¿å­˜ã™ã‚‹ãƒ€ã‚¤ã‚¢ãƒ­ã‚°ã®è¡¨ç¤º
 		if (GetSaveFileName(&ofn) == TRUE) {
-			// ƒtƒ@ƒCƒ‹ƒpƒX‚ğæ“¾
+			// ãƒ•ã‚¡ã‚¤ãƒ«ãƒ‘ã‚¹ã‚’å–å¾—
 			filePath = ofn.lpstrFile;
 
-			// ƒJƒŒƒ“ƒgƒfƒBƒŒƒNƒgƒŠ‚©‚ç‚Ì‘Š‘ÎƒpƒX‚ğæ“¾
+			// ã‚«ãƒ¬ãƒ³ãƒˆãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªã‹ã‚‰ã®ç›¸å¯¾ãƒ‘ã‚¹ã‚’å–å¾—
 			filePath = GetAssetsRelativePath(filePath);
 
-			// •¶š—ñ“à‚Ì"\\"‚ğ"/"‚É’uŠ·
+			// æ–‡å­—åˆ—å†…ã®"\\"ã‚’"/"ã«ç½®æ›
 			ReplaceBackslashes(filePath);
 
-			// ƒfƒBƒŒƒNƒgƒŠ‚ğ–ß‚·
+			// ãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªã‚’æˆ»ã™
 			SetCurrentDirectory(defaultCurrentDir);
 		}
 		else {
@@ -440,47 +441,47 @@ void GameEditor::SaveStage()
 		}
 	}
 
-	// ƒtƒ@ƒCƒ‹‚ÉƒXƒe[ƒWî•ñ‚ğ•Û‘¶
+	// ãƒ•ã‚¡ã‚¤ãƒ«ã«ã‚¹ãƒ†ãƒ¼ã‚¸æƒ…å ±ã‚’ä¿å­˜
 	json saveObj;
 	editStage_->Save(saveObj);
-	if (JsonReader::Save(filePath, saveObj) == false) MessageBox(NULL, "•Û‘¶‚É¸”s‚µ‚Ü‚µ‚½B", 0, 0);
+	if (JsonReader::Save(filePath, saveObj) == false) MessageBox(NULL, "ä¿å­˜ã«å¤±æ•—ã—ã¾ã—ãŸã€‚", 0, 0);
 	
 }
 
 void GameEditor::LoadStage()
 {
-	//Œ»İ‚ÌƒJƒŒƒ“ƒgƒfƒBƒŒƒNƒgƒŠ‚ğŠo‚¦‚Ä‚¨‚­
+	//ç¾åœ¨ã®ã‚«ãƒ¬ãƒ³ãƒˆãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªã‚’è¦šãˆã¦ãŠã
 	char defaultCurrentDir[MAX_PATH];
 	GetCurrentDirectory(MAX_PATH, defaultCurrentDir);
 
-	// “Ç‚İ‚Şƒtƒ@ƒCƒ‹‚ÌƒpƒX‚ğæ“¾
+	// èª­ã¿è¾¼ã‚€ãƒ•ã‚¡ã‚¤ãƒ«ã®ãƒ‘ã‚¹ã‚’å–å¾—
 	string filePath{}; {
-		// uƒtƒ@ƒCƒ‹‚ğŠJ‚­vƒ_ƒCƒAƒƒO‚Ìİ’è—p\‘¢‘Ì‚ğİ’è
+		// ã€Œãƒ•ã‚¡ã‚¤ãƒ«ã‚’é–‹ãã€ãƒ€ã‚¤ã‚¢ãƒ­ã‚°ã®è¨­å®šç”¨æ§‹é€ ä½“ã‚’è¨­å®š
 		OPENFILENAME ofn; {
-			TCHAR szFile[MAX_PATH] = {}; // ƒtƒ@ƒCƒ‹–¼‚ğŠi”[‚·‚éƒoƒbƒtƒ@
-			ZeroMemory(&ofn, sizeof(ofn)); // \‘¢‘Ì‚Ì‰Šú‰»
-			ofn.lStructSize = sizeof(ofn); // \‘¢‘Ì‚ÌƒTƒCƒY
-			ofn.lpstrFile = szFile; // ƒtƒ@ƒCƒ‹–¼‚ğŠi”[‚·‚éƒoƒbƒtƒ@
-			ofn.lpstrFile[0] = '\0'; // ‰Šú‰»
-			ofn.nMaxFile = sizeof(szFile); // ƒtƒ@ƒCƒ‹–¼ƒoƒbƒtƒ@‚ÌƒTƒCƒY
-			ofn.lpstrFilter = TEXT("JSONƒtƒ@ƒCƒ‹(*.json)\0*.json\0‚·‚×‚Ä‚Ìƒtƒ@ƒCƒ‹(*.*)\0*.*\0"); // ƒtƒBƒ‹ƒ^[iFBXƒtƒ@ƒCƒ‹‚Ì‚İ•\¦j
-			ofn.nFilterIndex = 1; // ‰Šú‘I‘ğ‚·‚éƒtƒBƒ‹ƒ^[
-			ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST; // ƒtƒ‰ƒOiƒtƒ@ƒCƒ‹‚ª‘¶İ‚·‚é‚±‚ÆAƒpƒX‚ª‘¶İ‚·‚é‚±‚Æ‚ğŠm”Fj
-			ofn.lpstrInitialDir = TEXT("."); // ƒJƒŒƒ“ƒgƒfƒBƒŒƒNƒgƒŠ‚ğ‰Šú‘I‘ğˆÊ’u‚Æ‚µ‚Äİ’è
+			TCHAR szFile[MAX_PATH] = {}; // ãƒ•ã‚¡ã‚¤ãƒ«åã‚’æ ¼ç´ã™ã‚‹ãƒãƒƒãƒ•ã‚¡
+			ZeroMemory(&ofn, sizeof(ofn)); // æ§‹é€ ä½“ã®åˆæœŸåŒ–
+			ofn.lStructSize = sizeof(ofn); // æ§‹é€ ä½“ã®ã‚µã‚¤ã‚º
+			ofn.lpstrFile = szFile; // ãƒ•ã‚¡ã‚¤ãƒ«åã‚’æ ¼ç´ã™ã‚‹ãƒãƒƒãƒ•ã‚¡
+			ofn.lpstrFile[0] = '\0'; // åˆæœŸåŒ–
+			ofn.nMaxFile = sizeof(szFile); // ãƒ•ã‚¡ã‚¤ãƒ«åãƒãƒƒãƒ•ã‚¡ã®ã‚µã‚¤ã‚º
+			ofn.lpstrFilter = TEXT("JSONãƒ•ã‚¡ã‚¤ãƒ«(*.json)\0*.json\0ã™ã¹ã¦ã®ãƒ•ã‚¡ã‚¤ãƒ«(*.*)\0*.*\0"); // ãƒ•ã‚£ãƒ«ã‚¿ãƒ¼ï¼ˆFBXãƒ•ã‚¡ã‚¤ãƒ«ã®ã¿è¡¨ç¤ºï¼‰
+			ofn.nFilterIndex = 1; // åˆæœŸé¸æŠã™ã‚‹ãƒ•ã‚£ãƒ«ã‚¿ãƒ¼
+			ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST; // ãƒ•ãƒ©ã‚°ï¼ˆãƒ•ã‚¡ã‚¤ãƒ«ãŒå­˜åœ¨ã™ã‚‹ã“ã¨ã€ãƒ‘ã‚¹ãŒå­˜åœ¨ã™ã‚‹ã“ã¨ã‚’ç¢ºèªï¼‰
+			ofn.lpstrInitialDir = TEXT("."); // ã‚«ãƒ¬ãƒ³ãƒˆãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªã‚’åˆæœŸé¸æŠä½ç½®ã¨ã—ã¦è¨­å®š
 		}
 
-		// ƒtƒ@ƒCƒ‹‚ğ‘I‘ğ‚·‚éƒ_ƒCƒAƒƒO‚Ì•\¦
+		// ãƒ•ã‚¡ã‚¤ãƒ«ã‚’é¸æŠã™ã‚‹ãƒ€ã‚¤ã‚¢ãƒ­ã‚°ã®è¡¨ç¤º
 		if (GetOpenFileName(&ofn) == TRUE) {
-			// ƒtƒ@ƒCƒ‹ƒpƒX‚ğæ“¾
+			// ãƒ•ã‚¡ã‚¤ãƒ«ãƒ‘ã‚¹ã‚’å–å¾—
 			filePath = ofn.lpstrFile;
 
-			// ƒJƒŒƒ“ƒgƒfƒBƒŒƒNƒgƒŠ‚©‚ç‚Ì‘Š‘ÎƒpƒX‚ğæ“¾
+			// ã‚«ãƒ¬ãƒ³ãƒˆãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªã‹ã‚‰ã®ç›¸å¯¾ãƒ‘ã‚¹ã‚’å–å¾—
 			filePath = GetAssetsRelativePath(filePath);
 
-			// •¶š—ñ“à‚Ì"\\"‚ğ"/"‚É’uŠ·
+			// æ–‡å­—åˆ—å†…ã®"\\"ã‚’"/"ã«ç½®æ›
 			ReplaceBackslashes(filePath);
 
-			// ƒfƒBƒŒƒNƒgƒŠ‚ğ–ß‚·
+			// ãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªã‚’æˆ»ã™
 			SetCurrentDirectory(defaultCurrentDir);
 		}
 		else {
@@ -488,9 +489,9 @@ void GameEditor::LoadStage()
 		}
 	}
 
-	// ƒtƒ@ƒCƒ‹‚ğ“Ç‚İ‚İƒXƒe[ƒW‚ğ¶¬
+	// ãƒ•ã‚¡ã‚¤ãƒ«ã‚’èª­ã¿è¾¼ã¿ã‚¹ãƒ†ãƒ¼ã‚¸ã‚’ç”Ÿæˆ
 	json loadObj;
-	if (JsonReader::Load(filePath, loadObj) == false) MessageBox(NULL, "“Ç‚É¸”s‚µ‚Ü‚µ‚½B", 0, 0);
+	if (JsonReader::Load(filePath, loadObj) == false) MessageBox(NULL, "èª­è¾¼ã«å¤±æ•—ã—ã¾ã—ãŸã€‚", 0, 0);
 	editStage_->Load(loadObj);
 }
 
@@ -501,38 +502,38 @@ void GameEditor::AddUIObject()
 
 void GameEditor::SaveUIPanel()
 {
-	//Œ»İ‚ÌƒJƒŒƒ“ƒgƒfƒBƒŒƒNƒgƒŠ‚ğŠo‚¦‚Ä‚¨‚­
+	//ç¾åœ¨ã®ã‚«ãƒ¬ãƒ³ãƒˆãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªã‚’è¦šãˆã¦ãŠã
 	char defaultCurrentDir[MAX_PATH];
 	GetCurrentDirectory(MAX_PATH, defaultCurrentDir);
 
-	// •Û‘¶æ‚Ìƒtƒ@ƒCƒ‹ƒpƒX‚ğæ“¾
+	// ä¿å­˜å…ˆã®ãƒ•ã‚¡ã‚¤ãƒ«ãƒ‘ã‚¹ã‚’å–å¾—
 	string filePath{}; {
-		// uƒtƒ@ƒCƒ‹‚ğ•Û‘¶vƒ_ƒCƒAƒƒO‚Ìİ’è—p\‘¢‘Ì‚ğİ’è
+		// ã€Œãƒ•ã‚¡ã‚¤ãƒ«ã‚’ä¿å­˜ã€ãƒ€ã‚¤ã‚¢ãƒ­ã‚°ã®è¨­å®šç”¨æ§‹é€ ä½“ã‚’è¨­å®š
 		OPENFILENAME ofn; {
 			ZeroMemory(&ofn, sizeof(ofn));
 			ofn.lStructSize = sizeof(OPENFILENAME);
-			ofn.lpstrFilter = TEXT("objectData(*.json)\0*.json\0‚·‚×‚Ä‚Ìƒtƒ@ƒCƒ‹(*.*)\0*.*\0\0");
-			char fileName[MAX_PATH] = "–³‘è.json";
+			ofn.lpstrFilter = TEXT("objectData(*.json)\0*.json\0ã™ã¹ã¦ã®ãƒ•ã‚¡ã‚¤ãƒ«(*.*)\0*.*\0\0");
+			char fileName[MAX_PATH] = "ç„¡é¡Œ.json";
 			ofn.lpstrFile = fileName;
 			ofn.nMaxFile = MAX_PATH;
 			ofn.Flags = OFN_OVERWRITEPROMPT;
 			ofn.lpstrDefExt = "json";
-			ofn.nFilterIndex = 1; // ‰Šú‘I‘ğ‚·‚éƒtƒBƒ‹ƒ^[
-			ofn.lpstrInitialDir = TEXT("."); // ƒJƒŒƒ“ƒgƒfƒBƒŒƒNƒgƒŠ‚ğ‰Šú‘I‘ğˆÊ’u‚Æ‚µ‚Äİ’è
+			ofn.nFilterIndex = 1; // åˆæœŸé¸æŠã™ã‚‹ãƒ•ã‚£ãƒ«ã‚¿ãƒ¼
+			ofn.lpstrInitialDir = TEXT("."); // ã‚«ãƒ¬ãƒ³ãƒˆãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªã‚’åˆæœŸé¸æŠä½ç½®ã¨ã—ã¦è¨­å®š
 		}
 
-		// ƒtƒ@ƒCƒ‹‚ğ•Û‘¶‚·‚éƒ_ƒCƒAƒƒO‚Ì•\¦
+		// ãƒ•ã‚¡ã‚¤ãƒ«ã‚’ä¿å­˜ã™ã‚‹ãƒ€ã‚¤ã‚¢ãƒ­ã‚°ã®è¡¨ç¤º
 		if (GetSaveFileName(&ofn) == TRUE) {
-			// ƒtƒ@ƒCƒ‹ƒpƒX‚ğæ“¾
+			// ãƒ•ã‚¡ã‚¤ãƒ«ãƒ‘ã‚¹ã‚’å–å¾—
 			filePath = ofn.lpstrFile;
 
-			// ƒJƒŒƒ“ƒgƒfƒBƒŒƒNƒgƒŠ‚©‚ç‚Ì‘Š‘ÎƒpƒX‚ğæ“¾
+			// ã‚«ãƒ¬ãƒ³ãƒˆãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªã‹ã‚‰ã®ç›¸å¯¾ãƒ‘ã‚¹ã‚’å–å¾—
 			filePath = GetAssetsRelativePath(filePath);
 
-			// •¶š—ñ“à‚Ì"\\"‚ğ"/"‚É’uŠ·
+			// æ–‡å­—åˆ—å†…ã®"\\"ã‚’"/"ã«ç½®æ›
 			ReplaceBackslashes(filePath);
 
-			// ƒfƒBƒŒƒNƒgƒŠ‚ğ–ß‚·
+			// ãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªã‚’æˆ»ã™
 			SetCurrentDirectory(defaultCurrentDir);
 		}
 		else {
@@ -540,46 +541,46 @@ void GameEditor::SaveUIPanel()
 		}
 	}
 
-	// ƒtƒ@ƒCƒ‹‚ÉƒXƒe[ƒWî•ñ‚ğ•Û‘¶
+	// ãƒ•ã‚¡ã‚¤ãƒ«ã«ã‚¹ãƒ†ãƒ¼ã‚¸æƒ…å ±ã‚’ä¿å­˜
 	json saveObj;
 	editUIPanel_->Save(saveObj);
-	if (JsonReader::Save(filePath, saveObj) == false) MessageBox(NULL, "•Û‘¶‚É¸”s‚µ‚Ü‚µ‚½B", 0, 0);
+	if (JsonReader::Save(filePath, saveObj) == false) MessageBox(NULL, "ä¿å­˜ã«å¤±æ•—ã—ã¾ã—ãŸã€‚", 0, 0);
 }
 
 void GameEditor::LoadUIPanel()
 {
-	//Œ»İ‚ÌƒJƒŒƒ“ƒgƒfƒBƒŒƒNƒgƒŠ‚ğŠo‚¦‚Ä‚¨‚­
+	//ç¾åœ¨ã®ã‚«ãƒ¬ãƒ³ãƒˆãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªã‚’è¦šãˆã¦ãŠã
 	char defaultCurrentDir[MAX_PATH];
 	GetCurrentDirectory(MAX_PATH, defaultCurrentDir);
 
-	// “Ç‚İ‚Şƒtƒ@ƒCƒ‹‚ÌƒpƒX‚ğæ“¾
+	// èª­ã¿è¾¼ã‚€ãƒ•ã‚¡ã‚¤ãƒ«ã®ãƒ‘ã‚¹ã‚’å–å¾—
 	string filePath{}; {
-		// uƒtƒ@ƒCƒ‹‚ğŠJ‚­vƒ_ƒCƒAƒƒO‚Ìİ’è—p\‘¢‘Ì‚ğİ’è
+		// ã€Œãƒ•ã‚¡ã‚¤ãƒ«ã‚’é–‹ãã€ãƒ€ã‚¤ã‚¢ãƒ­ã‚°ã®è¨­å®šç”¨æ§‹é€ ä½“ã‚’è¨­å®š
 		OPENFILENAME ofn; {
-			TCHAR szFile[MAX_PATH] = {}; // ƒtƒ@ƒCƒ‹–¼‚ğŠi”[‚·‚éƒoƒbƒtƒ@
-			ZeroMemory(&ofn, sizeof(ofn)); // \‘¢‘Ì‚Ì‰Šú‰»
-			ofn.lStructSize = sizeof(ofn); // \‘¢‘Ì‚ÌƒTƒCƒY
-			ofn.lpstrFile = szFile; // ƒtƒ@ƒCƒ‹–¼‚ğŠi”[‚·‚éƒoƒbƒtƒ@
-			ofn.lpstrFile[0] = '\0'; // ‰Šú‰»
-			ofn.nMaxFile = sizeof(szFile); // ƒtƒ@ƒCƒ‹–¼ƒoƒbƒtƒ@‚ÌƒTƒCƒY
-			ofn.lpstrFilter = TEXT("JSONƒtƒ@ƒCƒ‹(*.json)\0*.json\0‚·‚×‚Ä‚Ìƒtƒ@ƒCƒ‹(*.*)\0*.*\0"); // ƒtƒBƒ‹ƒ^[iFBXƒtƒ@ƒCƒ‹‚Ì‚İ•\¦j
-			ofn.nFilterIndex = 1; // ‰Šú‘I‘ğ‚·‚éƒtƒBƒ‹ƒ^[
-			ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST; // ƒtƒ‰ƒOiƒtƒ@ƒCƒ‹‚ª‘¶İ‚·‚é‚±‚ÆAƒpƒX‚ª‘¶İ‚·‚é‚±‚Æ‚ğŠm”Fj
-			ofn.lpstrInitialDir = TEXT("."); // ƒJƒŒƒ“ƒgƒfƒBƒŒƒNƒgƒŠ‚ğ‰Šú‘I‘ğˆÊ’u‚Æ‚µ‚Äİ’è
+			TCHAR szFile[MAX_PATH] = {}; // ãƒ•ã‚¡ã‚¤ãƒ«åã‚’æ ¼ç´ã™ã‚‹ãƒãƒƒãƒ•ã‚¡
+			ZeroMemory(&ofn, sizeof(ofn)); // æ§‹é€ ä½“ã®åˆæœŸåŒ–
+			ofn.lStructSize = sizeof(ofn); // æ§‹é€ ä½“ã®ã‚µã‚¤ã‚º
+			ofn.lpstrFile = szFile; // ãƒ•ã‚¡ã‚¤ãƒ«åã‚’æ ¼ç´ã™ã‚‹ãƒãƒƒãƒ•ã‚¡
+			ofn.lpstrFile[0] = '\0'; // åˆæœŸåŒ–
+			ofn.nMaxFile = sizeof(szFile); // ãƒ•ã‚¡ã‚¤ãƒ«åãƒãƒƒãƒ•ã‚¡ã®ã‚µã‚¤ã‚º
+			ofn.lpstrFilter = TEXT("JSONãƒ•ã‚¡ã‚¤ãƒ«(*.json)\0*.json\0ã™ã¹ã¦ã®ãƒ•ã‚¡ã‚¤ãƒ«(*.*)\0*.*\0"); // ãƒ•ã‚£ãƒ«ã‚¿ãƒ¼ï¼ˆFBXãƒ•ã‚¡ã‚¤ãƒ«ã®ã¿è¡¨ç¤ºï¼‰
+			ofn.nFilterIndex = 1; // åˆæœŸé¸æŠã™ã‚‹ãƒ•ã‚£ãƒ«ã‚¿ãƒ¼
+			ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST; // ãƒ•ãƒ©ã‚°ï¼ˆãƒ•ã‚¡ã‚¤ãƒ«ãŒå­˜åœ¨ã™ã‚‹ã“ã¨ã€ãƒ‘ã‚¹ãŒå­˜åœ¨ã™ã‚‹ã“ã¨ã‚’ç¢ºèªï¼‰
+			ofn.lpstrInitialDir = TEXT("."); // ã‚«ãƒ¬ãƒ³ãƒˆãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªã‚’åˆæœŸé¸æŠä½ç½®ã¨ã—ã¦è¨­å®š
 		}
 
-		// ƒtƒ@ƒCƒ‹‚ğ‘I‘ğ‚·‚éƒ_ƒCƒAƒƒO‚Ì•\¦
+		// ãƒ•ã‚¡ã‚¤ãƒ«ã‚’é¸æŠã™ã‚‹ãƒ€ã‚¤ã‚¢ãƒ­ã‚°ã®è¡¨ç¤º
 		if (GetOpenFileName(&ofn) == TRUE) {
-			// ƒtƒ@ƒCƒ‹ƒpƒX‚ğæ“¾
+			// ãƒ•ã‚¡ã‚¤ãƒ«ãƒ‘ã‚¹ã‚’å–å¾—
 			filePath = ofn.lpstrFile;
 
-			// ƒJƒŒƒ“ƒgƒfƒBƒŒƒNƒgƒŠ‚©‚ç‚Ì‘Š‘ÎƒpƒX‚ğæ“¾
+			// ã‚«ãƒ¬ãƒ³ãƒˆãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªã‹ã‚‰ã®ç›¸å¯¾ãƒ‘ã‚¹ã‚’å–å¾—
 			filePath = GetAssetsRelativePath(filePath);
 
-			// •¶š—ñ“à‚Ì"\\"‚ğ"/"‚É’uŠ·
+			// æ–‡å­—åˆ—å†…ã®"\\"ã‚’"/"ã«ç½®æ›
 			ReplaceBackslashes(filePath);
 
-			// ƒfƒBƒŒƒNƒgƒŠ‚ğ–ß‚·
+			// ãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªã‚’æˆ»ã™
 			SetCurrentDirectory(defaultCurrentDir);
 		}
 		else {
@@ -587,31 +588,31 @@ void GameEditor::LoadUIPanel()
 		}
 	}
 
-	// ƒtƒ@ƒCƒ‹‚ğ“Ç‚İ‚İƒXƒe[ƒW‚ğ¶¬
+	// ãƒ•ã‚¡ã‚¤ãƒ«ã‚’èª­ã¿è¾¼ã¿ã‚¹ãƒ†ãƒ¼ã‚¸ã‚’ç”Ÿæˆ
 	json loadObj;
-	if (JsonReader::Load(filePath, loadObj) == false) MessageBox(NULL, "“Ç‚É¸”s‚µ‚Ü‚µ‚½B", 0, 0);
+	if (JsonReader::Load(filePath, loadObj) == false) MessageBox(NULL, "èª­è¾¼ã«å¤±æ•—ã—ã¾ã—ãŸã€‚", 0, 0);
 	editUIPanel_->Load(loadObj);
 }
 
 void GameEditor::DrawPlantOutLiner()
 {
-	// ƒtƒ@ƒCƒ‹‘€ì—p‚Ìƒ{ƒ^ƒ“‚ğ•\¦
+	// ãƒ•ã‚¡ã‚¤ãƒ«æ“ä½œç”¨ã®ãƒœã‚¿ãƒ³ã‚’è¡¨ç¤º
 	ImGui::Text("file menu"); {
-		// ƒtƒ@ƒCƒ‹‚Ì•Û‘¶E“Ç‚İ‚İƒ{ƒ^ƒ“
+		// ãƒ•ã‚¡ã‚¤ãƒ«ã®ä¿å­˜ãƒ»èª­ã¿è¾¼ã¿ãƒœã‚¿ãƒ³
 		if (ImGui::Button("Save")) SavePlant(); ImGui::SameLine();
 		if (ImGui::Button("Load")) LoadPlant(); ImGui::SameLine();
 		if (ImGui::Button("Clear")) PlantCollection::ClearPlants();
 		ImGui::Separator();
 	}
 
-	// A•¨‚Ì’Ç‰Á—p‚Ìƒ{ƒ^ƒ“‚ğ•\¦
+	// æ¤ç‰©ã®è¿½åŠ ç”¨ã®ãƒœã‚¿ãƒ³ã‚’è¡¨ç¤º
 	ImGui::Text("create menu"); {
-		// A•¨–¼“ü—Íƒ{ƒbƒNƒX
+		// æ¤ç‰©åå…¥åŠ›ãƒœãƒƒã‚¯ã‚¹
 		static char plantNameBuffer[256] = "";
 		ImGui::InputTextWithHint("##:setting_name", "Input plant name...", plantNameBuffer, IM_ARRAYSIZE(plantNameBuffer));
 		ImGui::SameLine();
 
-		// ’Ç‰Áƒ{ƒ^ƒ“
+		// è¿½åŠ ãƒœã‚¿ãƒ³
 		if (ImGui::Button("+")) {
 			if (strlen(plantNameBuffer) > 0) {
 				PlantCollection::AddPlant({
@@ -628,10 +629,10 @@ void GameEditor::DrawPlantOutLiner()
 		}
 		ImGui::SameLine();
 
-		// Ú×İ’è’Ç‰Áƒ{ƒ^ƒ“
+		// è©³ç´°è¨­å®šè¿½åŠ ãƒœã‚¿ãƒ³
 		if (ImGui::Button(":")) isShowPlantWindow_ = true;
 
-		// –¼‘O‚ª–¢“ü—Í‚Ìê‡AÔ•¶š‚ÅŒx
+		// åå‰ãŒæœªå…¥åŠ›ã®å ´åˆã€èµ¤æ–‡å­—ã§è­¦å‘Š
 		if (strlen(plantNameBuffer) == 0) {
 			ImGui::TextColored(ImVec4(1.0f, 0.0f, 0.0f, 1.0f), "Name is required!");
 		}
@@ -639,7 +640,7 @@ void GameEditor::DrawPlantOutLiner()
 	} 
 	ImGui::Separator();
 
-	// A•¨‚ÌƒŠƒXƒg‚ğ•\¦
+	// æ¤ç‰©ã®ãƒªã‚¹ãƒˆã‚’è¡¨ç¤º
 	ImGui::BeginChild("ObjectList"); {
 		for (int i = 0; i < PlantCollection::GetPlants().size(); ++i)
 			if (ImGui::Selectable(PlantCollection::GetPlants()[i].name_.c_str(), selectEditPlantIndex_ == i))
@@ -647,44 +648,44 @@ void GameEditor::DrawPlantOutLiner()
 	}
 	ImGui::EndChild();
 
-	// A•¨ƒf[ƒ^Ú×İ’è’Ç‰ÁƒEƒBƒ“ƒhƒE‚ğ•\¦
+	// æ¤ç‰©ãƒ‡ãƒ¼ã‚¿è©³ç´°è¨­å®šè¿½åŠ ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ã‚’è¡¨ç¤º
 	if (isShowPlantWindow_) DrawAddPlantWindow();
 }
 
 void GameEditor::SavePlant()
 {
-	//Œ»İ‚ÌƒJƒŒƒ“ƒgƒfƒBƒŒƒNƒgƒŠ‚ğŠo‚¦‚Ä‚¨‚­
+	//ç¾åœ¨ã®ã‚«ãƒ¬ãƒ³ãƒˆãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªã‚’è¦šãˆã¦ãŠã
 	char defaultCurrentDir[MAX_PATH];
 	GetCurrentDirectory(MAX_PATH, defaultCurrentDir);
 
-	// •Û‘¶æ‚Ìƒtƒ@ƒCƒ‹ƒpƒX‚ğæ“¾
+	// ä¿å­˜å…ˆã®ãƒ•ã‚¡ã‚¤ãƒ«ãƒ‘ã‚¹ã‚’å–å¾—
 	string filePath{}; {
-		// uƒtƒ@ƒCƒ‹‚ğ•Û‘¶vƒ_ƒCƒAƒƒO‚Ìİ’è—p\‘¢‘Ì‚ğİ’è
+		// ã€Œãƒ•ã‚¡ã‚¤ãƒ«ã‚’ä¿å­˜ã€ãƒ€ã‚¤ã‚¢ãƒ­ã‚°ã®è¨­å®šç”¨æ§‹é€ ä½“ã‚’è¨­å®š
 		OPENFILENAME ofn; {
 			ZeroMemory(&ofn, sizeof(ofn));
 			ofn.lStructSize = sizeof(OPENFILENAME);
-			ofn.lpstrFilter = TEXT("objectData(*.json)\0*.json\0‚·‚×‚Ä‚Ìƒtƒ@ƒCƒ‹(*.*)\0*.*\0\0");
-			char fileName[MAX_PATH] = "–³‘è.json";
+			ofn.lpstrFilter = TEXT("objectData(*.json)\0*.json\0ã™ã¹ã¦ã®ãƒ•ã‚¡ã‚¤ãƒ«(*.*)\0*.*\0\0");
+			char fileName[MAX_PATH] = "ç„¡é¡Œ.json";
 			ofn.lpstrFile = fileName;
 			ofn.nMaxFile = MAX_PATH;
 			ofn.Flags = OFN_OVERWRITEPROMPT;
 			ofn.lpstrDefExt = "json";
-			ofn.nFilterIndex = 1; // ‰Šú‘I‘ğ‚·‚éƒtƒBƒ‹ƒ^[
-			ofn.lpstrInitialDir = TEXT("."); // ƒJƒŒƒ“ƒgƒfƒBƒŒƒNƒgƒŠ‚ğ‰Šú‘I‘ğˆÊ’u‚Æ‚µ‚Äİ’è
+			ofn.nFilterIndex = 1; // åˆæœŸé¸æŠã™ã‚‹ãƒ•ã‚£ãƒ«ã‚¿ãƒ¼
+			ofn.lpstrInitialDir = TEXT("."); // ã‚«ãƒ¬ãƒ³ãƒˆãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªã‚’åˆæœŸé¸æŠä½ç½®ã¨ã—ã¦è¨­å®š
 		}
 
-		// ƒtƒ@ƒCƒ‹‚ğ•Û‘¶‚·‚éƒ_ƒCƒAƒƒO‚Ì•\¦
+		// ãƒ•ã‚¡ã‚¤ãƒ«ã‚’ä¿å­˜ã™ã‚‹ãƒ€ã‚¤ã‚¢ãƒ­ã‚°ã®è¡¨ç¤º
 		if (GetSaveFileName(&ofn) == TRUE) {
-			// ƒtƒ@ƒCƒ‹ƒpƒX‚ğæ“¾
+			// ãƒ•ã‚¡ã‚¤ãƒ«ãƒ‘ã‚¹ã‚’å–å¾—
 			filePath = ofn.lpstrFile;
 
-			// ƒJƒŒƒ“ƒgƒfƒBƒŒƒNƒgƒŠ‚©‚ç‚Ì‘Š‘ÎƒpƒX‚ğæ“¾
+			// ã‚«ãƒ¬ãƒ³ãƒˆãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªã‹ã‚‰ã®ç›¸å¯¾ãƒ‘ã‚¹ã‚’å–å¾—
 			filePath = GetAssetsRelativePath(filePath);
 
-			// •¶š—ñ“à‚Ì"\\"‚ğ"/"‚É’uŠ·
+			// æ–‡å­—åˆ—å†…ã®"\\"ã‚’"/"ã«ç½®æ›
 			ReplaceBackslashes(filePath);
 
-			// ƒfƒBƒŒƒNƒgƒŠ‚ğ–ß‚·
+			// ãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªã‚’æˆ»ã™
 			SetCurrentDirectory(defaultCurrentDir);
 		}
 		else {
@@ -692,46 +693,46 @@ void GameEditor::SavePlant()
 		}
 	}
 
-	// ƒtƒ@ƒCƒ‹‚ÉƒXƒe[ƒWî•ñ‚ğ•Û‘¶
+	// ãƒ•ã‚¡ã‚¤ãƒ«ã«ã‚¹ãƒ†ãƒ¼ã‚¸æƒ…å ±ã‚’ä¿å­˜
 	json saveObj;
 	PlantCollection::Save(saveObj);
-	if (JsonReader::Save(filePath, saveObj) == false) MessageBox(NULL, "•Û‘¶‚É¸”s‚µ‚Ü‚µ‚½B", 0, 0);
+	if (JsonReader::Save(filePath, saveObj) == false) MessageBox(NULL, "ä¿å­˜ã«å¤±æ•—ã—ã¾ã—ãŸã€‚", 0, 0);
 }
 
 void GameEditor::LoadPlant()
 {
-	//Œ»İ‚ÌƒJƒŒƒ“ƒgƒfƒBƒŒƒNƒgƒŠ‚ğŠo‚¦‚Ä‚¨‚­
+	//ç¾åœ¨ã®ã‚«ãƒ¬ãƒ³ãƒˆãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªã‚’è¦šãˆã¦ãŠã
 	char defaultCurrentDir[MAX_PATH];
 	GetCurrentDirectory(MAX_PATH, defaultCurrentDir);
 
-	// “Ç‚İ‚Şƒtƒ@ƒCƒ‹‚ÌƒpƒX‚ğæ“¾
+	// èª­ã¿è¾¼ã‚€ãƒ•ã‚¡ã‚¤ãƒ«ã®ãƒ‘ã‚¹ã‚’å–å¾—
 	string filePath{}; {
-		// uƒtƒ@ƒCƒ‹‚ğŠJ‚­vƒ_ƒCƒAƒƒO‚Ìİ’è—p\‘¢‘Ì‚ğİ’è
+		// ã€Œãƒ•ã‚¡ã‚¤ãƒ«ã‚’é–‹ãã€ãƒ€ã‚¤ã‚¢ãƒ­ã‚°ã®è¨­å®šç”¨æ§‹é€ ä½“ã‚’è¨­å®š
 		OPENFILENAME ofn; {
-			TCHAR szFile[MAX_PATH] = {}; // ƒtƒ@ƒCƒ‹–¼‚ğŠi”[‚·‚éƒoƒbƒtƒ@
-			ZeroMemory(&ofn, sizeof(ofn)); // \‘¢‘Ì‚Ì‰Šú‰»
-			ofn.lStructSize = sizeof(ofn); // \‘¢‘Ì‚ÌƒTƒCƒY
-			ofn.lpstrFile = szFile; // ƒtƒ@ƒCƒ‹–¼‚ğŠi”[‚·‚éƒoƒbƒtƒ@
-			ofn.lpstrFile[0] = '\0'; // ‰Šú‰»
-			ofn.nMaxFile = sizeof(szFile); // ƒtƒ@ƒCƒ‹–¼ƒoƒbƒtƒ@‚ÌƒTƒCƒY
-			ofn.lpstrFilter = TEXT("JSONƒtƒ@ƒCƒ‹(*.json)\0*.json\0‚·‚×‚Ä‚Ìƒtƒ@ƒCƒ‹(*.*)\0*.*\0"); // ƒtƒBƒ‹ƒ^[iFBXƒtƒ@ƒCƒ‹‚Ì‚İ•\¦j
-			ofn.nFilterIndex = 1; // ‰Šú‘I‘ğ‚·‚éƒtƒBƒ‹ƒ^[
-			ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST; // ƒtƒ‰ƒOiƒtƒ@ƒCƒ‹‚ª‘¶İ‚·‚é‚±‚ÆAƒpƒX‚ª‘¶İ‚·‚é‚±‚Æ‚ğŠm”Fj
-			ofn.lpstrInitialDir = TEXT("."); // ƒJƒŒƒ“ƒgƒfƒBƒŒƒNƒgƒŠ‚ğ‰Šú‘I‘ğˆÊ’u‚Æ‚µ‚Äİ’è
+			TCHAR szFile[MAX_PATH] = {}; // ãƒ•ã‚¡ã‚¤ãƒ«åã‚’æ ¼ç´ã™ã‚‹ãƒãƒƒãƒ•ã‚¡
+			ZeroMemory(&ofn, sizeof(ofn)); // æ§‹é€ ä½“ã®åˆæœŸåŒ–
+			ofn.lStructSize = sizeof(ofn); // æ§‹é€ ä½“ã®ã‚µã‚¤ã‚º
+			ofn.lpstrFile = szFile; // ãƒ•ã‚¡ã‚¤ãƒ«åã‚’æ ¼ç´ã™ã‚‹ãƒãƒƒãƒ•ã‚¡
+			ofn.lpstrFile[0] = '\0'; // åˆæœŸåŒ–
+			ofn.nMaxFile = sizeof(szFile); // ãƒ•ã‚¡ã‚¤ãƒ«åãƒãƒƒãƒ•ã‚¡ã®ã‚µã‚¤ã‚º
+			ofn.lpstrFilter = TEXT("JSONãƒ•ã‚¡ã‚¤ãƒ«(*.json)\0*.json\0ã™ã¹ã¦ã®ãƒ•ã‚¡ã‚¤ãƒ«(*.*)\0*.*\0"); // ãƒ•ã‚£ãƒ«ã‚¿ãƒ¼ï¼ˆFBXãƒ•ã‚¡ã‚¤ãƒ«ã®ã¿è¡¨ç¤ºï¼‰
+			ofn.nFilterIndex = 1; // åˆæœŸé¸æŠã™ã‚‹ãƒ•ã‚£ãƒ«ã‚¿ãƒ¼
+			ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST; // ãƒ•ãƒ©ã‚°ï¼ˆãƒ•ã‚¡ã‚¤ãƒ«ãŒå­˜åœ¨ã™ã‚‹ã“ã¨ã€ãƒ‘ã‚¹ãŒå­˜åœ¨ã™ã‚‹ã“ã¨ã‚’ç¢ºèªï¼‰
+			ofn.lpstrInitialDir = TEXT("."); // ã‚«ãƒ¬ãƒ³ãƒˆãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªã‚’åˆæœŸé¸æŠä½ç½®ã¨ã—ã¦è¨­å®š
 		}
 
-		// ƒtƒ@ƒCƒ‹‚ğ‘I‘ğ‚·‚éƒ_ƒCƒAƒƒO‚Ì•\¦
+		// ãƒ•ã‚¡ã‚¤ãƒ«ã‚’é¸æŠã™ã‚‹ãƒ€ã‚¤ã‚¢ãƒ­ã‚°ã®è¡¨ç¤º
 		if (GetOpenFileName(&ofn) == TRUE) {
-			// ƒtƒ@ƒCƒ‹ƒpƒX‚ğæ“¾
+			// ãƒ•ã‚¡ã‚¤ãƒ«ãƒ‘ã‚¹ã‚’å–å¾—
 			filePath = ofn.lpstrFile;
 
-			// ƒJƒŒƒ“ƒgƒfƒBƒŒƒNƒgƒŠ‚©‚ç‚Ì‘Š‘ÎƒpƒX‚ğæ“¾
+			// ã‚«ãƒ¬ãƒ³ãƒˆãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªã‹ã‚‰ã®ç›¸å¯¾ãƒ‘ã‚¹ã‚’å–å¾—
 			filePath = GetAssetsRelativePath(filePath);
 
-			// •¶š—ñ“à‚Ì"\\"‚ğ"/"‚É’uŠ·
+			// æ–‡å­—åˆ—å†…ã®"\\"ã‚’"/"ã«ç½®æ›
 			ReplaceBackslashes(filePath);
 
-			// ƒfƒBƒŒƒNƒgƒŠ‚ğ–ß‚·
+			// ãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªã‚’æˆ»ã™
 			SetCurrentDirectory(defaultCurrentDir);
 		}
 		else {
@@ -739,57 +740,57 @@ void GameEditor::LoadPlant()
 		}
 	}
 
-	// ƒtƒ@ƒCƒ‹‚ğ“Ç‚İ‚İƒXƒe[ƒW‚ğ¶¬
+	// ãƒ•ã‚¡ã‚¤ãƒ«ã‚’èª­ã¿è¾¼ã¿ã‚¹ãƒ†ãƒ¼ã‚¸ã‚’ç”Ÿæˆ
 	json loadObj;
-	if (JsonReader::Load(filePath, loadObj) == false) MessageBox(NULL, "“Ç‚É¸”s‚µ‚Ü‚µ‚½B", 0, 0);
+	if (JsonReader::Load(filePath, loadObj) == false) MessageBox(NULL, "èª­è¾¼ã«å¤±æ•—ã—ã¾ã—ãŸã€‚", 0, 0);
 	PlantCollection::Load(loadObj);
 }
 
 void GameEditor::DrawAddPlantWindow()
 {
-	bool isValid = true; // ƒoƒŠƒf[ƒVƒ‡ƒ“‚ª’Ê‚Á‚½‚©‚Ç‚¤‚©‚ğ¦‚·ƒtƒ‰ƒO
+	bool isValid = true; // ãƒãƒªãƒ‡ãƒ¼ã‚·ãƒ§ãƒ³ãŒé€šã£ãŸã‹ã©ã†ã‹ã‚’ç¤ºã™ãƒ•ãƒ©ã‚°
 
 	ImGui::Begin("Add Plant!!", &isShowPlantWindow_);
 	ImGui::Text("Please set the information of the plant to be added.");
 	ImGui::Separator();
 
-	// A•¨–¼“ü—Íƒ{ƒbƒNƒX
+	// æ¤ç‰©åå…¥åŠ›ãƒœãƒƒã‚¯ã‚¹
 	static char plantNameBuffer[256] = "";
 	ImGui::InputTextWithHint(":setting name", "Input plant name...", plantNameBuffer, IM_ARRAYSIZE(plantNameBuffer));
 
-	// •K{ƒ`ƒFƒbƒN: A•¨–¼‚ª‹ó‚Å‚È‚¢‚©‚ğƒ`ƒFƒbƒN
+	// å¿…é ˆãƒã‚§ãƒƒã‚¯: æ¤ç‰©åãŒç©ºã§ãªã„ã‹ã‚’ãƒã‚§ãƒƒã‚¯
 	if (strlen(plantNameBuffer) == 0) {
 		isValid = false;
 		ImGui::TextColored(ImVec4(1.0f, 0.0f, 0.0f, 1.0f), "Name is required!");
 	}
 
-	// ƒŒƒAƒŠƒeƒB“ü—Íƒ{ƒbƒNƒX
+	// ãƒ¬ã‚¢ãƒªãƒ†ã‚£å…¥åŠ›ãƒœãƒƒã‚¯ã‚¹
 	static int rarity = 1;
 	ImGui::InputInt(":setting rarity", &rarity);
 
-	// •K{ƒ`ƒFƒbƒN: ƒŒƒAƒŠƒeƒB‚ª1ˆÈã‚Å‚ ‚é‚±‚Æ
+	// å¿…é ˆãƒã‚§ãƒƒã‚¯: ãƒ¬ã‚¢ãƒªãƒ†ã‚£ãŒ1ä»¥ä¸Šã§ã‚ã‚‹ã“ã¨
 	if (rarity <= 0) {
 		isValid = false;
 		ImGui::TextColored(ImVec4(1.0f, 0.0f, 0.0f, 1.0f), "Rarity must be greater than 0!");
 	}
 
-	// ƒGƒŠƒA”Ô†“ü—Íƒ{ƒbƒNƒX
+	// ã‚¨ãƒªã‚¢ç•ªå·å…¥åŠ›ãƒœãƒƒã‚¯ã‚¹
 	static int areaNumber = 1;
 	ImGui::InputInt(":setting areaNumber", &areaNumber);
 
-	// •K{ƒ`ƒFƒbƒN: ƒGƒŠƒA”Ô†‚ª1ˆÈã‚Å‚ ‚é‚±‚Æ
+	// å¿…é ˆãƒã‚§ãƒƒã‚¯: ã‚¨ãƒªã‚¢ç•ªå·ãŒ1ä»¥ä¸Šã§ã‚ã‚‹ã“ã¨
 	if (areaNumber <= 0) {
 		isValid = false;
 		ImGui::TextColored(ImVec4(1.0f, 0.0f, 0.0f, 1.0f), "Area number must be greater than 0!");
 	}
 
-	// ƒ‚ƒfƒ‹ƒtƒ@ƒCƒ‹ƒpƒX“ü—Íƒ{ƒbƒNƒX
+	// ãƒ¢ãƒ‡ãƒ«ãƒ•ã‚¡ã‚¤ãƒ«ãƒ‘ã‚¹å…¥åŠ›ãƒœãƒƒã‚¯ã‚¹
 	static string modelFilePath = "defaultPlant.fbx";
 	ImGui::InputText(":setting modelFilePath", &modelFilePath[0], modelFilePath.size());
 	ImGui::SameLine();
 	if (ImGui::Button(":set Model")) modelFilePath = GetFBXFilePath();
 
-	// ‰æ‘œƒtƒ@ƒCƒ‹ƒpƒX“ü—Íƒ{ƒbƒNƒX
+	// ç”»åƒãƒ•ã‚¡ã‚¤ãƒ«ãƒ‘ã‚¹å…¥åŠ›ãƒœãƒƒã‚¯ã‚¹
 	static string imageFilePath = "defaultPlant.png";
 	ImGui::InputText(":setting imageFilePath", &imageFilePath[0], imageFilePath.size());
 	ImGui::SameLine();
@@ -797,7 +798,7 @@ void GameEditor::DrawAddPlantWindow()
 
 	ImGui::Separator();
 
-	// uAddvƒ{ƒ^ƒ“‚ğ–³Œø‰»‚·‚é
+	// ã€ŒAddã€ãƒœã‚¿ãƒ³ã‚’ç„¡åŠ¹åŒ–ã™ã‚‹
 	if (isValid && ImGui::Button("Add")) {
 		PlantCollection::AddPlant({
 			(int)PlantCollection::GetPlants().size(),
@@ -809,7 +810,7 @@ void GameEditor::DrawAddPlantWindow()
 			});
 	}
 	else if (!isValid) {
-		// “ü—ÍƒGƒ‰[‚ª‚ ‚éê‡‚ÉAƒ{ƒ^ƒ“‚ğ–³Œø‰»‚·‚é
+		// å…¥åŠ›ã‚¨ãƒ©ãƒ¼ãŒã‚ã‚‹å ´åˆã«ã€ãƒœã‚¿ãƒ³ã‚’ç„¡åŠ¹åŒ–ã™ã‚‹
 		ImGui::BeginDisabled();
 		ImGui::Button("Add");
 		ImGui::EndDisabled();
@@ -819,37 +820,37 @@ void GameEditor::DrawAddPlantWindow()
 
 string GameEditor::GetFBXFilePath()
 {
-	//Œ»İ‚ÌƒJƒŒƒ“ƒgƒfƒBƒŒƒNƒgƒŠ‚ğŠo‚¦‚Ä‚¨‚­
+	//ç¾åœ¨ã®ã‚«ãƒ¬ãƒ³ãƒˆãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªã‚’è¦šãˆã¦ãŠã
 	char defaultCurrentDir[MAX_PATH];
 	GetCurrentDirectory(MAX_PATH, defaultCurrentDir);
 
-	// ’Ç‰Á‚·‚éƒIƒuƒWƒFƒNƒg‚Ìƒ‚ƒfƒ‹ƒtƒ@ƒCƒ‹ƒpƒX‚ğİ’è
+	// è¿½åŠ ã™ã‚‹ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®ãƒ¢ãƒ‡ãƒ«ãƒ•ã‚¡ã‚¤ãƒ«ãƒ‘ã‚¹ã‚’è¨­å®š
 	string filePath{}; {
-		// uƒtƒ@ƒCƒ‹‚ğŠJ‚­vƒ_ƒCƒAƒƒO‚Ìİ’è—p\‘¢‘Ì‚ğİ’è
+		// ã€Œãƒ•ã‚¡ã‚¤ãƒ«ã‚’é–‹ãã€ãƒ€ã‚¤ã‚¢ãƒ­ã‚°ã®è¨­å®šç”¨æ§‹é€ ä½“ã‚’è¨­å®š
 		OPENFILENAME ofn; {
-			TCHAR szFile[MAX_PATH] = {}; // ƒtƒ@ƒCƒ‹–¼‚ğŠi”[‚·‚éƒoƒbƒtƒ@
-			ZeroMemory(&ofn, sizeof(ofn)); // \‘¢‘Ì‚Ì‰Šú‰»
-			ofn.lStructSize = sizeof(ofn); // \‘¢‘Ì‚ÌƒTƒCƒY
-			ofn.lpstrFile = szFile; // ƒtƒ@ƒCƒ‹–¼‚ğŠi”[‚·‚éƒoƒbƒtƒ@
-			ofn.lpstrFile[0] = '\0'; // ‰Šú‰»
-			ofn.nMaxFile = sizeof(szFile); // ƒtƒ@ƒCƒ‹–¼ƒoƒbƒtƒ@‚ÌƒTƒCƒY
-			ofn.lpstrFilter = TEXT("FBXƒtƒ@ƒCƒ‹(*.fbx)\0*.fbx\0‚·‚×‚Ä‚Ìƒtƒ@ƒCƒ‹(*.*)\0*.*\0"); // ƒtƒBƒ‹ƒ^[iFBXƒtƒ@ƒCƒ‹‚Ì‚İ•\¦j			ofn.nFilterIndex = 1; // ‰Šú‘I‘ğ‚·‚éƒtƒBƒ‹ƒ^[
-			ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST; // ƒtƒ‰ƒOiƒtƒ@ƒCƒ‹‚ª‘¶İ‚·‚é‚±‚ÆAƒpƒX‚ª‘¶İ‚·‚é‚±‚Æ‚ğŠm”Fj
-			ofn.lpstrInitialDir = TEXT("."); // ƒJƒŒƒ“ƒgƒfƒBƒŒƒNƒgƒŠ‚ğ‰Šú‘I‘ğˆÊ’u‚Æ‚µ‚Äİ’è
+			TCHAR szFile[MAX_PATH] = {}; // ãƒ•ã‚¡ã‚¤ãƒ«åã‚’æ ¼ç´ã™ã‚‹ãƒãƒƒãƒ•ã‚¡
+			ZeroMemory(&ofn, sizeof(ofn)); // æ§‹é€ ä½“ã®åˆæœŸåŒ–
+			ofn.lStructSize = sizeof(ofn); // æ§‹é€ ä½“ã®ã‚µã‚¤ã‚º
+			ofn.lpstrFile = szFile; // ãƒ•ã‚¡ã‚¤ãƒ«åã‚’æ ¼ç´ã™ã‚‹ãƒãƒƒãƒ•ã‚¡
+			ofn.lpstrFile[0] = '\0'; // åˆæœŸåŒ–
+			ofn.nMaxFile = sizeof(szFile); // ãƒ•ã‚¡ã‚¤ãƒ«åãƒãƒƒãƒ•ã‚¡ã®ã‚µã‚¤ã‚º
+			ofn.lpstrFilter = TEXT("FBXãƒ•ã‚¡ã‚¤ãƒ«(*.fbx)\0*.fbx\0ã™ã¹ã¦ã®ãƒ•ã‚¡ã‚¤ãƒ«(*.*)\0*.*\0"); // ãƒ•ã‚£ãƒ«ã‚¿ãƒ¼ï¼ˆFBXãƒ•ã‚¡ã‚¤ãƒ«ã®ã¿è¡¨ç¤ºï¼‰			ofn.nFilterIndex = 1; // åˆæœŸé¸æŠã™ã‚‹ãƒ•ã‚£ãƒ«ã‚¿ãƒ¼
+			ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST; // ãƒ•ãƒ©ã‚°ï¼ˆãƒ•ã‚¡ã‚¤ãƒ«ãŒå­˜åœ¨ã™ã‚‹ã“ã¨ã€ãƒ‘ã‚¹ãŒå­˜åœ¨ã™ã‚‹ã“ã¨ã‚’ç¢ºèªï¼‰
+			ofn.lpstrInitialDir = TEXT("."); // ã‚«ãƒ¬ãƒ³ãƒˆãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªã‚’åˆæœŸé¸æŠä½ç½®ã¨ã—ã¦è¨­å®š
 		}
 
-		// ƒtƒ@ƒCƒ‹‚ğ‘I‘ğ‚·‚éƒ_ƒCƒAƒƒO‚Ì•\¦
+		// ãƒ•ã‚¡ã‚¤ãƒ«ã‚’é¸æŠã™ã‚‹ãƒ€ã‚¤ã‚¢ãƒ­ã‚°ã®è¡¨ç¤º
 		if (GetOpenFileName(&ofn) == TRUE) {
-			// ƒtƒ@ƒCƒ‹ƒpƒX‚ğæ“¾
+			// ãƒ•ã‚¡ã‚¤ãƒ«ãƒ‘ã‚¹ã‚’å–å¾—
 			filePath = ofn.lpstrFile;
 
-			// ƒJƒŒƒ“ƒgƒfƒBƒŒƒNƒgƒŠ‚©‚ç‚Ì‘Š‘ÎƒpƒX‚ğæ“¾
+			// ã‚«ãƒ¬ãƒ³ãƒˆãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªã‹ã‚‰ã®ç›¸å¯¾ãƒ‘ã‚¹ã‚’å–å¾—
 			filePath = GetAssetsRelativePath(filePath);
 
-			// •¶š—ñ“à‚Ì"\\"‚ğ"/"‚É’uŠ·
+			// æ–‡å­—åˆ—å†…ã®"\\"ã‚’"/"ã«ç½®æ›
 			ReplaceBackslashes(filePath);
 
-			// ƒfƒBƒŒƒNƒgƒŠ‚ğ–ß‚·
+			// ãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªã‚’æˆ»ã™
 			SetCurrentDirectory(defaultCurrentDir);
 		}
 		else {
@@ -857,44 +858,44 @@ string GameEditor::GetFBXFilePath()
 		}
 	}
 
-	// ƒtƒ@ƒCƒ‹ƒpƒX‚ğ•Ô‚·
+	// ãƒ•ã‚¡ã‚¤ãƒ«ãƒ‘ã‚¹ã‚’è¿”ã™
 	return filePath;
 }
 
 string GameEditor::GetPNGFilePath()
 {
-	//Œ»İ‚ÌƒJƒŒƒ“ƒgƒfƒBƒŒƒNƒgƒŠ‚ğŠo‚¦‚Ä‚¨‚­
+	//ç¾åœ¨ã®ã‚«ãƒ¬ãƒ³ãƒˆãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªã‚’è¦šãˆã¦ãŠã
 	char defaultCurrentDir[MAX_PATH];
 	GetCurrentDirectory(MAX_PATH, defaultCurrentDir);
 
-	// ’Ç‰Á‚·‚éƒIƒuƒWƒFƒNƒg‚Ìƒ‚ƒfƒ‹ƒtƒ@ƒCƒ‹ƒpƒX‚ğİ’è
+	// è¿½åŠ ã™ã‚‹ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®ãƒ¢ãƒ‡ãƒ«ãƒ•ã‚¡ã‚¤ãƒ«ãƒ‘ã‚¹ã‚’è¨­å®š
 	string filePath{}; {
-		// uƒtƒ@ƒCƒ‹‚ğŠJ‚­vƒ_ƒCƒAƒƒO‚Ìİ’è—p\‘¢‘Ì‚ğİ’è
+		// ã€Œãƒ•ã‚¡ã‚¤ãƒ«ã‚’é–‹ãã€ãƒ€ã‚¤ã‚¢ãƒ­ã‚°ã®è¨­å®šç”¨æ§‹é€ ä½“ã‚’è¨­å®š
 		OPENFILENAME ofn; {
-			TCHAR szFile[MAX_PATH] = {}; // ƒtƒ@ƒCƒ‹–¼‚ğŠi”[‚·‚éƒoƒbƒtƒ@
-			ZeroMemory(&ofn, sizeof(ofn)); // \‘¢‘Ì‚Ì‰Šú‰»
-			ofn.lStructSize = sizeof(ofn); // \‘¢‘Ì‚ÌƒTƒCƒY
-			ofn.lpstrFile = szFile; // ƒtƒ@ƒCƒ‹–¼‚ğŠi”[‚·‚éƒoƒbƒtƒ@
-			ofn.lpstrFile[0] = '\0'; // ‰Šú‰»
-			ofn.nMaxFile = sizeof(szFile); // ƒtƒ@ƒCƒ‹–¼ƒoƒbƒtƒ@‚ÌƒTƒCƒY
-			ofn.lpstrFilter = TEXT("PNGƒtƒ@ƒCƒ‹(*.fbx)\0*.png\0‚·‚×‚Ä‚Ìƒtƒ@ƒCƒ‹(*.*)\0*.*\0"); // ƒtƒBƒ‹ƒ^[iFBXƒtƒ@ƒCƒ‹‚Ì‚İ•\¦j
-			ofn.nFilterIndex = 1; // ‰Šú‘I‘ğ‚·‚éƒtƒBƒ‹ƒ^[
-			ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST; // ƒtƒ‰ƒOiƒtƒ@ƒCƒ‹‚ª‘¶İ‚·‚é‚±‚ÆAƒpƒX‚ª‘¶İ‚·‚é‚±‚Æ‚ğŠm”Fj
-			ofn.lpstrInitialDir = TEXT("."); // ƒJƒŒƒ“ƒgƒfƒBƒŒƒNƒgƒŠ‚ğ‰Šú‘I‘ğˆÊ’u‚Æ‚µ‚Äİ’è
+			TCHAR szFile[MAX_PATH] = {}; // ãƒ•ã‚¡ã‚¤ãƒ«åã‚’æ ¼ç´ã™ã‚‹ãƒãƒƒãƒ•ã‚¡
+			ZeroMemory(&ofn, sizeof(ofn)); // æ§‹é€ ä½“ã®åˆæœŸåŒ–
+			ofn.lStructSize = sizeof(ofn); // æ§‹é€ ä½“ã®ã‚µã‚¤ã‚º
+			ofn.lpstrFile = szFile; // ãƒ•ã‚¡ã‚¤ãƒ«åã‚’æ ¼ç´ã™ã‚‹ãƒãƒƒãƒ•ã‚¡
+			ofn.lpstrFile[0] = '\0'; // åˆæœŸåŒ–
+			ofn.nMaxFile = sizeof(szFile); // ãƒ•ã‚¡ã‚¤ãƒ«åãƒãƒƒãƒ•ã‚¡ã®ã‚µã‚¤ã‚º
+			ofn.lpstrFilter = TEXT("PNGãƒ•ã‚¡ã‚¤ãƒ«(*.fbx)\0*.png\0ã™ã¹ã¦ã®ãƒ•ã‚¡ã‚¤ãƒ«(*.*)\0*.*\0"); // ãƒ•ã‚£ãƒ«ã‚¿ãƒ¼ï¼ˆFBXãƒ•ã‚¡ã‚¤ãƒ«ã®ã¿è¡¨ç¤ºï¼‰
+			ofn.nFilterIndex = 1; // åˆæœŸé¸æŠã™ã‚‹ãƒ•ã‚£ãƒ«ã‚¿ãƒ¼
+			ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST; // ãƒ•ãƒ©ã‚°ï¼ˆãƒ•ã‚¡ã‚¤ãƒ«ãŒå­˜åœ¨ã™ã‚‹ã“ã¨ã€ãƒ‘ã‚¹ãŒå­˜åœ¨ã™ã‚‹ã“ã¨ã‚’ç¢ºèªï¼‰
+			ofn.lpstrInitialDir = TEXT("."); // ã‚«ãƒ¬ãƒ³ãƒˆãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªã‚’åˆæœŸé¸æŠä½ç½®ã¨ã—ã¦è¨­å®š
 		}
 
-		// ƒtƒ@ƒCƒ‹‚ğ‘I‘ğ‚·‚éƒ_ƒCƒAƒƒO‚Ì•\¦
+		// ãƒ•ã‚¡ã‚¤ãƒ«ã‚’é¸æŠã™ã‚‹ãƒ€ã‚¤ã‚¢ãƒ­ã‚°ã®è¡¨ç¤º
 		if (GetOpenFileName(&ofn) == TRUE) {
-			// ƒtƒ@ƒCƒ‹ƒpƒX‚ğæ“¾
+			// ãƒ•ã‚¡ã‚¤ãƒ«ãƒ‘ã‚¹ã‚’å–å¾—
 			filePath = ofn.lpstrFile;
 
-			// ƒJƒŒƒ“ƒgƒfƒBƒŒƒNƒgƒŠ‚©‚ç‚Ì‘Š‘ÎƒpƒX‚ğæ“¾
+			// ã‚«ãƒ¬ãƒ³ãƒˆãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªã‹ã‚‰ã®ç›¸å¯¾ãƒ‘ã‚¹ã‚’å–å¾—
 			filePath = GetAssetsRelativePath(filePath);
 
-			// •¶š—ñ“à‚Ì"\\"‚ğ"/"‚É’uŠ·
+			// æ–‡å­—åˆ—å†…ã®"\\"ã‚’"/"ã«ç½®æ›
 			ReplaceBackslashes(filePath);
 
-			// ƒfƒBƒŒƒNƒgƒŠ‚ğ–ß‚·
+			// ãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªã‚’æˆ»ã™
 			SetCurrentDirectory(defaultCurrentDir);
 		}
 		else {
@@ -902,6 +903,6 @@ string GameEditor::GetPNGFilePath()
 		}
 	}
 
-	// ƒtƒ@ƒCƒ‹ƒpƒX‚ğ•Ô‚·
+	// ãƒ•ã‚¡ã‚¤ãƒ«ãƒ‘ã‚¹ã‚’è¿”ã™
 	return filePath;
 }

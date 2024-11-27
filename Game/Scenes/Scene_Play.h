@@ -46,5 +46,6 @@ private:
 
 	/// <summary> ƒJ[ƒ\ƒ‹‚Ìó‘Ô‚ğİ’è </summary>
 	void SetCursorMode();
+
 };
 

@@ -53,7 +53,7 @@ float4 PS(VS_OUT inData) : SV_Target
         diffuse = g_vecDiffuse;
     }
 	
-    Dithering(inData.pos.xy, diffuse.a);
+  //  Dithering(inData.pos.xy, diffuse.a);
 	
 	//ライトの向き
 	float4 lightDir = g_vecLightDir;	//グルーバル変数は変更できないので、いったんローカル変数へ

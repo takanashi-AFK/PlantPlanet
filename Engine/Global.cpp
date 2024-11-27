@@ -58,3 +58,4 @@ valeable :*/
 }
 
 string g_selectedStage = "";
+int g_selectedGameMode = 0;

@@ -140,7 +140,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Game\Objects\Stage\Components\PlantComponents\Component_Plant.cpp" />
-    <ClCompile Include="Game\Objects\Stage\Components\PlantComponents\Component_PlantGenerator.cpp" />
+    <ClCompile Include="Game\Objects\Stage\Components\GaugeComponents\Component_StaminaGauge.cpp" />
     <ClCompile Include="Game\Objects\UI\Components\Component_UIEasing.cpp" />
     <ClCompile Include="Engine\DirectX\Easing.cpp" />
     <ClCompile Include="Game\Otheres\AudioController.cpp" />
@@ -233,6 +233,7 @@
   <ItemGroup>
     <ClInclude Include="Game\Objects\Stage\Components\PlantComponents\Component_Plant.h" />
     <ClInclude Include="Game\Objects\Stage\Components\PlantComponents\Component_PlantGenerator.h" />
+    <ClInclude Include="Game\Objects\Stage\Components\GaugeComponents\Component_StaminaGauge.h" />
     <ClInclude Include="Game\Objects\UI\Components\Component_UIEasing.h" />
     <ClInclude Include="Engine\DirectX\Easing.h" />
     <ClInclude Include="Game\Otheres\AudioController.h" />

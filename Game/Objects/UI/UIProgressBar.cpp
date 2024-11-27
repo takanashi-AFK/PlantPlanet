@@ -20,63 +20,63 @@ UIProgressBar::UIProgressBar(string _name, UIObject* parent,int _layerNum)
 
 void UIProgressBar::Initialize()
 {
-    // ƒtƒŒ[ƒ€‚ğİ’è
+    // ãƒ•ãƒ¬ãƒ¼ãƒ ã‚’è¨­å®š
     {
-        // ƒtƒŒ[ƒ€‰æ‘œ‚ğ“Ç‚İ‚Ş
+        // ãƒ•ãƒ¬ãƒ¼ãƒ ç”»åƒã‚’èª­ã¿è¾¼ã‚€
         frameImage_.Load(DEFAULT_FRAME_IMAGE);
 
-        // ƒtƒŒ[ƒ€‚Ìtransform‚ğİ’è ¦ƒfƒtƒHƒ‹ƒg‚ÌˆÊ’uA‰ñ“]AŠg‘åk¬
+        // ãƒ•ãƒ¬ãƒ¼ãƒ ã®transformã‚’è¨­å®š â€»ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆã®ä½ç½®ã€å›è»¢ã€æ‹¡å¤§ç¸®å°
         frameImage_.transform_ = transform_;
     }
 
-    // ƒQ[ƒW‚ğİ’è
+    // ã‚²ãƒ¼ã‚¸ã‚’è¨­å®š
     {
-        // ƒQ[ƒW‰æ‘œ‚ğ“Ç‚İ‚Ş
+        // ã‚²ãƒ¼ã‚¸ç”»åƒã‚’èª­ã¿è¾¼ã‚€
         gaugeImage_.Load(DEFAULT_GAUGE_IMAGE);
 
-        // ƒQ[ƒW‚Ìtransform‚ğİ’è ¦ƒfƒtƒHƒ‹ƒg‚ÌˆÊ’uA‰ñ“]AŠg‘åk¬
+        // ã‚²ãƒ¼ã‚¸ã®transformã‚’è¨­å®š â€»ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆã®ä½ç½®ã€å›è»¢ã€æ‹¡å¤§ç¸®å°
         gaugeImage_.transform_ = transform_;
 
-        // ƒQ[ƒW‚ÌF‚ğİ’è
+        // ã‚²ãƒ¼ã‚¸ã®è‰²ã‚’è¨­å®š
         gaugeImage_.color_ = { 1.0f,1.0f,1.0f };
     }
 }
 
 void UIProgressBar::Update()
 {
-    // •`‰æ—ptransform‚ğƒIƒuƒWƒFƒNƒg‚Ìtransform‚ÅXV
+    // æç”»ç”¨transformã‚’ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®transformã§æ›´æ–°
     frameImage_.transform_ = GetCalcTransform();
     gaugeImage_.transform_ = GetCalcTransform();
 
-    // ƒQ[ƒW‚ÌƒXƒP[ƒ‹‚ğQÆ‚µ‚½’l‚ğŠî‚Éİ’è
+    // ã‚²ãƒ¼ã‚¸ã®ã‚¹ã‚±ãƒ¼ãƒ«ã‚’å‚ç…§ã—ãŸå€¤ã‚’åŸºã«è¨­å®š
     {
-		// ƒQ[ƒW‚ÌƒXƒP[ƒ‹‚ğİ’è ¦Œ»İ’l/Å‘å’l
+		// ã‚²ãƒ¼ã‚¸ã®ã‚¹ã‚±ãƒ¼ãƒ«ã‚’è¨­å®š â€»ç¾åœ¨å€¤/æœ€å¤§å€¤
         if (max_ != nullptr || now_ != nullptr)gaugeImage_.transform_.scale_.x = frameImage_.transform_.scale_.x * (*now_ / *max_);
 
-		// ƒQ[ƒW‚ÌƒXƒP[ƒ‹‚ª0ˆÈ‰º‚Ìê‡‚ÍA0‚Éİ’è
+		// ã‚²ãƒ¼ã‚¸ã®ã‚¹ã‚±ãƒ¼ãƒ«ãŒ0ä»¥ä¸‹ã®å ´åˆã¯ã€0ã«è¨­å®š
 		if (gaugeImage_.transform_.scale_.x <= 0)gaugeImage_.transform_.scale_.x = 0;
 	}
 }
 
 void UIProgressBar::Draw()
 {
-    // ƒQ[ƒW‰æ‘œ‚ª“Ç‚İ‚Ü‚ê‚Ä‚¢‚éê‡
+    // ã‚²ãƒ¼ã‚¸ç”»åƒãŒèª­ã¿è¾¼ã¾ã‚Œã¦ã„ã‚‹å ´åˆ
   
     if (gaugeImage_.IsAvailable()) {
 
-        //this->transform_ = gaugeImage_.transform_;
+        Transform localTransform = gaugeImage_.transform_;
         auto t = GetCalcTransform();
-		// ƒQ[ƒW‚Ì‰æ‘œ‚ğ•`‰æ
+		// ã‚²ãƒ¼ã‚¸ã®ç”»åƒã‚’æç”»
         Image::SetTransform(gaugeImage_.handle_, t);
         Image::Draw(gaugeImage_.handle_, Direct3D::SHADER_BAR, gaugeImage_.color_);
     }
 
-    // ƒtƒŒ[ƒ€‰æ‘œ‚ª“Ç‚İ‚Ü‚ê‚Ä‚¢‚éê‡
+    // ãƒ•ãƒ¬ãƒ¼ãƒ ç”»åƒãŒèª­ã¿è¾¼ã¾ã‚Œã¦ã„ã‚‹å ´åˆ
     if (frameImage_.IsAvailable()) {
 
-       // this->transform_ = frameImage_.transform_;
+        Transform localTransform = frameImage_.transform_;
         auto t = GetCalcTransform();
-        // ƒtƒŒ[ƒ€‚Ì‰æ‘œ‚ğ•`‰æ
+        // ãƒ•ãƒ¬ãƒ¼ãƒ ã®ç”»åƒã‚’æç”»
 		Image::SetTransform(frameImage_.handle_, t);
 		Image::Draw(frameImage_.handle_);
     }
@@ -89,47 +89,47 @@ void UIProgressBar::Release()
 
 void UIProgressBar::Save(json& saveObj)
 {
-    // ƒQ[ƒW‰æ‘œ‚Ìî•ñ‚ğ•Û‘¶
+    // ã‚²ãƒ¼ã‚¸ç”»åƒã®æƒ…å ±ã‚’ä¿å­˜
     saveObj["gaugeImage_"]["filePath_"] = gaugeImage_.filePath_;
     saveObj["gaugeImage_"]["color_"] = { REFERENCE_XMFLOAT3(gaugeImage_.color_)};
     
-    // ƒtƒŒ[ƒ€‰æ‘œ‚Ìî•ñ‚ğ•Û‘¶
+    // ãƒ•ãƒ¬ãƒ¼ãƒ ç”»åƒã®æƒ…å ±ã‚’ä¿å­˜
     saveObj["frameImage_"]["filePath_"] = frameImage_.filePath_;
 }
 
 void UIProgressBar::Load(json& loadObj)
 {
-    // ƒQ[ƒW‰æ‘œ‚Ìî•ñ‚ğ“Ç
+    // ã‚²ãƒ¼ã‚¸ç”»åƒã®æƒ…å ±ã‚’èª­è¾¼
     if (loadObj.contains("gaugeImage_")) {
 		
-        // ƒQ[ƒW‰æ‘œ‚ğ“Ç‚İ‚Ş
+        // ã‚²ãƒ¼ã‚¸ç”»åƒã‚’èª­ã¿è¾¼ã‚€
         if (loadObj["gaugeImage_"].contains("filePath_")) gaugeImage_.Load(loadObj["gaugeImage_"]["filePath_"].get<string>());
 
-        // ƒQ[ƒW‚ÌF‚ğæ“¾
+        // ã‚²ãƒ¼ã‚¸ã®è‰²ã‚’å–å¾—
         if (loadObj["gaugeImage_"].contains("color_"))gaugeImage_.color_ = { loadObj["gaugeImage_"]["color_"][0].get<float>(),loadObj["gaugeImage_"]["color_"][1].get<float>(), loadObj["gaugeImage_"]["color_"][2].get<float>() };
 	}   
 
-    // ƒtƒŒ[ƒ€‰æ‘œ‚Ìî•ñ‚ğ“Ç
+    // ãƒ•ãƒ¬ãƒ¼ãƒ ç”»åƒã®æƒ…å ±ã‚’èª­è¾¼
     if (loadObj.contains("frameImage_")) {
 
-        // ƒtƒŒ[ƒ€‰æ‘œ‚ğ“Ç‚İ‚Ş
+        // ãƒ•ãƒ¬ãƒ¼ãƒ ç”»åƒã‚’èª­ã¿è¾¼ã‚€
         if (loadObj["frameImage_"].contains("filePath_"))frameImage_.Load(loadObj["frameImage_"]["filePath_"].get<string>());
 	}
 }
 
 void UIProgressBar::DrawData()
 {
-    // •`‰æî•ñ‚Ìİ’è
+    // æç”»æƒ…å ±ã®è¨­å®š
     if (ImGui::TreeNode("draw")) {
         
-        // ƒtƒŒ[ƒ€‚Ìİ’è
+        // ãƒ•ãƒ¬ãƒ¼ãƒ ã®è¨­å®š
         if(ImGui::TreeNode("frame")){
 
-			// ƒtƒŒ[ƒ€‰æ‘œ‚Ì•ÏX
+			// ãƒ•ãƒ¬ãƒ¼ãƒ ç”»åƒã®å¤‰æ›´
 			ImGui::Text("image : %s", frameImage_.filePath_.c_str()); ImGui::SameLine();
 			if (ImGui::SmallButton("...")) {
 
-                // ‰æ‘œƒtƒ@ƒCƒ‹‚ğ‘I‘ğ‚µ‚Ä“Ç‚İ‚Ş
+                // ç”»åƒãƒ•ã‚¡ã‚¤ãƒ«ã‚’é¸æŠã—ã¦èª­ã¿è¾¼ã‚€
 				string inputFilePath{};
 				if (GetImageFilePathFromExplorer(inputFilePath)) frameImage_.Load(inputFilePath);
 			}
@@ -137,19 +137,19 @@ void UIProgressBar::DrawData()
 			ImGui::TreePop();
 		}
 
-        // ƒQ[ƒW‚Ìİ’è
+        // ã‚²ãƒ¼ã‚¸ã®è¨­å®š
         if (ImGui::TreeNode("gauge")) {
 
-			// ƒQ[ƒW‰æ‘œ‚Ì•ÏX
+			// ã‚²ãƒ¼ã‚¸ç”»åƒã®å¤‰æ›´
 			ImGui::Text("image : %s", gaugeImage_.filePath_.c_str()); ImGui::SameLine();
 			if (ImGui::SmallButton("...")) {
 
-                // ‰æ‘œƒtƒ@ƒCƒ‹‚ğ‘I‘ğ‚µ‚Ä“Ç‚İ‚Ş
+                // ç”»åƒãƒ•ã‚¡ã‚¤ãƒ«ã‚’é¸æŠã—ã¦èª­ã¿è¾¼ã‚€
                 string inputFilePath{};
                 if (GetImageFilePathFromExplorer(inputFilePath)) gaugeImage_.Load(inputFilePath);
 			}
 
-			// ƒQ[ƒW‚ÌF‚ğİ’è
+			// ã‚²ãƒ¼ã‚¸ã®è‰²ã‚’è¨­å®š
 			ImGui::ColorEdit3("color", &gaugeImage_.color_.x);
 
 			ImGui::TreePop();
@@ -159,7 +159,7 @@ void UIProgressBar::DrawData()
 
     if (ImGui::TreeNode("value")) {
         
-		// Å‘å’l‚ÆŒ»İ’l‚ğİ’è
+		// æœ€å¤§å€¤ã¨ç¾åœ¨å€¤ã‚’è¨­å®š
 		if(max_ != nullptr)ImGui::DragFloat("Max", max_);
 		if(now_ != nullptr)ImGui::DragFloat("Now", now_);
 
@@ -169,42 +169,42 @@ void UIProgressBar::DrawData()
 
 bool UIProgressBar::GetImageFilePathFromExplorer(string& _filePath) const
 {
-    //Œ»İ‚ÌƒJƒŒƒ“ƒgƒfƒBƒŒƒNƒgƒŠ‚ğŠo‚¦‚Ä‚¨‚­
+    //ç¾åœ¨ã®ã‚«ãƒ¬ãƒ³ãƒˆãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªã‚’è¦šãˆã¦ãŠã
     char defaultCurrentDir[MAX_PATH];
     GetCurrentDirectory(MAX_PATH, defaultCurrentDir);
 
-    // ’Ç‰Á‚·‚éƒIƒuƒWƒFƒNƒg‚Ìƒ‚ƒfƒ‹ƒtƒ@ƒCƒ‹ƒpƒX‚ğİ’è
+    // è¿½åŠ ã™ã‚‹ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®ãƒ¢ãƒ‡ãƒ«ãƒ•ã‚¡ã‚¤ãƒ«ãƒ‘ã‚¹ã‚’è¨­å®š
     string filePath{}; {
-        // uƒtƒ@ƒCƒ‹‚ğŠJ‚­vƒ_ƒCƒAƒƒO‚Ìİ’è—p\‘¢‘Ì‚ğİ’è
+        // ã€Œãƒ•ã‚¡ã‚¤ãƒ«ã‚’é–‹ãã€ãƒ€ã‚¤ã‚¢ãƒ­ã‚°ã®è¨­å®šç”¨æ§‹é€ ä½“ã‚’è¨­å®š
         OPENFILENAME ofn; {
-            TCHAR szFile[MAX_PATH] = {}; // ƒtƒ@ƒCƒ‹–¼‚ğŠi”[‚·‚éƒoƒbƒtƒ@
-            ZeroMemory(&ofn, sizeof(ofn)); // \‘¢‘Ì‚Ì‰Šú‰»
-            ofn.lStructSize = sizeof(ofn); // \‘¢‘Ì‚ÌƒTƒCƒY
-            ofn.lpstrFile = szFile; // ƒtƒ@ƒCƒ‹–¼‚ğŠi”[‚·‚éƒoƒbƒtƒ@
-            ofn.lpstrFile[0] = '\0'; // ‰Šú‰»
-            ofn.nMaxFile = sizeof(szFile); // ƒtƒ@ƒCƒ‹–¼ƒoƒbƒtƒ@‚ÌƒTƒCƒY
-            ofn.lpstrFilter = TEXT("PNGƒtƒ@ƒCƒ‹(*.png)\0*.png\0‚·‚×‚Ä‚Ìƒtƒ@ƒCƒ‹(*.*)\0*.*\0"); // ƒtƒBƒ‹ƒ^[iFBXƒtƒ@ƒCƒ‹‚Ì‚İ•\¦j
-            ofn.nFilterIndex = 1; // ‰Šú‘I‘ğ‚·‚éƒtƒBƒ‹ƒ^[
-            ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST; // ƒtƒ‰ƒOiƒtƒ@ƒCƒ‹‚ª‘¶İ‚·‚é‚±‚ÆAƒpƒX‚ª‘¶İ‚·‚é‚±‚Æ‚ğŠm”Fj
-            ofn.lpstrInitialDir = TEXT("."); // ƒJƒŒƒ“ƒgƒfƒBƒŒƒNƒgƒŠ‚ğ‰Šú‘I‘ğˆÊ’u‚Æ‚µ‚Äİ’è
+            TCHAR szFile[MAX_PATH] = {}; // ãƒ•ã‚¡ã‚¤ãƒ«åã‚’æ ¼ç´ã™ã‚‹ãƒãƒƒãƒ•ã‚¡
+            ZeroMemory(&ofn, sizeof(ofn)); // æ§‹é€ ä½“ã®åˆæœŸåŒ–
+            ofn.lStructSize = sizeof(ofn); // æ§‹é€ ä½“ã®ã‚µã‚¤ã‚º
+            ofn.lpstrFile = szFile; // ãƒ•ã‚¡ã‚¤ãƒ«åã‚’æ ¼ç´ã™ã‚‹ãƒãƒƒãƒ•ã‚¡
+            ofn.lpstrFile[0] = '\0'; // åˆæœŸåŒ–
+            ofn.nMaxFile = sizeof(szFile); // ãƒ•ã‚¡ã‚¤ãƒ«åãƒãƒƒãƒ•ã‚¡ã®ã‚µã‚¤ã‚º
+            ofn.lpstrFilter = TEXT("PNGãƒ•ã‚¡ã‚¤ãƒ«(*.png)\0*.png\0ã™ã¹ã¦ã®ãƒ•ã‚¡ã‚¤ãƒ«(*.*)\0*.*\0"); // ãƒ•ã‚£ãƒ«ã‚¿ãƒ¼ï¼ˆFBXãƒ•ã‚¡ã‚¤ãƒ«ã®ã¿è¡¨ç¤ºï¼‰
+            ofn.nFilterIndex = 1; // åˆæœŸé¸æŠã™ã‚‹ãƒ•ã‚£ãƒ«ã‚¿ãƒ¼
+            ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST; // ãƒ•ãƒ©ã‚°ï¼ˆãƒ•ã‚¡ã‚¤ãƒ«ãŒå­˜åœ¨ã™ã‚‹ã“ã¨ã€ãƒ‘ã‚¹ãŒå­˜åœ¨ã™ã‚‹ã“ã¨ã‚’ç¢ºèªï¼‰
+            ofn.lpstrInitialDir = TEXT("."); // ã‚«ãƒ¬ãƒ³ãƒˆãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªã‚’åˆæœŸé¸æŠä½ç½®ã¨ã—ã¦è¨­å®š
         }
 
-        // ƒtƒ@ƒCƒ‹‚ğ‘I‘ğ‚·‚éƒ_ƒCƒAƒƒO‚Ì•\¦
+        // ãƒ•ã‚¡ã‚¤ãƒ«ã‚’é¸æŠã™ã‚‹ãƒ€ã‚¤ã‚¢ãƒ­ã‚°ã®è¡¨ç¤º
         if (GetOpenFileName(&ofn) == TRUE) {
-            // ƒtƒ@ƒCƒ‹ƒpƒX‚ğæ“¾
+            // ãƒ•ã‚¡ã‚¤ãƒ«ãƒ‘ã‚¹ã‚’å–å¾—
             filePath = ofn.lpstrFile;
 
-            // ƒJƒŒƒ“ƒgƒfƒBƒŒƒNƒgƒŠ‚©‚ç‚Ì‘Š‘ÎƒpƒX‚ğæ“¾
+            // ã‚«ãƒ¬ãƒ³ãƒˆãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªã‹ã‚‰ã®ç›¸å¯¾ãƒ‘ã‚¹ã‚’å–å¾—
             filePath = FileManager::GetAssetsRelativePath(filePath);
 
-            // •¶š—ñ“à‚Ì"\\"‚ğ"/"‚É’uŠ·
+            // æ–‡å­—åˆ—å†…ã®"\\"ã‚’"/"ã«ç½®æ›
             FileManager::ReplaceBackslashes(filePath);
 
-            // ƒfƒBƒŒƒNƒgƒŠ‚ğ–ß‚·
+            // ãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªã‚’æˆ»ã™
             SetCurrentDirectory(defaultCurrentDir);
         }
         else {
-            // ƒfƒBƒŒƒNƒgƒŠ‚ğ–ß‚·
+            // ãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªã‚’æˆ»ã™
 			SetCurrentDirectory(defaultCurrentDir);
 			return false;
         }
@@ -217,18 +217,18 @@ bool UIProgressBar::GetImageFilePathFromExplorer(string& _filePath) const
 
 bool ProgressBarImage::Load(string _filepath)
 {
-    // ƒtƒ@ƒCƒ‹ƒpƒX‚ğİ’è
+    // ãƒ•ã‚¡ã‚¤ãƒ«ãƒ‘ã‚¹ã‚’è¨­å®š
     filePath_ = _filepath;
 
-    // ‰æ‘œ‚Ì“Ç‚İ‚İ
+    // ç”»åƒã®èª­ã¿è¾¼ã¿
     handle_ = Image::Load(_filepath);
 
-    // ‰æ‘œ‚Ì“Ç‚İ‚İ‚É¬Œ÷‚µ‚½‚©‚Ç‚¤‚©‚ğ•Ô‚·
+    // ç”»åƒã®èª­ã¿è¾¼ã¿ã«æˆåŠŸã—ãŸã‹ã©ã†ã‹ã‚’è¿”ã™
     return handle_ >= 0;
 }
 
 bool ProgressBarImage::IsAvailable() const
 {
-    // ‰æ‘œ‚Ìƒnƒ“ƒhƒ‹‚ª—LŒø‚©‚Ç‚¤‚©‚ğ•Ô‚·
+    // ç”»åƒã®ãƒãƒ³ãƒ‰ãƒ«ãŒæœ‰åŠ¹ã‹ã©ã†ã‹ã‚’è¿”ã™
 	return handle_ >= 0;
 }
