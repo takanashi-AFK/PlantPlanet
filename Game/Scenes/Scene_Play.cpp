@@ -55,6 +55,21 @@ void Scene_Play::Update()
 
 	// プレイ情報の表示処理
 	SetPlayInfo();
+
+
+	// シーン遷移処理
+	{
+		if (Input::IsKeyDown(DIK_L)){
+
+			// プレイヤーが取得した植物情報を取得
+			Component_PlayerBehavior* playerBehavior = nullptr;
+			for (auto pb : pStage_->FindComponents(ComponentType::PlayerBehavior))playerBehavior = (Component_PlayerBehavior*)pb;
+			g_playerPlantData = playerBehavior->GetMyPlants();
+
+			SceneManager* sceneManager = (SceneManager*)FindObject("SceneManager");
+			sceneManager->ChangeScene(SCENE_ID_RESULT, TID_BLACKOUT);
+		}
+	}
 }
 
 void Scene_Play::Draw()
