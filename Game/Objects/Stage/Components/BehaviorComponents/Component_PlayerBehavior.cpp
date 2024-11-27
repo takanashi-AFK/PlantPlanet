@@ -722,7 +722,9 @@ StageObject* Component_PlayerBehavior::GetNearestPlant(PlantData& _plantData)
 	}
 
 	// 植物コンポーネント情報から植物データを取得
-	for (auto plant : nearPlant->FindComponent(Plant)) _plantData = ((Component_Plant*)plant)->GetData();
+	if(nearPlant!=nullptr)
+	for (auto plant : nearPlant->FindComponent(Plant)) 
+		_plantData = ((Component_Plant*)plant)->GetData();
 
 	// 一番近い植物オブジェクトを返す
 	return nearPlant;
