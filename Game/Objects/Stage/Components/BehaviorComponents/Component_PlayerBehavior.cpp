@@ -99,6 +99,7 @@ void Component_PlayerBehavior::Initialize()
 
 void Component_PlayerBehavior::Update()
 {
+
 	// ＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝
 	// カウント制御されている場合の処理
 	// ＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝
@@ -114,6 +115,7 @@ void Component_PlayerBehavior::Update()
 
 			//移動を可能にする
 			move->Execute();
+	
 
 			// ゲームスタートフラグを立てる
 			isGameStart_ = true;
@@ -162,14 +164,28 @@ void Component_PlayerBehavior::Update()
 	// ＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝
 	// 状態ごとの処理
 	// ＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝
+	Component_WASDInputMove* move = (Component_WASDInputMove*)(GetChildComponent("InputMove"));
+	move->SetRotateLock(true);
+	prevAngles_= holder_->GetRotate();
 
 	switch (nowState_)
 	{
 	case PLAYER_STATE_IDLE:           Idle();         break;  // 現在の状態がIDLEの場合
 	case PLAYER_STATE_WALK:           Walk();         break;  // 現在の状態がWALKの場合
-	case PLAYER_STATE_SHOOT:          Shoot();        break;  // 現在の状態がSHOOTの場合
+	//case PLAYER_STATE_SHOOT:          Shoot();        break;  // 現在の状態がSHOOTの場合
 	case PLAYER_STATE_DODGE:          Dodge();        break;  // 現在の状態がDASHの場合
 	case PLAYER_STATE_DEAD:           Dead();         break;  // 現在の状態がDEADの場合
+	}
+
+	if (isShootAttack_)	Shoot();
+
+	if (lockRotateTime_)
+	{
+		Component_WASDInputMove* move = (Component_WASDInputMove*)(GetChildComponent("InputMove"));
+		move->SetRotateLock(false);
+		--lockRotateTime_;
+		
+		holder_->SetRotate(prevAngles_);
 	}
 }
 
@@ -218,7 +234,8 @@ void Component_PlayerBehavior::Idle()
 			IsWASDKey() ? SetState(PLAYER_STATE_WALK) : SetState(PLAYER_STATE_IDLE);
 			return;
 		}
-		SetState(PLAYER_STATE_SHOOT);
+		//SetState(PLAYER_STATE_SHOOT);
+		isShootAttack_ = true;
 	}
 	// スペースキーが押されていたら...ダッシュ状態に遷移
 	else if (Input::IsKeyDown(DIK_SPACE) || Input::IsPadButtonDown(XINPUT_GAMEPAD_A)) {
@@ -252,7 +269,7 @@ void Component_PlayerBehavior::Walk()
 			IsWASDKey() ? SetState(PLAYER_STATE_WALK) : SetState(PLAYER_STATE_IDLE);
 			return;
 		}
-		SetState(PLAYER_STATE_SHOOT);
+		isShootAttack_ = true;
 	}
 	// スペースキーが押されていたら...ダッシュ状態に遷移
 	else if (Input::IsKeyDown(DIK_SPACE) || Input::IsPadButtonDown(XINPUT_GAMEPAD_A)) {
@@ -267,6 +284,8 @@ void Component_PlayerBehavior::Walk()
 
 void Component_PlayerBehavior::Shoot()
 {
+	isShootAttack_ = false;
+	lockRotateTime_ = 100;//調整数値。そのうちマジックナンバーを修正する
 
 	Component_StaminaGauge* sg = (Component_StaminaGauge*)(GetChildComponent("StaminaGauge"));
 	if (sg == nullptr)return;
@@ -277,7 +296,7 @@ void Component_PlayerBehavior::Shoot()
 
 	// TPSカメラの方向を取得
 	TPSCamera* tpsCamera = (TPSCamera*)holder_->FindObject("TPSCamera");
-	if (tpsCamera != nullptr)holder_->SetRotateY(tpsCamera->GetAngle().y);
+	if (tpsCamera != nullptr)prevAngles_.y = tpsCamera->GetAngle().y; // 向きの更新
 
 	// 射撃モーションのアニメーションの現在の再生時間を取得
 	float nowFrame = motion->GetNowFrame();
@@ -308,9 +327,8 @@ void Component_PlayerBehavior::Shoot()
 	}
 
 	// 移動コンポーネントの取得 & 有無の確認
-	Component_WASDInputMove* move = (Component_WASDInputMove*)(GetChildComponent("InputMove"));
-	if (move != nullptr) move->Stop();
-
+	//Component_WASDInputMove* move = (Component_WASDInputMove*)(GetChildComponent("InputMove"));
+	//if (move != nullptr);
 
 	// NOTE: 終了するためのフラグ
 	bool isEnd = false;
@@ -332,8 +350,9 @@ void Component_PlayerBehavior::Shoot()
 		sg->UseStamina(STAMINA_DECREASE_SHOOT);
 
 		// 移動コンポーネントの再開
-		if (move != nullptr) move->Execute();
+		//if (move != nullptr) move->Execute();
 	}
+
 }
 
 void Component_PlayerBehavior::Dodge()

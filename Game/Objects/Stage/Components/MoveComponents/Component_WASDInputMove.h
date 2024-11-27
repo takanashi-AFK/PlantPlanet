@@ -8,9 +8,24 @@ using namespace DirectX;
 
 class Component_WASDInputMove : public Component
 {
+
+public:
+	enum class DIRECTION
+	{
+		FORWARD = 0,
+		BACK,
+		LEFT ,
+		RIGHT,
+
+		AMOUNT
+	};
+
 private:
-	bool isMove_;
+	bool isMove_ : 1;
+	bool isRotate: 1;
+	DIRECTION direcionType_;
 	XMVECTOR dir_;
+	XMFLOAT3 angles_;
 
 	// effekseer: ïœå`çsóÒ
 	std::shared_ptr<EFFEKSEERLIB::EFKTransform> mt;/*ÅöÅöÅö*/
@@ -26,7 +41,11 @@ public:
 	void Load(json& _loadObj) override;
 	XMVECTOR GetMoveDirection() const { return dir_; }
 	bool IsMove() const { return isMove_; }
+	XMFLOAT3 GetRotation() { return this->angles_; };
 
+	void SetRotateLock(bool flag) { this->isRotate = flag; };
+	bool GetRotateLock() { return this->isRotate; };
+	DIRECTION GetDirectionType() { return this->direcionType_; };
 private:
 	void Move(XMVECTOR _dir, float _speed);
 };

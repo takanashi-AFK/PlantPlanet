@@ -395,7 +395,7 @@ namespace Direct3D
 		{
 			r_desc.CullMode = D3D11_CULL_BACK;
 			r_desc.FillMode = D3D11_FILL_SOLID;
-			r_desc.FrontCounterClockwise = TRUE;
+			r_desc.FrontCounterClockwise = FALSE;
 
 			D3D11_INPUT_ELEMENT_DESC temp[] = {
 				{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, vectorSize * 0,  D3D11_INPUT_PER_VERTEX_DATA, 0 },	//’¸“_ˆÊ’u

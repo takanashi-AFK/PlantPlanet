@@ -26,19 +26,23 @@ class Component_PlayerBehavior : public Component
 private:
 	PlayerState nowState_, prevState_;	// 現在の状態、前の状態
 	float shootHeight_;					// 射撃の高さ
-	bool isGameStart_;					// ゲーム開始フラグ
-	int invincibilityFrame_;			// 無敵フレーム
+	float stamina_;						// スタミナ
+	XMFLOAT3 prevAngles_;				// 前フレームの回転
 	Component_BossBehavior* bossBehavior;
+	int invincibilityFrame_;			// 無敵フレーム
+	int walkingFrame_;					// 連続して歩いている時間
+	int lockRotateTime_;				// 回転を固定する時間
 
 	// effekseer: 変形行列
 	std::shared_ptr<EFFEKSEERLIB::EFKTransform> effectModelTransform;/*★★★*/
 	EffectData effectData_;
 
-	bool isShootStart_;					// 射撃開始フラグ
-	bool isDodgeStart_;					// 回避開始フラグ
+	bool isShootStart_ : 1;					// 射撃開始フラグ
+	bool isDodgeStart_ : 1;					// 回避開始フラグ
+	bool isGameStart_  : 1;					// ゲーム開始フラグ
+	bool isUseStamina_ : 1;					// スタミナを使用したか
+	bool isShootAttack_: 1;					
 
-	float stamina_;						// スタミナ
-	bool isUseStamina_;					// スタミナを使用したか
 public:
 	/// <summary> コンストラクタ </summary>
 	Component_PlayerBehavior(string _name,StageObject* _holder,Component* _parent);

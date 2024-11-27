@@ -6,6 +6,7 @@
 #include "../../../../../Engine/GameObject/GameObject.h"
 #include "../../../Camera/TPSCamera.h"
 #include <cmath>
+#include <format>
 
 namespace
 {
@@ -20,7 +21,7 @@ namespace
 
 
 Component_WASDInputMove::Component_WASDInputMove(string _name, StageObject* _holder, Component* _parent)
-	:Component(_holder, _name, WASDInputMove, _parent), 
+	:Component(_holder, _name, WASDInputMove, _parent), isRotate(true),
 	isMove_(false),
 	dir_(XMVectorSet(0, 0, 0, 0))
 {
@@ -51,27 +52,36 @@ void Component_WASDInputMove::Update()
 	XMVECTOR sightLine = Camera::GetSightLine();
 	sightLine = XMVectorSetY(sightLine, 0);
 	sightLine = XMVector3Normalize(sightLine);
+	angles_ = holder_->GetRotate();
 
 	// 入力に応じて方向ベクトルを設定 (キーボードのWASDキー)
 	if (Input::IsKey(DIK_W)) {
 		dir_ += sightLine;
 		isMove_ = true;
-		holder_->SetRotateY(angle.y - ROTATE_OFFSET);
+
+		direcionType_ = DIRECTION::FORWARD;
+		angles_.y = angle.y - ROTATE_OFFSET;
 	}
 	if (Input::IsKey(DIK_A)) {
 		dir_ += XMVector3Transform(sightLine, XMMatrixRotationY(XMConvertToRadians(-ROTATE_BESIDE)));
 		isMove_ = true;
-		holder_->SetRotateY((angle.y - ROTATE_OFFSET) - ROTATE_BESIDE);
+
+		direcionType_ = DIRECTION::LEFT;
+		angles_.y = (angle.y - ROTATE_OFFSET) - ROTATE_BESIDE;
 	}
 	if (Input::IsKey(DIK_S)) {
 		dir_ += -sightLine;
 		isMove_ = true;
-		holder_->SetRotateY((angle.y - ROTATE_OFFSET) + ROTATE_BACK);
+
+		direcionType_ = DIRECTION::BACK;
+		angles_.y = (angle.y - ROTATE_OFFSET) + ROTATE_BACK;
 	}
 	if (Input::IsKey(DIK_D)) {
 		dir_ += XMVector3Transform(sightLine, XMMatrixRotationY(XMConvertToRadians(ROTATE_BESIDE)));
 		isMove_ = true;
-		holder_->SetRotateY((angle.y - ROTATE_OFFSET) + ROTATE_BESIDE);
+
+		direcionType_ = DIRECTION::RIGHT;
+		angles_.y = (angle.y - ROTATE_OFFSET) + ROTATE_BESIDE;
 	}
 
 	// コントローラ入力 (ゲームパッドの左スティック) を取得
@@ -86,7 +96,7 @@ void Component_WASDInputMove::Update()
 
 		// 新しい回転角度を計算し、キャラクターのY軸回転に反映
 		float newAngle = std::atan2(XMVectorGetX(dir_), XMVectorGetZ(dir_));
-		holder_->SetRotateY(XMConvertToDegrees(newAngle));
+		if (isRotate) holder_->SetRotateY(XMConvertToDegrees(newAngle));
 
 		isMove_ = true;
 	}
@@ -101,6 +111,13 @@ void Component_WASDInputMove::Update()
 
 	// 新しい位置を設定
 	holder_->SetPosition(pos);
+
+	angles_.y = XMConvertToDegrees(std::atan2(XMVectorGetX(dir_), XMVectorGetZ(dir_)));
+
+	ImGui::Text(std::format("cita : {}", XMConvertToDegrees(std::atan2(XMVectorGetX(dir_), XMVectorGetZ(dir_)))).c_str());
+
+	//向きの更新を行う
+	if (isRotate && isMove_)	holder_->SetRotate(angles_);
 
 	static int count = 0;
 	count++;
