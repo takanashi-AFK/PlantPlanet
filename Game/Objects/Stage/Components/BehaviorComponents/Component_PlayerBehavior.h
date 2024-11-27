@@ -31,6 +31,7 @@ private:
 	int invincibilityFrame_;			// 無敵フレーム
 	Component_BossBehavior* bossBehavior;
 	vector<PlantData> myPlants_;
+	int researchPoint_;
 
 	// effekseer: 変形行列
 	std::shared_ptr<EFFEKSEERLIB::EFKTransform> effectModelTransform;/*★★★*/
@@ -43,7 +44,7 @@ private:
 	bool isUseStamina_;					// スタミナを使用したか
 public:
 	/// <summary> コンストラクタ </summary>
-	Component_PlayerBehavior(string _name,StageObject* _holder,Component* _parent);
+	Component_PlayerBehavior(string _name, StageObject* _holder, Component* _parent);
 
 	/// <summary> 初期化 </summary>
 	void Initialize() override;
@@ -53,7 +54,7 @@ public:
 
 	/// <summary> 解放 </summary>
 	void Release() override;
-	
+
 	/// <summary> 保存 </summary>
 	void Save(json& _saveObj) override;
 
@@ -63,8 +64,8 @@ public:
 	/// <summary> ImGuiパネル表示 </summary>
 	void DrawData() override;
 
-/*
-setter :*/
+	/*
+	setter :*/
 	/// <param name="_state"> プレイヤーの状態 </param>
 	void SetState(PlayerState _state) { prevState_ = nowState_; nowState_ = _state; }
 
@@ -74,8 +75,8 @@ setter :*/
 	/// <param name="_flag"> ゲーム開始フラグ </param>
 	void SetGameStart(bool _flag) { isGameStart_ = _flag; }
 
-/*
-getter :*/
+	/*
+	getter :*/
 	/// <returns> プレイヤーの状態 </returns>
 	PlayerState GetState() const { return nowState_; }
 
@@ -87,8 +88,10 @@ getter :*/
 
 	/// <returns> ゲーム開始フラグ </returns>
 	bool GetGameStart() const { return isGameStart_; }
-/*
-predicate :*/
+
+	int GetResearchPointByRarity(PlantData _plantData);
+	/*
+	predicate :*/
 	/// <returns> プレイヤーが死んでいるか </returns>
 	bool IsDead();
 
@@ -110,14 +113,14 @@ private:
 
 	/// <summary> 付近の植物を取得 </summary>
 	StageObject* GetNearestPlant(PlantData& _plantData);
-/*
-state :*/
+	/*
+	state :*/
 	/// <summary> 待機状態時の処理 </summary>
 	void Idle();
-	
+
 	/// <summary> 歩行状態時の処理 </summary>
 	void Walk();
-	
+
 	/// <summary> 射撃状態時の処理 </summary>
 	void Shoot();
 
@@ -128,6 +131,5 @@ state :*/
 	void Dead();
 
 	/// <summary> インタラクト状態時の処理 </summary>
-	void Intract();
+	void Interact();
 };
-

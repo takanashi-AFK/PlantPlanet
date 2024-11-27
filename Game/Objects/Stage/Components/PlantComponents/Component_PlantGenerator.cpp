@@ -63,24 +63,27 @@ void Component_PlantGenerator::Update()
 	for (int i = 0; i < plantNum_; i++) {
 
 		// ステージオブジェクトを生成
-		StageObject* plant = CreateStageObject("plant" + std::to_string(i), randomPlants[i].modelFilePath_, holder_->GetParent());
-		
+		StageObject* stagePlantObject = CreateStageObject("plant" + std::to_string(i), randomPlants[i].modelFilePath_, holder_->GetParent());
+
 		// 生成位置を設定
-		plant->SetPosition(ramdomPositions[i]);
+		stagePlantObject->SetPosition(ramdomPositions[i]);
 
 		// 当たり判定を設定
-		plant->SetIsColliding(false);
-
+		stagePlantObject->SetIsColliding(false);
 		// プラントコンポーネントを作成
-		Component_Plant* plantComponent = (Component_Plant*)plant->AddComponent(CreateComponent("Plant", Plant, plant, this));
-		//plantComponent->SetData();
-		plant->AddComponent(CreateComponent("Plant", Plant, plant, this));
+		Component_Plant* plantComponent = (Component_Plant*)CreateComponent("Plant", Plant, stagePlantObject, this);
+
+		// 植物情報を設定
+		plantComponent->SetData(randomPlants[i]);
+
+		// コンポーネントを追加
+		stagePlantObject->AddComponent(plantComponent);
 
 		// サイズを設定
-		plant->SetScale({ 0.3f,0.3f,0.3f });
+		stagePlantObject->SetScale({ 0.3f,0.3f,0.3f });
 
 		// ステージに追加
-		((Stage*)holder_->GetParent())->AddStageObject(plant);
+		((Stage*)holder_->GetParent())->AddStageObject(stagePlantObject);
 	}
 
 	// アクティブをオフにする

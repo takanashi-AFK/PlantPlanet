@@ -1,0 +1,44 @@
+{
+  "interactTimeCircle": {
+    "color": [ 1.0, 0.5588235259056091, 0.0 ],
+    "imageFilePath": "Images/defaults/default_ProgressCircle.png",
+    "isVisible_": false,
+    "layerNumber_": 3,
+    "objectName_": "interactTimeCircle",
+    "position_": [ 0.0, -0.800000011920929, 0.0 ],
+    "rotate_": [ 0.0, 0.0, 90.0 ],
+    "scale_": [ 0.10000000149011612, 0.10000000149011612, 1.0 ],
+    "type_": 8
+  },
+  "interactTimeCircleFrame": {
+    "imageFilePath_": "Images/defaults/default_ProgressCircle.png",
+    "isVisible_": false,
+    "layerNumber_": 4,
+    "objectName_": "interactTimeCircleFrame",
+    "position_": [ 0.0, -0.800000011920929, 0.0 ],
+    "rotate_": [ 0.0, 0.0, 0.0 ],
+    "scale_": [ 0.05000000074505806, 0.05000000074505806, 1.0 ],
+    "type_": 2
+  },
+  "researchPointCircle": {
+    "color": [ 0.0, 0.0, 1.0 ],
+    "imageFilePath": "Images/defaults/default_ProgressCircle.png",
+    "isVisible_": true,
+    "layerNumber_": 1,
+    "objectName_": "researchPointCircle",
+    "position_": [ 0.800000011920929, -0.699999988079071, 0.0 ],
+    "rotate_": [ 0.0, 0.0, 90.0 ],
+    "scale_": [ 0.30000001192092896, 0.30000001192092896, 1.0 ],
+    "type_": 8
+  },
+  "researchPointCircleFrame": {
+    "imageFilePath_": "Images/test/flowerIcon.png",
+    "isVisible_": true,
+    "layerNumber_": 2,
+    "objectName_": "researchPointCircleFrame",
+    "position_": [ 0.800000011920929, -0.699999988079071, 0.0 ],
+    "rotate_": [ 0.0, 0.0, 0.0 ],
+    "scale_": [ 0.4000000059604645, 0.4000000059604645, 0.5 ],
+    "type_": 2
+  }
+}
