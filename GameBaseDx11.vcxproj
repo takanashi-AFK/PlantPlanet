@@ -230,6 +230,7 @@
     <ClCompile Include="Game\Scenes\Scene_DifficultySelect.cpp" />
     <ClCompile Include="Game\Objects\UI\UIInputString.cpp" />
     <ClCompile Include="Game\Plants\PlantCollection.cpp" />
+    <ClCompile Include="Game\Objects\UI\UIProgressCircle.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game\Objects\Stage\Components\PlantComponents\Component_Plant.h" />
@@ -327,6 +328,7 @@
     <ClInclude Include="Game\Scenes\Scene_DifficultySelect.h" />
     <ClInclude Include="Game\Objects\UI\UIInputString.h" />
     <ClInclude Include="Game\Plants\PlantCollection.h" />
+    <ClInclude Include="Game\Objects\UI\UIProgressCircle.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Assets\Shader\BillBoard.hlsl">

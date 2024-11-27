@@ -79,6 +79,7 @@ public:
 	void Draw(Transform& transform, RECT rect, float alpha, Direct3D::SHADER_TYPE _shader);
 	void Draw(Transform& transform, RECT rect, float alpha, Direct3D::SHADER_TYPE _shader, XMFLOAT3 _color);
 	void Draw(Transform& transform, RECT rect, float alpha,float startAngle,float endAngle);
+	void Draw(Transform& transform, RECT rect, float alpha, float startAngle, float endAngle, XMFLOAT3 _color);
 	
 	//画像サイズの取得
 	//戻値：画像サイズ

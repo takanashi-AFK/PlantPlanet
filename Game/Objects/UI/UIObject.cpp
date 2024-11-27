@@ -11,6 +11,7 @@
 #include "UIProgressBar.h"
 #include "UITimer.h"
 #include "UIInputString.h"
+#include "UIProgressCircle.h"
 
 #include "Components/Component_UIEasing.h"
 
@@ -332,6 +333,7 @@ UIObject* UIObject::CreateUIObject(string _name, UIType _type,UIObject* _parent,
 		case UI_PROGRESSBAR: obj = new UIProgressBar(_name, _parent, _layerNum); break;
 		case UI_TIMER:obj = new UITimer(_name, _parent, _layerNum); break;
 		case UI_INPUTSTRING:obj = new UIInputString(_name, _parent, _layerNum); break;
+		case UI_PROGRESSCIRCLE:obj = new UIProgressCircle(_name, _parent, _layerNum); break;
         default:obj = nullptr; break;
 	}
 	// インスタンスが生成できなかった場合はnullptrを返す
@@ -357,6 +359,7 @@ string UIObject::GetUITypeString(UIType _type)
 	case UI_PROGRESSBAR:return "PROGRESSBAR";
 	case UI_TIMER:return "TIMER";
 	case UI_INPUTSTRING:return "INPUTSTRING";
+	case UI_PROGRESSCIRCLE:return "PROGRESSCIRCLE";
 	default:return "UNKNOWN";
 	}
 }
