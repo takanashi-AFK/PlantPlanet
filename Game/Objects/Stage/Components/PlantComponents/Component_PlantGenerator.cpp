@@ -68,6 +68,9 @@ void Component_PlantGenerator::Update()
 		// 生成位置を設定
 		plant->SetPosition(ramdomPositions[i]);
 
+		// 当たり判定を設定
+		plant->SetIsColliding(false);
+
 		// プラントコンポーネントを作成
 		Component_Plant* plantComponent = (Component_Plant*)plant->AddComponent(CreateComponent("Plant", Plant, plant, this));
 		//plantComponent->SetData();
