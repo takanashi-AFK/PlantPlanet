@@ -5,10 +5,11 @@
 
 namespace {
 	const string DEFAULT_IMAGE = "Images/defaults/default_ProgressCircle.png";
+	const float START_ANGLE = 0.0f;
 }
 
 UIProgressCircle::UIProgressCircle(std::string _name, UIObject* parent, int _layerNum)
-	: UIObject(_name,UIType::UI_PROGRESSCIRCLE, parent, _layerNum), max_(nullptr), now_(nullptr), startAngle_(0), endAngle_(360)
+	: UIObject(_name,UIType::UI_PROGRESSCIRCLE, parent, _layerNum), max_(1), now_(0),endAngle_(360)
 {
 }
 
@@ -19,21 +20,24 @@ void UIProgressCircle::Initialize()
 
 	// 色を設定
 	color_ = { 0.0f,0.0f,1.0f };
+
+	// 現在値を最大値で初期化
+	now_ = max_;
 }
 
 void UIProgressCircle::Update()
 {
 	// 現在値と最大値を基に進行度を計算
-	float progress = (max_ != nullptr && now_ != nullptr) ? (*now_ / *max_) : 1.0f;
+	float progress = now_ / max_;
 
 	// 進行度を基に終了角度を計算
-	endAngle_ = startAngle_ + (progress * 360.0f);
+	endAngle_ = START_ANGLE + (progress * 360.0f);
 }
 
 void UIProgressCircle::Draw()
 {
 	Image::SetTransform(imageHandle_,transform_);
-	Image::Draw(imageHandle_, startAngle_, endAngle_, color_);
+	Image::Draw(imageHandle_, START_ANGLE, endAngle_, color_);
 }
 
 void UIProgressCircle::Release()
@@ -42,12 +46,6 @@ void UIProgressCircle::Release()
 
 void UIProgressCircle::Save(json& saveObj)
 {
-	// 開始角度の保存
-	saveObj["startAngle"] = startAngle_;
-
-	// 終了角度の保存
-	saveObj["endAngle"] = endAngle_;
-
 	// 画像ファイルパスの保存
 	saveObj["imageFilePath"] = imageFilePath_;
 
@@ -58,12 +56,6 @@ void UIProgressCircle::Save(json& saveObj)
 
 void UIProgressCircle::Load(json& loadObj)
 {
-	// 開始角度の読み込み
-	SetStartAngle(loadObj["startAngle"]);
-
-	// 終了角度の読み込み
-	SetEndAngle(loadObj["endAngle"]);
-
 	// 画像ファイルパスの読み込み
 	SetImage(loadObj["imageFilePath"]);
 
@@ -73,11 +65,11 @@ void UIProgressCircle::Load(json& loadObj)
 
 void UIProgressCircle::DrawData()
 {
-	// 開始角度の設定
-	ImGui::DragFloat("startAngle:", &startAngle_, 1.0f, 0.0f, 360.0f);
+	// 最大値の設定
+	ImGui::DragFloat("max:", &max_, 1.0f, 0.0f, FLT_MAX);
 
-	// 終了角度の設定
-	ImGui::DragFloat("endAngle:", &endAngle_, 1.0f, 0.0f, 360.0f);
+	// 現在値の設定
+	ImGui::DragFloat("now:", &now_, 1.0f, 0.0f, max_);
 
 	// 画像ファイルパスの設定
 	ImGui::Text("image: %s", imageFilePath_.c_str()); ImGui::SameLine();
