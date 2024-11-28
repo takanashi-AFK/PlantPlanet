@@ -53,6 +53,7 @@ void Component_WASDInputMove::Update()
 	sightLine = XMVectorSetY(sightLine, 0);
 	sightLine = XMVector3Normalize(sightLine);
 	angles_ = holder_->GetRotate();
+	direcionType_ = DIRECTION::NONE;
 
 	// 入力に応じて方向ベクトルを設定 (キーボードのWASDキー)
 	if (Input::IsKey(DIK_W)) {

@@ -12,7 +12,8 @@ class Component_WASDInputMove : public Component
 public:
 	enum class DIRECTION
 	{
-		FORWARD = 0,
+		NONE,
+		FORWARD,
 		BACK,
 		LEFT ,
 		RIGHT,
