@@ -117,15 +117,14 @@ void Scene_Play::Update()
 	// ボス出現処理
 	{
 		static bool isBossSpawn = false;
-		if (playerBehavior->GetResearchPoint() == 100 && isBossSpawn == false) {
+		if (playerBehavior->GetResearchPoint() >= 100 && isBossSpawn == false) {
 			// ボス敵の生成
 			SpawnBossEnemy();isBossSpawn = true;
 		}
 		// 
-		// []else playerBehavior->SetResearchPoint(playerBehavior->GetResearchPoint() + 1);
+		//else playerBehavior->SetResearchPoint(playerBehavior->GetResearchPoint() + 1);
 	}
 }
-
 void Scene_Play::Draw()
 {
 }
