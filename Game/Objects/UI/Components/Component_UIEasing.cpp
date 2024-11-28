@@ -1,6 +1,6 @@
 #include "Component_UIEasing.h"
 
-Component_UIEasing::Component_UIEasing(UIObject* p) :easing_(0, 0, 0),p_ui(p),easing_type(Easing::TYPE::COS)
+Component_UIEasing::Component_UIEasing(UIObject* p) :easing_(0, 0, 0),p_ui(p),easing_type(Easing::TYPE::STRAIGHT)
 {
 }
 
@@ -24,7 +24,6 @@ void Component_UIEasing::Save(json& _saveObj)
 		_saveObj["Easing_Start"] =  easing_.val0_ ;
 		_saveObj["Easing_Goal"] =  easing_.val1_ ;
 		_saveObj["Easing_Ratio"] =  easing_.ratio_ ;
-		_saveObj["Easing_Pile"] =  easing_.pile_ ;
 		_saveObj["Easing_Type"] =  static_cast<int>(this->easing_type ) ;
 	}
 }
@@ -59,7 +58,6 @@ void Component_UIEasing::Load(json& _loadObj)
 		SetFloat("Easing_Start", e.val0_);
 		SetFloat("Easing_Goal", e.val1_);
 		SetFloat("Easing_Ratio", e.ratio_);
-		SetFloat("Easing_Pile",e.pile_);
 
 		int temp = NULL;
 		SetInt("Easing_Type",temp);
