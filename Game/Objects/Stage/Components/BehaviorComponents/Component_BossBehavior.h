@@ -27,7 +27,6 @@ private:
 	float shootHeight_;			// 射撃の高さ
 	float tackleDamage_;		// 突進のダメージ
 
-	bool isActive_;				// アクティブフラグ
 	bool isGameStart_;			// ゲーム開始フラグ
 	bool isDeadStart_;			// 死亡開始フラグ
 
@@ -63,11 +62,13 @@ public:
 
 	/// <summary>ステートを返す</summary>
 	BossState GetState() const { return (BossState)bNowState_; }
-
 /*
 setter :*/
 	/// <param name="_state"> ボスの状態 </param>
 	void SetState(BossState _state) { bNowState_ = _state; }
+
+	/// <param name="_target"> 対象 </param>
+	void SetTarget(StageObject* _target) { target_ = _target; }
 /*
 predicate:*/
 	bool IsDead();

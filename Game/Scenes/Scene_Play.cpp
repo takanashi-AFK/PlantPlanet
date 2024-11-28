@@ -50,25 +50,79 @@ void Scene_Play::Update()
 	//	// カメラのアクティブ化
 	tpsCamera_->SetActive(true);
 
+	// プレイヤー情報を取得
+	Component_PlayerBehavior* playerBehavior = nullptr; {
+		for (auto pb : pStage_->FindComponents(ComponentType::PlayerBehavior))playerBehavior = (Component_PlayerBehavior*)pb;
+	}
+
+	// ボス情報を取得
+	Component_BossBehavior* bossBehavior = nullptr; {
+		for (auto bb : pStage_->FindComponents(ComponentType::BossBehavior))bossBehavior = (Component_BossBehavior*)bb;
+	}
+
 	// プレイヤーをカメラのターゲットに設定
-	for (auto playerBehavior : pStage_->FindComponents(ComponentType::PlayerBehavior))tpsCamera_->SetTarget(playerBehavior->GetHolder());
+	if(playerBehavior != nullptr)tpsCamera_->SetTarget(playerBehavior->GetHolder());
 
 	// プレイ情報の表示処理
 	SetPlayInfo();
 
-
 	// シーン遷移処理
+	bool isSceneChange = false;
 	{
-		if (Input::IsKeyDown(DIK_L)){
+		// ボスに関わる処理
+		if (bossBehavior!= nullptr){
+
+			// ボスのHPが0になったら
+			for (auto healthGauge : bossBehavior->GetChildComponent(ComponentType::HealthGauge)) {
+				if (((Component_HealthGauge*)healthGauge)->now_ <= 0) {
+					
+					// ボスの状態を死亡に変更
+					bossBehavior->SetState(BossState::BOSS_STATE_DEAD);
+					
+					// シーン遷移フラグを立てる
+					isSceneChange = true;
+				}
+			}
+
+			// プレイヤーのHPが0になったら
+			for (auto healthGauge : playerBehavior->GetChildComponent(ComponentType::HealthGauge)) {
+				if (((Component_HealthGauge*)healthGauge)->now_ <= 0) {
+
+					// プレイヤーの状態を死亡に変更
+					playerBehavior->SetState(PlayerState::PLAYER_STATE_DEAD);
+
+					// シーン遷移フラグを立てる
+					isSceneChange = true;
+				}
+			}
+
+			// 終了ボタンが押されたら
+			if (Input::IsKeyDown(DIK_ESCAPE)) {
+				
+				isSceneChange = true;
+			}
+		}
+
+		if (isSceneChange == true) {
 
 			// プレイヤーが取得した植物情報を取得
-			Component_PlayerBehavior* playerBehavior = nullptr;
-			for (auto pb : pStage_->FindComponents(ComponentType::PlayerBehavior))playerBehavior = (Component_PlayerBehavior*)pb;
 			g_playerPlantData = playerBehavior->GetMyPlants();
 
 			SceneManager* sceneManager = (SceneManager*)FindObject("SceneManager");
 			sceneManager->ChangeScene(SCENE_ID_RESULT, TID_BLACKOUT);
 		}
+
+	}
+
+	// ボス出現処理
+	{
+		static bool isBossSpawn = false;
+		if (playerBehavior->GetResearchPoint() == 100 && isBossSpawn == false) {
+			// ボス敵の生成
+			SpawnBossEnemy();isBossSpawn = true;
+		}
+		// 
+		// []else playerBehavior->SetResearchPoint(playerBehavior->GetResearchPoint() + 1);
 	}
 }
 
@@ -175,4 +229,27 @@ void Scene_Play::SetPlayInfo()
 		if (playerResearchPointCircle != nullptr)playerResearchPointCircle->SetProgress(playerBehavior->GetResearchPoint(), 100);
 	}
 
+}
+
+void Scene_Play::SpawnBossEnemy()
+{
+	// ボスの情報を読込 ※読込失敗時は処理を中断
+	json loadData;
+	if (JsonReader::Load("Datas/Test/testBoss.json", loadData) == false) return;
+
+	// ステージオブジェクトの生成
+	StageObject* stageObject_Boss = CreateStageObject(loadData.begin().key(), loadData.begin().value()["modelFilePath_"], pStage_);
+
+	// 読み込んだデータを反映
+	stageObject_Boss->Load(loadData.begin().value());
+
+	// 位置を設定
+	stageObject_Boss->SetPosition(27.5, 2, 27.5);
+
+	// ターゲットを設定
+	for (auto bossBehavior : stageObject_Boss->FindComponent(ComponentType::BossBehavior)) 
+		((Component_BossBehavior*)bossBehavior)->SetTarget(pStage_->GetStageObject("00_Player"));
+	
+	// ステージに追加
+	pStage_->AddStageObject(stageObject_Boss);
 }

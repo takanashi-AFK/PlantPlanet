@@ -49,5 +49,10 @@ private:
 
 	/// <summary> プレイ情報の表示設定 </summary>
 	void SetPlayInfo();
+
+/*
+other :*/
+	/// <summary> ボス敵の生成 </summary>
+	void SpawnBossEnemy();
 };
 
