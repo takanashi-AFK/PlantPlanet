@@ -27,8 +27,8 @@ void Scene_Title::Update()
 {
 	// シーン切替処理
 	{
-		if (Input::IsKeyDown(DIK_SPACE))
-		{
+		// ボタンが押されたら
+		if (((UIButton*)UIPanel::GetInstance()->GetUIObject("startButton"))->OnClick() || Input::IsPadButtonDown(XINPUT_GAMEPAD_A)) {
 			SceneManager* sceneManager = (SceneManager*)FindObject("SceneManager");
 			sceneManager->ChangeScene(SCENE_ID_PLAY, TID_BLACKOUT);
 		}

@@ -114,47 +114,6 @@ void Component_PlayerBehavior::Update()
 	Component_WASDInputMove* move = (Component_WASDInputMove*)(GetChildComponent("InputMove"));
 	if (GetChildComponent("InputMove") != nullptr)move->Execute();
 
-	//// HP関連処理
-	//{
-	//	// プレイヤーのHPゲージコンポーネントを取得
-	//	Component_HealthGauge* hg = (Component_HealthGauge*)(GetChildComponent("PlayerHealthGauge"));
-
-	//	// UIProgressBarを取得
-	//	UIProgressBar* hpBar = (UIProgressBar*)UIPanel::GetInstance()->FindObject(PLAY_SCENE_PLAYER_HP_GAUGE_NAME);
-
-	//	// HPの値を移動
-	//	ScoreManager::playerHp = (int)hg->now_;
-
-	//	// HPバーの値を設定
-	//	if (hpBar != nullptr && hg != nullptr)hpBar->SetProgress(&hg->now_, &hg->max_);
-
-	//	// HPが0以下になったら... DEAD状態に遷移
-	//	if (hg != nullptr)if (hg->IsDead() == true)SetState(PLAYER_STATE_DEAD);
-	//}
-
-	//// スタミナ関連処理
-	//{
-	//	// プレイヤーのスタミナゲージコンポーネントを取得
-	//	Component_StaminaGauge* sg = (Component_StaminaGauge*)(GetChildComponent("StaminaGauge"));
-
-	//	// UIProgressBarを取得
-	//	UIProgressBar* staminaBar = (UIProgressBar*)UIPanel::GetInstance()->FindObject("staminaGauge");
-
-	//	// スタミナバーの値を設定
-	//	if (staminaBar != nullptr && sg != nullptr)staminaBar->SetProgress(&sg->now_, &sg->max_);
-	//}
-
-	//// 調査度ゲージ処理
-	//{
-	//	// UIProgressBarを取得
-	//	UIProgressCircle* researchPointCircle = (UIProgressCircle*)UIPanel::GetInstance()->FindObject("researchPointCircle");
-
-	//	// 調査度バーの値を設定
-	//	researchPointCircle->SetProgress(researchPoint_,100);
-	//
-	//}
-
-
 	// ＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝
 	// 状態ごとの処理
 	// ＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝
@@ -218,7 +177,7 @@ void Component_PlayerBehavior::Idle()
 		SetState(PLAYER_STATE_SHOOT);
 	}
 	// スペースキーが押されていたら...ダッシュ状態に遷移
-	else if (Input::IsKeyDown(DIK_SPACE) || Input::IsPadButtonDown(XINPUT_GAMEPAD_A)) {
+	else if (Input::IsKeyDown(DIK_SPACE) || Input::GetPadTriggerL(0)) {
 		if (!sg->CanUseStamina(STAMINA_DECREASE_DODGE)) {
 			// 状態を遷移
 			IsWASDKey() ? SetState(PLAYER_STATE_WALK) : SetState(PLAYER_STATE_IDLE);
@@ -254,7 +213,7 @@ void Component_PlayerBehavior::Walk()
 		SetState(PLAYER_STATE_SHOOT);
 	}
 	// スペースキーが押されていたら...ダッシュ状態に遷移
-	else if (Input::IsKeyDown(DIK_SPACE) || Input::IsPadButtonDown(XINPUT_GAMEPAD_A)) {
+	else if (Input::IsKeyDown(DIK_SPACE) || Input::GetPadTriggerL(0)) {
 		if (!sg->CanUseStamina(STAMINA_DECREASE_DODGE)) {
 			// 状態を遷移
 			IsWASDKey() ? SetState(PLAYER_STATE_WALK) : SetState(PLAYER_STATE_IDLE);
@@ -317,7 +276,7 @@ void Component_PlayerBehavior::Shoot()
 	bool isEnd = false;
 
 	// スペースキーが押されていたら...ダッシュ状態に遷移
-	if (Input::IsKeyDown(DIK_SPACE) || Input::IsPadButtonDown(XINPUT_GAMEPAD_A)) { isEnd = true; SetState(PLAYER_STATE_DODGE); }
+	if (Input::IsKeyDown(DIK_SPACE) || Input::GetPadTriggerL(0)) { isEnd = true; SetState(PLAYER_STATE_DODGE); }
 
 	// アニメーションが終わったら...
 	if (motion->IsEnd())
