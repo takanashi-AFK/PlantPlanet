@@ -75,6 +75,9 @@ public:
 	/// <param name="_flag"> ゲーム開始フラグ </param>
 	void SetGameStart(bool _flag) { isGameStart_ = _flag; }
 
+	/// <param name="_point"> リサーチポイント </param>
+	void SetResearchPoint(int _point) { researchPoint_ = _point; }
+
 	/*
 	getter :*/
 	/// <returns> プレイヤーの状態 </returns>

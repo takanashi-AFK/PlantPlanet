@@ -44,17 +44,10 @@ Component_BossBehavior::Component_BossBehavior(string _name, StageObject* _holde
 	shotInterval_(0), 
 	stateChangeDelay_(0),
 	shootHeight_(0), 
-	isActive_(false), 
 	isGameStart_(false), 
 	isDeadStart_(true),
 	tackleDamage_(0)
 {
-#ifdef _DEBUG
-	isActive_ = false;
-#else
-	isActive_ = true;
-#endif // DEBUG
-
 }
 
 void Component_BossBehavior::Initialize()
@@ -64,6 +57,7 @@ void Component_BossBehavior::Initialize()
 	if (!FindChildComponent("Timer")) AddChildComponent(CreateComponent("Timer", Timer, holder_, this));
 	if (!FindChildComponent("TackleMove")) AddChildComponent(CreateComponent("TackleMove", TackleMove, holder_, this));
 	if (!FindChildComponent("HealthGauge")) AddChildComponent(CreateComponent("HealthGauge", HealthGauge, holder_, this));
+	if(!FindChildComponent("CircleRangeDetector")) AddChildComponent(CreateComponent("CircleRangeDetector", CircleRangeDetector, holder_, this));
 
 	// effekseer: :Effectの読み込み
 	EFFEKSEERLIB::gEfk->AddEffect("sword", "Effects/Salamander12.efk");/*★★★*/
@@ -76,11 +70,22 @@ void Component_BossBehavior::Initialize()
 
 void Component_BossBehavior::Update()
 {
-	// ターゲットの取得
-	if (target_ == nullptr) target_ = (StageObject*)holder_->FindObject(targetName_);
+	// ターゲットの取得処理
+	if (target_ == nullptr) target_ = (StageObject*)holder_->GetParent()->FindChildObject(targetName_);
+
+	// 範囲内にプレイヤーが存在するかどうか
+	Component_CircleRangeDetector* circleRangeDetector = (Component_CircleRangeDetector*)GetChildComponent("CircleRangeDetector");
+	if (circleRangeDetector != nullptr) {
+		circleRangeDetector->SetRadius(20.f);
+		circleRangeDetector->SetTarget(target_);
+	}
+
+	if(circleRangeDetector->IsContains() == true) Execute();
+
 
 	// 対象が存在しない または アクティブでない場合は処理を行わない
-	if (target_ == nullptr || !isActive_) return;
+	if (target_ == nullptr || isActive_ == false) return;
+
 
 	// 状態によって処理を分岐
 	switch (bNowState_)
@@ -90,7 +95,6 @@ void Component_BossBehavior::Update()
 	case BOSS_STATE_TACKLE:Tackle(); break;
 	case BOSS_STATE_DEAD:Dead(); break;
 	}
-
 }
 
 void Component_BossBehavior::Release()

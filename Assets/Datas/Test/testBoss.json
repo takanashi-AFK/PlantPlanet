@@ -1,0 +1,66 @@
+{
+  "Boss": {
+    "fallSpeed_": 1.0,
+    "isColliding_": true,
+    "isCollisionWall_": false,
+    "isOnGround_": false,
+    "modelFilePath_": "Models/Enemies/Cactan/cactan.fbx",
+    "myComponents_": {
+      "bossBehavior": {
+        "childComponents_": {
+          "CircleRangeDetector": {
+            "name_": "CircleRangeDetector",
+            "radius_": 0.0,
+            "type_": 3
+          },
+          "HealthGauge": {
+            "max_": 1000.0,
+            "name_": "HealthGauge",
+            "now_": 1000.0,
+            "type_": 6
+          },
+          "ShootAttack": {
+            "EffectData": {
+              "name": "Sylph13",
+              "path": "Effects/Sylph13.efk",
+              "scale": [ 0.4000000059604645, 0.4000000059604645, 0.4000000059604645 ]
+            },
+            "bulletColliderRadius_": 0.10000000894069672,
+            "bulletLifeTime_": 3.0,
+            "name_": "ShootAttack",
+            "power_": 120,
+            "shootingDirection_": [ 1.0, 0.0, 0.0 ],
+            "shootingSpeed_": 0.15000000596046448,
+            "type_": 17
+          },
+          "TackleMove": {
+            "direction_": 0.0,
+            "distance_": 2.7284841053187847e-12,
+            "easingType_": "InCubic",
+            "name_": "TackleMove",
+            "speed_": 0.019999999552965164,
+            "type_": 18
+          },
+          "Timer": {
+            "maxTime_": 1500.0,
+            "name_": "Timer",
+            "nowTime_": 1500.0,
+            "type_": 19
+          }
+        },
+        "name_": "bossBehavior",
+        "shootHeight_": -1.2000000476837158,
+        "shotInterval_": 0.07999999821186066,
+        "stateChangeDelay_": 3.0,
+        "tackleDamage_": 180.0,
+        "target_": "00_player",
+        "type_": 0
+      }
+    },
+    "onGroundOffset_": [ 0.0, 0.0, 0.0 ],
+    "position_": [ 0.0, 0.0, 0.0 ],
+    "rotate_": [ 0.0, 0.0, 0.0 ],
+    "scale_": [ 4.5, 4.5, 4.5 ],
+    "shaderType_": 0
+  }
+}
