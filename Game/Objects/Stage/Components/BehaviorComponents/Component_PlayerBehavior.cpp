@@ -18,6 +18,7 @@
 #include "Component_BossBehavior.h"
 #include <algorithm> 
 #include <directxmath.h> 
+#include<format>
 
 // child components include
 #include "../AttackComponents/Component_MeleeAttack.h"
@@ -388,6 +389,9 @@ void Component_PlayerBehavior::Dodge()
 	Component_TackleMove* tackle = (Component_TackleMove*)(GetChildComponent("TackleMove"));
 	if (tackle != nullptr && isDodgeStart_ == false) {
 
+		//向きを固定する時間を無しにする
+		lockRotateTime_ = 0;
+
 		// 突進方向を設定
 		XMVECTOR dir = -INITIALIZE_DIRECTION_Z; {
 			// 移動を不可能にする
@@ -396,6 +400,7 @@ void Component_PlayerBehavior::Dodge()
 			// 移動方向がゼロベクトルでなければ、移動方向を取得
 			if (IsXMVectorZero(move->GetMoveDirection()) == false)dir = move->GetMoveDirection();
 			else dir = XMVector3Normalize(XMVectorSetY(Camera::GetSightLine(),0));
+
 		}
 
 		// 突進方向を設定
@@ -455,6 +460,18 @@ void Component_PlayerBehavior::Dodge()
 		isDodgeStart_ = true;
 	}
 
+	//モデルの向きの設定
+	{
+		auto dir = tackle->GetDirection();
+
+		float cita = XMConvertToDegrees(std::atan2f(XMVectorGetX(dir), XMVectorGetZ(dir)));
+
+		ImGui::Text(std::format("cita : {}", cita).c_str());
+
+		prevAngles_.y = cita;
+		holder_->SetRotate(prevAngles_);
+	}
+
 	// エフェクトの再生処理
 	{
 		EFFEKSEERLIB::EFKTransform t;
@@ -473,7 +490,7 @@ void Component_PlayerBehavior::Dodge()
 			hg->Unlock();
 		}
 	}
-
+	
 	XMFLOAT3 holderPos = holder_->GetPosition();
 	XMFLOAT3 bossPos = bossBehavior->GetHolder()->GetPosition();
 	XMFLOAT3 bossToPlayer = bossPos - holderPos;
