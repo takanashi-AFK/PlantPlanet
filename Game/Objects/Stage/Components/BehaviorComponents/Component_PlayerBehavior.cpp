@@ -84,7 +84,7 @@ Component_PlayerBehavior::Component_PlayerBehavior(string _name, StageObject* _h
 	bossBehavior(nullptr),
 	effectModelTransform(nullptr),
 	effectData_(),
-	researchPoint_(0),
+	researchPoint_(95),
 	myPlants_()
 {
 }
@@ -277,9 +277,14 @@ void Component_PlayerBehavior::Shoot()
 	// NOTE: 終了するためのフラグ
 	bool isEnd = false;
 
-	// スペースキーが押されていたら...ダッシュ状態に遷移
-	if (Input::IsKeyDown(DIK_SPACE) || Input::GetPadTriggerL(0)) { isEnd = true; SetState(PLAYER_STATE_DODGE); }
-
+	if (Input::IsKeyDown(DIK_SPACE) || Input::GetPadTriggerL(0)) {
+		if (!sg->CanUseStamina(STAMINA_DECREASE_DODGE)) {
+			// 状態を遷移
+			IsWASDKey() ? SetState(PLAYER_STATE_WALK) : SetState(PLAYER_STATE_IDLE);
+			return;
+		}
+		SetState(PLAYER_STATE_DODGE);
+	}
 	// アニメーションが終わったら...
 	if (motion->IsEnd())
 	{
