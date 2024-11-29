@@ -250,6 +250,20 @@ void StageObject::Draw()
 	Model::Draw(modelHandle_);
 
 	Direct3D::SetShader(Direct3D::SHADER_3D);
+
+	int mh = Model::Load("Models/DebugCollision/BoxCollider.fbx");
+	auto temppos = Model::GetBonePosition(modelHandle_, "mixamorig:LeftHand");
+	//temppos = holder_->GetWorldScale();
+
+	ImGui::Text(std::format("x:{} y:{} z:{}", temppos.x, temppos.y, temppos.z).c_str());
+
+	Transform temptrans = {};
+	temptrans.position_ = temppos;
+	temptrans.scale_ = { .5f,.5f,.5f };
+	
+	Direct3D::SetShader(Direct3D::SHADER_3D);
+	Model::SetTransform(mh, temptrans);
+	Model::Draw(mh);
 }
 
 void StageObject::Release()

@@ -152,12 +152,27 @@ namespace Model
 	//任意のボーンの位置を取得
 	XMFLOAT3 GetBonePosition(int handle, std::string boneName)
 	{
-		XMFLOAT3 pos = _datas[handle]->pFbx->GetBonePosition(boneName);
+		XMFLOAT3 pos = _datas[handle]->pFbx->GetBonePosition(boneName, static_cast<int>(_datas[handle]->nowFrame));
 		XMVECTOR vec = XMVector3TransformCoord(XMLoadFloat3(&pos), _datas[handle]->transform.GetWorldMatrix());
 		XMStoreFloat3(&pos, vec);
 		return pos;
 	}
 
+	XMFLOAT3 GetBoneRotation(int handle, std::string boneName)
+	{
+		XMFLOAT3 rot = _datas[handle]->pFbx->GetBoneRotation(boneName, static_cast<int>(_datas[handle]->nowFrame));
+		XMVECTOR vec = XMVector3TransformCoord(XMLoadFloat3(&rot), _datas[handle]->transform.GetWorldMatrix());
+		XMStoreFloat3(&rot, vec);
+		return rot;
+	}
+
+	XMFLOAT3 GetBoneScale(int handle, std::string boneName)
+	{
+		XMFLOAT3 scale = _datas[handle]->pFbx->GetBoneScale(boneName, static_cast<int>(_datas[handle]->nowFrame));
+		XMVECTOR vec = XMVector3TransformCoord(XMLoadFloat3(&scale), _datas[handle]->transform.GetWorldMatrix());
+		XMStoreFloat3(&scale, vec);
+		return scale;
+	}
 
 	//ワールド行列を設定
 	void SetTransform(int handle, Transform & transform)

@@ -96,6 +96,7 @@ void Component_PlayerBehavior::Initialize()
 	if (FindChildComponent("PlayerMotion") == false)AddChildComponent(CreateComponent("PlayerMotion", PlayerMotion, holder_, this));
 	if (FindChildComponent("TackleMove") == false)AddChildComponent(CreateComponent("TackleMove", TackleMove, holder_, this));
 	if (FindChildComponent("StaminaGauge") == false)AddChildComponent(CreateComponent("StaminaGauge", StaminaGauge, holder_, this));
+
 }
 
 void Component_PlayerBehavior::Update()
@@ -187,8 +188,6 @@ void Component_PlayerBehavior::Update()
 		--lockRotateTime_;
 		
 		holder_->SetRotate(prevAngles_);
-
-
 	}
 }
 

@@ -114,15 +114,18 @@ void Fbx::Release()
 
 }
 
-XMFLOAT3 Fbx::GetBonePosition(std::string boneName)
+XMFLOAT3 Fbx::GetBonePosition(std::string boneName,int frame)
 {
+	FbxTime     time;
+	time.SetTime(0, 0, 0, frame, 0, 0, _frameRate);
+
 	XMFLOAT3 position = XMFLOAT3(0, 0, 0);
 	for (int i = 0; i < parts_.size(); i++)
 	{
-		if (parts_[i]->GetBonePosition(boneName, &position))
+		if (parts_[i]->GetBonePosition(boneName, &position,time))
 			break;
 	}
-
+	
 
 	return position;
 }
