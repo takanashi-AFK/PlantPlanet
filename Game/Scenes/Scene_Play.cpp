@@ -96,13 +96,15 @@ void Scene_Play::Update()
 				}
 			}
 
-			// 終了ボタンが押されたら
-			if (Input::IsKeyDown(DIK_ESCAPE)) {
-				
-				isSceneChange = true;
-			}
 		}
 
+			// 終了ボタンが押されたら
+		if (Input::IsKeyDown(DIK_ESCAPE) || Input::IsPadButtonDown(XINPUT_GAMEPAD_START)) {
+
+			isSceneChange = true;
+			
+		}
+			
 		if (isSceneChange == true) {
 
 			// プレイヤーが取得した植物情報を取得
