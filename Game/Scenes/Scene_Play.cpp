@@ -23,7 +23,7 @@
 using namespace Constants;
 
 Scene_Play::Scene_Play(GameObject* parent)
-	:GameObject(parent, "Scene_Play"), pStage_(nullptr), tpsCamera_(nullptr), fixedCursorPos(true), cursorVisible(true), isGameStart_(false)
+	:GameObject(parent, "Scene_Play"), pStage_(nullptr), tpsCamera_(nullptr), fixedCursorPos(true), cursorVisible(true), isGameStart_(false), isBossSpawn_(false)
 {
 }
 
@@ -118,14 +118,16 @@ void Scene_Play::Update()
 
 	// ボス出現処理
 	{
-		static bool isBossSpawn = false;
-		if (playerBehavior->GetResearchPoint() >= 100 && isBossSpawn == false) {
+		
+		if (playerBehavior->GetResearchPoint() >= 100 && isBossSpawn_ == false) {
 			// ボス敵の生成
-			SpawnBossEnemy();isBossSpawn = true;
+			SpawnBossEnemy(); isBossSpawn_ = true;
 		}
 		// 
 		//else playerBehavior->SetResearchPoint(playerBehavior->GetResearchPoint() + 1);
 	}
+
+	ImGui::Text("%d", playerBehavior->GetResearchPoint());
 }
 void Scene_Play::Draw()
 {

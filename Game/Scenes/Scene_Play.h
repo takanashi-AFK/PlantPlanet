@@ -18,6 +18,7 @@ private:
 	bool isGameStart_;		// ゲーム開始フラグ
 	bool fixedCursorPos;	// カーソル固定化
 	bool cursorVisible;		// カーソル表示
+	bool isBossSpawn_;
 public:
 	/// <summary> コンストラクタ </summary>
 	Scene_Play(GameObject* parent);
