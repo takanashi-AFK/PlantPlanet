@@ -84,7 +84,7 @@ Component_PlayerBehavior::Component_PlayerBehavior(string _name, StageObject* _h
 	bossBehavior(nullptr),
 	effectModelTransform(nullptr),
 	effectData_(),
-	researchPoint_(95),
+	researchPoint_(0),
 	myPlants_()
 {
 }

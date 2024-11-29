@@ -126,8 +126,6 @@ void Scene_Play::Update()
 		// 
 		//else playerBehavior->SetResearchPoint(playerBehavior->GetResearchPoint() + 1);
 	}
-
-	ImGui::Text("%d", playerBehavior->GetResearchPoint());
 }
 void Scene_Play::Draw()
 {
