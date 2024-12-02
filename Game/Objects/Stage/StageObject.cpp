@@ -259,7 +259,8 @@ void StageObject::Draw()
 
 	Transform temptrans = {};
 	temptrans.position_ = temppos;
-	temptrans.scale_ = { .5f,.5f,.5f };
+	temptrans.scale_ = Model::GetBoneScale (modelHandle_, "mixamorig:LeftHand");
+	temptrans.rotate_ = Model::GetBoneRotation(modelHandle_, "mixamorig:LeftHand");
 	
 	Direct3D::SetShader(Direct3D::SHADER_3D);
 	Model::SetTransform(mh, temptrans);

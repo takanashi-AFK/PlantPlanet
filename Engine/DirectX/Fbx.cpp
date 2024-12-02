@@ -130,6 +130,38 @@ XMFLOAT3 Fbx::GetBonePosition(std::string boneName,int frame)
 	return position;
 }
 
+XMFLOAT3 Fbx::GetBoneRotation(std::string boneName, int frame)
+{
+	FbxTime     time;
+	time.SetTime(0, 0, 0, frame, 0, 0, _frameRate);
+
+	XMFLOAT3 rotation = XMFLOAT3(0, 0, 0);
+	for (int i = 0; i < parts_.size(); i++)
+	{
+		if (parts_[i]->GetBoneRotation(boneName, &rotation, time))
+			break;
+	}
+
+
+	return rotation;
+}
+
+XMFLOAT3 Fbx::GetBoneScale(std::string boneName, int frame)
+{
+	FbxTime     time;
+	time.SetTime(0, 0, 0, frame, 0, 0, _frameRate);
+
+	XMFLOAT3 scale = XMFLOAT3(0, 0, 0);
+	for (int i = 0; i < parts_.size(); i++)
+	{
+		if (parts_[i]->GetBoneScale(boneName, &scale, time))
+			break;
+	}
+
+
+	return scale;
+}
+
 void Fbx::Draw(Transform& transform, int frame)
 {
 	Direct3D::SetBlendMode(Direct3D::BLEND_DEFAULT);

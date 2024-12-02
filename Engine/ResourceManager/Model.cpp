@@ -169,8 +169,18 @@ namespace Model
 	XMFLOAT3 GetBoneScale(int handle, std::string boneName)
 	{
 		XMFLOAT3 scale = _datas[handle]->pFbx->GetBoneScale(boneName, static_cast<int>(_datas[handle]->nowFrame));
-		XMVECTOR vec = XMVector3TransformCoord(XMLoadFloat3(&scale), _datas[handle]->transform.GetWorldMatrix());
-		XMStoreFloat3(&scale, vec);
+
+		{
+			XMVECTOR vecScale = {};
+			XMVECTOR dummy = {};
+
+			XMMatrixDecompose(&vecScale, &dummy, &dummy, _datas[handle]->transform.GetWorldMatrix());
+
+			scale.x *= XMVectorGetX(vecScale);
+			scale.y *= XMVectorGetY(vecScale);
+			scale.z *= XMVectorGetZ(vecScale);
+		}
+
 		return scale;
 	}
 

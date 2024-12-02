@@ -602,6 +602,60 @@ bool FbxParts::GetBonePosition(std::string boneName, XMFLOAT3* position, FbxTime
 	return false;
 }
 
+bool FbxParts::GetBoneRotation(std::string boneName, XMFLOAT3* rotation, FbxTime& const time)
+{
+	CalculateAnimBone(time);
+	for (int i = 0; i < numBone_; i++)
+	{
+		if (boneName == ppCluster_[i]->GetLink()->GetName())
+		{
+			XMVECTOR vecScale = {};
+			XMVECTOR vecPos = {};
+			XMVECTOR vecRot = {};
+			XMMatrixDecompose(&vecScale, &vecRot, &vecPos, pBoneArray_[i].newPose);
+
+			rotation->x = XMVectorGetX(vecRot);
+			rotation->y = XMVectorGetX(vecRot);
+			rotation->z = XMVectorGetX(vecRot);
+
+			/*
+			ImGui::Text(std::format("Bone Rot---\nx:{0} y:{1} z:{2} \n--------------------"
+				, rotation->x,rotation->y, rotation->z).c_str());
+*/
+			return true;
+		}
+	}
+
+	return false;
+}
+
+bool FbxParts::GetBoneScale(std::string boneName, XMFLOAT3* scale, FbxTime& const time)
+{
+	CalculateAnimBone(time);
+	for (int i = 0; i < numBone_; i++)
+	{
+		if (boneName == ppCluster_[i]->GetLink()->GetName())
+		{
+			XMVECTOR vecScale = {};
+			XMVECTOR vecPos = {};
+			XMVECTOR vecRot = {};
+			XMMatrixDecompose(&vecScale,&vecRot,&vecPos, pBoneArray_[i].newPose);
+
+			scale->x = XMVectorGetX(vecScale);
+			scale->y = XMVectorGetY(vecScale);
+			scale->z = XMVectorGetZ(vecScale);
+
+			/*
+			ImGui::Text(std::format("Bone Pos---\nx:{0} y:{1} z:{2} \n--------------------"
+				, position->x, position->y, position->z).c_str());
+*/
+			return true;
+		}
+	}
+
+	return false;
+}
+
 void FbxParts::RayCast(RayCastData* data)
 {
 	data->hit = FALSE;

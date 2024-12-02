@@ -146,8 +146,8 @@ public:
 	//引数：position	ワールド座標での位置【out】
 	//戻値：見つかればtrue
 	bool GetBonePosition(std::string boneName, XMFLOAT3	* position,FbxTime& const time);
-	bool GetBoneRotation(std::string boneName, XMFLOAT3* position, FbxTime& const time);
-	bool GetBoneScale(std::string boneName, XMFLOAT3* position, FbxTime& const time);
+	bool GetBoneRotation(std::string boneName, XMFLOAT3* rotation, FbxTime& const time);
+	bool GetBoneScale(std::string boneName, XMFLOAT3* scale, FbxTime& const time);
 	//スキンメッシュ情報を取得
 	//戻値：スキンメッシュ情報
 	FbxSkin* GetSkinInfo() { return pSkinInfo_; }
