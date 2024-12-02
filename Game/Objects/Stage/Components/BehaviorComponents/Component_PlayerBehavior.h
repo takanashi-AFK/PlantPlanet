@@ -19,6 +19,7 @@ enum PlayerState {
 	PLAYER_STATE_DODGE,		/* 回避 */
 	PLAYER_STATE_DEAD,		/* 死亡 */
 	PLAYER_STATE_INTRACT,	/* インタラクト */
+	PLAYER_STATE_MELEE,		/* 近接攻撃 */
 	PLAYER_STATE_MAX
 };
 
@@ -143,4 +144,7 @@ private:
 
 	/// <summary> インタラクト状態時の処理 </summary>
 	void Interact();
+
+	/// <summary> 近接攻撃状態時の処理 </summary>
+	void Melee();
 };

@@ -4,16 +4,27 @@
 #include "../../../../../Engine/ImGui/imgui.h"
 #include "../TimerComponent/Component_Timer.h"
 #include "../GaugeComponents/Component_HealthGauge.h"
-#include "../../Stage.h"
+#include "../../../../Engine/GameObject/Camera.h"
+#include "../../../../../Engine/DirectX/Direct3D.h"
+
+namespace
+{
+	const float MOVE_SPEED = 0.1f;
+	const float MOVE_DISTANCE = 0.5f;
+
+
+}
 
 Component_MeleeAttack::Component_MeleeAttack(string _name, StageObject* _holder, Component* _parent)
-	:Component_Attack(_holder, _name, MeleeAttack, _parent), isHit_(false)
+	:Component_Attack(_holder, _name, MeleeAttack, _parent), 
+	isHit_(false),
+	isFirstMove_(true),
+	startPosition_(XMFLOAT3(0, 0, 0))
 {
 }
 
 void Component_MeleeAttack::Initialize()
 {
-
 	if (!FindChildComponent("Timer")) {
 		AddChildComponent(CreateComponent("Timer", Timer, holder_, this));
 	}
@@ -27,39 +38,23 @@ void Component_MeleeAttack::Update()
 
 	if (!isActive_) return;
 
+	// ボタンが押された瞬間だけ、初期位置を取得
+	if (isFirstMove_ == true) {
+		startPosition_ = holder_->GetPosition();
+		isFirstMove_ = false;
+	}
 
-	Collider* collider = (BoxCollider*)(holder_->GetCollider(0));
-	if (!collider) return;
+	forward_ = Camera::GetSightLine();
 
-	{
-		XMFLOAT3 front{};
+	XMVECTOR moveVec = (XMLoadFloat3(&startPosition_) * XMVector3Normalize(forward_)) * MOVE_SPEED;
 
-		// 正面ベクトルがなかったら
-		if (XMVector3Equal(forward_, XMVectorZero())) {
+	XMFLOAT3 holderPosition = startPosition_;
+	XMStoreFloat3(&holderPosition, moveVec);
 
-			// 前回の正面ベクトルを使う
-			forward_ = prevFrontVec_;
-			if (XMVector3Equal(prevFrontVec_, XMVectorZero())) {
-				forward_ = XMVectorSet(0, 0, 1, 0);	// 初期値
+	holder_->SetPosition(holderPosition);
 
-			}
-		}
-
-		// 正面ベクトルを取得
-		XMStoreFloat3(&front, forward_);
-
-
-		prevFrontVec_ = forward_;
-
-		// 正面ベクトルを使ってコライダーの中心を更新
-		collider->SetCenter(front);
-
-		// 時間がたったら中心に戻す
-		if (AutoDelete(0.03f)) {
-			collider->SetCenter(XMFLOAT3{ 0, 0, 0 });
-			Stop();
-			isHit_ = false;
-		}
+	if (XMVectorGetX(XMVector3Length(XMLoadFloat3(&holderPosition) - XMLoadFloat3(&startPosition_)))) {
+		Stop();
 	}
 }
 
@@ -75,32 +70,3 @@ void Component_MeleeAttack::DrawData()
 	if (ImGui::Button("Execute")) Execute();
 }
 
-bool Component_MeleeAttack::AutoDelete(float _time)
-{
-	Component_Timer* timer =(Component_Timer*)(GetChildComponent("Timer"));
-	if (!timer) return false;
-	timer->SetTime(_time);
-	timer->Start();
-	if (timer->GetIsEnd()) {
-		timer->Reset();
-		return true;
-	}
-	return false;
-}
-
-void Component_MeleeAttack::OnCollision(GameObject* _target, Collider* _collider)
-{
-	if (!isActive_ || isHit_) return;
-
-	StageObject* target = (StageObject*)(_target);
-	if (!target) return;
-
-	for (auto hm : target->FindComponent(HealthGauge)) {
-		((Component_HealthGauge*)hm)->TakeDamage(power_);
-		isHit_ = true;
-
-		if (((Component_HealthGauge*)hm)->GetNow() <= 0.f) {
-			((Stage*)holder_->FindObject("Stage"))->DeleteStageObject((StageObject*)_target);
-		}
-	}
-}

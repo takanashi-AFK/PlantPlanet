@@ -9,7 +9,6 @@
 #include "../../../../Constants.h"
 #include "../../../Camera/TPSCamera.h"
 #include "../../../Engine/Global.h"
-#include "../../../Engine/Global.h"
 #include "../../../Game/Objects/UI/UIPanel.h"
 #include "../../../Game/Objects/UI/UIProgressBar.h"
 #include "../../../UI/CountDown.h"
@@ -18,11 +17,12 @@
 #include "Component_BossBehavior.h"
 #include <algorithm> 
 #include <directxmath.h> 
+#include "../../../UI/UIProgressCircle.h"
+#include "../../../UI/UIImage.h"
 
 // child components include
 #include "../AttackComponents/Component_MeleeAttack.h"
 #include "../AttackComponents/Component_ShootAttack.h"
-#include "../GaugeComponents/Component_HealthGauge.h"
 #include "../MotionComponent/Component_PlayerMotion.h"
 #include "../MoveComponents/Component_TackleMove.h"
 #include "../MoveComponents/Component_WASDInputMove.h"
@@ -30,8 +30,6 @@
 #include "../DetectorComponents/Component_CircleRangeDetector.h"
 #include "../PlantComponents/Component_Plant.h"
 #include "../GaugeComponents/Component_StaminaGauge.h"
-#include "../../../UI/UIProgressCircle.h"
-#include "../../../UI/UIImage.h"
 
 using namespace Constants;
 
@@ -107,7 +105,7 @@ void Component_PlayerBehavior::Initialize()
 	if (FindChildComponent("InteractTimer") == false)AddChildComponent(CreateComponent("InteractTimer", Timer, holder_, this));
 	if (FindChildComponent("IsInteractableDetector") == false)AddChildComponent(CreateComponent("IsInteractableDetector", CircleRangeDetector, holder_, this));
 	if (FindChildComponent("StaminaGauge") == false)AddChildComponent(CreateComponent("StaminaGauge", StaminaGauge, holder_, this));
-
+	if (FindChildComponent("MeleeAttack") == false)AddChildComponent(CreateComponent("MeleeAttack", MeleeAttack, holder_, this));
 }
 
 void Component_PlayerBehavior::Update()
@@ -125,9 +123,12 @@ void Component_PlayerBehavior::Update()
 	case PLAYER_STATE_IDLE:           Idle();         break;  // 現在の状態がIDLEの場合
 	case PLAYER_STATE_WALK:           Walk();         break;  // 現在の状態がWALKの場合
 	case PLAYER_STATE_SHOOT:          Shoot();        break;  // 現在の状態がSHOOTの場合
-	case PLAYER_STATE_DODGE:          Dodge();         break;  // 現在の状態がDASHの場合
-	case PLAYER_STATE_DEAD:            Dead();         break;  // 現在の状態がDEADの場合
-	case PLAYER_STATE_INTRACT:        Interact();      break;  // 現在の状態がINTRACTの場合
+	case PLAYER_STATE_DODGE:          Dodge();        break;  // 現在の状態がDASHの場合
+	case PLAYER_STATE_DEAD:            Dead();        break;  // 現在の状態がDEADの場合
+	case PLAYER_STATE_INTRACT:        Interact();     break;  // 現在の状態がINTRACTの場合
+	case PLAYER_STATE_MELEE:        
+		Melee();     
+		break;  // 現在の状態がMELEEの場合
 	}
 }
 
@@ -189,6 +190,8 @@ void Component_PlayerBehavior::Idle()
 	}
 	// Aボタン もしくは Eキー が押されていたら...インタラクト状態に遷移
 	else if (Input::IsKeyDown(DIK_E) || Input::IsPadButtonDown(XINPUT_GAMEPAD_A)) SetState(PLAYER_STATE_INTRACT);
+
+	else if (Input::IsKeyDown(DIK_V))SetState(PLAYER_STATE_MELEE);
 }
 
 void Component_PlayerBehavior::Walk()
@@ -552,6 +555,20 @@ void Component_PlayerBehavior::Interact()
 		// 待機状態に遷移
 		SetState(PLAYER_STATE_IDLE);
 	}
+}
+
+void Component_PlayerBehavior::Melee()
+{
+	/*Component_MeleeAttack* melee = (Component_MeleeAttack*)(GetChildComponent("MeleeAttack"));
+	if (melee != nullptr)return;
+
+	melee->Execute();
+
+	if (melee->IsActive() == false) {
+		SetState(PLAYER_STATE_IDLE);
+	}*/
+
+	ImGui::Text("nanika");
 }
 
 int Component_PlayerBehavior::GetResearchPointByRarity(PlantData _plantData)
