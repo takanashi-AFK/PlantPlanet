@@ -83,7 +83,8 @@ Component_PlayerBehavior::Component_PlayerBehavior(string _name, StageObject* _h
 	effectModelTransform(nullptr),
 	effectData_(),
 	researchPoint_(95),
-	myPlants_()
+	myPlants_(),
+	isMeleeStart_(true)
 {
 }
 
@@ -120,15 +121,13 @@ void Component_PlayerBehavior::Update()
 
 	switch (nowState_)
 	{
-	case PLAYER_STATE_IDLE:           Idle();         break;  // 現在の状態がIDLEの場合
-	case PLAYER_STATE_WALK:           Walk();         break;  // 現在の状態がWALKの場合
-	case PLAYER_STATE_SHOOT:          Shoot();        break;  // 現在の状態がSHOOTの場合
-	case PLAYER_STATE_DODGE:          Dodge();        break;  // 現在の状態がDASHの場合
-	case PLAYER_STATE_DEAD:            Dead();        break;  // 現在の状態がDEADの場合
-	case PLAYER_STATE_INTRACT:        Interact();     break;  // 現在の状態がINTRACTの場合
-	case PLAYER_STATE_MELEE:        
-		Melee();     
-		break;  // 現在の状態がMELEEの場合
+	case PLAYER_STATE_IDLE:				Idle();         break;  // 現在の状態がIDLEの場合
+	case PLAYER_STATE_WALK:				Walk();         break;  // 現在の状態がWALKの場合
+	case PLAYER_STATE_SHOOT:			Shoot();        break;  // 現在の状態がSHOOTの場合
+	case PLAYER_STATE_DODGE:			Dodge();        break;  // 現在の状態がDASHの場合
+	case PLAYER_STATE_DEAD:				Dead();        break;  // 現在の状態がDEADの場合
+	case PLAYER_STATE_INTRACT:			Interact();     break;  // 現在の状態がINTRACTの場合
+	case PLAYER_STATE_MELEE:			Melee();     break;  // 現在の状態がMELEEの場合
 	}
 }
 
@@ -188,10 +187,17 @@ void Component_PlayerBehavior::Idle()
 		}
 		SetState(PLAYER_STATE_DODGE);
 	}
+	// スペースキーが押されていたら...ダッシュ状態に遷移
+	else if (Input::IsKeyDown(DIK_V) || Input::IsPadButton(XINPUT_GAMEPAD_RIGHT_SHOULDER)) {
+		if (!sg->CanUseStamina(STAMINA_DECREASE_MELEE)) {
+			// 状態を遷移
+			IsWASDKey() ? SetState(PLAYER_STATE_WALK) : SetState(PLAYER_STATE_IDLE);
+			return;
+		}
+		SetState(PLAYER_STATE_DODGE);
+	}
 	// Aボタン もしくは Eキー が押されていたら...インタラクト状態に遷移
 	else if (Input::IsKeyDown(DIK_E) || Input::IsPadButtonDown(XINPUT_GAMEPAD_A)) SetState(PLAYER_STATE_INTRACT);
-
-	else if (Input::IsKeyDown(DIK_V))SetState(PLAYER_STATE_MELEE);
 }
 
 void Component_PlayerBehavior::Walk()
@@ -559,16 +565,36 @@ void Component_PlayerBehavior::Interact()
 
 void Component_PlayerBehavior::Melee()
 {
-	/*Component_MeleeAttack* melee = (Component_MeleeAttack*)(GetChildComponent("MeleeAttack"));
-	if (melee != nullptr)return;
+	Component_MeleeAttack* melee = (Component_MeleeAttack*)(GetChildComponent("MeleeAttack"));
+	if (melee == nullptr)return;
 
-	melee->Execute();
+	// 移動コンポーネントの取得 & 有無の確認
+	Component_WASDInputMove* move = (Component_WASDInputMove*)(GetChildComponent("InputMove"));
+	if (move == nullptr) return;
 
+	Component_StaminaGauge* sg = (Component_StaminaGauge*)(GetChildComponent("StaminaGauge"));
+	if (sg == nullptr)return;
+
+	if (isMeleeStart_ == true) {
+		melee->Execute();
+		move->Stop();
+		isMeleeStart_ = false;
+	}
+
+	// 攻撃処理が終了していたら...
 	if (melee->IsActive() == false) {
-		SetState(PLAYER_STATE_IDLE);
-	}*/
 
-	ImGui::Text("nanika");
+		// 攻撃フラグをリセット
+		isMeleeStart_ = true;
+
+		// 移動を可能にする
+		move->Execute();
+
+		sg->UseStamina(STAMINA_DECREASE_MELEE);
+
+		// 状態を遷移
+		IsWASDKey() ? SetState(PLAYER_STATE_WALK) : SetState(PLAYER_STATE_IDLE);
+	}
 }
 
 int Component_PlayerBehavior::GetResearchPointByRarity(PlantData _plantData)
@@ -674,7 +700,7 @@ StageObject* Component_PlayerBehavior::GetNearestPlant(PlantData& _plantData)
 		for (StageObject* object : pStage->GetStageObjects()) {
 
 			// 植物オブジェクトだったらリストに追加
-			for (auto plant : object->FindComponent(Plant))
+			if(object->GetObjectType() == StageObject::TYPE_PLANT)
 				plantObjects.push_back(object);
 		}
 	}
@@ -692,10 +718,8 @@ StageObject* Component_PlayerBehavior::GetNearestPlant(PlantData& _plantData)
 
 			//// 植物オブジェクトの位置を取得
 			//XMFLOAT3 plantPos = plant->GetPosition();
-
 			//// コンポーネント保有者と植物オブジェクトの距離を計算
 			//float dist = XMVectorGetX(XMVector3Length(XMLoadFloat3(&plantPos) - XMLoadFloat3(&holder_->GetPosition())));
-
 			//// 一番近い植物オブジェクトを取得
 			//if (dist < minDist) {
 			//	minDist = dist;

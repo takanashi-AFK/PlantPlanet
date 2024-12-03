@@ -40,6 +40,7 @@ private:
 
 	bool isShootStart_;					// 射撃開始フラグ
 	bool isDodgeStart_;					// 回避開始フラグ
+	bool isMeleeStart_;
 
 	//float stamina_;						// スタミナ
 	//bool isUseStamina_;					// スタミナを使用したか

@@ -16,7 +16,17 @@ using std::vector;
 
 class StageObject : public GameObject
 {
+public:
+	enum ObjectType
+	{
+		TYPE_PLAYER = 0,
+		TYPE_ENEMY,
+		TYPE_PLANT,
+	};
 protected:
+
+
+	ObjectType objectType_;
 	vector<Component*> myComponents_;   // 自身が保有するコンポーネント群
 
 	string modelFilePath_;              // モデルのファイルパス
@@ -34,7 +44,9 @@ protected:
 	std::mutex mutex_;
 #endif
 
+
 public:
+
 	/// <summary> コンストラクタ </summary>
 	StageObject(string _name,string _modelFilePath,GameObject* _parent);
 
@@ -96,6 +108,9 @@ getter :*/
 
 	/// <summary> 衝突するかどうかを取得 </summary>
 	bool GetIsColliding() { return isColliding_; }
+
+	/// <summary> オブジェクトの種類を取得 </summary>
+	ObjectType GetObjectType() { return objectType_; }
 /*
 setter :*/
 	/// <summary> モデル番号の設定 </summary>
@@ -115,6 +130,8 @@ setter :*/
 
 	/// <summary> シェーダータイプの設定 </summary>
 	void SetShader(Direct3D::SHADER_TYPE _type) { shaderType_ = _type; };
+
+	void SetObjectType(ObjectType _type) { objectType_ = _type; }
 /*
 predicate :*/
 	/// <summary> 地面に設置するかどうかを判定 </summary>
@@ -122,6 +139,8 @@ predicate :*/
 
 	/// <summary> 壁に当たったかどうかを判定</summary>
 	bool IsCollisionWall() const { return isCollisionWall_; }
+
+
 
 private:
 	/// <summary> 接地処理 </summary>
