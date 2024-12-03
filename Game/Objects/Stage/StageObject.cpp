@@ -251,17 +251,17 @@ void StageObject::Draw()
 
 	Direct3D::SetShader(Direct3D::SHADER_3D);
 
-	int mh = Model::Load("Models/DebugCollision/BoxCollider.fbx");
+	int mh = Model::Load("Models/Player/blasterA.fbx");
 	auto temppos = Model::GetBonePosition(modelHandle_, "mixamorig:LeftHand");
 	//temppos = holder_->GetWorldScale();
 
-	ImGui::Text(std::format("x:{} y:{} z:{}", temppos.x, temppos.y, temppos.z).c_str());
 
 	Transform temptrans = {};
 	temptrans.position_ = temppos;
 	temptrans.scale_ = Model::GetBoneScale (modelHandle_, "mixamorig:LeftHand");
-	temptrans.rotate_ = Model::GetBoneRotation(modelHandle_, "mixamorig:LeftHand");
-	
+
+	temptrans.rotate_ = Model::GetBoneRotation(modelHandle_, "mixamorig:LeftHand") ;
+
 	Direct3D::SetShader(Direct3D::SHADER_3D);
 	Model::SetTransform(mh, temptrans);
 	Model::Draw(mh);

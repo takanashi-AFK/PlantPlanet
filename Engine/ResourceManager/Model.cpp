@@ -1,5 +1,6 @@
 #include "../Global.h"
 #include "Model.h"
+#include<numbers>
 
 //3Dモデル（FBXファイル）を管理する
 namespace Model
@@ -160,10 +161,23 @@ namespace Model
 
 	XMFLOAT3 GetBoneRotation(int handle, std::string boneName)
 	{
-		XMFLOAT3 rot = _datas[handle]->pFbx->GetBoneRotation(boneName, static_cast<int>(_datas[handle]->nowFrame));
-		XMVECTOR vec = XMVector3TransformCoord(XMLoadFloat3(&rot), _datas[handle]->transform.GetWorldMatrix());
-		XMStoreFloat3(&rot, vec);
-		return rot;
+		auto matRot = _datas[handle]->pFbx->GetBoneRotationMatrix(boneName, static_cast<int>(_datas[handle]->nowFrame));
+
+		{
+			XMVECTOR vecRot = {};
+			XMVECTOR dummy = {};
+
+			XMMatrixDecompose(&dummy, &vecRot, &dummy, _datas[handle]->transform.GetWorldMatrix());
+
+			auto matRotW = XMMatrixRotationQuaternion(vecRot);
+
+			matRot = matRotW * matRot ;
+
+		}
+
+		XMFLOAT3 rotation = {};
+
+		return rotation;
 	}
 
 	XMFLOAT3 GetBoneScale(int handle, std::string boneName)

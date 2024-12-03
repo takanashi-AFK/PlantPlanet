@@ -115,8 +115,6 @@ void Component_WASDInputMove::Update()
 
 	angles_.y = XMConvertToDegrees(std::atan2(XMVectorGetX(dir_), XMVectorGetZ(dir_)));
 
-	ImGui::Text(std::format("cita : {}", XMConvertToDegrees(std::atan2(XMVectorGetX(dir_), XMVectorGetZ(dir_)))).c_str());
-
 	//Œü‚«‚ÌXV‚ðs‚¤
 	if (isRotate && isMove_)	holder_->SetRotate(angles_);
 

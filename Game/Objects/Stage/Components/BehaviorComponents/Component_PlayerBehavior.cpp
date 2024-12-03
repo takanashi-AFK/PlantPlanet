@@ -465,8 +465,6 @@ void Component_PlayerBehavior::Dodge()
 
 		float cita = XMConvertToDegrees(std::atan2f(XMVectorGetX(dir), XMVectorGetZ(dir)));
 
-		ImGui::Text(std::format("cita : {}", cita).c_str());
-
 		prevAngles_.y = cita;
 		holder_->SetRotate(prevAngles_);
 	}
@@ -526,7 +524,7 @@ void Component_PlayerBehavior::Dodge()
 
 		dodgeDistance = DODGE_DISTANCE;
 
-		sg->UseStamina(STAMINA_DECREASE_DODGE);
+		//sg->UseStamina(STAMINA_DECREASE_DODGE);
 
 		// 状態を遷移
 		IsWASDKey() ? SetState(PLAYER_STATE_WALK) : SetState(PLAYER_STATE_IDLE);

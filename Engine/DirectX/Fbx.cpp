@@ -130,15 +130,15 @@ XMFLOAT3 Fbx::GetBonePosition(std::string boneName,int frame)
 	return position;
 }
 
-XMFLOAT3 Fbx::GetBoneRotation(std::string boneName, int frame)
+XMMATRIX Fbx::GetBoneRotationMatrix(std::string boneName, int frame)
 {
 	FbxTime     time;
 	time.SetTime(0, 0, 0, frame, 0, 0, _frameRate);
 
-	XMFLOAT3 rotation = XMFLOAT3(0, 0, 0);
+	XMMATRIX rotation = {};
 	for (int i = 0; i < parts_.size(); i++)
 	{
-		if (parts_[i]->GetBoneRotation(boneName, &rotation, time))
+		if (parts_[i]->GetBoneRotationMatrix(boneName, &rotation, time))
 			break;
 	}
 
