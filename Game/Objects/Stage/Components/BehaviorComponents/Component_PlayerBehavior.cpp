@@ -194,7 +194,7 @@ void Component_PlayerBehavior::Idle()
 			IsWASDKey() ? SetState(PLAYER_STATE_WALK) : SetState(PLAYER_STATE_IDLE);
 			return;
 		}
-		SetState(PLAYER_STATE_DODGE);
+		SetState(PLAYER_STATE_MELEE);
 	}
 	// Aボタン もしくは Eキー が押されていたら...インタラクト状態に遷移
 	else if (Input::IsKeyDown(DIK_E) || Input::IsPadButtonDown(XINPUT_GAMEPAD_A)) SetState(PLAYER_STATE_INTRACT);
@@ -231,6 +231,15 @@ void Component_PlayerBehavior::Walk()
 			return;
 		}
 		SetState(PLAYER_STATE_DODGE);
+	}
+	// Vが押されていたら...近接攻撃状態に遷移
+	else if (Input::IsKeyDown(DIK_V) || Input::IsPadButton(XINPUT_GAMEPAD_RIGHT_SHOULDER)) {
+		if (!sg->CanUseStamina(STAMINA_DECREASE_MELEE)) {
+			// 状態を遷移
+			IsWASDKey() ? SetState(PLAYER_STATE_WALK) : SetState(PLAYER_STATE_IDLE);
+			return;
+		}
+		SetState(PLAYER_STATE_MELEE);
 	}
 	// Aボタン もしくは Eキー が押されていたら...インタラクト状態に遷移
 	else if (Input::IsKeyDown(DIK_E) || Input::IsPadButtonDown(XINPUT_GAMEPAD_A)) SetState(PLAYER_STATE_INTRACT);

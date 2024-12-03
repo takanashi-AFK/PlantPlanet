@@ -109,6 +109,8 @@ void Component_MeleeAttack::StepForward()
 
 		XMVECTOR move = XMLoadFloat3(&holderPosition) + XMVector3Normalize(forward_) * ((distance_)*Direct3D::EaseFunc[easingType_](rate_));
 
+		move = XMVectorSet(XMVectorGetX(move), 0, XMVectorGetZ(move), 0.f);
+
 		XMStoreFloat3(&holderPosition, move);
 
 		// 位置を更新
@@ -131,8 +133,11 @@ void Component_MeleeAttack::Slash()
 	Component_FanRangeDetector * attackRange = (Component_FanRangeDetector*)(GetChildComponent("attackRange"));
 	if (attackRange == nullptr)return;
 
+	attackRange->SetAngle(180);
+	attackRange->SetRange(5);
+	attackRange->SetDirection(Camera::GetSightLine());
 
-
+	// 範囲内にいるenemyの属性を持っているオブジェクトをターゲットにする
 
 }
 
