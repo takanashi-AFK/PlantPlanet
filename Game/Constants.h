@@ -66,6 +66,10 @@ namespace Constants {
 	const string PLAYER_STATE_IDLE_FBX = "Models/Player/Silly Dancing.fbx";
 	const string PLAYER_STATE_DODGE_FBX = "Models/Player/Female Action Pose.fbx";
 	const string PLAYER_STATE_DEAD_FBX = "Models/Player/Standing React Death Right.fbx";
+	const string PLAYER_STATE_SHOOT_WALK_LEFT_FBX = "";
+	const string PLAYER_STATE_SHOOT_WALK_RIGHT_FBX = "";
+	const string PLAYER_STATE_SHOOT_WALK_BACK_FBX = "";
+	const string PLAYER_STATE_SHOOT_WALK_FORWARD_FBX = "";
 
 // 各種データのパス ////////////////////////////////////////////////////
 

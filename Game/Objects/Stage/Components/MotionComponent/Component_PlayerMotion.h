@@ -28,5 +28,8 @@ getter :*/
 predicate :*/
 	/// <summary> アニメーションが終了したか </summary>
 	bool IsEnd();
+
+	//撃った後のアニメーション時間
+	static const int shotWalkTime_ = 90;
 };
 

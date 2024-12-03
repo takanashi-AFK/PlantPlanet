@@ -164,6 +164,10 @@ namespace Model
 		auto mat = _datas[handle]->pFbx->GetBoneRotationMatrix(boneName, static_cast<int>(_datas[handle]->nowFrame));
 
 		{
+			/*
+			以下の方法でワールド回転を取得し合成すると
+			少し回転がおかしくなるため廃止
+			*/
 			//XMVECTOR vecRot = {};
 			//XMVECTOR dummy = {};
 
@@ -177,11 +181,11 @@ namespace Model
 
 		XMFLOAT3 rotation = {};
 
-		float m11 = mat.r[0].m128_f32[0]; // 1行1列
-		float m21 = mat.r[1].m128_f32[0]; // 2行1列
-		float m31 = mat.r[2].m128_f32[0]; // 3行1列
-		float m32 = mat.r[2].m128_f32[1]; // 3行2列
-		float m33 = mat.r[2].m128_f32[2]; // 3行3列
+		float m11 = mat.r[0].m128_f32[0]; 
+		float m21 = mat.r[1].m128_f32[0]; 
+		float m31 = mat.r[2].m128_f32[0]; 
+		float m32 = mat.r[2].m128_f32[1]; 
+		float m33 = mat.r[2].m128_f32[2]; 
 
 
 		float yaw, roll;

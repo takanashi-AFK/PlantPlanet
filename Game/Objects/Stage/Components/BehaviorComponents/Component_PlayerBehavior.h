@@ -18,6 +18,10 @@ enum PlayerState {
 	PLAYER_STATE_SHOOT,		/* 射撃 */
 	PLAYER_STATE_DODGE,		/* 回避 */
 	PLAYER_STATE_DEAD,		/* 死亡 */
+	PLAYER_STATE_SHOOT_WALK_LEFT,/*撃った後に銃を構えて左に動く*/
+	PLAYER_STATE_SHOOT_WALK_RIGHT,/*撃った後に銃を構えて右に動く*/
+	PLAYER_STATE_SHOOT_WALK_BACK,/*撃った後に銃を構えて後方に動く*/
+	PLAYER_STATE_SHOOT_WALK_FORWARD,/*撃った後に銃を構えて前方に動く*/
 	PLAYER_STATE_MAX
 };
 

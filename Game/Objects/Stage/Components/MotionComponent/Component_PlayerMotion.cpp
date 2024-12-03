@@ -20,6 +20,12 @@ void Component_PlayerMotion::Initialize()
     modelHandleList_[PLAYER_STATE_IDLE] = MotionData(PLAYER_STATE_IDLE_FBX, 0, 200, 1,true);
     modelHandleList_[PLAYER_STATE_DODGE] = MotionData(PLAYER_STATE_DODGE_FBX, 0, 60, 1,false);
     modelHandleList_[PLAYER_STATE_DEAD] = MotionData(PLAYER_STATE_DEAD_FBX, 0, 182, 1,false);
+    /*
+    modelHandleList_[PLAYER_STATE_SHOOT_WALK_LEFT] = MotionData(PLAYER_STATE_SHOOT_WALK_LEFT_FBX, 0, shotWalkTime_, 1, true);
+    modelHandleList_[PLAYER_STATE_SHOOT_WALK_RIGHT] = MotionData(PLAYER_STATE_SHOOT_WALK_RIGHT_FBX, 0, shotWalkTime_, 1, true);
+    modelHandleList_[PLAYER_STATE_SHOOT_WALK_BACK] = MotionData(PLAYER_STATE_SHOOT_WALK_BACK_FBX, 0, shotWalkTime_, 1, true);
+    modelHandleList_[PLAYER_STATE_SHOOT_WALK_FORWARD] = MotionData(PLAYER_STATE_SHOOT_WALK_FORWARD_FBX, 0, shotWalkTime_, 1, true);
+    */
 }
 
 void Component_PlayerMotion::Update()
