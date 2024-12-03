@@ -159,19 +159,19 @@ namespace Model
 		return pos;
 	}
 
-	XMFLOAT3 GetBoneRotation(int handle, std::string boneName)
+	XMFLOAT3 GetBoneRotation(int handle, std::string boneName, XMFLOAT3 parentRotation)
 	{
 		auto mat = _datas[handle]->pFbx->GetBoneRotationMatrix(boneName, static_cast<int>(_datas[handle]->nowFrame));
 
 		{
-			XMVECTOR vecRot = {};
-			XMVECTOR dummy = {};
+			//XMVECTOR vecRot = {};
+			//XMVECTOR dummy = {};
 
-			XMMatrixDecompose(&dummy, &vecRot, &dummy, _datas[handle]->transform.GetWorldMatrix());
+			//XMMatrixDecompose(&dummy, &vecRot, &dummy, _datas[handle]->transform.GetWorldMatrix());
 
-			auto matW = XMMatrixRotationQuaternion(vecRot);
+			//auto matW = XMMatrixRotationQuaternion(vecRot);
 
-			mat = mat * matW;
+			//mat = mat * matW;
 
 		}
 
@@ -190,9 +190,9 @@ namespace Model
 		yaw = std::atan2(m21, m11);   
 		roll = std::atan2(m32, m33); 
 
-		rotation.x = XMConvertToDegrees(roll);  
-		rotation.y = XMConvertToDegrees(pitch); 
-		rotation.z = XMConvertToDegrees(yaw);   
+		rotation.x = XMConvertToDegrees(roll) + parentRotation.x;
+		rotation.y = XMConvertToDegrees(pitch) + parentRotation.y;
+		rotation.z = XMConvertToDegrees(yaw) + parentRotation.z;
 		
 		return rotation;
 	}
