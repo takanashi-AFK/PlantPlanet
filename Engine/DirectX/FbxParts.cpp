@@ -602,7 +602,7 @@ bool FbxParts::GetBonePosition(std::string boneName, XMFLOAT3* position, FbxTime
 	return false;
 }
 
-bool FbxParts::GetBoneMatrix(std::string boneName, XMMATRIX* mat, FbxTime& const time)
+bool FbxParts::GetBoneRotationMatrix(std::string boneName, XMMATRIX* mat, FbxTime& const time)
 {
 	CalculateAnimBone(time);
 	for (int i = 0; i < numBone_; i++)

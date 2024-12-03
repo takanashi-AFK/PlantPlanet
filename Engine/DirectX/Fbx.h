@@ -83,7 +83,7 @@ public:
 	//引数：boneName	取得したいボーンの位置
 	//戻値：ボーンの位置
 	XMFLOAT3 GetBonePosition(std::string boneName, int frame);
-	XMMATRIX GetBoneMatrix(std::string boneName, int frame);
+	XMMATRIX GetBoneRotationMatrix(std::string boneName, int frame);
 	XMFLOAT3 GetBoneScale(std::string boneName, int frame);
 
 	//レイキャスト（レイを飛ばして当たり判定）

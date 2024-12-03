@@ -161,7 +161,7 @@ namespace Model
 
 	XMFLOAT3 GetBoneRotation(int handle, std::string boneName)
 	{
-		auto mat = _datas[handle]->pFbx->GetBoneMatrix(boneName, static_cast<int>(_datas[handle]->nowFrame));
+		auto mat = _datas[handle]->pFbx->GetBoneRotationMatrix(boneName, static_cast<int>(_datas[handle]->nowFrame));
 
 		{
 			XMVECTOR vecRot = {};
