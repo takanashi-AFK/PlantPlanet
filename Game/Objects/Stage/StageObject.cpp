@@ -258,6 +258,7 @@ void StageObject::Draw()
 
 	Transform temptrans = {};
 	temptrans.position_ = temppos;
+	
 	temptrans.scale_ = Model::GetBoneScale (modelHandle_, "mixamorig:LeftHand");
 
 	temptrans.rotate_ = Model::GetBoneRotation(modelHandle_, "mixamorig:LeftHand") ;

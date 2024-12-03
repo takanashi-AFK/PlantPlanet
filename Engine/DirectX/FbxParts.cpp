@@ -602,7 +602,7 @@ bool FbxParts::GetBonePosition(std::string boneName, XMFLOAT3* position, FbxTime
 	return false;
 }
 
-bool FbxParts::GetBoneRotationMatrix(std::string boneName, XMMATRIX* matRot, FbxTime& const time)
+bool FbxParts::GetBoneMatrix(std::string boneName, XMMATRIX* mat, FbxTime& const time)
 {
 	CalculateAnimBone(time);
 	for (int i = 0; i < numBone_; i++)
@@ -614,22 +614,7 @@ bool FbxParts::GetBoneRotationMatrix(std::string boneName, XMMATRIX* matRot, Fbx
 			XMVECTOR vecRot = {};
 			XMMatrixDecompose(&vecScale, &vecRot, &vecPos, pBoneArray_[i].newPose);
 
-			*matRot = XMMatrixRotationQuaternion(vecRot);
-
-	ImGui::Text(std::format("1 x:{} y:{} z:{}",
-		matRot->r[0].m128_f32[0],
-		matRot->r[0].m128_f32[1],
-		matRot->r[0].m128_f32[2]).c_str());
-
-	ImGui::Text(std::format("2 x:{} y:{} z:{}",
-		matRot->r[1].m128_f32[0],
-		matRot->r[1].m128_f32[1],
-		matRot->r[1].m128_f32[2]).c_str());
-
-	ImGui::Text(std::format("3 x:{} y:{} z:{}",
-		matRot->r[2].m128_f32[0],
-		matRot->r[2].m128_f32[1],
-		matRot->r[2].m128_f32[2]).c_str());
+			*mat = XMMatrixRotationQuaternion(vecRot);
 
 			return true;
 		}
