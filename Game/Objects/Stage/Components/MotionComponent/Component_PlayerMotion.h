@@ -30,6 +30,7 @@ predicate :*/
 	bool IsEnd();
 
 	//撃った後のアニメーション時間
-	static const int shotWalkTime_ = 90;
+	static constexpr int shotWalkFrame_ = 60;
+	static constexpr int shotRecoilFrame_ = 20;
 };
 

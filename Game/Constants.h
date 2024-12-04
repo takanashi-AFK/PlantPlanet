@@ -62,14 +62,15 @@ namespace Constants {
 
 	/// プレイヤーのモーション ///
 	const string PLAYER_STATE_WALK_FBX = "Models/Player/Running.fbx";
-	const string PLAYER_STATE_SHOOT_FBX = "Models/Player/Fireball.fbx";
+	const string PLAYER_STATE_SHOOT_FBX = "Models/Player/Firing Rifle.fbx";
 	const string PLAYER_STATE_IDLE_FBX = "Models/Player/Silly Dancing.fbx";
 	const string PLAYER_STATE_DODGE_FBX = "Models/Player/Female Action Pose.fbx";
 	const string PLAYER_STATE_DEAD_FBX = "Models/Player/Standing React Death Right.fbx";
-	const string PLAYER_STATE_SHOOT_WALK_LEFT_FBX = "";
-	const string PLAYER_STATE_SHOOT_WALK_RIGHT_FBX = "";
-	const string PLAYER_STATE_SHOOT_WALK_BACK_FBX = "";
-	const string PLAYER_STATE_SHOOT_WALK_FORWARD_FBX = "";
+	const string PLAYER_STATE_SHOOT_WALK_LEFT_FBX ="Models/Player/Run Right.fbx"; 
+	const string PLAYER_STATE_SHOOT_WALK_RIGHT_FBX = "Models/Player/Run Left.fbx";
+	const string PLAYER_STATE_SHOOT_WALK_BACK_FBX = "Models/Player/Run Backward.fbx";
+	const string PLAYER_STATE_SHOOT_WALK_FORWARD_FBX = "Models/Player/Run Forward.fbx";
+	const string PLAYER_STATE_SHOOT_IDLE_FBX = "Models/Player/Rifle Aiming Idle.fbx";
 
 // 各種データのパス ////////////////////////////////////////////////////
 

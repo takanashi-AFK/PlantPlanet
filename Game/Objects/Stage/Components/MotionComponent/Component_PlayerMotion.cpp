@@ -16,16 +16,17 @@ void Component_PlayerMotion::Initialize()
 {
     // モデルのハンドルリストにモデルを追加
     modelHandleList_[PLAYER_STATE_WALK] = MotionData(PLAYER_STATE_WALK_FBX, 0, 40, 1,true);
-    modelHandleList_[PLAYER_STATE_SHOOT] = MotionData(PLAYER_STATE_SHOOT_FBX, 0, 150, 1,false);
+    modelHandleList_[PLAYER_STATE_SHOOT] = MotionData(PLAYER_STATE_SHOOT_FBX, 0, shotRecoilFrame_, 1,false);
     modelHandleList_[PLAYER_STATE_IDLE] = MotionData(PLAYER_STATE_IDLE_FBX, 0, 200, 1,true);
     modelHandleList_[PLAYER_STATE_DODGE] = MotionData(PLAYER_STATE_DODGE_FBX, 0, 60, 1,false);
     modelHandleList_[PLAYER_STATE_DEAD] = MotionData(PLAYER_STATE_DEAD_FBX, 0, 182, 1,false);
-    /*
-    modelHandleList_[PLAYER_STATE_SHOOT_WALK_LEFT] = MotionData(PLAYER_STATE_SHOOT_WALK_LEFT_FBX, 0, shotWalkTime_, 1, true);
-    modelHandleList_[PLAYER_STATE_SHOOT_WALK_RIGHT] = MotionData(PLAYER_STATE_SHOOT_WALK_RIGHT_FBX, 0, shotWalkTime_, 1, true);
-    modelHandleList_[PLAYER_STATE_SHOOT_WALK_BACK] = MotionData(PLAYER_STATE_SHOOT_WALK_BACK_FBX, 0, shotWalkTime_, 1, true);
-    modelHandleList_[PLAYER_STATE_SHOOT_WALK_FORWARD] = MotionData(PLAYER_STATE_SHOOT_WALK_FORWARD_FBX, 0, shotWalkTime_, 1, true);
-    */
+    
+
+    modelHandleList_[PLAYER_STATE_SHOOT_WALK_LEFT] = MotionData(PLAYER_STATE_SHOOT_WALK_LEFT_FBX, 0, shotWalkFrame_, 1, true);
+    modelHandleList_[PLAYER_STATE_SHOOT_WALK_RIGHT] = MotionData(PLAYER_STATE_SHOOT_WALK_RIGHT_FBX, 0, shotWalkFrame_, 1, true);
+    modelHandleList_[PLAYER_STATE_SHOOT_WALK_BACK] = MotionData(PLAYER_STATE_SHOOT_WALK_BACK_FBX, 0, shotWalkFrame_, 1, true);
+    modelHandleList_[PLAYER_STATE_SHOOT_WALK_FORWARD] = MotionData(PLAYER_STATE_SHOOT_WALK_FORWARD_FBX, 0, shotWalkFrame_, 1, true);
+    modelHandleList_[PLAYER_STATE_SHOOT_IDLE] = MotionData(PLAYER_STATE_SHOOT_IDLE_FBX, 0, shotWalkFrame_, 1, true);
 }
 
 void Component_PlayerMotion::Update()
@@ -37,16 +38,39 @@ void Component_PlayerMotion::Update()
     for (auto playerBehavior : holder_->FindComponent(PlayerBehavior)) p_playerBehavior = (Component_PlayerBehavior*)(playerBehavior);
         
     state = (p_playerBehavior)->GetState();
-    auto lockRotateTimeLeft = (p_playerBehavior)->GetLockRotateTime();
+    auto lockRotateTimeLeft = (p_playerBehavior)->GetLockRotateTimeLeft();
+
     //攻撃を撃った後なら複数のアニメーションに分岐する
     if (lockRotateTimeLeft)
     {
-       // auto direction = ((Component_WASDInputMove*)(holder_->FindComponent("InputMove")))->GetDirectionType();
+        auto direction = ((Component_WASDInputMove*)(holder_->FindComponent("InputMove")))->GetDirectionType();
 
-       // switch (direction)
-    //    {
-     //   case Component_WASDInputMove::DIRECTION::LEFT:
-     //   }
+        if (lockRotateTimeLeft < shotRecoilFrame_)
+        {
+            holder_->SetModelHandle(modelHandleList_[PLAYER_STATE_SHOOT].modelHandle);
+
+            Model::SetAnimFrame(
+                modelHandleList_[PLAYER_STATE_SHOOT].modelHandle,
+                lockRotateTimeLeft,
+                modelHandleList_[PLAYER_STATE_SHOOT].endFrame,
+                modelHandleList_[PLAYER_STATE_SHOOT].speed
+            );
+            return;
+        }
+
+        else
+        {
+            switch (direction)
+            {
+            case Component_WASDInputMove::DIRECTION::LEFT:state = PLAYER_STATE_SHOOT_WALK_LEFT; break;
+            case Component_WASDInputMove::DIRECTION::RIGHT:state = PLAYER_STATE_SHOOT_WALK_RIGHT; break;
+            case Component_WASDInputMove::DIRECTION::BACK:state = PLAYER_STATE_SHOOT_WALK_BACK; break;
+            case Component_WASDInputMove::DIRECTION::FORWARD:state = PLAYER_STATE_SHOOT_WALK_FORWARD; break;
+
+            default:state = PLAYER_STATE_SHOOT_IDLE; break;
+            }
+        }
+
     }
 
     // 現在のモデル番号が、現在の状態のモデル番号と一致していない時.

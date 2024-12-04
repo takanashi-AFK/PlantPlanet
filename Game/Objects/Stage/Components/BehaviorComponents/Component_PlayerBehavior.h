@@ -22,6 +22,7 @@ enum PlayerState {
 	PLAYER_STATE_SHOOT_WALK_RIGHT,/*撃った後に銃を構えて右に動く*/
 	PLAYER_STATE_SHOOT_WALK_BACK,/*撃った後に銃を構えて後方に動く*/
 	PLAYER_STATE_SHOOT_WALK_FORWARD,/*撃った後に銃を構えて前方に動く*/
+	PLAYER_STATE_SHOOT_IDLE,
 	PLAYER_STATE_MAX
 };
 
@@ -35,7 +36,8 @@ private:
 	Component_BossBehavior* bossBehavior;
 	int invincibilityFrame_;			// 無敵フレーム
 	int walkingFrame_;					// 連続して歩いている時間
-	int lockRotateTime_;				// 回転を固定する時間
+	int lockRotateFrame_;				// 回転を固定する時間
+	int lockRotateFrameLeft_;			// 回転を固定してから経過した時間
 
 	// effekseer: 変形行列
 	std::shared_ptr<EFFEKSEERLIB::EFKTransform> effectModelTransform;/*★★★*/
@@ -94,7 +96,8 @@ getter :*/
 	/// <returns> ゲーム開始フラグ </returns>
 	bool GetGameStart() const { return isGameStart_; }
 
-	float GetLockRotateTime()const { return lockRotateTime_; };
+	int GetLockRotateTime()const { return lockRotateFrame_; };
+	int GetLockRotateTimeLeft()const { return lockRotateFrameLeft_; };
 /*
 predicate :*/
 	/// <returns> プレイヤーが死んでいるか </returns>

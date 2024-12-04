@@ -173,6 +173,11 @@ void Component_PlayerBehavior::Update()
 	switch (nowState_)
 	{
 	case PLAYER_STATE_IDLE:           Idle();         break;  // 現在の状態がIDLEの場合
+
+	case PLAYER_STATE_SHOOT_WALK_LEFT:
+	case PLAYER_STATE_SHOOT_WALK_RIGHT:
+	case PLAYER_STATE_SHOOT_WALK_FORWARD:
+	case PLAYER_STATE_SHOOT_WALK_BACK:
 	case PLAYER_STATE_WALK:           Walk();         break;  // 現在の状態がWALKの場合
 	//case PLAYER_STATE_SHOOT:          Shoot();        break;  // 現在の状態がSHOOTの場合
 	case PLAYER_STATE_DODGE:          Dodge();        break;  // 現在の状態がDASHの場合
@@ -181,14 +186,19 @@ void Component_PlayerBehavior::Update()
 
 	if (isShootAttack_)	Shoot();
 
-	if (lockRotateTime_)
+	if (lockRotateFrameLeft_ < lockRotateFrame_)
 	{
 		Component_WASDInputMove* move = (Component_WASDInputMove*)(GetChildComponent("InputMove"));
 		move->SetRotateLock(false);
-		--lockRotateTime_;
 		
 		holder_->SetRotate(prevAngles_);
+		++lockRotateFrameLeft_;
+		return;
 	}
+	
+	lockRotateFrameLeft_ = NULL;
+	lockRotateFrame_ = NULL;
+
 }
 
 void Component_PlayerBehavior::Release()
@@ -287,7 +297,13 @@ void Component_PlayerBehavior::Walk()
 void Component_PlayerBehavior::Shoot()
 {
 	isShootAttack_ = false;
-	lockRotateTime_ = 100;//調整数値。そのうちマジックナンバーを修正する
+
+	{
+		constexpr int loopTime_ = 1;
+		constexpr int lockFrameShoot = Component_PlayerMotion::shotRecoilFrame_ + Component_PlayerMotion::shotWalkFrame_ * loopTime_;
+		lockRotateFrame_ = lockFrameShoot;
+		lockRotateFrameLeft_ = 0;
+	}
 
 	Component_StaminaGauge* sg = (Component_StaminaGauge*)(GetChildComponent("StaminaGauge"));
 	if (sg == nullptr)return;
@@ -389,7 +405,7 @@ void Component_PlayerBehavior::Dodge()
 	if (tackle != nullptr && isDodgeStart_ == false) {
 
 		//向きを固定する時間を無しにする
-		lockRotateTime_ = 0;
+		lockRotateFrame_ = 0;
 
 		// 突進方向を設定
 		XMVECTOR dir = -INITIALIZE_DIRECTION_Z; {
