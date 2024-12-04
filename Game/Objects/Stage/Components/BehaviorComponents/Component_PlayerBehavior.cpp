@@ -95,8 +95,8 @@ void Component_PlayerBehavior::Initialize()
 	holder_->AddCollider(new BoxCollider(PLAYER_COLLIDER_POSITION, PLAYER_COLLIDER_SIZE));
 
 	// effekseer: :Effectの読み込み
-	EFFEKSEERLIB::gEfk->AddEffect("dodge", "Effects/Lazer01.efk");/*★★★*/
-	EFFEKSEERLIB::gEfk->AddEffect("impact", "Effects/Attack_Impact.efk");/*★★★*/
+	EFFEKSEERLIB::gEfk->AddEffect("dodge", "Effects/Lazer01.efk");
+	EFFEKSEERLIB::gEfk->AddEffect("impact", "Effects/Attack_Impact.efk");
 
 	// 子コンポーネントの追加
 	if (FindChildComponent("InputMove") == false)AddChildComponent(CreateComponent("InputMove", WASDInputMove, holder_, this));
@@ -152,7 +152,7 @@ void Component_PlayerBehavior::Update()
 		ScoreManager::playerHp = (int)hg->now_;
 
 		// HPバーの値を設定
-		if (hpBar != nullptr && hg != nullptr)hpBar->SetProgress(&hg->now_, &hg->max_);
+		if (hpBar != nullptr && hg != nullptr)hpBar->SetProgress(hg->now_, hg->max_);
 
 		// HPが0以下になったら... DEAD状態に遷移
 		if (hg != nullptr)if (hg->IsDead() == true)SetState(PLAYER_STATE_DEAD);
@@ -167,7 +167,7 @@ void Component_PlayerBehavior::Update()
 		UIProgressBar* staminaBar = (UIProgressBar*)UIPanel::GetInstance()->FindObject("staminaGauge");
 
 		// スタミナバーの値を設定
-		if (staminaBar != nullptr && sg != nullptr)staminaBar->SetProgress(&sg->now_, &sg->max_);
+		if (staminaBar != nullptr && sg != nullptr)staminaBar->SetProgress(sg->now_, sg->max_);
 
 		ImGui::Text("Stamina : %f", sg->now_);
 
@@ -180,7 +180,6 @@ void Component_PlayerBehavior::Update()
 	// ＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝
 	// 状態ごとの処理
 	// ＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝
-	Component_WASDInputMove* move = (Component_WASDInputMove*)(GetChildComponent("InputMove"));
 	move->SetRotateLock(true);
 	prevAngles_= holder_->GetRotate();
 
@@ -203,7 +202,6 @@ void Component_PlayerBehavior::Update()
 
 	if (lockRotateFrameLeft_ < lockRotateFrame_)
 	{
-		Component_WASDInputMove* move = (Component_WASDInputMove*)(GetChildComponent("InputMove"));
 		move->SetRotateLock(false);
 		
 		holder_->SetRotate(prevAngles_);

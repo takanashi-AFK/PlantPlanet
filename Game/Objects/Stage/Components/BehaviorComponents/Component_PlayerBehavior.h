@@ -4,26 +4,26 @@
 #include "../../StageObject.h"
 #include <vector>
 #include "../../../../../Engine/ResourceManager/Model.h"
-#include "../../../EffekseeLib/EffekseerVFX.h"/*★★★*/
+#include "../../../EffekseeLib/EffekseerVFX.h"
 #include "../../../../../Engine/Global.h"
 #include "../../../../Plants/Plant.h"
 
 // 前方宣言
 class CountDown;
 class Component_BossBehavior;
-// プレイヤーの状態
+
 enum PlayerState {
-	PLAYER_STATE_IDLE = 0,	/* 待機 */
-	PLAYER_STATE_WALK,		/* 歩行 */
-	PLAYER_STATE_SHOOT,		/* 射撃 */
-	PLAYER_STATE_DODGE,		/* 回避 */
-	PLAYER_STATE_DEAD,		/* 死亡 */
-	PLAYER_STATE_SHOOT_WALK_LEFT,/*撃った後に銃を構えて左に動く*/
-	PLAYER_STATE_SHOOT_WALK_RIGHT,/*撃った後に銃を構えて右に動く*/
-	PLAYER_STATE_SHOOT_WALK_BACK,/*撃った後に銃を構えて後方に動く*/
-	PLAYER_STATE_SHOOT_WALK_FORWARD,/*撃った後に銃を構えて前方に動く*/
-	PLAYER_STATE_SHOOT_IDLE/*撃った後に銃を構えて動かない*/,
-	PLAYER_STATE_INTRACT,	/* インタラクト */
+	PLAYER_STATE_IDLE = 0,
+	PLAYER_STATE_WALK,
+	PLAYER_STATE_SHOOT,
+	PLAYER_STATE_DODGE,
+	PLAYER_STATE_DEAD,
+	PLAYER_STATE_SHOOT_WALK_LEFT,
+	PLAYER_STATE_SHOOT_WALK_RIGHT,
+	PLAYER_STATE_SHOOT_WALK_BACK,
+	PLAYER_STATE_SHOOT_WALK_FORWARD,
+	PLAYER_STATE_SHOOT_IDLE,
+	PLAYER_STATE_INTRACT,
 	PLAYER_STATE_MAX
 };
 
@@ -43,7 +43,7 @@ private:
 	int researchPoint_;
 
 	// effekseer: 変形行列
-	std::shared_ptr<EFFEKSEERLIB::EFKTransform> effectModelTransform;/*★★★*/
+	std::shared_ptr<EFFEKSEERLIB::EFKTransform> effectModelTransform;
 	EffectData effectData_;
 
 	bool isShootStart_ : 1;					// 射撃開始フラグ
