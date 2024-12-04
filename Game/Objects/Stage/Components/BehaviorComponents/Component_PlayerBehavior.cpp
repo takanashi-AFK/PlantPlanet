@@ -36,21 +36,21 @@
 using namespace Constants;
 
 namespace {
-	const int SHOOT_FRAME = 115;
-	const float DODGE_DISTANCE = 5.0f;
-	const XMFLOAT3 PLAYER_COLLIDER_SIZE = { 1,1,1 };
-	const XMFLOAT3 PLAYER_COLLIDER_POSITION = { 0,0.5,0 };
-	const XMVECTOR INITIALIZE_DIRECTION_Z = { 0,0,1,0 };
-	const float DODGE_RAY_OFFSET = 0.5f;
-	const float DODGE_DISTANCE_LIMIT = 0.7;
-	const int EFFECT_FRAME = 60;
-	const int EFFECT_SPEED = 1;
-	const float BOSS_TACKLE_DISTANCE = 2.0f;
-	const int STAMINA_DECREASE_SHOOT = 10;
-	const int STAMINA_DECREASE_MELEE = 20;
-	const int STAMINA_DECREASE_DODGE = 30;
-	const float STAMINA_RECOVERY = 0.17f;
-	const float STAMINA_MAX = 100.f;
+	constexpr int SHOOT_FRAME = 115;
+	constexpr float DODGE_DISTANCE = 5.0f;
+	constexpr XMFLOAT3 PLAYER_COLLIDER_SIZE = { 1,1,1 };
+	constexpr XMFLOAT3 PLAYER_COLLIDER_POSITION = { 0,0.5,0 };
+	constexpr XMVECTOR INITIALIZE_DIRECTION_Z = { 0,0,1,0 };
+	constexpr float DODGE_RAY_OFFSET = 0.5f;
+	constexpr float DODGE_DISTANCE_LIMIT = 0.7;
+	constexpr int EFFECT_FRAME = 60;
+	constexpr int EFFECT_SPEED = 1;
+	constexpr float BOSS_TACKLE_DISTANCE = 2.0f;
+	constexpr int STAMINA_DECREASE_SHOOT = 10;
+	constexpr int STAMINA_DECREASE_MELEE = 20;
+	constexpr int STAMINA_DECREASE_DODGE = 30;
+	constexpr float STAMINA_RECOVERY = 0.17f;
+	constexpr float STAMINA_MAX = 100.f;
 
 	const int INCLEACE_RESEARCH_POINT_RARITY_3 = 30;
 	const int INCLEACE_RESEARCH_POINT_RARITY_2 = 15;
@@ -112,6 +112,67 @@ void Component_PlayerBehavior::Initialize()
 
 void Component_PlayerBehavior::Update()
 {
+
+	// ＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝
+	// カウント制御されている場合の処理
+	// ＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝
+	CountDown* countDown = (CountDown*)(holder_->FindObject("CountDown"));
+	if (countDown != nullptr && isGameStart_ == false) {
+
+		// 移動コンポーネントの取得 & 有無の確認
+		Component_WASDInputMove* move = (Component_WASDInputMove*)(GetChildComponent("InputMove"));
+		if (GetChildComponent("InputMove") == nullptr)return;
+
+		// カウントダウンが終了した場合
+		if (countDown->IsFinished()) {
+
+			//移動を可能にする
+			move->Execute();
+	
+
+			// ゲームスタートフラグを立てる
+			isGameStart_ = true;
+		}
+		else {
+			// 移動を不可能にする
+			move->Stop();
+			return;
+		}
+	}
+
+	// HP関連処理
+	{
+		// プレイヤーのHPゲージコンポーネントを取得
+		Component_HealthGauge* hg = (Component_HealthGauge*)(GetChildComponent("PlayerHealthGauge"));
+
+		// UIProgressBarを取得
+		UIProgressBar* hpBar = (UIProgressBar*)UIPanel::GetInstance()->FindObject(PLAY_SCENE_PLAYER_HP_GAUGE_NAME);
+
+		// HPの値を移動
+		ScoreManager::playerHp = (int)hg->now_;
+
+		// HPバーの値を設定
+		if (hpBar != nullptr && hg != nullptr)hpBar->SetProgress(&hg->now_, &hg->max_);
+
+		// HPが0以下になったら... DEAD状態に遷移
+		if (hg != nullptr)if (hg->IsDead() == true)SetState(PLAYER_STATE_DEAD);
+	}
+
+	// スタミナ関連処理
+	{
+		// プレイヤーのスタミナゲージコンポーネントを取得
+		Component_StaminaGauge* sg = (Component_StaminaGauge*)(GetChildComponent("StaminaGauge"));
+
+		// UIProgressBarを取得
+		UIProgressBar* staminaBar = (UIProgressBar*)UIPanel::GetInstance()->FindObject("staminaGauge");
+
+		// スタミナバーの値を設定
+		if (staminaBar != nullptr && sg != nullptr)staminaBar->SetProgress(&sg->now_, &sg->max_);
+
+		ImGui::Text("Stamina : %f", sg->now_);
+
+	}
+
 	// 移動コンポーネントの取得 & 有無の確認
 	Component_WASDInputMove* move = (Component_WASDInputMove*)(GetChildComponent("InputMove"));
 	if (GetChildComponent("InputMove") != nullptr)move->Execute();
@@ -119,16 +180,40 @@ void Component_PlayerBehavior::Update()
 	// ＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝
 	// 状態ごとの処理
 	// ＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝
+	Component_WASDInputMove* move = (Component_WASDInputMove*)(GetChildComponent("InputMove"));
+	move->SetRotateLock(true);
+	prevAngles_= holder_->GetRotate();
 
 	switch (nowState_)
 	{
 	case PLAYER_STATE_IDLE:           Idle();         break;  // 現在の状態がIDLEの場合
+
+	case PLAYER_STATE_SHOOT_WALK_LEFT:
+	case PLAYER_STATE_SHOOT_WALK_RIGHT:
+	case PLAYER_STATE_SHOOT_WALK_FORWARD:
+	case PLAYER_STATE_SHOOT_WALK_BACK:
 	case PLAYER_STATE_WALK:           Walk();         break;  // 現在の状態がWALKの場合
-	case PLAYER_STATE_SHOOT:          Shoot();        break;  // 現在の状態がSHOOTの場合
 	case PLAYER_STATE_DODGE:          Dodge();         break;  // 現在の状態がDASHの場合
 	case PLAYER_STATE_DEAD:            Dead();         break;  // 現在の状態がDEADの場合
 	case PLAYER_STATE_INTRACT:        Interact();      break;  // 現在の状態がINTRACTの場合
+
 	}
+
+	if (isShootAttack_)	Shoot();
+
+	if (lockRotateFrameLeft_ < lockRotateFrame_)
+	{
+		Component_WASDInputMove* move = (Component_WASDInputMove*)(GetChildComponent("InputMove"));
+		move->SetRotateLock(false);
+		
+		holder_->SetRotate(prevAngles_);
+		++lockRotateFrameLeft_;
+		return;
+	}
+	
+	lockRotateFrameLeft_ = NULL;
+	lockRotateFrame_ = NULL;
+
 }
 
 void Component_PlayerBehavior::Release()
@@ -176,7 +261,8 @@ void Component_PlayerBehavior::Idle()
 			IsWASDKey() ? SetState(PLAYER_STATE_WALK) : SetState(PLAYER_STATE_IDLE);
 			return;
 		}
-		SetState(PLAYER_STATE_SHOOT);
+		//SetState(PLAYER_STATE_SHOOT);
+		isShootAttack_ = true;
 	}
 	// スペースキーが押されていたら...ダッシュ状態に遷移
 	else if (Input::IsKeyDown(DIK_SPACE) || Input::GetPadTriggerL(0)) {
@@ -212,7 +298,7 @@ void Component_PlayerBehavior::Walk()
 			IsWASDKey() ? SetState(PLAYER_STATE_WALK) : SetState(PLAYER_STATE_IDLE);
 			return;
 		}
-		SetState(PLAYER_STATE_SHOOT);
+		isShootAttack_ = true;
 	}
 	// スペースキーが押されていたら...ダッシュ状態に遷移
 	else if (Input::IsKeyDown(DIK_SPACE) || Input::GetPadTriggerL(0)) {
@@ -229,6 +315,14 @@ void Component_PlayerBehavior::Walk()
 
 void Component_PlayerBehavior::Shoot()
 {
+	isShootAttack_ = false;
+
+	{
+		constexpr int loopTime_ = 1;
+		constexpr int lockFrameShoot = Component_PlayerMotion::shotRecoilFrame_ + Component_PlayerMotion::shotWalkFrame_ * loopTime_;
+		lockRotateFrame_ = lockFrameShoot;
+		lockRotateFrameLeft_ = 0;
+	}
 
 	Component_StaminaGauge* sg = (Component_StaminaGauge*)(GetChildComponent("StaminaGauge"));
 	if (sg == nullptr)return;
@@ -239,7 +333,7 @@ void Component_PlayerBehavior::Shoot()
 
 	// TPSカメラの方向を取得
 	TPSCamera* tpsCamera = (TPSCamera*)holder_->FindObject("TPSCamera");
-	if (tpsCamera != nullptr)holder_->SetRotateY(tpsCamera->GetAngle().y);
+	if (tpsCamera != nullptr)prevAngles_.y = tpsCamera->GetAngle().y; // 向きの更新
 
 	// 射撃モーションのアニメーションの現在の再生時間を取得
 	float nowFrame = motion->GetNowFrame();
@@ -270,9 +364,8 @@ void Component_PlayerBehavior::Shoot()
 	}
 
 	// 移動コンポーネントの取得 & 有無の確認
-	Component_WASDInputMove* move = (Component_WASDInputMove*)(GetChildComponent("InputMove"));
-	if (move != nullptr) move->Stop();
-
+	//Component_WASDInputMove* move = (Component_WASDInputMove*)(GetChildComponent("InputMove"));
+	//if (move != nullptr);
 
 	// NOTE: 終了するためのフラグ
 	bool isEnd = false;
@@ -299,8 +392,9 @@ void Component_PlayerBehavior::Shoot()
 		sg->UseStamina(STAMINA_DECREASE_SHOOT);
 
 		// 移動コンポーネントの再開
-		if (move != nullptr) move->Execute();
+		//if (move != nullptr) move->Execute();
 	}
+
 }
 
 void Component_PlayerBehavior::Dodge()
@@ -325,6 +419,9 @@ void Component_PlayerBehavior::Dodge()
 	Component_TackleMove* tackle = (Component_TackleMove*)(GetChildComponent("TackleMove"));
 	if (tackle != nullptr && isDodgeStart_ == false) {
 
+		//向きを固定する時間を無しにする
+		lockRotateFrame_ = 0;
+
 		// 突進方向を設定
 		XMVECTOR dir = -INITIALIZE_DIRECTION_Z; {
 			// 移動を不可能にする
@@ -332,7 +429,7 @@ void Component_PlayerBehavior::Dodge()
 
 			// 移動方向がゼロベクトルでなければ、移動方向を取得
 			if (IsXMVectorZero(move->GetMoveDirection()) == false)dir = move->GetMoveDirection();
-			else dir = XMVector3Normalize(XMVectorSetY(Camera::GetSightLine(), 0));
+			else dir = XMVector3Normalize(XMVectorSetY(Camera::GetSightLine(),0));
 		}
 
 		// 突進方向を設定
@@ -392,6 +489,16 @@ void Component_PlayerBehavior::Dodge()
 		isDodgeStart_ = true;
 	}
 
+	//モデルの向きの設定
+	{
+		auto dir = tackle->GetDirection();
+
+		float cita = XMConvertToDegrees(std::atan2f(XMVectorGetX(dir), XMVectorGetZ(dir)));
+
+		prevAngles_.y = cita;
+		holder_->SetRotate(prevAngles_);
+	}
+
 	// エフェクトの再生処理
 	{
 		EFFEKSEERLIB::EFKTransform t;
@@ -409,9 +516,11 @@ void Component_PlayerBehavior::Dodge()
 		if (frameCount >= invincibilityFrame_) {
 			hg->Unlock();
 		}
-	}
-
-
+	}	
+	XMFLOAT3 holderPos = holder_->GetPosition();
+	XMFLOAT3 bossPos = bossBehavior->GetHolder()->GetPosition();
+	XMFLOAT3 bossToPlayer = bossPos - holderPos;
+	XMVECTOR vBossToPlayer = XMLoadFloat3(&bossToPlayer);
 
 	// ボス衝突判定
 	BossState bossState = BOSS_STATE_MAX;

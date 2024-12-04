@@ -26,6 +26,7 @@ protected:
 	bool isCollisionWall_;              // 壁に当たったかどうか
 	bool isColliding_;                  // ほかのオブジェクトと衝突するかどうか
 	XMFLOAT3 onGroundOffset_;           // 地面に設置する際のオフセット
+	XMFLOAT3 raycastDirection_;
 	float fallSpeed_;                   // 落下速度
 
 	Direct3D::SHADER_TYPE shaderType_;   // シェーダータイプ
@@ -88,6 +89,8 @@ getter :*/
 	/// <summary> 地面に設置する際のオフセットの取得 </summary>
 	XMFLOAT3 GetOnGroundOffset() const { return onGroundOffset_; }
 
+	XMFLOAT3 GetRayCastDirection()const { return this->raycastDirection_; };
+
 	/// <summary> 落下速度の取得 </summary>
 	float GetFallSpeed() const { return fallSpeed_; }
 
@@ -115,6 +118,8 @@ setter :*/
 
 	/// <summary> シェーダータイプの設定 </summary>
 	void SetShader(Direct3D::SHADER_TYPE _type) { shaderType_ = _type; };
+
+	void SetRayCastDirection(XMFLOAT3 dir) { this->raycastDirection_ = dir; };
 /*
 predicate :*/
 	/// <summary> 地面に設置するかどうかを判定 </summary>

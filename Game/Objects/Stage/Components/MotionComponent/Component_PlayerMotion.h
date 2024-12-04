@@ -28,5 +28,9 @@ getter :*/
 predicate :*/
 	/// <summary> アニメーションが終了したか </summary>
 	bool IsEnd();
+
+	//撃った後のアニメーション時間
+	static constexpr int shotWalkFrame_ = 60;
+	static constexpr int shotRecoilFrame_ = 20;
 };
 
