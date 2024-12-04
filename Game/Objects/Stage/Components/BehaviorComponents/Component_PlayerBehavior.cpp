@@ -18,7 +18,6 @@
 #include "Component_BossBehavior.h"
 #include <algorithm> 
 #include <directxmath.h> 
-#include<format>
 
 // child components include
 #include "../AttackComponents/Component_MeleeAttack.h"
