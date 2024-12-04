@@ -334,10 +334,13 @@ void Component_PlayerBehavior::Shoot()
 	if (tpsCamera != nullptr)prevAngles_.y = tpsCamera->GetAngle().y; // 向きの更新
 
 	// 射撃モーションのアニメーションの現在の再生時間を取得
-	float nowFrame = motion->GetNowFrame();
+	//float nowFrame = motion->GetNowFrame();
 
 	// 現在のフレームが射撃アニメーションのちょうどいいタイミングを過ぎたら...
-	if (nowFrame >= SHOOT_FRAME && isShootStart_ == false) {
+
+
+	//if (nowFrame >= SHOOT_FRAME && isShootStart_ == false)
+	{
 
 		// 発射オプションを設定
 		Component_ShootAttack* shoot = (Component_ShootAttack*)(GetChildComponent("ShootAttack"));
@@ -377,7 +380,7 @@ void Component_PlayerBehavior::Shoot()
 		SetState(PLAYER_STATE_DODGE);
 	}
 	// アニメーションが終わったら...
-	if (motion->IsEnd())
+	//if (motion->IsEnd())
 	{
 		isEnd = true; SetState(PLAYER_STATE_IDLE);
 	}
