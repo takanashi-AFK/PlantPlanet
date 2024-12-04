@@ -6,6 +6,7 @@
 #include "../../../../Engine/GameObject/Camera.h"
 #include "../../../../../Engine/DirectX/Direct3D.h"
 #include "../DetectorComponents/Component_FanRangeDetector.h"
+#include "../../Stage.h"
 
 namespace
 {
@@ -133,11 +134,40 @@ void Component_MeleeAttack::Slash()
 	Component_FanRangeDetector * attackRange = (Component_FanRangeDetector*)(GetChildComponent("attackRange"));
 	if (attackRange == nullptr)return;
 
+
 	attackRange->SetAngle(180);
 	attackRange->SetRange(5);
 	attackRange->SetDirection(Camera::GetSightLine());
 
-	// 範囲内にいるenemyの属性を持っているオブジェクトをターゲットにする
+	// 全敵オブジェクトを取得
+	vector<StageObject*> enemyObjects; {
+
+		// ステージ情報の取得
+		Stage* pStage = (Stage*)(holder_->FindObject("Stage"));
+		if (pStage == nullptr)return;
+
+		// ステージオブジェクトの取得
+		for (StageObject* object : pStage->GetStageObjects()) {
+
+			// 敵オブジェクトだったらリストに追加
+			if (object->GetObjectType() == StageObject::TYPE_ENEMY)
+				enemyObjects.push_back(object);
+		}
+		if(enemyObjects.size() == 0)return;
+	}
+
+
+	for (auto enemy : enemyObjects) {
+
+		if (attackRange->IsContains()) {
+
+			Component_HealthGauge* healthGauge = (Component_HealthGauge*)enemy->FindComponent("HealthGauge");
+			if (healthGauge == nullptr)continue;
+			healthGauge->TakeDamage(power_);
+
+		}
+
+	}
 
 }
 

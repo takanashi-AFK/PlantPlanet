@@ -21,6 +21,7 @@ void Component_FanRangeDetector::Initialize()
 
 void Component_FanRangeDetector::Update()
 {
+
 	// ‘ÎÛ‚ª‘¶İ‚µ‚È‚¢ê‡‚Íˆ—‚ğs‚í‚È‚¢
 	if (target_ == nullptr)return;
 	

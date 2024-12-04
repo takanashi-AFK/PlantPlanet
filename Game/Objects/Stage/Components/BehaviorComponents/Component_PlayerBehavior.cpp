@@ -538,6 +538,7 @@ void Component_PlayerBehavior::Interact()
 				// 所持植物リストに追加
 				myPlants_.push_back(plantData);
 
+				// 調査ポイントを加算
 				researchPoint_ += GetResearchPointByRarity(plantData);
 
 				// 植物オブジェクトを削除
