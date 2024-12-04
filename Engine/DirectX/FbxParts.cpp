@@ -4,9 +4,6 @@
 #include "Direct3D.h"
 #include "../GameObject/Camera.h"
 
-#include"../ImGui/imgui.h"
-#include<format>
-
 //コンストラクタ
 FbxParts::FbxParts() :
 	ppIndexBuffer_(nullptr), pMaterial_(nullptr),
@@ -443,14 +440,6 @@ void FbxParts::CalculateAnimBone(FbxTime& const time)
 		pBoneArray_[i].newPose = XMLoadFloat4x4(&pose);
 		pBoneArray_[i].diffPose = XMMatrixInverse(nullptr, pBoneArray_[i].bindPose);
 
-		/*
-		XMFLOAT3 position;
-		position.x = pBoneArray_[3].diffPose.r[3].m128_f32[0];
-		position.y = pBoneArray_[3].diffPose.r[3].m128_f32[1];
-		position.z = pBoneArray_[3].diffPose.r[3].m128_f32[2];
-
-		ImGui::Text(std::format("x:{0} y:{1} z:{2}", position.x, position.y, position.z).c_str());
-		*/
 		pBoneArray_[i].diffPose *= pBoneArray_[i].newPose;
 	}
 
@@ -576,7 +565,7 @@ void FbxParts::DrawMeshAnime(Transform& transform, FbxTime time, FbxScene* scene
 	//		_localMatrix(x, y) = (float)mCurrentOrentation.Get(x, y);
 	//	}
 	//}
-
+	
 	Draw(transform);
 }
 
@@ -591,10 +580,6 @@ bool FbxParts::GetBonePosition(std::string boneName, XMFLOAT3* position, FbxTime
 			position->y = pBoneArray_[i].newPose.r[3].m128_f32[1];
 			position->z = pBoneArray_[i].newPose.r[3].m128_f32[2];
 
-			/*
-			ImGui::Text(std::format("Bone Pos---\nx:{0} y:{1} z:{2} \n--------------------"
-				, position->x, position->y, position->z).c_str());
-*/
 			return true;
 		}
 	}
@@ -639,10 +624,6 @@ bool FbxParts::GetBoneScale(std::string boneName, XMFLOAT3* scale, FbxTime& cons
 			scale->y = XMVectorGetY(vecScale);
 			scale->z = XMVectorGetZ(vecScale);
 
-			/*
-			ImGui::Text(std::format("Bone Pos---\nx:{0} y:{1} z:{2} \n--------------------"
-				, position->x, position->y, position->z).c_str());
-*/
 			return true;
 		}
 	}

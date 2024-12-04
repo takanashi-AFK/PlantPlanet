@@ -1,6 +1,5 @@
 #include "../Global.h"
 #include "Model.h"
-#include<numbers>
 
 //3Dモデル（FBXファイル）を管理する
 namespace Model

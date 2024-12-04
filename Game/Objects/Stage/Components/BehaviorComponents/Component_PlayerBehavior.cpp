@@ -33,21 +33,21 @@
 using namespace Constants;
 
 namespace {
-	const int SHOOT_FRAME = 115;
-	const float DODGE_DISTANCE = 5.0f;
-	const XMFLOAT3 PLAYER_COLLIDER_SIZE = { 1,1,1 };
-	const XMFLOAT3 PLAYER_COLLIDER_POSITION = { 0,0.5,0 };
-	const XMVECTOR INITIALIZE_DIRECTION_Z = { 0,0,1,0 };
-	const float DODGE_RAY_OFFSET = 0.5f;
-	const float DODGE_DISTANCE_LIMIT = 0.7;
-	const int EFFECT_FRAME = 60;
-	const int EFFECT_SPEED = 1;
-	const float BOSS_TACKLE_DISTANCE = 2.0f;
-	const int STAMINA_DECREASE_SHOOT = 10;
-	const int STAMINA_DECREASE_MELEE = 20;
-	const int STAMINA_DECREASE_DODGE = 30;
-	const float STAMINA_RECOVERY = 0.17f;
-	const float STAMINA_MAX = 100.f;
+	constexpr int SHOOT_FRAME = 115;
+	constexpr float DODGE_DISTANCE = 5.0f;
+	constexpr XMFLOAT3 PLAYER_COLLIDER_SIZE = { 1,1,1 };
+	constexpr XMFLOAT3 PLAYER_COLLIDER_POSITION = { 0,0.5,0 };
+	constexpr XMVECTOR INITIALIZE_DIRECTION_Z = { 0,0,1,0 };
+	constexpr float DODGE_RAY_OFFSET = 0.5f;
+	constexpr float DODGE_DISTANCE_LIMIT = 0.7;
+	constexpr int EFFECT_FRAME = 60;
+	constexpr int EFFECT_SPEED = 1;
+	constexpr float BOSS_TACKLE_DISTANCE = 2.0f;
+	constexpr int STAMINA_DECREASE_SHOOT = 10;
+	constexpr int STAMINA_DECREASE_MELEE = 20;
+	constexpr int STAMINA_DECREASE_DODGE = 30;
+	constexpr float STAMINA_RECOVERY = 0.17f;
+	constexpr float STAMINA_MAX = 100.f;
 
 	bool IsXMVectorZero(XMVECTOR _vec) {
 		return XMVector3Equal(_vec, XMVectorZero());
@@ -540,7 +540,7 @@ void Component_PlayerBehavior::Dodge()
 
 		dodgeDistance = DODGE_DISTANCE;
 
-		//sg->UseStamina(STAMINA_DECREASE_DODGE);
+		sg->UseStamina(STAMINA_DECREASE_DODGE);
 
 		// 状態を遷移
 		IsWASDKey() ? SetState(PLAYER_STATE_WALK) : SetState(PLAYER_STATE_IDLE);

@@ -2,8 +2,6 @@
 #include "Direct3D.h"
 #include "FbxParts.h"
 
-
-
 Fbx::Fbx() :_animSpeed(0)
 {
 }

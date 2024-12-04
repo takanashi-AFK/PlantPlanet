@@ -250,22 +250,6 @@ void StageObject::Draw()
 	Model::Draw(modelHandle_);
 
 	Direct3D::SetShader(Direct3D::SHADER_3D);
-
-	int mh = Model::Load("Models/Player/Temporary_MeleeWeapon.fbx");
-	auto temppos = Model::GetBonePosition(modelHandle_, "mixamorig:LeftHand");
-	//temppos = holder_->GetWorldScale();
-
-
-	Transform temptrans = {};
-	temptrans.position_ = temppos;
-	
-	temptrans.scale_ = Model::GetBoneScale (modelHandle_, "mixamorig:LeftHand");
-
-	temptrans.rotate_ = Model::GetBoneRotation(modelHandle_, "mixamorig:LeftHand",transform_.rotate_) ;
-
-	Direct3D::SetShader(Direct3D::SHADER_3D);
-	Model::SetTransform(mh, temptrans);
-	Model::Draw(mh);
 }
 
 void StageObject::Release()
