@@ -40,6 +40,8 @@ void Component_MeleeAttack::Initialize()
 
 void Component_MeleeAttack::Update()
 {
+	attackRange_ = (Component_FanRangeDetector*)(GetChildComponent("attackRange"));
+	if (attackRange_ == nullptr)return;
 
 	if (!isActive_) return;
 
@@ -48,7 +50,6 @@ void Component_MeleeAttack::Update()
 		case E_STEPFORWORD: StepForward();  break;
 		case E_SLASH:		Slash();		break;
 	}
-	StepForward();
 }
 
 void Component_MeleeAttack::Release()
@@ -57,18 +58,15 @@ void Component_MeleeAttack::Release()
 
 void Component_MeleeAttack::DrawData()
 {
-	ImGui::Text(isHit_ ? "true" : "false");
 
-	ImGui::DragInt("power_", &power_);
-	if (ImGui::Button("Execute")) Execute();
+	ImGui::Separator();
 
-
+	ImGui::Text("StepForward");
 	// 移動距離を設定
 	ImGui::DragFloat("distance_", &distance_);
 
 	// 移動速度を設定
 	ImGui::DragFloat("speed_", &speed_, 0.001, 0, 1);
-
 
 	// イージングの種類を設定
 	if (ImGui::BeginCombo("EaseFunc", easingType_.c_str())) {
@@ -79,6 +77,17 @@ void Component_MeleeAttack::DrawData()
 		}
 		ImGui::EndCombo();
 	}
+	ImGui::Separator();
+
+	ImGui::Text("Slash");
+	ImGui::Separator();
+
+	ImGui::DragInt("power_", &power_);
+	if (ImGui::Button("Execute")) Execute();
+
+
+	ImGui::Separator();
+
 }
 
 void Component_MeleeAttack::Save(json& _saveObj)
@@ -86,6 +95,9 @@ void Component_MeleeAttack::Save(json& _saveObj)
 	_saveObj["distance_"] = distance_;
 	_saveObj["speed_"] = speed_;
 	_saveObj["easingType_"] = easingType_;
+	_saveObj["power_"] = power_;
+	_saveObj["angle_"] = angle_;
+	_saveObj["range_"] = range_;
 }
 
 void Component_MeleeAttack::Load(json& _loadObj)
@@ -93,6 +105,9 @@ void Component_MeleeAttack::Load(json& _loadObj)
 	if (_loadObj.contains("distance_")) distance_ = _loadObj["distance_"];
 	if (_loadObj.contains("speed_")) speed_ = _loadObj["speed_"];
 	if (_loadObj.contains("easingType_")) easingType_ = _loadObj["easingType_"];
+	if (_loadObj.contains("power_")) power_ = _loadObj["power_"];
+	if (_loadObj.contains("angle_")) angle_ = _loadObj["angle_"];
+	if (_loadObj.contains("range_")) range_ = _loadObj["range_"];
 }
 
 void Component_MeleeAttack::StepForward()
@@ -121,7 +136,6 @@ void Component_MeleeAttack::StepForward()
 
 		// MOVE_DISTANCEに到達したら停止
 		if (rate_ >= 1) {
-			Stop();
 			isFirstMove_ = true;
 			rate_ = 0;
 			SetSequence(E_SLASH);
@@ -131,13 +145,7 @@ void Component_MeleeAttack::StepForward()
 
 void Component_MeleeAttack::Slash()
 {
-	Component_FanRangeDetector * attackRange = (Component_FanRangeDetector*)(GetChildComponent("attackRange"));
-	if (attackRange == nullptr)return;
 
-
-	attackRange->SetAngle(180);
-	attackRange->SetRange(5);
-	attackRange->SetDirection(Camera::GetSightLine());
 
 	// 全敵オブジェクトを取得
 	vector<StageObject*> enemyObjects; {
@@ -153,13 +161,18 @@ void Component_MeleeAttack::Slash()
 			if (object->GetObjectType() == StageObject::TYPE_ENEMY)
 				enemyObjects.push_back(object);
 		}
-		if(enemyObjects.size() == 0)return;
+		if (enemyObjects.size() == 0) {
+			Stop();
+			SetSequence(E_STEPFORWORD);
+			return;
+		}
 	}
 
 
 	for (auto enemy : enemyObjects) {
 
-		if (attackRange->IsContains()) {
+		attackRange_->SetTarget(enemy);
+		if (attackRange_->IsContains()) {
 
 			Component_HealthGauge* healthGauge = (Component_HealthGauge*)enemy->FindComponent("HealthGauge");
 			if (healthGauge == nullptr)continue;
@@ -168,6 +181,7 @@ void Component_MeleeAttack::Slash()
 		}
 
 	}
-
+	SetSequence(E_STEPFORWORD);
+	Stop();
 }
 

@@ -3,6 +3,7 @@
 #include "../../../../../Engine/Collider/BoxCollider.h"
 #include <DirectXMath.h>
 using namespace DirectX;
+class Component_FanRangeDetector;
 
 class Component_MeleeAttack : public Component_Attack
 {
@@ -25,7 +26,10 @@ private:
 
 	bool isFirstMove_;
 	XMFLOAT3 startPosition_;
+	Component_FanRangeDetector* attackRange_;
 
+	float range_;
+	float angle_;
 public:
 	Component_MeleeAttack(string _name, StageObject* _holder, Component* _parent);
 	void Initialize() override;
@@ -39,6 +43,7 @@ public:
 	void SetForward(XMVECTOR _forward) { forward_ = _forward; }
 
 	void StepForward();
+
 
 	void Slash();
 
