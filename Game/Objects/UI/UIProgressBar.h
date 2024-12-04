@@ -24,8 +24,8 @@ struct ProgressBarImage{
 class UIProgressBar : public UIObject
 {
 private:
-    float* max_;                    // 最大値
-    float* now_;	                // 現在値
+    float max_;                    // 最大値
+    float now_;	                // 現在値
 
     ProgressBarImage frameImage_;   // フレーム画像
     ProgressBarImage gaugeImage_;   // ゲージ画像
@@ -57,13 +57,13 @@ public:
 /*
 setter :*/
     /// <summary> 最大値を設定 </summary>
-    void SetMax(float* _max) { max_ = _max; }
+    void SetMax(float _max) { max_ = _max; }
 
     /// <summary> 現在値を設定 </summary>
-    void SetNow(float* _now) { now_ = _now; }
+    void SetNow(float _now) { now_ = _now; }
 
     /// <summary> 最大値と現在値を設定 </summary>
-    void SetProgress(float* _now ,float* _max){ now_ = _now; max_ = _max; }
+    void SetProgress(float _now ,float _max){ now_ = _now; max_ = _max; }
 
 private:
     /// <summary> 画像ファイルパスをエクスプローラーから取得 </summary>

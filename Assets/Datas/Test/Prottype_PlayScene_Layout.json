@@ -1,0 +1,92 @@
+{
+  "HPBar": {
+    "frameImage_": { "filePath_": "Images/defaults/Bar_Frame.png" },
+    "gaugeImage_": {
+      "color_": [ 0.0, 1.0, 0.20588231086730957 ],
+      "filePath_": "Images/defaults/Bar_Gauge.png"
+    },
+    "isVisible_": true,
+    "layerNumber_": 1,
+    "objectName_": "HPBar",
+    "position_": [ -0.9800000190734863, -0.8999999761581421, 0.0 ],
+    "rotate_": [ 0.0, 0.0, 0.0 ],
+    "scale_": [ 1.5, 0.5, 1.0 ],
+    "type_": 4
+  },
+  "ResearchBack": {
+    "imageFilePath_": "Images/defaults/default_ProgressCircle.png",
+    "isVisible_": true,
+    "layerNumber_": 3,
+    "objectName_": "ResearchBack",
+    "position_": [ 0.8700000047683716, -0.75, 0.0 ],
+    "rotate_": [ 0.0, 0.0, 0.0 ],
+    "scale_": [ 0.30000001192092896, 0.30000001192092896, 1.0 ],
+    "type_": 2
+  },
+  "ResearchBack2": {
+    "imageFilePath_": "Images/defaults/Timer_Gauge.png",
+    "isVisible_": true,
+    "layerNumber_": 4,
+    "objectName_": "ResearchBack2",
+    "position_": [ 0.8700000047683716, -0.75, 0.0 ],
+    "rotate_": [ 0.0, 0.0, 0.0 ],
+    "scale_": [ 0.1850000023841858, 0.1850000023841858, 1.0 ],
+    "type_": 2
+  },
+  "ResearchCircle": {
+    "color": [ 0.0, 0.9134950041770935, 0.9411764740943909 ],
+    "imageFilePath": "Images/defaults/default_ProgressCircle.png",
+    "isVisible_": true,
+    "layerNumber_": 5,
+    "objectName_": "ResearchCircle",
+    "position_": [ 0.8700000047683716, -0.75, 0.0 ],
+    "rotate_": [ 0.0, 0.0, 90.0 ],
+    "scale_": [ 0.27000001072883606, 0.27000001072883606, 1.0 ],
+    "type_": 8
+  },
+  "ResearchFront": {
+    "imageFilePath_": "Images/defaults/default_ProgressCircle.png",
+    "isVisible_": true,
+    "layerNumber_": 6,
+    "objectName_": "ResearchFront",
+    "position_": [ 0.8700000047683716, -0.75, 0.0 ],
+    "rotate_": [ 0.0, 0.0, 0.0 ],
+    "scale_": [ 0.20000000298023224, 0.20000000298023224, 1.0 ],
+    "type_": 2
+  },
+  "STBar": {
+    "frameImage_": { "filePath_": "Images/defaults/Bar_Frame.png" },
+    "gaugeImage_": {
+      "color_": [ 1.0, 0.7058823108673096, 0.0 ],
+      "filePath_": "Images/defaults/Bar_Gauge.png"
+    },
+    "isVisible_": true,
+    "layerNumber_": 2,
+    "objectName_": "STBar",
+    "position_": [ -0.9800000190734863, -0.800000011920929, 0.0 ],
+    "rotate_": [ 0.0, 0.0, 0.0 ],
+    "scale_": [ 1.5, 0.5, 1.0 ],
+    "type_": 4
+  },
+  "interactTimeCircle": {
+    "color": [ 1.0, 0.5588235259056091, 0.0 ],
+    "imageFilePath": "Images/defaults/default_ProgressCircle.png",
+    "isVisible_": false,
+    "layerNumber_": 7,
+    "objectName_": "interactTimeCircle",
+    "position_": [ 0.0, -0.8799999952316284, 0.0 ],
+    "rotate_": [ 0.0, 0.0, 90.0 ],
+    "scale_": [ 0.10000000149011612, 0.10000000149011612, 1.0 ],
+    "type_": 8
+  },
+  "interactTimeCircleFrame": {
+    "imageFilePath_": "Images/defaults/default_ProgressCircle.png",
+    "isVisible_": false,
+    "layerNumber_": 8,
+    "objectName_": "interactTimeCircleFrame",
+    "position_": [ 0.0, -0.8799999952316284, 0.0 ],
+    "rotate_": [ 0.0, 0.0, 0.0 ],
+    "scale_": [ 0.05000000074505806, 0.05000000074505806, 1.0 ],
+    "type_": 2
+  }
+}

@@ -19,6 +19,7 @@ enum UIType {
 	UI_PANEL,
 	UI_TIMER,
 	UI_INPUTSTRING,
+	UI_PROGRESSCIRCLE,
 	UI_MAX,
 };
 
@@ -162,6 +163,7 @@ getter :*/
 
 	inline Transform GetTransform() { return this->transform_; }
 
+	Transform GetCalcTransform(Transform _transform);
 	Transform GetCalcTransform();
 
 /*

@@ -304,8 +304,11 @@
     <ClCompile Include="Game\Objects\UI\UIInputString.cpp" />
     <ClCompile Include="Engine\DirectX\Easing.cpp" />
     <ClCompile Include="Game\Objects\UI\Components\Component_UIEasing.cpp" />
-    <ClCompile Include="Game\Otheres\PlantCollection.cpp" />
     <ClCompile Include="Game\Objects\Stage\Components\GaugeComponents\Component_StaminaGauge.cpp" />
+    <ClCompile Include="Game\Objects\Stage\Components\PlantComponents\Component_Plant.cpp" />
+    <ClCompile Include="Game\Plants\PlantCollection.cpp" />
+    <ClCompile Include="Game\Objects\Stage\Components\PlantComponents\Component_PlantGenerator.cpp" />
+    <ClCompile Include="Game\Objects\UI\UIProgressCircle.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Collider\BoxCollider.h">
@@ -536,8 +539,12 @@
     <ClInclude Include="Game\Objects\UI\UIInputString.h" />
     <ClInclude Include="Engine\DirectX\Easing.h" />
     <ClInclude Include="Game\Objects\UI\Components\Component_UIEasing.h" />
-    <ClInclude Include="Game\Otheres\PlantCollection.h" />
+    <ClInclude Include="Game\Plants\Plant.h" />
     <ClInclude Include="Game\Objects\Stage\Components\GaugeComponents\Component_StaminaGauge.h" />
+    <ClInclude Include="Game\Objects\Stage\Components\PlantComponents\Component_Plant.h" />
+    <ClInclude Include="Game\Objects\Stage\Components\PlantComponents\Component_PlantGenerator.h" />
+    <ClInclude Include="Game\Plants\PlantCollection.h" />
+    <ClInclude Include="Game\Objects\UI\UIProgressCircle.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Assets\Shader\Simple2D.hlsl">
@@ -565,6 +572,12 @@
       <Filter>02Shader</Filter>
     </FxCompile>
     <FxCompile Include="Assets\Shader\Timer.hlsl">
+      <Filter>02Shader</Filter>
+    </FxCompile>
+    <FxCompile Include="Assets\Shader\RareFlower.hlsl">
+      <Filter>02Shader</Filter>
+    </FxCompile>
+    <FxCompile Include="Assets\Shader\Enemy_BOSS.hlsl">
       <Filter>02Shader</Filter>
     </FxCompile>
   </ItemGroup>

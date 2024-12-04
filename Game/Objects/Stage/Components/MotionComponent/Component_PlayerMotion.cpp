@@ -14,24 +14,23 @@ Component_PlayerMotion::Component_PlayerMotion(string _name, StageObject* _holde
 
 void Component_PlayerMotion::Initialize()
 {
-    // ƒ‚ƒfƒ‹‚Ìƒnƒ“ƒhƒ‹ƒŠƒXƒg‚Éƒ‚ƒfƒ‹‚ð’Ç‰Á
+    // ãƒ¢ãƒ‡ãƒ«ã®ãƒãƒ³ãƒ‰ãƒ«ãƒªã‚¹ãƒˆã«ãƒ¢ãƒ‡ãƒ«ã‚’è¿½åŠ 
     modelHandleList_[PLAYER_STATE_WALK] = MotionData(PLAYER_STATE_WALK_FBX, 0, 40, 1,true);
     modelHandleList_[PLAYER_STATE_SHOOT] = MotionData(PLAYER_STATE_SHOOT_FBX, 0, shotRecoilFrame_, 1,false);
     modelHandleList_[PLAYER_STATE_IDLE] = MotionData(PLAYER_STATE_IDLE_FBX, 0, 200, 1,true);
     modelHandleList_[PLAYER_STATE_DODGE] = MotionData(PLAYER_STATE_DODGE_FBX, 0, 60, 1,false);
     modelHandleList_[PLAYER_STATE_DEAD] = MotionData(PLAYER_STATE_DEAD_FBX, 0, 182, 1,false);
-    
-
     modelHandleList_[PLAYER_STATE_SHOOT_WALK_LEFT] = MotionData(PLAYER_STATE_SHOOT_WALK_LEFT_FBX, 0, shotWalkFrame_, 1, true);
     modelHandleList_[PLAYER_STATE_SHOOT_WALK_RIGHT] = MotionData(PLAYER_STATE_SHOOT_WALK_RIGHT_FBX, 0, shotWalkFrame_, 1, true);
     modelHandleList_[PLAYER_STATE_SHOOT_WALK_BACK] = MotionData(PLAYER_STATE_SHOOT_WALK_BACK_FBX, 0, shotWalkFrame_, 1, true);
     modelHandleList_[PLAYER_STATE_SHOOT_WALK_FORWARD] = MotionData(PLAYER_STATE_SHOOT_WALK_FORWARD_FBX, 0, shotWalkFrame_, 1, true);
     modelHandleList_[PLAYER_STATE_SHOOT_IDLE] = MotionData(PLAYER_STATE_SHOOT_IDLE_FBX, 0, shotWalkFrame_, 1, true);
+    modelHandleList_[PLAYER_STATE_INTRACT] = MotionData(PLAYER_STATE_INTRACT_FBX, 0, 280, 1,false);
 }
 
 void Component_PlayerMotion::Update()
 {
-    // ƒvƒŒƒCƒ„[‚Ìó‘Ô‚ðŽæ“¾ FIX: playerBehavior‚ª•¡”Ž‚½‚¹‚È‚¢‚æ‚¤‚É‚·‚é
+    // ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®çŠ¶æ…‹ã‚’å–å¾— FIX: playerBehaviorãŒè¤‡æ•°æŒãŸã›ãªã„ã‚ˆã†ã«ã™ã‚‹
     PlayerState state = PLAYER_STATE_MAX;
     Component_PlayerBehavior* p_playerBehavior = nullptr;
 
@@ -40,7 +39,7 @@ void Component_PlayerMotion::Update()
     state = (p_playerBehavior)->GetState();
     auto lockRotateTimeLeft = (p_playerBehavior)->GetLockRotateTimeLeft();
 
-    //UŒ‚‚ðŒ‚‚Á‚½Œã‚È‚ç•¡”‚ÌƒAƒjƒ[ƒVƒ‡ƒ“‚É•ªŠò‚·‚é
+    //æ”»æ’ƒã‚’æ’ƒã£ãŸå¾Œãªã‚‰è¤‡æ•°ã®ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã«åˆ†å²ã™ã‚‹
     if (lockRotateTimeLeft)
     {
         auto direction = ((Component_WASDInputMove*)(holder_->FindComponent("InputMove")))->GetDirectionType();
@@ -73,13 +72,13 @@ void Component_PlayerMotion::Update()
 
     }
 
-    // Œ»Ý‚Ìƒ‚ƒfƒ‹”Ô†‚ªAŒ»Ý‚Ìó‘Ô‚Ìƒ‚ƒfƒ‹”Ô†‚Æˆê’v‚µ‚Ä‚¢‚È‚¢Žž.
+    // ç¾åœ¨ã®ãƒ¢ãƒ‡ãƒ«ç•ªå·ãŒã€ç¾åœ¨ã®çŠ¶æ…‹ã®ãƒ¢ãƒ‡ãƒ«ç•ªå·ã¨ä¸€è‡´ã—ã¦ã„ãªã„æ™‚.
     if (holder_->GetModelHandle() != modelHandleList_[state].modelHandle) {
 
-        // ƒ‚ƒfƒ‹‚ð•ÏXŒãƒ‚[ƒVƒ‡ƒ“‚Ìƒ‚ƒfƒ‹‚É•ÏX
+        // ãƒ¢ãƒ‡ãƒ«ã‚’å¤‰æ›´å¾Œãƒ¢ãƒ¼ã‚·ãƒ§ãƒ³ã®ãƒ¢ãƒ‡ãƒ«ã«å¤‰æ›´
         holder_->SetModelHandle(modelHandleList_[state].modelHandle);
 
-        // Ä¶
+        // å†ç”Ÿ
         Model::SetAnimFrame(
             modelHandleList_[state].modelHandle, 
             modelHandleList_[state].startFrame, 
@@ -88,17 +87,17 @@ void Component_PlayerMotion::Update()
         );
     }
 
-	// ƒAƒjƒ[ƒVƒ‡ƒ“‚ÌI—¹ƒtƒŒ[ƒ€‚É’B‚µ‚½‚ç
+	// ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã®çµ‚äº†ãƒ•ãƒ¬ãƒ¼ãƒ ã«é”ã—ãŸã‚‰
     if (Model::GetAnimFrame(modelHandleList_[state].modelHandle) == modelHandleList_[state].endFrame) {
 
-        // Ä¶ ‚à‚µ‚­‚Í ’âŽ~
+        // å†ç”Ÿ ã‚‚ã—ãã¯ åœæ­¢
         Model::SetAnimFrame(
             modelHandleList_[state].modelHandle,
             modelHandleList_[state].isLoop ? modelHandleList_[state].startFrame : modelHandleList_[state].endFrame,
             modelHandleList_[state].endFrame,
 
-            // ƒ‹[ƒv‚·‚éê‡‚ÍƒAƒjƒ[ƒVƒ‡ƒ“‘¬“x‚ðÝ’è
-            // HACK:ƒAƒjƒ[ƒVƒ‡ƒ“‚Ì‘¬“x‚ð0‚ÉÝ’è‚·‚é‚±‚Æ‚Å’âŽ~‚Å‚«‚é
+            // ãƒ«ãƒ¼ãƒ—ã™ã‚‹å ´åˆã¯ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³é€Ÿåº¦ã‚’è¨­å®š
+            // HACK:ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã®é€Ÿåº¦ã‚’0ã«è¨­å®šã™ã‚‹ã“ã¨ã§åœæ­¢ã§ãã‚‹
             modelHandleList_[state].isLoop ? modelHandleList_[state].speed : 0
         );
     }
@@ -114,7 +113,7 @@ void Component_PlayerMotion::DrawData()
 
 int Component_PlayerMotion::GetNowFrame()
 {
-    // ƒvƒŒƒCƒ„[‚Ìó‘Ô‚ðŽæ“¾ FIX: playerBehavior‚ª•¡”Ž‚½‚¹‚È‚¢‚æ‚¤‚É‚·‚é
+    // ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®çŠ¶æ…‹ã‚’å–å¾— FIX: playerBehaviorãŒè¤‡æ•°æŒãŸã›ãªã„ã‚ˆã†ã«ã™ã‚‹
     PlayerState state = PLAYER_STATE_MAX;
     for (auto playerBehavior : holder_->FindComponent(PlayerBehavior)) state = ((Component_PlayerBehavior*)playerBehavior)->GetState();
 
@@ -123,11 +122,11 @@ int Component_PlayerMotion::GetNowFrame()
 
 bool Component_PlayerMotion::IsEnd()
 {
-    // ƒvƒŒƒCƒ„[‚Ìó‘Ô‚ðŽæ“¾ FIX: playerBehavior‚ª•¡”Ž‚½‚¹‚È‚¢‚æ‚¤‚É‚·‚é
+    // ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®çŠ¶æ…‹ã‚’å–å¾— FIX: playerBehaviorãŒè¤‡æ•°æŒãŸã›ãªã„ã‚ˆã†ã«ã™ã‚‹
     PlayerState state = PLAYER_STATE_MAX;
     for (auto playerBehavior : holder_->FindComponent(PlayerBehavior)) state = ((Component_PlayerBehavior*)playerBehavior)->GetState();
 
-    // ƒAƒjƒ[ƒVƒ‡ƒ“‚ÌI—¹ƒtƒŒ[ƒ€‚É’B‚µ‚½‚ç
+    // ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã®çµ‚äº†ãƒ•ãƒ¬ãƒ¼ãƒ ã«é”ã—ãŸã‚‰
     return (Model::GetAnimFrame(modelHandleList_[state].modelHandle) >= modelHandleList_[state].endFrame);
 }
 

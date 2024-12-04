@@ -4,130 +4,156 @@
 #include "../../StageObject.h"
 #include <vector>
 #include "../../../../../Engine/ResourceManager/Model.h"
-#include "../../../EffekseeLib/EffekseerVFX.h"/*ššš*/
+#include "../../../EffekseeLib/EffekseerVFX.h"/*â˜…â˜…â˜…*/
 #include "../../../../../Engine/Global.h"
+#include "../../../../Plants/Plant.h"
 
-
-// ‘O•ûéŒ¾
+// å‰æ–¹å®£è¨€
 class CountDown;
 class Component_BossBehavior;
-// ƒvƒŒƒCƒ„[‚Ìó‘Ô
+// ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®çŠ¶æ…‹
 enum PlayerState {
-	PLAYER_STATE_IDLE = 0,	/* ‘Ò‹@ */
-	PLAYER_STATE_WALK,		/* •às */
-	PLAYER_STATE_SHOOT,		/* ËŒ‚ */
-	PLAYER_STATE_DODGE,		/* ‰ñ”ğ */
-	PLAYER_STATE_DEAD,		/* €–S */
-	PLAYER_STATE_SHOOT_WALK_LEFT,/*Œ‚‚Á‚½Œã‚Ée‚ğ\‚¦‚Ä¶‚É“®‚­*/
-	PLAYER_STATE_SHOOT_WALK_RIGHT,/*Œ‚‚Á‚½Œã‚Ée‚ğ\‚¦‚Ä‰E‚É“®‚­*/
-	PLAYER_STATE_SHOOT_WALK_BACK,/*Œ‚‚Á‚½Œã‚Ée‚ğ\‚¦‚ÄŒã•û‚É“®‚­*/
-	PLAYER_STATE_SHOOT_WALK_FORWARD,/*Œ‚‚Á‚½Œã‚Ée‚ğ\‚¦‚Ä‘O•û‚É“®‚­*/
-	PLAYER_STATE_SHOOT_IDLE,
+	PLAYER_STATE_IDLE = 0,	/* å¾…æ©Ÿ */
+	PLAYER_STATE_WALK,		/* æ­©è¡Œ */
+	PLAYER_STATE_SHOOT,		/* å°„æ’ƒ */
+	PLAYER_STATE_DODGE,		/* å›é¿ */
+	PLAYER_STATE_DEAD,		/* æ­»äº¡ */
+	PLAYER_STATE_SHOOT_WALK_LEFT,/*æ’ƒã£ãŸå¾Œã«éŠƒã‚’æ§‹ãˆã¦å·¦ã«å‹•ã*/
+	PLAYER_STATE_SHOOT_WALK_RIGHT,/*æ’ƒã£ãŸå¾Œã«éŠƒã‚’æ§‹ãˆã¦å³ã«å‹•ã*/
+	PLAYER_STATE_SHOOT_WALK_BACK,/*æ’ƒã£ãŸå¾Œã«éŠƒã‚’æ§‹ãˆã¦å¾Œæ–¹ã«å‹•ã*/
+	PLAYER_STATE_SHOOT_WALK_FORWARD,/*æ’ƒã£ãŸå¾Œã«éŠƒã‚’æ§‹ãˆã¦å‰æ–¹ã«å‹•ã*/
+	PLAYER_STATE_SHOOT_IDLE/*æ’ƒã£ãŸå¾Œã«éŠƒã‚’æ§‹ãˆã¦å‹•ã‹ãªã„*/,
+	PLAYER_STATE_INTRACT,	/* ã‚¤ãƒ³ã‚¿ãƒ©ã‚¯ãƒˆ */
 	PLAYER_STATE_MAX
 };
 
 class Component_PlayerBehavior : public Component
 {
 private:
-	PlayerState nowState_, prevState_;	// Œ»İ‚Ìó‘ÔA‘O‚Ìó‘Ô
-	float shootHeight_;					// ËŒ‚‚Ì‚‚³
-	float stamina_;						// ƒXƒ^ƒ~ƒi
-	XMFLOAT3 prevAngles_;				// ‘OƒtƒŒ[ƒ€‚Ì‰ñ“]
+	PlayerState nowState_, prevState_;	// ç¾åœ¨ã®çŠ¶æ…‹ã€å‰ã®çŠ¶æ…‹
+	float shootHeight_;					// å°„æ’ƒã®é«˜ã•
+	float stamina_;						// ã‚¹ã‚¿ãƒŸãƒŠ
+	XMFLOAT3 prevAngles_;				// å‰ãƒ•ãƒ¬ãƒ¼ãƒ ã®å›è»¢
 	Component_BossBehavior* bossBehavior;
-	int invincibilityFrame_;			// –³“GƒtƒŒ[ƒ€
-	int walkingFrame_;					// ˜A‘±‚µ‚Ä•à‚¢‚Ä‚¢‚éŠÔ
-	int lockRotateFrame_;				// ‰ñ“]‚ğŒÅ’è‚·‚éŠÔ
-	int lockRotateFrameLeft_;			// ‰ñ“]‚ğŒÅ’è‚µ‚Ä‚©‚çŒo‰ß‚µ‚½ŠÔ
+	int invincibilityFrame_;			// ç„¡æ•µãƒ•ãƒ¬ãƒ¼ãƒ 
+	int walkingFrame_;					// é€£ç¶šã—ã¦æ­©ã„ã¦ã„ã‚‹æ™‚é–“
+	int lockRotateFrame_;				// å›è»¢ã‚’å›ºå®šã™ã‚‹æ™‚é–“
+	int lockRotateFrameLeft_;			// å›è»¢ã‚’å›ºå®šã—ã¦ã‹ã‚‰çµŒéã—ãŸæ™‚é–“
+	vector<PlantData> myPlants_;
+	int researchPoint_;
 
-	// effekseer: •ÏŒ`s—ñ
-	std::shared_ptr<EFFEKSEERLIB::EFKTransform> effectModelTransform;/*ššš*/
+	// effekseer: å¤‰å½¢è¡Œåˆ—
+	std::shared_ptr<EFFEKSEERLIB::EFKTransform> effectModelTransform;/*â˜…â˜…â˜…*/
 	EffectData effectData_;
 
-	bool isShootStart_ : 1;					// ËŒ‚ŠJnƒtƒ‰ƒO
-	bool isDodgeStart_ : 1;					// ‰ñ”ğŠJnƒtƒ‰ƒO
-	bool isGameStart_  : 1;					// ƒQ[ƒ€ŠJnƒtƒ‰ƒO
-	bool isUseStamina_ : 1;					// ƒXƒ^ƒ~ƒi‚ğg—p‚µ‚½‚©
+	bool isShootStart_ : 1;					// å°„æ’ƒé–‹å§‹ãƒ•ãƒ©ã‚°
+	bool isDodgeStart_ : 1;					// å›é¿é–‹å§‹ãƒ•ãƒ©ã‚°
+	bool isGameStart_  : 1;					// ã‚²ãƒ¼ãƒ é–‹å§‹ãƒ•ãƒ©ã‚°
+	bool isUseStamina_ : 1;					// ã‚¹ã‚¿ãƒŸãƒŠã‚’ä½¿ç”¨ã—ãŸã‹
 	bool isShootAttack_: 1;					
 
 public:
-	/// <summary> ƒRƒ“ƒXƒgƒ‰ƒNƒ^ </summary>
-	Component_PlayerBehavior(string _name,StageObject* _holder,Component* _parent);
+	/// <summary> ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿ </summary>
+	Component_PlayerBehavior(string _name, StageObject* _holder, Component* _parent);
 
-	/// <summary> ‰Šú‰» </summary>
+	/// <summary> åˆæœŸåŒ– </summary>
 	void Initialize() override;
 
-	/// <summary> XV </summary>
+	/// <summary> æ›´æ–° </summary>
 	void Update() override;
 
-	/// <summary> ‰ğ•ú </summary>
+	/// <summary> è§£æ”¾ </summary>
 	void Release() override;
-	
-	/// <summary> •Û‘¶ </summary>
+
+	/// <summary> ä¿å­˜ </summary>
 	void Save(json& _saveObj) override;
 
-	/// <summary> “Ç </summary>
+	/// <summary> èª­è¾¼ </summary>
 	void Load(json& _loadObj) override;
 
-	/// <summary> ImGuiƒpƒlƒ‹•\¦ </summary>
+	/// <summary> ImGuiãƒ‘ãƒãƒ«è¡¨ç¤º </summary>
 	void DrawData() override;
 
-/*
-setter :*/
-	/// <param name="_state"> ƒvƒŒƒCƒ„[‚Ìó‘Ô </param>
+	/*
+	setter :*/
+	/// <param name="_state"> ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®çŠ¶æ…‹ </param>
 	void SetState(PlayerState _state) { prevState_ = nowState_; nowState_ = _state; }
 
-	/// <param name="_height"> ËŒ‚‚Ì‚‚³ </param>
+	/// <param name="_height"> å°„æ’ƒã®é«˜ã• </param>
 	void SetShootHeight(float _height) { shootHeight_ = _height; }
 
-	/// <param name="_flag"> ƒQ[ƒ€ŠJnƒtƒ‰ƒO </param>
+	/// <param name="_flag"> ã‚²ãƒ¼ãƒ é–‹å§‹ãƒ•ãƒ©ã‚° </param>
 	void SetGameStart(bool _flag) { isGameStart_ = _flag; }
 
-/*
-getter :*/
-	/// <returns> ƒvƒŒƒCƒ„[‚Ìó‘Ô </returns>
+	/// <param name="_point"> ãƒªã‚µãƒ¼ãƒãƒã‚¤ãƒ³ãƒˆ </param>
+	void SetResearchPoint(int _point) { researchPoint_ = _point; }
+
+	/*
+	getter :*/
+	/// <returns> ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®çŠ¶æ…‹ </returns>
 	PlayerState GetState() const { return nowState_; }
 
-	/// <returns> ‘O‚ÌƒvƒŒƒCƒ„[‚Ìó‘Ô </returns>
+	/// <returns> å‰ã®ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®çŠ¶æ…‹ </returns>
 	PlayerState GetPrevState() const { return prevState_; }
 
-	/// <returns> ËŒ‚‚Ì‚‚³ </returns>
+	/// <returns> å°„æ’ƒã®é«˜ã• </returns>
 	float GetShootHeight() const { return shootHeight_; }
 
-	/// <returns> ƒQ[ƒ€ŠJnƒtƒ‰ƒO </returns>
+	/// <returns> ã‚²ãƒ¼ãƒ é–‹å§‹ãƒ•ãƒ©ã‚° </returns>
 	bool GetGameStart() const { return isGameStart_; }
 
 	int GetLockRotateTime()const { return lockRotateFrame_; };
 	int GetLockRotateTimeLeft()const { return lockRotateFrameLeft_; };
+
+	/// <returns> ãƒ¬ã‚¢ãƒªãƒ†ã‚£ã”ã¨ã«ãƒªã‚µãƒ¼ãƒãƒã‚¤ãƒ³ãƒˆã‚’åˆ¤åˆ¥ã—ã¦å–å¾— </returns>
+	int GetResearchPointByRarity(PlantData _plantData);
+
+	/// <returns> ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®ãƒªã‚µãƒ¼ãƒãƒã‚¤ãƒ³ãƒˆ </returns>
+	int GetResearchPoint() const { return researchPoint_; }
+
+	/// <returns> ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®æ¤ç‰©ãƒ‡ãƒ¼ã‚¿ </returns>
+	vector<PlantData> GetMyPlants() { return myPlants_; }
+
 /*
 predicate :*/
-	/// <returns> ƒvƒŒƒCƒ„[‚ª€‚ñ‚Å‚¢‚é‚© </returns>
+	/// <returns> ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ãŒæ­»ã‚“ã§ã„ã‚‹ã‹ </returns>
 	bool IsDead();
 
-	/// <returns> ËŒ‚‚ğŠJn‚µ‚½‚© </returns>
+	/// <returns> ä»˜è¿‘ã«ã‚¤ãƒ³ã‚¿ãƒ©ã‚¯ãƒˆå¯èƒ½ãªã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆãŒã‚ã‚‹ã‹ã©ã†ã‹ </returns>
+	bool IsInteractable();
+
+	/// <returns> å°„æ’ƒã‚’é–‹å§‹ã—ãŸã‹ </returns>
 	bool IsShootStart() const { return isShootStart_; }
 
-	/// <returns> ‰ñ”ğ‚ğŠJn‚µ‚½‚© </returns>
+	/// <returns> å›é¿ã‚’é–‹å§‹ã—ãŸã‹ </returns>
 	bool IsDodgeStart() const { return isDodgeStart_; }
 
-	/// <returns> Œ»İ‚Ìó‘Ô‚ªw’è‚µ‚½ó‘Ô‚© </returns>
+	/// <returns> ç¾åœ¨ã®çŠ¶æ…‹ãŒæŒ‡å®šã—ãŸçŠ¶æ…‹ã‹ </returns>
 	bool IsState(PlayerState _state) const { return nowState_ == _state; }
+
 private:
-	/// <summary> ËŒ‚•ûŒü‚ÌŒvZ </summary>
+	/// <summary> å°„æ’ƒæ–¹å‘ã®è¨ˆç®— </summary>
 	XMVECTOR CalcShootDirection();
 
-	/// <summary> ‘Ò‹@ó‘Ô‚Ìˆ— </summary>
+	/// <summary> ä»˜è¿‘ã®æ¤ç‰©ã‚’å–å¾— </summary>
+	StageObject* GetNearestPlant(PlantData& _plantData);
+	/*
+	state :*/
+	/// <summary> å¾…æ©ŸçŠ¶æ…‹æ™‚ã®å‡¦ç† </summary>
 	void Idle();
-	
-	/// <summary> •àsó‘Ô‚Ìˆ— </summary>
+
+	/// <summary> æ­©è¡ŒçŠ¶æ…‹æ™‚ã®å‡¦ç† </summary>
 	void Walk();
-	
-	/// <summary> ËŒ‚ó‘Ô‚Ìˆ— </summary>
+
+	/// <summary> å°„æ’ƒçŠ¶æ…‹æ™‚ã®å‡¦ç† </summary>
 	void Shoot();
 
-	/// <summary> ‰ñ”ğó‘Ô‚Ìˆ— </summary>
+	/// <summary> å›é¿çŠ¶æ…‹æ™‚ã®å‡¦ç† </summary>
 	void Dodge();
 
-	/// <summary> €–Só‘Ô‚Ìˆ— </summary>
+	/// <summary> æ­»äº¡çŠ¶æ…‹æ™‚ã®å‡¦ç† </summary>
 	void Dead();
-};
 
+	/// <summary> ã‚¤ãƒ³ã‚¿ãƒ©ã‚¯ãƒˆçŠ¶æ…‹æ™‚ã®å‡¦ç† </summary>
+	void Interact();
+};

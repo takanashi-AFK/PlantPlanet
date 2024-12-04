@@ -47,6 +47,7 @@ namespace Direct3D
 		SHADER_DAMAGE,
 		SHADER_TIMER,
 		SHADER_BOSS,
+		SHADER_RAREFLOWER,
 		SHADER_MAX
 	};	//3タイプ（3D用、2D用、当たり判定枠表示用）
 	struct SHADER_BUNDLE

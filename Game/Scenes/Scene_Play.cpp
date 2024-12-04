@@ -1,6 +1,6 @@
 #include "Scene_Play.h"
 
-// ƒCƒ“ƒNƒ‹[ƒh
+// ã‚¤ãƒ³ã‚¯ãƒ«ãƒ¼ãƒ‰
 #include "../../Engine/DirectX/Input.h"
 #include "../../Engine/Global.h"
 #include"../../Engine/SceneManager.h"
@@ -14,123 +14,119 @@
 #include "../Objects/UI/CountDown.h"
 #include "../Objects/UI/UIPanel.h"
 #include "../Objects/UI/UITimer.h"
+#include "../Plants/PlantCollection.h"
 
+#include "../Objects/UI/UIProgressBar.h"
+#include "../Objects/Stage/Components/GaugeComponents/Component_StaminaGauge.h"
+#include "../Objects/UI/UIProgressCircle.h"
 
 using namespace Constants;
 
 Scene_Play::Scene_Play(GameObject* parent)
-	:GameObject(parent,"Scene_Play"), pStage_(nullptr), tpsCamera_(nullptr), fixedCursorPos(true), cursorVisible(true), isGameStart_(false)
+	:GameObject(parent, "Scene_Play"), pStage_(nullptr), tpsCamera_(nullptr), fixedCursorPos(true), cursorVisible(true), isGameStart_(false), isBossSpawn_(false)
 {
 }
 
 void Scene_Play::Initialize()
 {
-	// UIƒpƒlƒ‹‚Ì‰Šú‰»
+	// UIãƒ‘ãƒãƒ«ã®åˆæœŸåŒ–
 	InitUIPanel();
 
-	// ƒXƒe[ƒW‚Ì‰Šú‰»
+	// ã‚¹ãƒ†ãƒ¼ã‚¸ã®åˆæœŸåŒ–
 	InitStage();
 
-	// ƒJƒƒ‰‚Ì‰Šú‰»
+	// ã‚«ãƒ¡ãƒ©ã®åˆæœŸåŒ–
 	InitCamera();
 
-	// ƒJƒEƒ“ƒgƒ_ƒEƒ“‚Ì¶¬
-	countDown_ = Instantiate<CountDown>(this);
-	countDown_->Start();
-
-	// ƒJ[ƒ\ƒ‹‚Ì”ñ•\¦‰»
+	// ã‚«ãƒ¼ã‚½ãƒ«ã®éè¡¨ç¤ºåŒ–
 	ShowCursor(false);
 }
 
 void Scene_Play::Update()
 {
-	// ƒ^ƒCƒ}[‚Ìæ“¾
-	UITimer* uiTimer = (UITimer*)UIPanel::GetInstance()->FindObject(PLAY_SCENE_TIMER_NAME);
-
-	// ƒJ[ƒ\ƒ‹ŒÅ’è‰»ˆ—
+	// ã‚«ãƒ¼ã‚½ãƒ«å›ºå®šåŒ–å‡¦ç†
 	SetCursorMode();
 
-	// ƒQ[ƒ€ŠJnˆ—
-	if (countDown_->IsFinished() && isGameStart_ == false) {
-		
-		// ƒJƒƒ‰‚ÌƒAƒNƒeƒBƒu‰»
-		tpsCamera_->SetActive(true);
+	//	// ã‚«ãƒ¡ãƒ©ã®ã‚¢ã‚¯ãƒ†ã‚£ãƒ–åŒ–
+	tpsCamera_->SetActive(true);
 
-		// ƒQ[ƒ€ŠJnƒtƒ‰ƒO‚ğ—§‚Ä‚é
-		isGameStart_ = true;
-
-		// ƒ^ƒCƒ}[‚ÌŠJn
-		if (uiTimer != nullptr) uiTimer->StartTimer();
+	// ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼æƒ…å ±ã‚’å–å¾—
+	Component_PlayerBehavior* playerBehavior = nullptr; {
+		for (auto pb : pStage_->FindComponents(ComponentType::PlayerBehavior))playerBehavior = (Component_PlayerBehavior*)pb;
 	}
 
-	// ƒV[ƒ“Ø‘Öˆ—
-	switch (g_selectedGameMode)
+	// ãƒœã‚¹æƒ…å ±ã‚’å–å¾—
+	Component_BossBehavior* bossBehavior = nullptr; {
+		for (auto bb : pStage_->FindComponents(ComponentType::BossBehavior))bossBehavior = (Component_BossBehavior*)bb;
+	}
+
+	// ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã‚’ã‚«ãƒ¡ãƒ©ã®ã‚¿ãƒ¼ã‚²ãƒƒãƒˆã«è¨­å®š
+	if(playerBehavior != nullptr)tpsCamera_->SetTarget(playerBehavior->GetHolder());
+
+	// ãƒ—ãƒ¬ã‚¤æƒ…å ±ã®è¡¨ç¤ºå‡¦ç†
+	SetPlayInfo();
+
+	// ã‚·ãƒ¼ãƒ³é·ç§»å‡¦ç†
+	bool isSceneChange = false;
 	{
-	case 1:// adv
-		{
-			// ƒV[ƒ“Ø‘Öƒtƒ‰ƒO‚ğ—pˆÓ
-			bool isSceneChange = false;
+		// ãƒœã‚¹ã«é–¢ã‚ã‚‹å‡¦ç†
+		if (bossBehavior!= nullptr){
 
-			// ƒvƒŒƒCƒ„[‚ª€‚ñ‚¾ê‡AØ‘Öƒtƒ‰ƒO‚ğ—§‚Ä‚é
-			for (auto playerBehavior : pStage_->FindComponents(ComponentType::PlayerBehavior))if (((Component_PlayerBehavior*)playerBehavior)->IsDead()) { ScoreManager::isClear = false; isSceneChange = true; }
-
-			// ƒ{ƒX‚ª€‚ñ‚¾ê‡AØ‘Öƒtƒ‰ƒO‚ğ—§‚Ä‚é
-			for (auto bossBehavior : pStage_->FindComponents(ComponentType::BossBehavior)) if (((Component_BossBehavior*)bossBehavior)->IsDead()) { ScoreManager::isClear = true; isSceneChange = true; }
-
-			// ƒ^ƒCƒ}[‚ªI—¹‚µ‚½ê‡AØ‘Öƒtƒ‰ƒO‚ğ—§‚Ä‚é
-			if (uiTimer != nullptr)if (uiTimer->IsEnd()) { ScoreManager::isClear = false; isSceneChange = true; }
-
-			// ƒV[ƒ“Ø‘Öƒtƒ‰ƒO‚ª—§‚Á‚Ä‚¢‚éê‡
-			if (isSceneChange == true) {
-
-				// ƒ^ƒCƒ}[‚ÌÅI’l‚ğæ“¾
-				ScoreManager::time = uiTimer->GetSeconds();
-
-				// ƒ‚[ƒh‚ğƒŠƒZƒbƒg
-				g_selectedGameMode = 0;
-
-				// ƒV[ƒ“‚ğØ‚è‘Ö‚¦‚é
-				SceneManager* sceneManager = (SceneManager*)FindObject("SceneManager");
-				sceneManager->ChangeScene(SCENE_ID_RESULT, TID_BLACKOUT);
+			// ãƒœã‚¹ã®HPãŒ0ã«ãªã£ãŸã‚‰
+			for (auto healthGauge : bossBehavior->GetChildComponent(ComponentType::HealthGauge)) {
+				if (((Component_HealthGauge*)healthGauge)->now_ <= 0) {
+					
+					// ãƒœã‚¹ã®çŠ¶æ…‹ã‚’æ­»äº¡ã«å¤‰æ›´
+					bossBehavior->SetState(BossState::BOSS_STATE_DEAD);
+					
+					// ã‚·ãƒ¼ãƒ³é·ç§»ãƒ•ãƒ©ã‚°ã‚’ç«‹ã¦ã‚‹
+					isSceneChange = true;
+				}
 			}
-			break;
+
+			// ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®HPãŒ0ã«ãªã£ãŸã‚‰
+			for (auto healthGauge : playerBehavior->GetChildComponent(ComponentType::HealthGauge)) {
+				if (((Component_HealthGauge*)healthGauge)->now_ <= 0) {
+
+					// ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®çŠ¶æ…‹ã‚’æ­»äº¡ã«å¤‰æ›´
+					playerBehavior->SetState(PlayerState::PLAYER_STATE_DEAD);
+
+					// ã‚·ãƒ¼ãƒ³é·ç§»ãƒ•ãƒ©ã‚°ã‚’ç«‹ã¦ã‚‹
+					isSceneChange = true;
+				}
+			}
+
 		}
 
-	case 2:// sca
-		{
-			// ƒV[ƒ“Ø‘Öƒtƒ‰ƒO‚ğ—pˆÓ
-			bool isSceneChange = false;
+			// çµ‚äº†ãƒœã‚¿ãƒ³ãŒæŠ¼ã•ã‚ŒãŸã‚‰
+		if (Input::IsKeyDown(DIK_ESCAPE) || Input::IsPadButtonDown(XINPUT_GAMEPAD_START)) {
 
-			// ƒvƒŒƒCƒ„[‚ª€‚ñ‚¾ê‡AØ‘Öƒtƒ‰ƒO‚ğ—§‚Ä‚é
-			for (auto playerBehavior : pStage_->FindComponents(ComponentType::PlayerBehavior))if (((Component_PlayerBehavior*)playerBehavior)->IsDead()) { ScoreManager::isClear = false; isSceneChange = true; }
-
-			// ƒ{ƒX‚ª€‚ñ‚¾ê‡AØ‘Öƒtƒ‰ƒO‚ğ—§‚Ä‚é
-			for (auto bossBehavior : pStage_->FindComponents(ComponentType::BossBehavior)) if (((Component_BossBehavior*)bossBehavior)->IsDead()) { ScoreManager::isClear = true; isSceneChange = true; }
-
-			// ƒ^ƒCƒ}[‚ªI—¹‚µ‚½ê‡AØ‘Öƒtƒ‰ƒO‚ğ—§‚Ä‚é
-			if (uiTimer != nullptr)if (uiTimer->IsEnd()) { ScoreManager::isClear = false; isSceneChange = true; }
-
-			// ƒV[ƒ“Ø‘Öƒtƒ‰ƒO‚ª—§‚Á‚Ä‚¢‚éê‡
-			if (isSceneChange == true) {
-
-				// ƒ^ƒCƒ}[‚ÌÅI’l‚ğæ“¾
-				ScoreManager::time = uiTimer->GetSeconds();
-
-				// ƒ‚[ƒh‚ğƒŠƒZƒbƒg
-				g_selectedGameMode = 0;
-
-				// ƒV[ƒ“‚ğØ‚è‘Ö‚¦‚é
-				SceneManager* sceneManager = (SceneManager*)FindObject("SceneManager");
-				sceneManager->ChangeScene(SCENE_ID_RESULT, TID_BLACKOUT);
-			}
-			break;
+			isSceneChange = true;
+			
 		}
+			
+		if (isSceneChange == true) {
+
+			// ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ãŒå–å¾—ã—ãŸæ¤ç‰©æƒ…å ±ã‚’å–å¾—
+			g_playerPlantData = playerBehavior->GetMyPlants();
+
+			SceneManager* sceneManager = (SceneManager*)FindObject("SceneManager");
+			sceneManager->ChangeScene(SCENE_ID_RESULT, TID_BLACKOUT);
+		}
+
 	}
 
-	// ƒvƒŒƒCƒ„[‚ğƒJƒƒ‰‚Ìƒ^[ƒQƒbƒg‚Éİ’è
-	for (auto playerBehavior : pStage_->FindComponents(ComponentType::PlayerBehavior))tpsCamera_->SetTarget(playerBehavior->GetHolder());
+	// ãƒœã‚¹å‡ºç¾å‡¦ç†
+	{
+		
+		if (playerBehavior->GetResearchPoint() >= 100 && isBossSpawn_ == false) {
+			// ãƒœã‚¹æ•µã®ç”Ÿæˆ
+			SpawnBossEnemy(); isBossSpawn_ = true;
+		}
+		// 
+		//else playerBehavior->SetResearchPoint(playerBehavior->GetResearchPoint() + 1);
+	}
 }
-
 void Scene_Play::Draw()
 {
 }
@@ -141,77 +137,120 @@ void Scene_Play::Release()
 
 void Scene_Play::InitUIPanel()
 {
-	// UIƒpƒlƒ‹ & ƒŒƒCƒAƒEƒg‚Ì“Ç‚İ‚İ
+	// UIãƒ‘ãƒãƒ« & ãƒ¬ã‚¤ã‚¢ã‚¦ãƒˆã®èª­ã¿è¾¼ã¿
 	json loadData;
-	if (JsonReader::Load(PLAY_SCENE_UI_LAYOUT_JSON, loadData)) UIPanel::GetInstance()->Load(loadData);
+	if (JsonReader::Load("Datas/Test/Prottype_PlayScene_Layout.json", loadData))
+		UIPanel::GetInstance()->Load(loadData);
 }
 
 void Scene_Play::InitStage()
 {
-	// ƒXƒJƒCƒXƒtƒBƒA‚Ì¶¬
+	// ã‚¹ã‚«ã‚¤ã‚¹ãƒ•ã‚£ã‚¢ã®ç”Ÿæˆ
 	Instantiate<SkySphere>(this);
 
-	// ƒXƒe[ƒWƒf[ƒ^‚Ì“Ç‚İ‚İ
+	// ã‚¹ãƒ†ãƒ¼ã‚¸ãƒ‡ãƒ¼ã‚¿ã®èª­ã¿è¾¼ã¿
 	json loadData;
-	switch (g_selectedGameMode) {
+	if (JsonReader::Load("Datas/Test/testStage_Intract.json", loadData)) {
 
-	case 1:
-		if (JsonReader::Load(STAGE_EASY_JSON, loadData)) {
+		// ã‚¹ãƒ†ãƒ¼ã‚¸ã‚’ç”Ÿæˆ
+		pStage_ = Instantiate<Stage>(this);
 
-			// ƒXƒe[ƒW‚ğ¶¬
-			pStage_ = Instantiate<Stage>(this);
+		// ã‚¹ãƒ†ãƒ¼ã‚¸ã®èª­ã¿è¾¼ã¿
+		pStage_->Load(loadData);
+	}
+	
+	// æ¤ç‰©ã®ç”Ÿæˆ
+	{
+		// æ¤ç‰©ãƒ‡ãƒ¼ã‚¿ã®èª­ã¿è¾¼ã¿
+		json loadData;
+		JsonReader::Load("Datas/PlantData/plant.json", loadData);
+		PlantCollection::Load(loadData);
 
-			// ƒXƒe[ƒW‚Ì“Ç‚İ‚İ
-			pStage_->Load(loadData);
-		}
-		break;
-
-
-	case 2:
-		if (JsonReader::Load(STAGE_NORMAL_JSON, loadData)) {
-
-			// ƒXƒe[ƒW‚ğ¶¬
-			pStage_ = Instantiate<Stage>(this);
-
-			// ƒXƒe[ƒW‚Ì“Ç‚İ‚İ
-			pStage_->Load(loadData);
-		}
-		break;
+		// generatorã®èµ·å‹•
+		for (auto pg : (pStage_->GetStageObject("generator"))->FindComponent(ComponentType::PlantGenerator))pg->Execute();
 	}
 }
 
 void Scene_Play::InitCamera()
 {
-	// ƒJƒƒ‰î•ñ‚Ì“Ç‚İ‚İ
+	// ã‚«ãƒ¡ãƒ©æƒ…å ±ã®èª­ã¿è¾¼ã¿
 	json loadData;
 	if (JsonReader::Load(PLAY_SCENE_CAMERA_LAYOUT_JSON, loadData)) {
 
-		// ƒJƒƒ‰‚Ì¶¬
+		// ã‚«ãƒ¡ãƒ©ã®ç”Ÿæˆ
 		tpsCamera_ = Instantiate<TPSCamera>(this);
-		
-		// ƒJƒƒ‰‚Ì“Ç‚İ‚İ
+
+		// ã‚«ãƒ¡ãƒ©ã®èª­ã¿è¾¼ã¿
 		tpsCamera_->Load(loadData);
 
-		// ƒJƒƒ‰‚ÌƒAƒNƒeƒBƒu‰»
+		// ã‚«ãƒ¡ãƒ©ã®ã‚¢ã‚¯ãƒ†ã‚£ãƒ–åŒ–
 		tpsCamera_->SetActive(false);
 	}
 }
 
 void Scene_Play::SetCursorMode()
 {
-	// F3ƒL[‚ª‰Ÿ‚³‚ê‚½‚ç
+	// F3ã‚­ãƒ¼ãŒæŠ¼ã•ã‚ŒãŸã‚‰
 	if (Input::IsKeyDown(DIK_F3)) {
 
-		// ƒJ[ƒ\ƒ‹ŒÅ’è‰»‚ÌØ‚è‘Ö‚¦
+		// ã‚«ãƒ¼ã‚½ãƒ«å›ºå®šåŒ–ã®åˆ‡ã‚Šæ›¿ãˆ
 		fixedCursorPos = !fixedCursorPos;
 
-		// ƒJ[ƒ\ƒ‹‚Ì•\¦ó‘Ô‚ğØ‚è‘Ö‚¦‚é
+		// ã‚«ãƒ¼ã‚½ãƒ«ã®è¡¨ç¤ºçŠ¶æ…‹ã‚’åˆ‡ã‚Šæ›¿ãˆã‚‹
 		cursorVisible = !fixedCursorPos;
 		ShowCursor(cursorVisible);
 	}
 
-	// ƒJ[ƒ\ƒ‹‚ÌˆÊ’u‚ğ’†‰›‚ÉŒÅ’è
+	// ã‚«ãƒ¼ã‚½ãƒ«ã®ä½ç½®ã‚’ä¸­å¤®ã«å›ºå®š
 	if (fixedCursorPos) {
 		SetCursorPos(Direct3D::screenWidth_ / 2, Direct3D::screenHeight_ / 2);
 	}
+}
+
+void Scene_Play::SetPlayInfo()
+{
+	// ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®æƒ…å ±ã‚’è¨­å®šã—UIãƒ‘ãƒãƒ«ã«åæ˜ 
+	{
+		// `PlayerBehavior`ã‚³ãƒ³ãƒãƒ¼ãƒãƒ³ãƒˆã®å–å¾—
+		Component_PlayerBehavior* playerBehavior = nullptr;
+		for (auto pb : pStage_->FindComponents(ComponentType::PlayerBehavior))playerBehavior = (Component_PlayerBehavior*)pb;
+
+		// ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®HPæƒ…å ±ã‚’å–å¾— & åæ˜ 
+		Component_HealthGauge* playerHealthGauge = (Component_HealthGauge*)playerBehavior->GetChildComponent("PlayerHealthGauge");
+		UIProgressBar* playerHPBar = (UIProgressBar*)UIPanel::GetInstance()->FindObject("HPBar");
+		if (playerHPBar != nullptr && playerHealthGauge != nullptr)playerHPBar->SetProgress(playerHealthGauge->now_, playerHealthGauge->max_);
+	
+		// ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®ã‚¹ã‚¿ãƒŸãƒŠæƒ…å ±ã‚’å–å¾— & åæ˜ 
+		Component_StaminaGauge* playerStaminaGauge = (Component_StaminaGauge*)playerBehavior->GetChildComponent("StaminaGauge");
+		UIProgressBar* playerSTBar = (UIProgressBar*)UIPanel::GetInstance()->FindObject("STBar");
+		if (playerSTBar != nullptr && playerStaminaGauge != nullptr)playerSTBar->SetProgress(playerStaminaGauge->now_, playerStaminaGauge->max_);
+
+		// ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®èª¿æŸ»åº¦æƒ…å ±ã‚’å–å¾— & åæ˜ 
+		UIProgressCircle* playerResearchPointCircle = (UIProgressCircle*)UIPanel::GetInstance()->FindObject("ResearchCircle");
+		if (playerResearchPointCircle != nullptr)playerResearchPointCircle->SetProgress(playerBehavior->GetResearchPoint(), 100);
+	}
+
+}
+
+void Scene_Play::SpawnBossEnemy()
+{
+	// ãƒœã‚¹ã®æƒ…å ±ã‚’èª­è¾¼ â€»èª­è¾¼å¤±æ•—æ™‚ã¯å‡¦ç†ã‚’ä¸­æ–­
+	json loadData;
+	if (JsonReader::Load("Datas/Test/testBoss.json", loadData) == false) return;
+
+	// ã‚¹ãƒ†ãƒ¼ã‚¸ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®ç”Ÿæˆ
+	StageObject* stageObject_Boss = CreateStageObject(loadData.begin().key(), loadData.begin().value()["modelFilePath_"], pStage_);
+
+	// èª­ã¿è¾¼ã‚“ã ãƒ‡ãƒ¼ã‚¿ã‚’åæ˜ 
+	stageObject_Boss->Load(loadData.begin().value());
+
+	// ä½ç½®ã‚’è¨­å®š
+	stageObject_Boss->SetPosition(27.5, 2, 27.5);
+
+	// ã‚¿ãƒ¼ã‚²ãƒƒãƒˆã‚’è¨­å®š
+	for (auto bossBehavior : stageObject_Boss->FindComponent(ComponentType::BossBehavior)) 
+		((Component_BossBehavior*)bossBehavior)->SetTarget(pStage_->GetStageObject("00_Player"));
+	
+	// ã‚¹ãƒ†ãƒ¼ã‚¸ã«è¿½åŠ 
+	pStage_->AddStageObject(stageObject_Boss);
 }

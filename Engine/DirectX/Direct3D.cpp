@@ -422,7 +422,39 @@ namespace Direct3D
 			compile_fxc(L"Shader/Timer.hlsl", Direct3D::SHADER_TIMER, sizeof(temp) / sizeof(D3D11_INPUT_ELEMENT_DESC));
 		}
 		
-		shaderName;
+		//敵ボス
+		{
+			r_desc.CullMode = D3D11_CULL_BACK;
+			r_desc.FillMode = D3D11_FILL_SOLID;
+			r_desc.FrontCounterClockwise = FALSE;	//反時計回りは表面じゃない
+
+			D3D11_INPUT_ELEMENT_DESC temp[] =
+			{
+				{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, vectorSize * 0,  D3D11_INPUT_PER_VERTEX_DATA, 0 },	//頂点位置
+				{ "NORMAL",   0, DXGI_FORMAT_R32G32B32_FLOAT, 0, vectorSize * 1, D3D11_INPUT_PER_VERTEX_DATA, 0 },	//法線
+				{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT,    0, vectorSize * 2, D3D11_INPUT_PER_VERTEX_DATA, 0 },	//テクスチャ（UV）座標
+			};
+
+			hlsl_layout = temp;
+			compile_fxc(L"Shader/Enemy_BOSS.hlsl", Direct3D::SHADER_BOSS, sizeof(temp) / sizeof(D3D11_INPUT_ELEMENT_DESC));
+		}
+
+		//レアフラワー
+		{
+			r_desc.CullMode = D3D11_CULL_BACK;
+			r_desc.FillMode = D3D11_FILL_SOLID;
+			r_desc.FrontCounterClockwise = FALSE;	//反時計回りは表面じゃない
+
+			D3D11_INPUT_ELEMENT_DESC temp[] =
+			{
+				{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, vectorSize * 0,  D3D11_INPUT_PER_VERTEX_DATA, 0 },	//頂点位置
+				{ "NORMAL",   0, DXGI_FORMAT_R32G32B32_FLOAT, 0, vectorSize * 1, D3D11_INPUT_PER_VERTEX_DATA, 0 },	//法線
+				{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT,    0, vectorSize * 2, D3D11_INPUT_PER_VERTEX_DATA, 0 },	//テクスチャ（UV）座標
+			};
+
+			hlsl_layout = temp;
+			compile_fxc(L"Shader/RareFlower.hlsl", Direct3D::SHADER_RAREFLOWER, sizeof(temp) / sizeof(D3D11_INPUT_ELEMENT_DESC));
+		}
 	}
 
 	

@@ -30,6 +30,9 @@ VS_OUT VS(float4 pos : POSITION, float4 Normal : NORMAL, float2 Uv : TEXCOORD)
 
 	//UV「座標
 	outData.uv = Uv;	//そのままピクセルシェーダーへ
+	
+    outData.globalPos = worldPos;
+    outData.localPos = pos;
 
    // outData.pos = mul(outData.pos,g_matShadow); //影行列を使って影の位置を計算
 	//まとめて出力

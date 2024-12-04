@@ -110,6 +110,9 @@ setter :*/
 	/// <summary> 地面に設置する際のオフセットの設定 </summary>
 	void SetOnGroundOffset(XMFLOAT3 _offset) { onGroundOffset_ = _offset; }
 
+	/// <summary> 衝突するかどうかを設定 </summary>
+	void SetIsColliding(bool _isColliding) { isColliding_ = _isColliding; }
+
 	/// <summary> 落下速度の設定 </summary>
 	void SetFallSpeed(float _speed) { fallSpeed_ = _speed; }
 
