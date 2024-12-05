@@ -234,7 +234,7 @@ void Component_PlayerBehavior::DrawData()
 {
 	// 高さの設定
 	ImGui::DragFloat("ShootHeight", &shootHeight_, 0.1f);
-
+	
 	// 無敵フレームの設定
 	ImGui::DragInt("invincibilityFrame", &invincibilityFrame_, 1);
 }

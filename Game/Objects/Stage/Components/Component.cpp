@@ -31,6 +31,7 @@
 #include "PlantComponents/Component_PlantGenerator.h"
 #include "PlantComponents/Component_Plant.h"
 #include "GaugeComponents/Component_StaminaGauge.h"
+#include "MotionComponent/Component_Accessory.h"
 
 Component::Component(StageObject* _holder, string _name,ComponentType _type)
     :holder_(_holder), name_(_name),type_(_type),childComponents_(),parent_(nullptr),isActive_(false)
@@ -237,6 +238,7 @@ Component* CreateComponent(string _name, ComponentType _type, StageObject* _hold
 	    	case PlantGenerator: comp = new Component_PlantGenerator(_name, _holder, _parent); break;
        	case Plant: comp = new Component_Plant(_name, _holder, _parent); break;
 		    case StaminaGauge: comp = new Component_StaminaGauge(_name, _holder, _parent); break;
+			case Accessory: comp = new Component_Accessory(_name, _holder, _parent); break;
         default: /* その他コンポーネントを追加する時は上記のように追加 */ break;
     }
     return comp;
@@ -277,6 +279,7 @@ string ComponentTypeToString(ComponentType _type)
 	case PlantGenerator: return "PlantGeneratorComponent";
 	case Plant: return "PlantComponent";
 	case StaminaGauge: return "StaminaGaugeComponent";
+	case Accessory: return "AccessoryComponent";
 		// その他コンポーネントを追加する時は上記のように追加
 
 	default: return "None";

@@ -41,6 +41,7 @@ enum ComponentType
 	PlantGenerator,
 	Plant,
 	StaminaGauge, 
+	Accessory,
 	// コンポーネント追加時に識別番号を追加
 	Max
 	

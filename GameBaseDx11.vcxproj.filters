@@ -309,6 +309,7 @@
     <ClCompile Include="Game\Plants\PlantCollection.cpp" />
     <ClCompile Include="Game\Objects\Stage\Components\PlantComponents\Component_PlantGenerator.cpp" />
     <ClCompile Include="Game\Objects\UI\UIProgressCircle.cpp" />
+    <ClCompile Include="Game\Objects\Stage\Components\MotionComponent\Component_Accessory.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Collider\BoxCollider.h">
@@ -545,6 +546,7 @@
     <ClInclude Include="Game\Objects\Stage\Components\PlantComponents\Component_PlantGenerator.h" />
     <ClInclude Include="Game\Plants\PlantCollection.h" />
     <ClInclude Include="Game\Objects\UI\UIProgressCircle.h" />
+    <ClInclude Include="Game\Objects\Stage\Components\MotionComponent\Component_Accessory.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Assets\Shader\Simple2D.hlsl">

@@ -60,6 +60,8 @@ namespace Model
 	//引数：matrix	ワールド行列
 	void Draw(int handle);
 
+	std::string GetModelName(int handle);
+
 	//任意のモデルを開放
 	//引数：handle	開放したいモデルの番号
 	void Release(int handle);
@@ -81,17 +83,9 @@ namespace Model
 	//任意のボーンの位置を取得
 	//引数：handle		調べたいモデルの番号
 	//引数：boneName	調べたいボーンの名前
-	//戻値：ボーンの位置（ワールド座標）
+	//戻値：ボーンの位置（ローカル座標）
 	XMFLOAT3 GetBonePosition(int handle, std::string boneName);
-
-	/// <summary>
-	/// この関数のみ技術的な問題で親の回転(グローバル)が必要
-	/// </summary>
-	/// <param name="handle"></param>
-	/// <param name="boneName"></param>
-	/// <param name="parentRotation"></param>
-	/// <returns></returns>
-	XMFLOAT3 GetBoneRotation(int handle, std::string boneName,XMFLOAT3 parentRotation);
+	XMFLOAT3 GetBoneRotation(int handle, std::string boneName);
 	XMFLOAT3 GetBoneScale(int handle, std::string boneName);
 
 	//ワールド行列を設定
