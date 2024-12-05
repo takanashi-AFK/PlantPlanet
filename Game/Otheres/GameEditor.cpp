@@ -214,7 +214,11 @@ void GameEditor::DrawPlantDatails()
 
 		ImGui::Text("id:%d",PlantCollection::GetPlants()[selectEditPlantIndex_].id_);
 		ImGui::Text("rarity:%d",PlantCollection::GetPlants()[selectEditPlantIndex_].rarity_);
+		ImGui::InputInt("rarity", &PlantCollection::GetPlants()[selectEditPlantIndex_].rarity_);
 		ImGui::Text("name:%s",PlantCollection::GetPlants()[selectEditPlantIndex_].name_.c_str());
+		ImGui::InputText("name", &PlantCollection::GetPlants()[selectEditPlantIndex_].name_[0], PlantCollection::GetPlants()[selectEditPlantIndex_].name_.size());
+		ImGui::Text("isSpawn", PlantCollection::GetPlants()[selectEditPlantIndex_].isSpawn_);
+		ImGui::Checkbox("isSpawn", &PlantCollection::GetPlants()[selectEditPlantIndex_].isSpawn_);
 		ImGui::Text("modelFilePath:%s",PlantCollection::GetPlants()[selectEditPlantIndex_].modelFilePath_.c_str());
 		ImGui::Text("imageFilePath:%s",PlantCollection::GetPlants()[selectEditPlantIndex_].imageFilePath_.c_str());
 	}
@@ -621,6 +625,7 @@ void GameEditor::DrawPlantOutLiner()
 					1,
 					plantNameBuffer,
 					3,
+					true,
 					"defaultPlant.fbx",
 					"dafaultPlant.png"
 					});
@@ -785,6 +790,9 @@ void GameEditor::DrawAddPlantWindow()
 		ImGui::TextColored(ImVec4(1.0f, 0.0f, 0.0f, 1.0f), "Area number must be greater than 0!");
 	}
 
+	static bool isSpawn = true;
+	ImGui::Checkbox(":setting isSpawn", &isSpawn);
+
 	// モデルファイルパス入力ボックス
 	static string modelFilePath = "defaultPlant.fbx";
 	ImGui::InputText(":setting modelFilePath", &modelFilePath[0], modelFilePath.size());
@@ -806,6 +814,7 @@ void GameEditor::DrawAddPlantWindow()
 			rarity,
 			plantNameBuffer,
 			areaNumber,
+			isSpawn,
 			modelFilePath,
 			imageFilePath
 			});

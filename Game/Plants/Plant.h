@@ -8,6 +8,7 @@ struct PlantData {
 	int rarity_;			// 稀少度
 	string name_;			// 名前
 	int areaId_;			// 出現エリア
+	bool isSpawn_;
 	string modelFilePath_;	// モデルファイルパス
 	string imageFilePath_;	// 画像ファイルパス
 };
