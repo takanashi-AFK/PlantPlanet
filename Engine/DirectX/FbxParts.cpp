@@ -416,6 +416,36 @@ void FbxParts::IntConstantBuffer()
 	Direct3D::pDevice_->CreateBuffer(&cb, NULL, &pConstantBuffer_);
 }
 
+void FbxParts::CalculateAnimBone(FbxTime& const time)
+{
+	if (isCalculatedAnimBones_)	return;
+
+	// ボーンごとの現在の行列を取得する
+	for (int i = 0; i < numBone_; i++)
+	{
+		FbxAnimEvaluator* evaluator = ppCluster_[i]->GetLink()->GetScene()->GetAnimationEvaluator();
+		FbxMatrix mCurrentOrentation = evaluator->GetNodeGlobalTransform(ppCluster_[i]->GetLink(), time);
+
+		// 行列コピー（Fbx形式からDirectXへの変換）
+		XMFLOAT4X4 pose;
+		for (DWORD x = 0; x < 4; x++)
+		{
+			for (DWORD y = 0; y < 4; y++)
+			{
+				pose(x, y) = (float)mCurrentOrentation.Get(x, y);
+			}
+		}
+
+		// オフセット時のポーズの差分を計算する
+		pBoneArray_[i].newPose = XMLoadFloat4x4(&pose);
+		pBoneArray_[i].diffPose = XMMatrixInverse(nullptr, pBoneArray_[i].bindPose);
+
+		pBoneArray_[i].diffPose *= pBoneArray_[i].newPose;
+	}
+
+	isCalculatedAnimBones_ = true;
+}
+
 //描画
 void FbxParts::Draw(Transform& transform)
 {
@@ -427,10 +457,6 @@ void FbxParts::Draw(Transform& transform)
 	//使用するコンスタントバッファをシェーダに伝える
 	Direct3D::pContext_->VSSetConstantBuffers(0, 1, &pConstantBuffer_);
 	Direct3D::pContext_->PSSetConstantBuffers(0, 1, &pConstantBuffer_);
-
-
-
-
 
 	//シェーダーのコンスタントバッファーに各種データを渡す
 	for (DWORD i = 0; i < materialCount_; i++)
@@ -489,28 +515,8 @@ void FbxParts::Draw(Transform& transform)
 //ボーン有りのモデルを描画
 void FbxParts::DrawSkinAnime(Transform& transform, FbxTime time)
 {
-	// ボーンごとの現在の行列を取得する
-	for (int i = 0; i < numBone_; i++)
-	{
-		FbxAnimEvaluator* evaluator = ppCluster_[i]->GetLink()->GetScene()->GetAnimationEvaluator();
-		FbxMatrix mCurrentOrentation = evaluator->GetNodeGlobalTransform(ppCluster_[i]->GetLink(), time);
-
-		// 行列コピー（Fbx形式からDirectXへの変換）
-		XMFLOAT4X4 pose;
-		for (DWORD x = 0; x < 4; x++)
-		{
-			for (DWORD y = 0; y < 4; y++)
-			{
-				pose(x, y) = (float)mCurrentOrentation.Get(x, y);
-			}
-		}
-
-		// オフセット時のポーズの差分を計算する
-		pBoneArray_[i].newPose = XMLoadFloat4x4(&pose);
-		pBoneArray_[i].diffPose = XMMatrixInverse(nullptr, pBoneArray_[i].bindPose);
-		pBoneArray_[i].diffPose *= pBoneArray_[i].newPose;
-	}
-
+	CalculateAnimBone(time);
+	
 	// 各ボーンに対応した頂点の変形制御
 	for (DWORD i = 0; i < vertexCount_; i++)
 	{
@@ -546,7 +552,7 @@ void FbxParts::DrawSkinAnime(Transform& transform, FbxTime time)
 
 
 	Draw(transform);
-
+	isCalculatedAnimBones_ = false;
 }
 
 void FbxParts::DrawMeshAnime(Transform& transform, FbxTime time, FbxScene* scene)
@@ -563,26 +569,67 @@ void FbxParts::DrawMeshAnime(Transform& transform, FbxTime time, FbxScene* scene
 	//		_localMatrix(x, y) = (float)mCurrentOrentation.Get(x, y);
 	//	}
 	//}
-
+	
 	Draw(transform);
 }
 
-bool FbxParts::GetBonePosition(std::string boneName, XMFLOAT3* position)
+bool FbxParts::GetBonePosition(std::string boneName, XMFLOAT3* position, FbxTime& const time)
 {
+	CalculateAnimBone(time);
 	for (int i = 0; i < numBone_; i++)
 	{
 		if (boneName == ppCluster_[i]->GetLink()->GetName())
 		{
-			FbxAMatrix  matrix;
-			ppCluster_[i]->GetTransformLinkMatrix(matrix);
-
-			position->x = (float)matrix[3][0];
-			position->y = (float)matrix[3][1];
-			position->z = (float)matrix[3][2];
+			position->x = pBoneArray_[i].newPose.r[3].m128_f32[0];
+			position->y = pBoneArray_[i].newPose.r[3].m128_f32[1];
+			position->z = pBoneArray_[i].newPose.r[3].m128_f32[2];
 
 			return true;
 		}
+	}
 
+	return false;
+}
+
+bool FbxParts::GetBoneRotationMatrix(std::string boneName, XMMATRIX* mat, FbxTime& const time)
+{
+	CalculateAnimBone(time);
+	for (int i = 0; i < numBone_; i++)
+	{
+		if (boneName == ppCluster_[i]->GetLink()->GetName())
+		{
+			XMVECTOR vecScale = {};
+			XMVECTOR vecPos = {};
+			XMVECTOR vecRot = {};
+			XMMatrixDecompose(&vecScale, &vecRot, &vecPos, pBoneArray_[i].newPose);
+
+			*mat = XMMatrixRotationQuaternion(vecRot);
+
+			return true;
+		}
+	}
+
+	return false;
+}
+
+bool FbxParts::GetBoneScale(std::string boneName, XMFLOAT3* scale, FbxTime& const time)
+{
+	CalculateAnimBone(time);
+	for (int i = 0; i < numBone_; i++)
+	{
+		if (boneName == ppCluster_[i]->GetLink()->GetName())
+		{
+			XMVECTOR vecScale = {};
+			XMVECTOR vecPos = {};
+			XMVECTOR vecRot = {};
+			XMMatrixDecompose(&vecScale,&vecRot,&vecPos, pBoneArray_[i].newPose);
+
+			scale->x = XMVectorGetX(vecScale);
+			scale->y = XMVectorGetY(vecScale);
+			scale->z = XMVectorGetZ(vecScale);
+
+			return true;
+		}
 	}
 
 	return false;

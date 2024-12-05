@@ -2,8 +2,6 @@
 #include "Direct3D.h"
 #include "FbxParts.h"
 
-
-
 Fbx::Fbx() :_animSpeed(0)
 {
 }
@@ -114,17 +112,51 @@ void Fbx::Release()
 
 }
 
-XMFLOAT3 Fbx::GetBonePosition(std::string boneName)
+XMFLOAT3 Fbx::GetBonePosition(std::string boneName,int frame)
 {
+	FbxTime     time;
+	time.SetTime(0, 0, 0, frame, 0, 0, _frameRate);
+
 	XMFLOAT3 position = XMFLOAT3(0, 0, 0);
 	for (int i = 0; i < parts_.size(); i++)
 	{
-		if (parts_[i]->GetBonePosition(boneName, &position))
+		if (parts_[i]->GetBonePosition(boneName, &position,time))
+			break;
+	}
+	
+
+	return position;
+}
+
+XMMATRIX Fbx::GetBoneRotationMatrix(std::string boneName, int frame)
+{
+	FbxTime     time;
+	time.SetTime(0, 0, 0, frame, 0, 0, _frameRate);
+
+	XMMATRIX mat = {};
+	for (int i = 0; i < parts_.size(); i++)
+	{
+		if (parts_[i]->GetBoneRotationMatrix(boneName, &mat, time))
+			break;
+	}
+
+	return mat;
+}
+
+XMFLOAT3 Fbx::GetBoneScale(std::string boneName, int frame)
+{
+	FbxTime     time;
+	time.SetTime(0, 0, 0, frame, 0, 0, _frameRate);
+
+	XMFLOAT3 scale = XMFLOAT3(0, 0, 0);
+	for (int i = 0; i < parts_.size(); i++)
+	{
+		if (parts_[i]->GetBoneScale(boneName, &scale, time))
 			break;
 	}
 
 
-	return position;
+	return scale;
 }
 
 void Fbx::Draw(Transform& transform, int frame)

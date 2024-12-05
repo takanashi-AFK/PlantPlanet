@@ -104,7 +104,7 @@ class FbxParts
 	int				numBone_;		// FBXに含まれている関節の数
 	Bone*			pBoneArray_;	// 各関節の情報
 	Weight*			pWeightArray_;	// ウェイト情報（頂点の対する各関節の影響度合い）
-
+	bool			isCalculatedAnimBones_;// ボーンのアニメーション計算が終わっているか
 
 
 	/////////privateな関数（Init関数から呼ばれる）//////////////////////////
@@ -114,6 +114,7 @@ class FbxParts
 	void InitIndex(fbxsdk::FbxMesh * mesh);		//インデックスバッファ準備
 	void InitSkelton(FbxMesh * pMesh);			//骨の情報を準備
 	void IntConstantBuffer();	//コンスタントバッファ（シェーダーに情報を送るやつ）準備
+	void CalculateAnimBone(FbxTime& const time);
 
 public:
 	FbxParts();
@@ -144,8 +145,9 @@ public:
 	//引数：boneName	取得したいボーンの位置
 	//引数：position	ワールド座標での位置【out】
 	//戻値：見つかればtrue
-	bool GetBonePosition(std::string boneName, XMFLOAT3	* position);
-
+	bool GetBonePosition(std::string boneName, XMFLOAT3	* position,FbxTime& const time);
+	bool GetBoneRotationMatrix(std::string boneName, XMMATRIX* matRot, FbxTime& const time);
+	bool GetBoneScale(std::string boneName, XMFLOAT3* scale, FbxTime& const time);
 	//スキンメッシュ情報を取得
 	//戻値：スキンメッシュ情報
 	FbxSkin* GetSkinInfo() { return pSkinInfo_; }

@@ -152,12 +152,71 @@ namespace Model
 	//任意のボーンの位置を取得
 	XMFLOAT3 GetBonePosition(int handle, std::string boneName)
 	{
-		XMFLOAT3 pos = _datas[handle]->pFbx->GetBonePosition(boneName);
+		XMFLOAT3 pos = _datas[handle]->pFbx->GetBonePosition(boneName, static_cast<int>(_datas[handle]->nowFrame));
 		XMVECTOR vec = XMVector3TransformCoord(XMLoadFloat3(&pos), _datas[handle]->transform.GetWorldMatrix());
 		XMStoreFloat3(&pos, vec);
 		return pos;
 	}
 
+	XMFLOAT3 GetBoneRotation(int handle, std::string boneName, XMFLOAT3 parentRotation)
+	{
+		auto mat = _datas[handle]->pFbx->GetBoneRotationMatrix(boneName, static_cast<int>(_datas[handle]->nowFrame));
+
+		{
+			/*
+			以下の方法でワールド回転を取得し合成すると
+			少し回転がおかしくなるため廃止
+			*/
+			//XMVECTOR vecRot = {};
+			//XMVECTOR dummy = {};
+
+			//XMMatrixDecompose(&dummy, &vecRot, &dummy, _datas[handle]->transform.GetWorldMatrix());
+
+			//auto matW = XMMatrixRotationQuaternion(vecRot);
+
+			//mat = mat * matW;
+
+		}
+
+		XMFLOAT3 rotation = {};
+
+		float m11 = mat.r[0].m128_f32[0]; 
+		float m21 = mat.r[1].m128_f32[0]; 
+		float m31 = mat.r[2].m128_f32[0]; 
+		float m32 = mat.r[2].m128_f32[1]; 
+		float m33 = mat.r[2].m128_f32[2]; 
+
+
+		float yaw, roll;
+
+		float pitch = std::asin(-m31);
+		yaw = std::atan2(m21, m11);   
+		roll = std::atan2(m32, m33); 
+
+		rotation.x = XMConvertToDegrees(roll) + parentRotation.x;
+		rotation.y = XMConvertToDegrees(pitch) + parentRotation.y;
+		rotation.z = XMConvertToDegrees(yaw) + parentRotation.z;
+		
+		return rotation;
+	}
+
+	XMFLOAT3 GetBoneScale(int handle, std::string boneName)
+	{
+		XMFLOAT3 scale = _datas[handle]->pFbx->GetBoneScale(boneName, static_cast<int>(_datas[handle]->nowFrame));
+
+		{
+			XMVECTOR vecScale = {};
+			XMVECTOR dummy = {};
+
+			XMMatrixDecompose(&vecScale, &dummy, &dummy, _datas[handle]->transform.GetWorldMatrix());
+
+			scale.x *= XMVectorGetX(vecScale);
+			scale.y *= XMVectorGetY(vecScale);
+			scale.z *= XMVectorGetZ(vecScale);
+		}
+
+		return scale;
+	}
 
 	//ワールド行列を設定
 	void SetTransform(int handle, Transform & transform)
