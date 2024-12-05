@@ -161,6 +161,6 @@ private:
 	/// <summary> インタラクト状態時の処理 </summary>
 	void Interact();
 
-	/// <summary> �ߐڍU����Ԏ��̏��� </summary>
+	/// <summary> 近接攻撃時の処理 </summary>
 	void Melee();
 };
