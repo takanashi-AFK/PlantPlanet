@@ -26,6 +26,7 @@ void Component_PlayerMotion::Initialize()
     modelHandleList_[PLAYER_STATE_SHOOT_WALK_FORWARD] = MotionData(PLAYER_STATE_SHOOT_WALK_FORWARD_FBX, 0, shotWalkFrame_, 1, true);
     modelHandleList_[PLAYER_STATE_SHOOT_IDLE] = MotionData(PLAYER_STATE_SHOOT_IDLE_FBX, 0, shotWalkFrame_, 1, true);
     modelHandleList_[PLAYER_STATE_INTRACT] = MotionData(PLAYER_STATE_INTRACT_FBX, 0, 280, 1,false);
+	modelHandleList_[PLAYER_STATE_MELEE] = MotionData(PLAYER_STATE_DODGE_FBX, 0, 60, 1, false);
 }
 
 void Component_PlayerMotion::Update()

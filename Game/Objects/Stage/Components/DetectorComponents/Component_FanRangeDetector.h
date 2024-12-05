@@ -61,5 +61,15 @@ public:
 	/// ŒŸo”ÍˆÍ“à‚É“ü‚Á‚Ä‚¢‚é‚©‚Ç‚¤‚©
 	/// </returns>
 	bool IsContains();
+
+	void SetTarget(StageObject* _target) { target_ = _target; }
+
+	void SetRange(float _length) { length_ = _length; }
+
+	void SetAngle(float _angle) { angle_ = _angle; }
+
+	void SetDirection(XMVECTOR _direction) { direction_ = _direction; }
+
+
 };
 

@@ -24,6 +24,7 @@ enum PlayerState {
 	PLAYER_STATE_SHOOT_WALK_FORWARD,
 	PLAYER_STATE_SHOOT_IDLE,
 	PLAYER_STATE_INTRACT,
+  PLAYER_STATE_MELEE,	
 	PLAYER_STATE_MAX
 };
 
@@ -51,6 +52,9 @@ private:
 	bool isGameStart_  : 1;					// ゲーム開始フラグ
 	bool isUseStamina_ : 1;					// スタミナを使用したか
 	bool isShootAttack_: 1;					
+  
+	bool isMeleeStart_;
+
 
 public:
 	/// <summary> コンストラクタ </summary>
@@ -156,4 +160,7 @@ private:
 
 	/// <summary> インタラクト状態時の処理 </summary>
 	void Interact();
+
+	/// <summary> �ߐڍU����Ԏ��̏��� </summary>
+	void Melee();
 };

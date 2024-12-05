@@ -82,6 +82,9 @@ void Component_PlantGenerator::Update()
 		// サイズを設定
 		stagePlantObject->SetScale({ 0.3f,0.3f,0.3f });
 
+		// 属性を設定
+		stagePlantObject->SetObjectType(StageObject::TYPE_PLANT);
+
 		// ステージに追加
 		((Stage*)holder_->GetParent())->AddStageObject(stagePlantObject);
 	}

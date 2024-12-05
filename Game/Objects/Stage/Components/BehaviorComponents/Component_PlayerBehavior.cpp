@@ -9,7 +9,6 @@
 #include "../../../../Constants.h"
 #include "../../../Camera/TPSCamera.h"
 #include "../../../Engine/Global.h"
-#include "../../../Engine/Global.h"
 #include "../../../Game/Objects/UI/UIPanel.h"
 #include "../../../Game/Objects/UI/UIProgressBar.h"
 #include "../../../UI/CountDown.h"
@@ -18,11 +17,12 @@
 #include "Component_BossBehavior.h"
 #include <algorithm> 
 #include <directxmath.h> 
+#include "../../../UI/UIProgressCircle.h"
+#include "../../../UI/UIImage.h"
 
 // child components include
 #include "../AttackComponents/Component_MeleeAttack.h"
 #include "../AttackComponents/Component_ShootAttack.h"
-#include "../GaugeComponents/Component_HealthGauge.h"
 #include "../MotionComponent/Component_PlayerMotion.h"
 #include "../MoveComponents/Component_TackleMove.h"
 #include "../MoveComponents/Component_WASDInputMove.h"
@@ -30,8 +30,6 @@
 #include "../DetectorComponents/Component_CircleRangeDetector.h"
 #include "../PlantComponents/Component_Plant.h"
 #include "../GaugeComponents/Component_StaminaGauge.h"
-#include "../../../UI/UIProgressCircle.h"
-#include "../../../UI/UIImage.h"
 
 using namespace Constants;
 
@@ -85,7 +83,8 @@ Component_PlayerBehavior::Component_PlayerBehavior(string _name, StageObject* _h
 	effectModelTransform(nullptr),
 	effectData_(),
 	researchPoint_(95),
-	myPlants_()
+	myPlants_(),
+	isMeleeStart_(true)
 {
 }
 
@@ -107,7 +106,7 @@ void Component_PlayerBehavior::Initialize()
 	if (FindChildComponent("InteractTimer") == false)AddChildComponent(CreateComponent("InteractTimer", Timer, holder_, this));
 	if (FindChildComponent("IsInteractableDetector") == false)AddChildComponent(CreateComponent("IsInteractableDetector", CircleRangeDetector, holder_, this));
 	if (FindChildComponent("StaminaGauge") == false)AddChildComponent(CreateComponent("StaminaGauge", StaminaGauge, holder_, this));
-
+	if (FindChildComponent("MeleeAttack") == false)AddChildComponent(CreateComponent("MeleeAttack", MeleeAttack, holder_, this));
 }
 
 void Component_PlayerBehavior::Update()
@@ -186,7 +185,6 @@ void Component_PlayerBehavior::Update()
 	switch (nowState_)
 	{
 	case PLAYER_STATE_IDLE:           Idle();         break;  // 現在の状態がIDLEの場合
-
 	case PLAYER_STATE_SHOOT_WALK_LEFT:
 	case PLAYER_STATE_SHOOT_WALK_RIGHT:
 	case PLAYER_STATE_SHOOT_WALK_FORWARD:
@@ -195,7 +193,7 @@ void Component_PlayerBehavior::Update()
 	case PLAYER_STATE_DODGE:          Dodge();         break;  // 現在の状態がDASHの場合
 	case PLAYER_STATE_DEAD:            Dead();         break;  // 現在の状態がDEADの場合
 	case PLAYER_STATE_INTRACT:        Interact();      break;  // 現在の状態がINTRACTの場合
-
+	case PLAYER_STATE_MELEE:			Melee();     break;  // 現在の状態がMELEEの場合
 	}
 
 	if (isShootAttack_)	Shoot();
@@ -271,6 +269,15 @@ void Component_PlayerBehavior::Idle()
 		}
 		SetState(PLAYER_STATE_DODGE);
 	}
+	// スペースキーが押されていたら...ダッシュ状態に遷移
+	else if (Input::IsKeyDown(DIK_V) || Input::IsPadButton(XINPUT_GAMEPAD_RIGHT_SHOULDER)) {
+		if (!sg->CanUseStamina(STAMINA_DECREASE_MELEE)) {
+			// 状態を遷移
+			IsWASDKey() ? SetState(PLAYER_STATE_WALK) : SetState(PLAYER_STATE_IDLE);
+			return;
+		}
+		SetState(PLAYER_STATE_MELEE);
+	}
 	// Aボタン もしくは Eキー が押されていたら...インタラクト状態に遷移
 	else if (Input::IsKeyDown(DIK_E) || Input::IsPadButtonDown(XINPUT_GAMEPAD_A)) SetState(PLAYER_STATE_INTRACT);
 }
@@ -306,6 +313,15 @@ void Component_PlayerBehavior::Walk()
 			return;
 		}
 		SetState(PLAYER_STATE_DODGE);
+	}
+	// Vが押されていたら...近接攻撃状態に遷移
+	else if (Input::IsKeyDown(DIK_V) || Input::IsPadButton(XINPUT_GAMEPAD_RIGHT_SHOULDER)) {
+		if (!sg->CanUseStamina(STAMINA_DECREASE_MELEE)) {
+			// 状態を遷移
+			IsWASDKey() ? SetState(PLAYER_STATE_WALK) : SetState(PLAYER_STATE_IDLE);
+			return;
+		}
+		SetState(PLAYER_STATE_MELEE);
 	}
 	// Aボタン もしくは Eキー が押されていたら...インタラクト状態に遷移
 	else if (Input::IsKeyDown(DIK_E) || Input::IsPadButtonDown(XINPUT_GAMEPAD_A)) SetState(PLAYER_STATE_INTRACT);
@@ -630,6 +646,7 @@ void Component_PlayerBehavior::Interact()
 				// 所持植物リストに追加
 				myPlants_.push_back(plantData);
 
+				// 調査ポイントを加算
 				researchPoint_ += GetResearchPointByRarity(plantData);
 
 				// 植物オブジェクトを削除
@@ -661,6 +678,40 @@ void Component_PlayerBehavior::Interact()
 
 		// 待機状態に遷移
 		SetState(PLAYER_STATE_IDLE);
+	}
+}
+
+void Component_PlayerBehavior::Melee()
+{
+	Component_MeleeAttack* melee = (Component_MeleeAttack*)(GetChildComponent("MeleeAttack"));
+	if (melee == nullptr)return;
+
+	// 移動コンポーネントの取得 & 有無の確認
+	Component_WASDInputMove* move = (Component_WASDInputMove*)(GetChildComponent("InputMove"));
+	if (move == nullptr) return;
+
+	Component_StaminaGauge* sg = (Component_StaminaGauge*)(GetChildComponent("StaminaGauge"));
+	if (sg == nullptr)return;
+
+	if (isMeleeStart_ == true) {
+		melee->Execute();
+		move->Stop();
+		isMeleeStart_ = false;
+	}
+
+	// 攻撃処理が終了していたら...
+	if (melee->IsActive() == false) {
+
+		// 攻撃フラグをリセット
+		isMeleeStart_ = true;
+
+		// 移動を可能にする
+		move->Execute();
+
+		sg->UseStamina(STAMINA_DECREASE_MELEE);
+
+		// 状態を遷移
+		IsWASDKey() ? SetState(PLAYER_STATE_WALK) : SetState(PLAYER_STATE_IDLE);
 	}
 }
 
@@ -767,7 +818,7 @@ StageObject* Component_PlayerBehavior::GetNearestPlant(PlantData& _plantData)
 		for (StageObject* object : pStage->GetStageObjects()) {
 
 			// 植物オブジェクトだったらリストに追加
-			for (auto plant : object->FindComponent(Plant))
+			if(object->GetObjectType() == StageObject::TYPE_PLANT)
 				plantObjects.push_back(object);
 		}
 	}
@@ -785,10 +836,8 @@ StageObject* Component_PlayerBehavior::GetNearestPlant(PlantData& _plantData)
 
 			//// 植物オブジェクトの位置を取得
 			//XMFLOAT3 plantPos = plant->GetPosition();
-
 			//// コンポーネント保有者と植物オブジェクトの距離を計算
 			//float dist = XMVectorGetX(XMVector3Length(XMLoadFloat3(&plantPos) - XMLoadFloat3(&holder_->GetPosition())));
-
 			//// 一番近い植物オブジェクトを取得
 			//if (dist < minDist) {
 			//	minDist = dist;

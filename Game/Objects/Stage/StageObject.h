@@ -1,6 +1,6 @@
 #pragma once
 
-// ƒCƒ“ƒNƒ‹[ƒh
+// ã‚¤ãƒ³ã‚¯ãƒ«ãƒ¼ãƒ‰
 #include "../../../Engine/DirectX/Direct3D.h"
 #include "../../../Engine/GameObject/GameObject.h"
 #include "Components/Component.h"
@@ -10,137 +10,156 @@
 #include<mutex>
 #endif
 
-// usingéŒ¾
+// usingå®£è¨€
 using std::vector;
 
 
 class StageObject : public GameObject
 {
+public:
+	enum ObjectType
+	{
+		TYPE_PLAYER = 0,
+		TYPE_ENEMY,
+		TYPE_PLANT,
+	};
 protected:
-	vector<Component*> myComponents_;   // ©g‚ª•Û—L‚·‚éƒRƒ“ƒ|[ƒlƒ“ƒgŒQ
 
-	string modelFilePath_;              // ƒ‚ƒfƒ‹‚Ìƒtƒ@ƒCƒ‹ƒpƒX
-	int modelHandle_;                   // ƒ‚ƒfƒ‹”Ô†
 
-	bool isOnGround_;                   // ’n–Ê‚Éİ’u‚·‚é‚©‚Ç‚¤‚©
-	bool isCollisionWall_;              // •Ç‚É“–‚½‚Á‚½‚©‚Ç‚¤‚©
-	bool isColliding_;                  // ‚Ù‚©‚ÌƒIƒuƒWƒFƒNƒg‚ÆÕ“Ë‚·‚é‚©‚Ç‚¤‚©
-	XMFLOAT3 onGroundOffset_;           // ’n–Ê‚Éİ’u‚·‚éÛ‚ÌƒIƒtƒZƒbƒg
+	ObjectType objectType_;
+	vector<Component*> myComponents_;   // è‡ªèº«ãŒä¿æœ‰ã™ã‚‹ã‚³ãƒ³ãƒãƒ¼ãƒãƒ³ãƒˆç¾¤
+
+	string modelFilePath_;              // ãƒ¢ãƒ‡ãƒ«ã®ãƒ•ã‚¡ã‚¤ãƒ«ãƒ‘ã‚¹
+	int modelHandle_;                   // ãƒ¢ãƒ‡ãƒ«ç•ªå·
+
+	bool isOnGround_;                   // åœ°é¢ã«è¨­ç½®ã™ã‚‹ã‹ã©ã†ã‹
+	bool isCollisionWall_;              // å£ã«å½“ãŸã£ãŸã‹ã©ã†ã‹
+	bool isColliding_;                  // ã»ã‹ã®ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã¨è¡çªã™ã‚‹ã‹ã©ã†ã‹
+	XMFLOAT3 onGroundOffset_;           // åœ°é¢ã«è¨­ç½®ã™ã‚‹éš›ã®ã‚ªãƒ•ã‚»ãƒƒãƒˆ
 	XMFLOAT3 raycastDirection_;
-	float fallSpeed_;                   // —‰º‘¬“x
+	float fallSpeed_;                   // è½ä¸‹é€Ÿåº¦
 
-	Direct3D::SHADER_TYPE shaderType_;   // ƒVƒF[ƒ_[ƒ^ƒCƒv
+	Direct3D::SHADER_TYPE shaderType_;   // ã‚·ã‚§ãƒ¼ãƒ€ãƒ¼ã‚¿ã‚¤ãƒ—
 
 #ifdef _DEBUG
 	std::mutex mutex_;
 #endif
 
+
 public:
-	/// <summary> ƒRƒ“ƒXƒgƒ‰ƒNƒ^ </summary>
+
+	/// <summary> ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿ </summary>
 	StageObject(string _name,string _modelFilePath,GameObject* _parent);
 
-	/// <summary> ‰Šú‰» </summary>
+	/// <summary> åˆæœŸåŒ– </summary>
 	void Initialize() override;
 
-	/// <summary> XV </summary>
+	/// <summary> æ›´æ–° </summary>
 	void Update() override;
 
-	/// <summary> •`‰æ </summary>
+	/// <summary> æç”» </summary>
 	void Draw() override;
 
-	/// <summary> ‰ğ•ú </summary>
+	/// <summary> è§£æ”¾ </summary>
 	void Release() override;
 
-	/// <summary> Õ“Ëˆ— </summary>
+	/// <summary> è¡çªå‡¦ç† </summary>
 	void OnCollision(GameObject* _target, Collider* _collider) override;
 
-	/// <summary> •Û‘¶ </summary>
+	/// <summary> ä¿å­˜ </summary>
 	virtual void Save(json& _saveObj);
 
-	/// <summary> “Ç </summary>
+	/// <summary> èª­è¾¼ </summary>
 	virtual  void Load(json& _loadObj);
 
-	/// <summary> ImGui•\¦ </summary>
+	/// <summary> ImGuiè¡¨ç¤º </summary>
 	virtual void DrawData();
 
-	/// <summary> ƒRƒ“ƒ|[ƒlƒ“ƒg‚Ì’Ç‰Á </summary>
+	/// <summary> ã‚³ãƒ³ãƒãƒ¼ãƒãƒ³ãƒˆã®è¿½åŠ  </summary>
 	bool AddComponent(Component* _comp);
 
-	/// <summary> ƒRƒ“ƒ|[ƒlƒ“ƒg‚Ìíœ </summary>
+	/// <summary> ã‚³ãƒ³ãƒãƒ¼ãƒãƒ³ãƒˆã®å‰Šé™¤ </summary>
 	bool DeleteComponent(Component* _comp);
 
-	/// <summary> ‘SƒRƒ“ƒ|[ƒlƒ“ƒg‚Ìíœ </summary>
+	/// <summary> å…¨ã‚³ãƒ³ãƒãƒ¼ãƒãƒ³ãƒˆã®å‰Šé™¤ </summary>
 	bool DeleteAllComponent();
 
-	/// <summary> ƒRƒ“ƒ|[ƒlƒ“ƒg‚ğ’T‚· </summary>
+	/// <summary> ã‚³ãƒ³ãƒãƒ¼ãƒãƒ³ãƒˆã‚’æ¢ã™ </summary>
 	Component* FindComponent(string _name);
 	vector<Component*> FindComponent(ComponentType _type);
 
-	/// <summary> ƒAƒjƒ[ƒVƒ‡ƒ“‚ğÄ¶ </summary>
+	/// <summary> ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã‚’å†ç”Ÿ </summary>
 	void PlayAnimation(int _startFrame, int _endFrame, float _speed);
 /*
 getter :*/
-	/// <summary> ƒ‚ƒfƒ‹”Ô†‚Ìæ“¾ </summary>
+	/// <summary> ãƒ¢ãƒ‡ãƒ«ç•ªå·ã®å–å¾— </summary>
 	int GetModelHandle() const { return modelHandle_; }
 
-	/// <summary> ƒ‚ƒfƒ‹ƒtƒ@ƒCƒ‹ƒpƒX‚Ìæ“¾ </summary>
+	/// <summary> ãƒ¢ãƒ‡ãƒ«ãƒ•ã‚¡ã‚¤ãƒ«ãƒ‘ã‚¹ã®å–å¾— </summary>
 	string GetModelFilePath() const { return modelFilePath_; }
 
-	/// <summary> ’n–Ê‚Éİ’u‚·‚éÛ‚ÌƒIƒtƒZƒbƒg‚Ìæ“¾ </summary>
+	/// <summary> åœ°é¢ã«è¨­ç½®ã™ã‚‹éš›ã®ã‚ªãƒ•ã‚»ãƒƒãƒˆã®å–å¾— </summary>
 	XMFLOAT3 GetOnGroundOffset() const { return onGroundOffset_; }
 
 	XMFLOAT3 GetRayCastDirection()const { return this->raycastDirection_; };
 
-	/// <summary> —‰º‘¬“x‚Ìæ“¾ </summary>
+	/// <summary> è½ä¸‹é€Ÿåº¦ã®å–å¾— </summary>
 	float GetFallSpeed() const { return fallSpeed_; }
 
-	/// <summary> ƒVƒF[ƒ_[ƒ^ƒCƒv‚Ìæ“¾ </summary>
+	/// <summary> ã‚·ã‚§ãƒ¼ãƒ€ãƒ¼ã‚¿ã‚¤ãƒ—ã®å–å¾— </summary>
 	Direct3D::SHADER_TYPE GetShaderType() const { return shaderType_; }
 
-	/// <summary> Õ“Ë‚·‚é‚©‚Ç‚¤‚©‚ğæ“¾ </summary>
+	/// <summary> è¡çªã™ã‚‹ã‹ã©ã†ã‹ã‚’å–å¾— </summary>
 	bool GetIsColliding() { return isColliding_; }
+
+	/// <summary> ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®ç¨®é¡ã‚’å–å¾— </summary>
+	ObjectType GetObjectType() { return objectType_; }
 /*
 setter :*/
-	/// <summary> ƒ‚ƒfƒ‹”Ô†‚Ìİ’è </summary>
+	/// <summary> ãƒ¢ãƒ‡ãƒ«ç•ªå·ã®è¨­å®š </summary>
 	void SetModelHandle(int _handle) { modelHandle_ = _handle; }
 
-	/// <summary> ƒ‚ƒfƒ‹ƒtƒ@ƒCƒ‹ƒpƒX‚Ìİ’è </summary>
+	/// <summary> ãƒ¢ãƒ‡ãƒ«ãƒ•ã‚¡ã‚¤ãƒ«ãƒ‘ã‚¹ã®è¨­å®š </summary>
 	void SetModelFilePath(string _path) { modelFilePath_ = _path; }
 
-	/// <summary> ’n–Ê‚Éİ’u‚·‚éÛ‚ÌƒIƒtƒZƒbƒg‚Ìİ’è </summary>
+	/// <summary> åœ°é¢ã«è¨­ç½®ã™ã‚‹éš›ã®ã‚ªãƒ•ã‚»ãƒƒãƒˆã®è¨­å®š </summary>
 	void SetOnGroundOffset(XMFLOAT3 _offset) { onGroundOffset_ = _offset; }
 
-	/// <summary> Õ“Ë‚·‚é‚©‚Ç‚¤‚©‚ğİ’è </summary>
+	/// <summary> è¡çªã™ã‚‹ã‹ã©ã†ã‹ã‚’è¨­å®š </summary>
 	void SetIsColliding(bool _isColliding) { isColliding_ = _isColliding; }
 
-	/// <summary> —‰º‘¬“x‚Ìİ’è </summary>
+	/// <summary> è½ä¸‹é€Ÿåº¦ã®è¨­å®š </summary>
 	void SetFallSpeed(float _speed) { fallSpeed_ = _speed; }
 
-	/// <summary> ƒVƒF[ƒ_[ƒ^ƒCƒv‚Ìİ’è </summary>
+	/// <summary> ã‚·ã‚§ãƒ¼ãƒ€ãƒ¼ã‚¿ã‚¤ãƒ—ã®è¨­å®š </summary>
 	void SetShader(Direct3D::SHADER_TYPE _type) { shaderType_ = _type; };
 
+	void SetObjectType(ObjectType _type) { objectType_ = _type; }
+  
 	void SetRayCastDirection(XMFLOAT3 dir) { this->raycastDirection_ = dir; };
 /*
 predicate :*/
-	/// <summary> ’n–Ê‚Éİ’u‚·‚é‚©‚Ç‚¤‚©‚ğ”»’è </summary>
+	/// <summary> åœ°é¢ã«è¨­ç½®ã™ã‚‹ã‹ã©ã†ã‹ã‚’åˆ¤å®š </summary>
 	bool IsOnGround() const { return isOnGround_; }
 
-	/// <summary> •Ç‚É“–‚½‚Á‚½‚©‚Ç‚¤‚©‚ğ”»’è</summary>
+	/// <summary> å£ã«å½“ãŸã£ãŸã‹ã©ã†ã‹ã‚’åˆ¤å®š</summary>
 	bool IsCollisionWall() const { return isCollisionWall_; }
 
+
+
 private:
-	/// <summary> Ú’nˆ— </summary>
+	/// <summary> æ¥åœ°å‡¦ç† </summary>
 	void OnGround(float _fallSpeed);
 
-	/// <summary> •Ç‚ß‚è‚İ–h~ˆ— </summary>
+	/// <summary> å£ã‚ã‚Šè¾¼ã¿é˜²æ­¢å‡¦ç† </summary>
 	void CollisionWall();
 };
 
 /// <summary>
-/// ƒXƒe[ƒWƒIƒuƒWƒFƒNƒg‚ğ¶¬‚·‚éŠÖ”
+/// ã‚¹ãƒ†ãƒ¼ã‚¸ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’ç”Ÿæˆã™ã‚‹é–¢æ•°
 /// </summary>
-/// <param name="_name"> ƒIƒuƒWƒFƒNƒg–¼</param>
-/// <param name="_modelFilePath"> ƒ‚ƒfƒ‹ƒtƒ@ƒCƒ‹ƒpƒX</param>
-/// <param name="_parent"> eƒIƒuƒWƒFƒNƒg</param>
-/// <returns>ì¬‚µ‚½ƒIƒuƒWƒFƒNƒg‚Ìƒ|ƒCƒ“ƒ^</returns>
+/// <param name="_name"> ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆå</param>
+/// <param name="_modelFilePath"> ãƒ¢ãƒ‡ãƒ«ãƒ•ã‚¡ã‚¤ãƒ«ãƒ‘ã‚¹</param>
+/// <param name="_parent"> è¦ªã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆ</param>
+/// <returns>ä½œæˆã—ãŸã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®ãƒã‚¤ãƒ³ã‚¿</returns>
 StageObject* CreateStageObject(string _name, string _modelFilePath, GameObject* _parent);
