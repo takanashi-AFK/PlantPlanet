@@ -80,6 +80,7 @@ public:
 
 	/// <summary> コンポーネントの削除 </summary>
 	bool DeleteComponent(Component* _comp);
+	void DeleteComponent();
 
 	/// <summary> 全コンポーネントの削除 </summary>
 	bool DeleteAllComponent();
@@ -153,6 +154,7 @@ private:
 
 	/// <summary> 壁めり込み防止処理 </summary>
 	void CollisionWall();
+
 };
 
 /// <summary>

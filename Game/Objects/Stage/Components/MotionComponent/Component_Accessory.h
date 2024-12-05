@@ -8,7 +8,8 @@ class Component_Accessory : public Component_Motion
 public:
 	/// <summary> コンストラクタ </summary>
 	Component_Accessory(string _name, StageObject* _holder, Component* _parent);
-
+	
+	~Component_Accessory() override;
 	/// <summary> 初期化 </summary>
 	void Initialize() override;
 
@@ -29,8 +30,8 @@ public:
 	char bone_[256];
 
 protected:
-	StageObject* gun_;
-	int gunModelHandle_;
+	StageObject* accessory_;
+	int accessoryModelHandle_;
 
 	XMFLOAT3 originalRotate_;
 	XMFLOAT3 originalScale_;

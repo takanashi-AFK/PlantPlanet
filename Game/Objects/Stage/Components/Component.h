@@ -59,6 +59,7 @@ protected:
 	vector<Component*> childComponents_;    // 子コンポーネント群
 	Component* parent_;                     // 親コンポーネント
 	bool isActive_;                         // アクティブ状態かどうか
+	bool killMe_;
 
 public:
 	/// <summary>
@@ -69,6 +70,7 @@ public:
 	Component(StageObject* _holder, string _name, ComponentType _type);
 	Component(StageObject* _holder, string _name,ComponentType _type,Component* _parent);
 
+	virtual ~Component();
 	/// <summary>
 	/// 初期化
 	/// </summary>
@@ -185,6 +187,9 @@ public:
 
 	void Execute() { isActive_ = true; }
 	void Stop() { isActive_ = false; }
+
+	void KillMe();
+	bool isKillMe()const;
 
 	bool IsActive() const { return isActive_; }
 };
