@@ -16,7 +16,15 @@ namespace {
 }
 
 Component_PlantGenerator::Component_PlantGenerator(string _name, StageObject* _holder, Component* _parent)
-	:Component(_holder, _name, PlantGenerator, _parent)
+	:Component(_holder, _name, PlantGenerator, _parent),
+	radius_(10),
+	plantNum_(10), 
+	maxRarity_(MAX_RARITY),
+	minRarity_(MIN_RARITY),
+	areaId_(0), 
+	rare1Weight_(0.7), 
+	rare2Weight_(0.25), 
+	rare3Weight_(0.05)
 {
 }
 
@@ -113,6 +121,11 @@ void Component_PlantGenerator::Save(json& _saveObj)
 
 	// 出現エリアを保存
 	_saveObj["areaId_"] = areaId_;
+
+	// 重みを保存
+	_saveObj["rare1Weight_"] = rare1Weight_;
+	_saveObj["rare2Weight_"] = rare2Weight_;
+	_saveObj["rare3Weight_"] = rare3Weight_;
 }
 
 void Component_PlantGenerator::Load(json& _loadObj)
@@ -131,10 +144,16 @@ void Component_PlantGenerator::Load(json& _loadObj)
 
 	// 出現エリアを読込
 	areaId_ = _loadObj["areaId_"];
+
+	// 重みを読込
+	rare1Weight_ = _loadObj["rare1Weight_"];
+	rare2Weight_ = _loadObj["rare2Weight_"];
+	rare3Weight_ = _loadObj["rare3Weight_"];
 }
 
 void Component_PlantGenerator::DrawData()
 {
+	bool isExecute = true;
 	// 半径を設定
 	ImGui::DragFloat("radius_", &radius_);
 
@@ -150,8 +169,20 @@ void Component_PlantGenerator::DrawData()
 	// 出現エリアを設定
 	ImGui::DragInt("areaId_", &areaId_);
 
+	ImGui::Separator();
+
+	// 確率の設定
+	ImGui::DragFloat("rare1Weight_", &rare1Weight_, 0.01f, 0.f, 1.f - (rare2Weight_ + rare3Weight_));
+	ImGui::DragFloat("rare2Weight_", &rare2Weight_, 0.01f, 0.f, 1.f - (rare1Weight_ + rare3Weight_));
+	ImGui::DragFloat("rare3Weight_", &rare3Weight_, 0.01f, 0.f, 1.f - (rare1Weight_ + rare2Weight_));
+
+	// 合計が1じゃなかったら怒る
+	if (rare1Weight_ + rare2Weight_ + rare3Weight_ != 1.f) {
+		ImGui::Text("Please set so that the total is 1");
+		isExecute = false;
+	}
 	// ボタンを表示
-	if (ImGui::Button("Generate"))Execute();
+	if (ImGui::Button("Generate") && isExecute)Execute();
 }
 
 XMFLOAT3 Component_PlantGenerator::GenerateRandomPosition()
@@ -173,7 +204,7 @@ XMFLOAT3 Component_PlantGenerator::GenerateRandomPosition()
 PlantData Component_PlantGenerator::WeightedPickPlants(unordered_map<int,PlantData> _plants)
 {
 	// 希望する確率分布をレアリティごとに設定
-	std::vector<double> rarityWeights = { 0.7, 0.25, 0.05 }; // レアリティ1, 2, 3の確率
+	std::vector<double> rarityWeights = { rare1Weight_, rare2Weight_, rare3Weight_ }; // レアリティ1, 2, 3の確率
 
 	// 確率に基づいてランダムにレアリティを選ぶ
 	std::random_device rd;
@@ -189,7 +220,7 @@ PlantData Component_PlantGenerator::WeightedPickPlants(unordered_map<int,PlantDa
 	// 選ばれたレアリティの中からランダムに1つ選ぶ
 	std::vector<PlantData> candidates;
 	for (const auto& plant : _plants) {
-		if (plant.second.rarity_ == selectedRarity) {
+		if (plant.second.rarity_ == selectedRarity && plant.second.isSpawn_) {
 			candidates.push_back(plant.second);
 		}
 	}

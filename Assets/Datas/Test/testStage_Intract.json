@@ -1,1 +1,152 @@
-{"00_player":{"fallSpeed_":1.0,"isColliding_":true,"isCollisionWall_":true,"isOnGround_":true,"modelFilePath_":"Models/Player/Silly Dancing.fbx","myComponents_":{"PlayerBehavior":{"childComponents_":{"InputMove":{"isActive_":false,"name_":"InputMove","speed_":0.10000000149011612,"type_":20},"InteractTimer":{"maxTime_":0.0,"name_":"InteractTimer","nowTime_":0.0,"type_":19},"IntractTimer":{"maxTime_":0.0,"name_":"IntractTimer","nowTime_":0.0,"type_":19},"IsInteractableDetector":{"name_":"IsInteractableDetector","radius_":0.0,"type_":3},"MeleeAttack":{"childComponents_":{"Timer":{"maxTime_":0.0,"name_":"Timer","nowTime_":0.0,"type_":19},"attackRange":{"angle_":0.0,"length_":0.0,"name_":"attackRange","type_":5}},"distance_":5.0,"easingType_":"InCubic","name_":"MeleeAttack","speed_":0.10000000149011612,"type_":9},"PlayerHealthGauge":{"max_":1000.0,"name_":"PlayerHealthGauge","now_":1000.0,"type_":6},"PlayerMotion":{"name_":"PlayerMotion","type_":21},"ShootAttack":{"EffectData":{"name":"A_Salamander4","path":"Effects/A_Salamander4.efk","scale":[0.20000000298023224,0.20000000298023224,0.20000000298023224]},"bulletColliderRadius_":0.20000000298023224,"bulletLifeTime_":1.0,"name_":"ShootAttack","power_":100,"shootingDirection_":[-2.978851318359375,3.1054084300994873,-3.8821823596954346],"shootingSpeed_":0.20000000298023224,"type_":17},"StaminaGauge":{"childComponents_":{"Timer":{"maxTime_":180.0,"name_":"Timer","nowTime_":0.0,"type_":19}},"max_":100.0,"name_":"StaminaGauge","now_":80.84999084472656,"type_":25},"TackleMove":{"direction_":0.0,"distance_":5.0,"easingType_":"OutCubic","name_":"TackleMove","speed_":0.019999999552965164,"type_":18}},"invincibilityFrame":20,"name_":"PlayerBehavior","shootHeight":0.6000000238418579,"type_":11}},"onGroundOffset_":[0.0,1.7000000476837158,0.0],"position_":[0.6783813834190369,-0.19999992847442627,-4.199999809265137],"rotate_":[0.0,0.0,0.0],"scale_":[0.5,0.5,0.5],"shaderType_":4},"area":{"fallSpeed_":1.0,"isColliding_":true,"isCollisionWall_":false,"isOnGround_":false,"modelFilePath_":"Models/Area/Area.fbx","onGroundOffset_":[0.0,0.0,0.0],"position_":[0.0,0.0,0.0],"rotate_":[0.0,0.0,0.0],"scale_":[0.05000000074505806,0.05000000074505806,0.05000000074505806],"shaderType_":0},"generator":{"fallSpeed_":1.0,"isColliding_":false,"isCollisionWall_":false,"isOnGround_":false,"modelFilePath_":"Models/DebugCollision/SphereCollider.fbx","myComponents_":{"generator":{"areaId_":1,"maxRarity_":3,"minRarity_":1,"name_":"generator","plantNum_":120,"radius_":50.0,"type_":23}},"onGroundOffset_":[0.0,0.0,0.0],"position_":[27.200000762939453,0.0,27.100000381469727],"rotate_":[0.0,0.0,0.0],"scale_":[1.0,1.0,1.0],"shaderType_":0}}
+{
+  "00_player": {
+    "fallSpeed_": 1.0,
+    "isColliding_": true,
+    "isCollisionWall_": true,
+    "isOnGround_": true,
+    "modelFilePath_": "Models/Player/Silly Dancing.fbx",
+    "myComponents_": {
+      "PlayerBehavior": {
+        "childComponents_": {
+          "InputMove": {
+            "isActive_": false,
+            "name_": "InputMove",
+            "speed_": 0.10000000149011612,
+            "type_": 20
+          },
+          "InteractTimer": {
+            "maxTime_": 0.0,
+            "name_": "InteractTimer",
+            "nowTime_": 0.0,
+            "type_": 19
+          },
+          "IntractTimer": {
+            "maxTime_": 0.0,
+            "name_": "IntractTimer",
+            "nowTime_": 0.0,
+            "type_": 19
+          },
+          "IsInteractableDetector": {
+            "name_": "IsInteractableDetector",
+            "radius_": 0.0,
+            "type_": 3
+          },
+          "MeleeAttack": {
+            "childComponents_": {
+              "Timer": {
+                "maxTime_": 0.0,
+                "name_": "Timer",
+                "nowTime_": 0.0,
+                "type_": 19
+              },
+              "attackRange": {
+                "angle_": 0.0,
+                "length_": 0.0,
+                "name_": "attackRange",
+                "type_": 5
+              }
+            },
+            "distance_": 5.0,
+            "easingType_": "InCubic",
+            "name_": "MeleeAttack",
+            "speed_": 0.10000000149011612,
+            "type_": 9
+          },
+          "PlayerHealthGauge": {
+            "max_": 1000.0,
+            "name_": "PlayerHealthGauge",
+            "now_": 1000.0,
+            "type_": 6
+          },
+          "PlayerMotion": {
+            "name_": "PlayerMotion",
+            "type_": 21
+          },
+          "ShootAttack": {
+            "EffectData": {
+              "name": "A_Salamander4",
+              "path": "Effects/A_Salamander4.efk",
+              "scale": [ 0.20000000298023224, 0.20000000298023224, 0.20000000298023224 ]
+            },
+            "bulletColliderRadius_": 0.20000000298023224,
+            "bulletLifeTime_": 1.0,
+            "name_": "ShootAttack",
+            "power_": 100,
+            "shootingDirection_": [ -2.978851318359375, 3.1054084300994873, -3.8821823596954346 ],
+            "shootingSpeed_": 0.20000000298023224,
+            "type_": 17
+          },
+          "StaminaGauge": {
+            "childComponents_": {
+              "Timer": {
+                "maxTime_": 180.0,
+                "name_": "Timer",
+                "nowTime_": 0.0,
+                "type_": 19
+              }
+            },
+            "max_": 100.0,
+            "name_": "StaminaGauge",
+            "now_": 80.84999084472656,
+            "type_": 25
+          },
+          "TackleMove": {
+            "direction_": 0.0,
+            "distance_": 5.0,
+            "easingType_": "OutCubic",
+            "name_": "TackleMove",
+            "speed_": 0.019999999552965164,
+            "type_": 18
+          }
+        },
+        "invincibilityFrame": 20,
+        "name_": "PlayerBehavior",
+        "shootHeight": 0.6000000238418579,
+        "type_": 11
+      }
+    },
+    "onGroundOffset_": [ 0.0, 1.7000000476837158, 0.0 ],
+    "position_": [ 0.6783813834190369, -0.19999992847442627, -4.199999809265137 ],
+    "rotate_": [ 0.0, 0.0, 0.0 ],
+    "scale_": [ 0.5, 0.5, 0.5 ],
+    "shaderType_": 4
+  },
+  "area": {
+    "fallSpeed_": 1.0,
+    "isColliding_": true,
+    "isCollisionWall_": false,
+    "isOnGround_": false,
+    "modelFilePath_": "Models/Area/Area.fbx",
+    "onGroundOffset_": [ 0.0, 0.0, 0.0 ],
+    "position_": [ 0.0, 0.0, 0.0 ],
+    "rotate_": [ 0.0, 0.0, 0.0 ],
+    "scale_": [ 0.05000000074505806, 0.05000000074505806, 0.05000000074505806 ],
+    "shaderType_": 0
+  },
+  "generator": {
+    "fallSpeed_": 1.0,
+    "isColliding_": false,
+    "isCollisionWall_": false,
+    "isOnGround_": false,
+    "modelFilePath_": "Models/DebugCollision/SphereCollider.fbx",
+    "myComponents_": {
+      "generator": {
+        "rare3Weight_": 0.05,
+        "rare2Weight_": 0.2,
+        "rare1Weight_": 0.75,
+        "areaId_": 1,
+        "maxRarity_": 3,
+        "minRarity_": 1,
+        "name_": "generator",
+        "plantNum_": 120,
+        "radius_": 50.0,
+        "type_": 23
+      }
+    },
+    "onGroundOffset_": [ 0.0, 0.0, 0.0 ],
+    "position_": [ 27.200000762939453, 0.0, 27.100000381469727 ],
+    "rotate_": [ 0.0, 0.0, 0.0 ],
+    "scale_": [ 1.0, 1.0, 1.0 ],
+    "shaderType_": 0
+  }
+}
