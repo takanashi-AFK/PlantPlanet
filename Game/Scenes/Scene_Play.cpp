@@ -163,7 +163,7 @@ void Scene_Play::InitStage()
 	{
 		// 植物データの読み込み
 		json loadData;
-		JsonReader::Load("Datas/PlantData/plant.json", loadData);
+		JsonReader::Load("Datas/PlantData/TentativeFlowers.json", loadData);
 		PlantCollection::Load(loadData);
 
 		// generatorの起動

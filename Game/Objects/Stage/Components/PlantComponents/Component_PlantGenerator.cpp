@@ -201,7 +201,7 @@ XMFLOAT3 Component_PlantGenerator::GenerateRandomPosition()
 	};
 }
 
-PlantData Component_PlantGenerator::WeightedPickPlants(unordered_map<int,PlantData> _plants)
+PlantData Component_PlantGenerator::WeightedPickPlants(unordered_map<int, PlantData> _plants)
 {
 	// 希望する確率分布をレアリティごとに設定
 	std::vector<double> rarityWeights = { rare1Weight_, rare2Weight_, rare3Weight_ }; // レアリティ1, 2, 3の確率
@@ -211,13 +211,11 @@ PlantData Component_PlantGenerator::WeightedPickPlants(unordered_map<int,PlantDa
 	std::mt19937 gen(rd());
 	int selectedRarity;
 	do {
-
-	std::discrete_distribution<> dist(rarityWeights.begin() , rarityWeights.end());
-
-	selectedRarity = dist(gen) + 1; // レアリティは1~3なので+1
+		std::discrete_distribution<> dist(rarityWeights.begin(), rarityWeights.end());
+		selectedRarity = dist(gen) + 1; // レアリティは1~3なので+1
 	} while (selectedRarity < minRarity_ || selectedRarity > maxRarity_);
 
-	// 選ばれたレアリティの中からランダムに1つ選ぶ
+	// 選ばれたレアリティかつ isSpawn が true の中からランダムに1つ選ぶ
 	std::vector<PlantData> candidates;
 	for (const auto& plant : _plants) {
 		if (plant.second.rarity_ == selectedRarity && plant.second.isSpawn_) {
@@ -231,12 +229,25 @@ PlantData Component_PlantGenerator::WeightedPickPlants(unordered_map<int,PlantDa
 		return candidates[randomIndex(gen)];
 	}
 	else {
-		// 万が一候補がなければランダムに選択
-		auto it = _plants.begin();
-		std::advance(it, rand() % _plants.size());
-		return it->second;
-	}
+		// 万が一候補がなければ isSpawn が true の中からランダムに選択
+		std::vector<PlantData> fallbackCandidates;
+		for (const auto& plant : _plants) {
+			if (plant.second.isSpawn_) {
+				fallbackCandidates.push_back(plant.second);
+			}
+		}
 
+		if (!fallbackCandidates.empty()) {
+			std::uniform_int_distribution<> randomIndex(0, fallbackCandidates.size() - 1);
+			return fallbackCandidates[randomIndex(gen)];
+		}
+		else {
+			// 最後の手段として、全体からランダムに選択
+			auto it = _plants.begin();
+			std::advance(it, rand() % _plants.size());
+			return it->second;
+		}
+	}
 }
 
 int Component_PlantGenerator::CalculateTotalResearchPoint(vector<PlantData>& randomPlants)
