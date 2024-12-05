@@ -3,7 +3,7 @@
 #include "../../../Engine/Global.h"
 
 Component_Accessory::Component_Accessory(string _name, StageObject* _holder, Component* _parent)
-	:Component_Motion(_name, _holder, PlayerMotion, _parent), originalPosition_{}, originalRotate_{}, originalScale_{1,1,1},
+	:Component(_holder, _name, ComponentType::Accessory, _parent), originalPosition_{}, originalRotate_{}, originalScale_{1,1,1},
 	accessory_{}, accessoryModelHandle_{},bone_{ "mixamorig:LeftHand" }
 {
 }
@@ -15,40 +15,7 @@ Component_Accessory::~Component_Accessory()
 
 void Component_Accessory::Initialize()
 {
-	char defaultCurrentDir[MAX_PATH];
-	GetCurrentDirectory(MAX_PATH, defaultCurrentDir);
-	{
-		OPENFILENAME ofn; {
-			TCHAR szFile[MAX_PATH] = {}; // ファイル名を格納するバッファ
-			ZeroMemory(&ofn, sizeof(ofn)); // 構造体の初期化
-			ofn.lStructSize = sizeof(ofn); // 構造体のサイズ
-			ofn.lpstrFile = szFile; // ファイル名を格納するバッファ
-			ofn.lpstrFile[0] = '\0'; // 初期化
-			ofn.nMaxFile = sizeof(szFile); // ファイル名バッファのサイズ
-			ofn.lpstrFilter = TEXT("FBXファイル(*.fbx)\0*.fbx\0すべてのファイル(*.*)\0*.*\0");
-			ofn.nFilterIndex = 1; // 初期選択するフィルター
-			ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST; // フラグ（ファイルが存在すること、パスが存在することを確認）
-			ofn.lpstrInitialDir = TEXT("."); // カレントディレクトリを初期選択位置として設定
-		}
-
-		// ファイルを選択するダイアログの表示
-		if (GetOpenFileName(&ofn) == TRUE) {
-			// ファイルパスを取得
-			string path = ofn.lpstrFile;
-
-			// カレントディレクトリからの相対パスを取得
-			path = FileManager::GetAssetsRelativePath(path);
-
-			// 文字列内の"\\"を"/"に置換
-			FileManager::ReplaceBackslashes(path);
-
-			// ディレクトリを戻す
-			SetCurrentDirectory(defaultCurrentDir);
-
-			accessory_ = CreateStageObject("Accessory 3D Model", path, holder_);
-
-		}
-	}
+	
 }
 
 void Component_Accessory::Update()
@@ -132,16 +99,57 @@ void Component_Accessory::ExchangeModel(std::string filePath)
 
 void Component_Accessory::Load(json& _loadObj)
 {
-	if (_loadObj.contains("Accessory ModelPath")) accessoryModelHandle_ = Model::Load(_loadObj["ModelPath"]);
+	string path{};
+
+	if (_loadObj.contains("Accessory ModelPath")) accessoryModelHandle_ = Model::Load(_loadObj["Accessory ModelPath"].get<std::string>());
+	else
+	{
+
+		char defaultCurrentDir[MAX_PATH];
+		GetCurrentDirectory(MAX_PATH, defaultCurrentDir);
+		{
+			OPENFILENAME ofn; {
+				TCHAR szFile[MAX_PATH] = {}; // ファイル名を格納するバッファ
+				ZeroMemory(&ofn, sizeof(ofn)); // 構造体の初期化
+				ofn.lStructSize = sizeof(ofn); // 構造体のサイズ
+				ofn.lpstrFile = szFile; // ファイル名を格納するバッファ
+				ofn.lpstrFile[0] = '\0'; // 初期化
+				ofn.nMaxFile = sizeof(szFile); // ファイル名バッファのサイズ
+				ofn.lpstrFilter = TEXT("FBXファイル(*.fbx)\0*.fbx\0すべてのファイル(*.*)\0*.*\0");
+				ofn.nFilterIndex = 1; // 初期選択するフィルター
+				ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST; // フラグ（ファイルが存在すること、パスが存在することを確認）
+				ofn.lpstrInitialDir = TEXT("."); // カレントディレクトリを初期選択位置として設定
+			}
+
+			// ファイルを選択するダイアログの表示
+			if (GetOpenFileName(&ofn) == TRUE) {
+				// ファイルパスを取得
+				path = ofn.lpstrFile;
+
+				// カレントディレクトリからの相対パスを取得
+				path = FileManager::GetAssetsRelativePath(path);
+
+				// 文字列内の"\\"を"/"に置換
+				FileManager::ReplaceBackslashes(path);
+
+				// ディレクトリを戻す
+				SetCurrentDirectory(defaultCurrentDir);
+
+
+
+			}
+		}
+	}
 
 	if (_loadObj.contains("Accessory Original Position")) originalPosition_
-		={ _loadObj["Accessory Original Position"][0],_loadObj["Original Position"][1],_loadObj["Original Position"][2] };
+		={ _loadObj["Accessory Original Position"][0].get<float>(),_loadObj["Original Position"][1],_loadObj["Original Position"][2]};
 	if (_loadObj.contains("Accessory Original Rotate")) originalRotate_
 		= { _loadObj["Accessory Original Rotate"][0],_loadObj["Original Rotate"][1],_loadObj["Original Rotate"][2] };
 	if (_loadObj.contains("Accessory Original Scale"))originalScale_
 		= { _loadObj["Accessory Original Scale"][0],_loadObj["Original Scale"][1],_loadObj["Original Scale"][2] };
 
-	ExchangeModel(_loadObj["ModelPath"]);
+	accessory_ = CreateStageObject(name_, path, holder_);
+	ExchangeModel(_loadObj["Accessory ModelPath"].get<string>());
 }
 
 void Component_Accessory::Save(json& _saveObj)
