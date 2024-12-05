@@ -34,12 +34,16 @@
 #include "MotionComponent/Component_Accessory.h"
 
 Component::Component(StageObject* _holder, string _name,ComponentType _type)
-    :holder_(_holder), name_(_name),type_(_type),childComponents_(),parent_(nullptr),isActive_(false)
+    :holder_(_holder), name_(_name),type_(_type),childComponents_(),parent_(nullptr),isActive_(false),killMe_(false)
 {
 }
 
 Component::Component(StageObject* _holder, string _name, ComponentType _type, Component* _parent)
 	: holder_(_holder), name_(_name), type_(_type), childComponents_(),parent_(_parent), isActive_(false)
+{
+}
+
+Component::~Component()
 {
 }
 
@@ -93,9 +97,8 @@ void Component::ChildDrawData()
 		if (ImGui::SmallButton("Delete")) {
 
 			if(parent_ != nullptr)parent_->DeleteChildComponent(this->name_);
-			holder_->DeleteComponent(this);
+			this->KillMe();
 		}
-		
 
 		// 自身の情報を描画
 		this->DrawData();
@@ -157,6 +160,8 @@ bool Component::DeleteChildComponent(string _name)
             // 子コンポーネントを開放
             (*it)->ChildRelease();
             // リストから削除
+
+			delete* it;
             childComponents_.erase(it);
             return true;
         }
@@ -203,6 +208,16 @@ vector<Component*> Component::GetChildComponent(ComponentType _type)
 		}
 	}
 	return result;
+}
+
+void Component::KillMe()
+{
+	killMe_ = true;
+}
+
+bool Component::isKillMe() const
+{
+	return killMe_;
 }
 
 Component* CreateComponent(string _name, ComponentType _type, StageObject* _holder, Component* _parent)

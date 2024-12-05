@@ -113,7 +113,22 @@ bool StageObject::DeleteComponent(Component* _comp)
 	if (it == myComponents_.end()) return false;
 
 	// イテレータのコンポーネントを消す
+	delete* it;
 	myComponents_.erase(it); return true;
+}
+
+void StageObject::DeleteComponent()
+{
+	for (auto itr = myComponents_.begin(); itr != myComponents_.end();) {
+
+		if ((*itr)->isKillMe())
+		{
+			delete* itr;
+			itr = myComponents_.erase(itr);
+		}
+
+		else ++itr;
+	}
 }
 
 bool StageObject::DeleteAllComponent()
@@ -215,6 +230,7 @@ void StageObject::CollisionWall()
 		}
 	}
 }
+
 void StageObject::PlayAnimation(int _startFrame, int _endFrame, float _speed)
 {
 	Model::SetAnimFrame(modelHandle_,_startFrame, _endFrame, _speed);
@@ -237,6 +253,8 @@ void StageObject::Update()
 	for (auto comp : myComponents_)comp->ChildUpdate();
 	OnGround(fallSpeed_);
 	CollisionWall();
+
+	DeleteComponent();
 }
 
 void StageObject::Draw()

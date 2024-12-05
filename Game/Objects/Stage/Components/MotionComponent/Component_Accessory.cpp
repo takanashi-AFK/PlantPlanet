@@ -4,8 +4,13 @@
 
 Component_Accessory::Component_Accessory(string _name, StageObject* _holder, Component* _parent)
 	:Component_Motion(_name, _holder, PlayerMotion, _parent), originalPosition_{}, originalRotate_{}, originalScale_{1,1,1},
-	gun_{}, gunModelHandle_{},bone_{ "mixamorig:LeftHand" }
+	accessory_{}, accessoryModelHandle_{},bone_{ "mixamorig:LeftHand" }
 {
+}
+
+Component_Accessory::~Component_Accessory()
+{
+	accessory_->KillMe();
 }
 
 void Component_Accessory::Initialize()
@@ -40,7 +45,7 @@ void Component_Accessory::Initialize()
 			// ディレクトリを戻す
 			SetCurrentDirectory(defaultCurrentDir);
 
-			gun_ = CreateStageObject("Player's gun", path, holder_);
+			accessory_ = CreateStageObject("Accessory 3D Model", path, holder_);
 
 		}
 	}
@@ -56,14 +61,13 @@ void Component_Accessory::Update()
 	auto boneRot = Model::GetBoneRotation(playerHandle, bone_);
 	auto boneScale = Model::GetBoneScale(playerHandle, bone_);
 
-	gun_->SetPosition(bonePos + originalPosition_);
-	gun_->SetRotate(boneRot + originalRotate_);
-	gun_->SetScale({ boneScale.x * originalScale_.x ,boneScale.y * originalScale_.y,boneScale.z * originalScale_.z });
+	accessory_->SetPosition(bonePos + originalPosition_);
+	accessory_->SetRotate(boneRot + originalRotate_);
+	accessory_->SetScale({ boneScale.x * originalScale_.x ,boneScale.y * originalScale_.y,boneScale.z * originalScale_.z });
 }
 
 void Component_Accessory::Release()
 {
-	
 }
 
 void Component_Accessory::DrawData()
@@ -113,22 +117,22 @@ void Component_Accessory::DrawData()
 	}
 
 	ImGui::SameLine();
-	ImGui::Text(Model::GetModelName(gunModelHandle_).c_str());
+	ImGui::Text(Model::GetModelName(accessoryModelHandle_).c_str());
 	ImGui::InputText(": Bone Name", bone_, sizeof(bone_));
 }
 
 void Component_Accessory::ExchangeModel(std::string filePath)
 {
-	gunModelHandle_ = Model::Load(filePath);
+	accessoryModelHandle_ = Model::Load(filePath);
 
-	gun_->SetModelFilePath(filePath);
-	gun_->SetModelHandle(gunModelHandle_);
+	accessory_->SetModelFilePath(filePath);
+	accessory_->SetModelHandle(accessoryModelHandle_);
 }
 
 
 void Component_Accessory::Load(json& _loadObj)
 {
-	if (_loadObj.contains("Accessory ModelPath")) gunModelHandle_ = Model::Load(_loadObj["ModelPath"]);
+	if (_loadObj.contains("Accessory ModelPath")) accessoryModelHandle_ = Model::Load(_loadObj["ModelPath"]);
 
 	if (_loadObj.contains("Accessory Original Position")) originalPosition_
 		={ _loadObj["Accessory Original Position"][0],_loadObj["Original Position"][1],_loadObj["Original Position"][2] };
@@ -142,7 +146,7 @@ void Component_Accessory::Load(json& _loadObj)
 
 void Component_Accessory::Save(json& _saveObj)
 {
-	_saveObj["Accessory ModelPath"] = Model::GetModelName(gunModelHandle_);
+	_saveObj["Accessory ModelPath"] = Model::GetModelName(accessoryModelHandle_);
 
 	_saveObj["Accessory Original Position"] = { originalPosition_.x,originalPosition_.y,originalPosition_.z };
 	_saveObj["Accessory Original Rotate"] = { originalRotate_.x,originalRotate_.y,originalRotate_.z };
