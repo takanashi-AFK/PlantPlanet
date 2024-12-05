@@ -128,23 +128,23 @@ void Component_Accessory::ExchangeModel(std::string filePath)
 
 void Component_Accessory::Load(json& _loadObj)
 {
-	if (_loadObj.contains("ModelPath")) gunModelHandle_ = Model::Load(_loadObj["ModelPath"]);
+	if (_loadObj.contains("Accessory ModelPath")) gunModelHandle_ = Model::Load(_loadObj["ModelPath"]);
 
-	if (_loadObj.contains("Original Position")) originalPosition_
-		={ _loadObj["Original Position"][0],_loadObj["Original Position"][1],_loadObj["Original Position"][2] };
-	if (_loadObj.contains("Original Rotate")) originalRotate_
-		= { _loadObj["Original Rotate"][0],_loadObj["Original Rotate"][1],_loadObj["Original Rotate"][2] };
-	if (_loadObj.contains("Original Scale"))originalScale_
-		= { _loadObj["Original Scale"][0],_loadObj["Original Scale"][1],_loadObj["Original Scale"][2] };
+	if (_loadObj.contains("Accessory Original Position")) originalPosition_
+		={ _loadObj["Accessory Original Position"][0],_loadObj["Original Position"][1],_loadObj["Original Position"][2] };
+	if (_loadObj.contains("Accessory Original Rotate")) originalRotate_
+		= { _loadObj["Accessory Original Rotate"][0],_loadObj["Original Rotate"][1],_loadObj["Original Rotate"][2] };
+	if (_loadObj.contains("Accessory Original Scale"))originalScale_
+		= { _loadObj["Accessory Original Scale"][0],_loadObj["Original Scale"][1],_loadObj["Original Scale"][2] };
 
 	ExchangeModel(_loadObj["ModelPath"]);
 }
 
 void Component_Accessory::Save(json& _saveObj)
 {
-	_saveObj["ModelPath"] = Model::GetModelName(gunModelHandle_);
+	_saveObj["Accessory ModelPath"] = Model::GetModelName(gunModelHandle_);
 
-	_saveObj["Original Position"] = { originalPosition_.x,originalPosition_.y,originalPosition_.z };
-	_saveObj["Original Rotate"] = { originalRotate_.x,originalRotate_.y,originalRotate_.z };
-	_saveObj["Original Scale"] = { originalScale_.x,originalScale_.y,originalScale_.z };
+	_saveObj["Accessory Original Position"] = { originalPosition_.x,originalPosition_.y,originalPosition_.z };
+	_saveObj["Accessory Original Rotate"] = { originalRotate_.x,originalRotate_.y,originalRotate_.z };
+	_saveObj["Accessory Original Scale"] = { originalScale_.x,originalScale_.y,originalScale_.z };
 }
