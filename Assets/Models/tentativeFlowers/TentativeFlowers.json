@@ -1,0 +1,93 @@
+[
+  {
+    "areaId_": 1,
+    "id_": 0,
+    "imageFilePath_": "Models/tentativeFlowers/R1_flower_1.png",
+    "modelFilePath_": "Models/tentativeFlowers/R1_flower_1.fbx",
+    "isSpawn_": true,
+    "name_": "R1No1",
+    "rarity_": 1
+  },
+  {
+    "areaId_": 1,
+    "id_": 1,
+    "imageFilePath_": "Models/tentativeFlowers/R1_flower_2.png",
+    "modelFilePath_": "Models/tentativeFlowers/R1_flower_2.fbx",
+    "isSpawn_": true,
+    "name_": "R1No2",
+    "rarity_": 1
+  },
+  {
+    "areaId_": 1,
+    "id_": 2,
+    "imageFilePath_": "Models/tentativeFlowers/R1_flower_3.png",
+    "modelFilePath_": "Models/tentativeFlowers/R1_flower_3.fbx",
+    "isSpawn_": true,
+    "name_": "R1No3",
+    "rarity_": 1
+  },
+  {
+    "areaId_": 1,
+    "id_": 3,
+    "imageFilePath_": "Models/tentativeFlowers/R1_flower_4.png",
+    "modelFilePath_": "Models/tentativeFlowers/R1_flower_4.fbx",
+    "isSpawn_": true,
+    "name_": "R1No4",
+    "rarity_": 1
+  },
+  {
+    "areaId_": 1,
+    "id_": 4,
+    "imageFilePath_": "Models/tentativeFlowers/R1_flower_5.png",
+    "modelFilePath_": "Models/tentativeFlowers/R1_flower_5.fbx",
+    "isSpawn_": true,
+    "name_": "R1No5",
+    "rarity_": 1
+  },
+  {
+    "areaId_": 1,
+    "id_": 5,
+    "imageFilePath_": "Models/tentativeFlowers/R2_flower_6.png",
+    "modelFilePath_": "Models/tentativeFlowers/R2_flower_6.fbx",
+    "isSpawn_": false,
+    "name_": "R2No6",
+    "rarity_": 2
+  },
+  {
+    "areaId_": 1,
+    "id_": 6,
+    "imageFilePath_": "Models/tentativeFlowers/R2_flower_7.png",
+    "modelFilePath_": "Models/tentativeFlowers/R2_flower_7.fbx",
+    "isSpawn_": false,
+    "name_": "R2No7",
+    "rarity_": 2
+  },
+  {
+    "areaId_": 1,
+    "id_": 7,
+    "imageFilePath_": "Models/tentativeFlowers/R2_flower_8.png",
+    "modelFilePath_": "Models/tentativeFlowers/R2_flower_8.fbx",
+    "isSpawn_": false,
+
+    "name_": "R2No8",
+    "rarity_": 2
+  },
+  {
+    "areaId_": 1,
+    "id_": 8,
+    "imageFilePath_": "Models/tentativeFlowers/R3_flower_9.png",
+    "modelFilePath_": "Models/tentativeFlowers/R3_flower_9.fbx",
+    "isSpawn_": false,
+    "name_": "R3No9",
+    "rarity_": 3
+  },
+  {
+    "areaId_": 1,
+    "id_": 9,
+    "imageFilePath_": "Models/tentativeFlowers/R3_flower_10.png",
+    "modelFilePath_": "Models/tentativeFlowers/R3_flower_10.fbx",
+    "isSpawn_": true,
+    "name_": "R3No10",
+    "rarity_": 3
+  }
+]
