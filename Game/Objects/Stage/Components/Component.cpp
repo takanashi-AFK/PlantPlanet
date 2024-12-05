@@ -32,9 +32,10 @@
 #include "PlantComponents/Component_Plant.h"
 #include "GaugeComponents/Component_StaminaGauge.h"
 #include "MotionComponent/Component_Accessory.h"
+#include "BehaviorComponents/Component_MeleeEnemyBehavior.h"
 
 Component::Component(StageObject* _holder, string _name,ComponentType _type)
-    :holder_(_holder), name_(_name),type_(_type),childComponents_(),parent_(nullptr),isActive_(false)
+	:holder_(_holder), name_(_name),type_(_type),childComponents_(),parent_(nullptr),isActive_(false)
 {
 }
 
@@ -149,45 +150,45 @@ bool Component::AddChildComponent(Component* _comp)
 }
 bool Component::DeleteChildComponent(string _name)
 {
-    // リスト内のコンポーネントを探す
-    for (auto it = childComponents_.begin(); it != childComponents_.end(); ++it)
-    {
-        if ((*it)->name_ == _name)
-        {
-            // 子コンポーネントを開放
-            (*it)->ChildRelease();
-            // リストから削除
-            childComponents_.erase(it);
-            return true;
-        }
-    }
-    return false;
+	// リスト内のコンポーネントを探す
+	for (auto it = childComponents_.begin(); it != childComponents_.end(); ++it)
+	{
+		if ((*it)->name_ == _name)
+		{
+			// 子コンポーネントを開放
+			(*it)->ChildRelease();
+			// リストから削除
+			childComponents_.erase(it);
+			return true;
+		}
+	}
+	return false;
 }
 
 bool Component::FindChildComponent(string _name)
 {
-    // リスト内のコンポーネントを探す
-    for (auto comp : childComponents_)
-    {
-        if (comp->name_ == _name)
-        {
-            return true;
-        }
-    }
-    return false;
+	// リスト内のコンポーネントを探す
+	for (auto comp : childComponents_)
+	{
+		if (comp->name_ == _name)
+		{
+			return true;
+		}
+	}
+	return false;
 }
 
 Component* Component::GetChildComponent(string _name)
 {
-    // リスト内のコンポーネントを探す
-    for (auto comp : childComponents_)
-    {
-        if (comp->name_ == _name)
-        {
-            return comp;
-        }
-    }
-    return nullptr;
+	// リスト内のコンポーネントを探す
+	for (auto comp : childComponents_)
+	{
+		if (comp->name_ == _name)
+		{
+			return comp;
+		}
+	}
+	return nullptr;
 }
 
 vector<Component*> Component::GetChildComponent(ComponentType _type)
@@ -207,41 +208,42 @@ vector<Component*> Component::GetChildComponent(ComponentType _type)
 
 Component* CreateComponent(string _name, ComponentType _type, StageObject* _holder, Component* _parent)
 {
-    Component* comp = nullptr;
+	Component* comp = nullptr;
 
-    // タイプ(識別番号にしたがってコンポーネントを作成)
-    switch (_type)
-    {
-        case BossBehavior: comp = new Component_BossBehavior(_name, _holder, _parent); break;
-        case CactanBehavior: comp = new Component_CactanBehavior(_name, _holder, _parent); break;
-        case Chase: comp = new Component_Chase(_name, _holder, _parent); break;
-        case CircleRangeDetector: comp = new Component_CircleRangeDetector(_name, _holder, _parent); break;
-        case Fall: comp = new Component_Fall(_name, _holder, _parent); break;
-        case FanRangeDetector: comp = new Component_FanRangeDetector(_name, _holder, _parent); break;
-        case HealthGauge: comp = new Component_HealthGauge(_name, _holder, _parent); break;
-        case HelingoBehavior: comp = new Component_HelingoBehavior(_name, _holder, _parent); break;
-        case HelingoFall: comp = new Component_HelingoFall(_name, _holder, _parent); break;
-        case MeleeAttack: comp = new Component_MeleeAttack(_name, _holder, _parent); break;
-        case MoveX: comp = new Component_MoveX(_name, _holder, _parent); break;
-        case PlayerBehavior: comp = new Component_PlayerBehavior(_name, _holder, _parent); break;
-        case Rise: comp = new Component_Rise(_name, _holder, _parent); break;
-        case Rotation: comp = new Component_Rotation(_name, _holder, _parent); break;
-        case RotationX: comp = new Component_RotationX(_name, _holder, _parent); break;
-        case RotationY: comp = new Component_RotationY(_name, _holder, _parent); break;
-        case RotationZ: comp = new Component_RotationZ(_name, _holder, _parent); break;
-        case ShootAttack: comp = new Component_ShootAttack(_name, _holder, _parent); break;
-        case TackleMove: comp = new Component_TackleMove(_name, _holder, _parent); break;
-        case Timer: comp = new Component_Timer(_name, _holder, _parent); break;
-        case WASDInputMove: comp = new Component_WASDInputMove(_name, _holder, _parent); break;
-		    case PlayerMotion: comp = new Component_PlayerMotion(_name, _holder, _parent); break;
-		    case Teleporter: comp = new Component_Teleporter(_name, _holder, _parent); break;
-	    	case PlantGenerator: comp = new Component_PlantGenerator(_name, _holder, _parent); break;
-       	case Plant: comp = new Component_Plant(_name, _holder, _parent); break;
-		    case StaminaGauge: comp = new Component_StaminaGauge(_name, _holder, _parent); break;
-			case Accessory: comp = new Component_Accessory(_name, _holder, _parent); break;
-        default: /* その他コンポーネントを追加する時は上記のように追加 */ break;
-    }
-    return comp;
+	// タイプ(識別番号にしたがってコンポーネントを作成)
+	switch (_type)
+	{
+		case BossBehavior: comp = new Component_BossBehavior(_name, _holder, _parent); break;
+		case CactanBehavior: comp = new Component_CactanBehavior(_name, _holder, _parent); break;
+		case Chase: comp = new Component_Chase(_name, _holder, _parent); break;
+		case CircleRangeDetector: comp = new Component_CircleRangeDetector(_name, _holder, _parent); break;
+		case Fall: comp = new Component_Fall(_name, _holder, _parent); break;
+		case FanRangeDetector: comp = new Component_FanRangeDetector(_name, _holder, _parent); break;
+		case HealthGauge: comp = new Component_HealthGauge(_name, _holder, _parent); break;
+		case HelingoBehavior: comp = new Component_HelingoBehavior(_name, _holder, _parent); break;
+		case HelingoFall: comp = new Component_HelingoFall(_name, _holder, _parent); break;
+		case MeleeAttack: comp = new Component_MeleeAttack(_name, _holder, _parent); break;
+		case MoveX: comp = new Component_MoveX(_name, _holder, _parent); break;
+		case PlayerBehavior: comp = new Component_PlayerBehavior(_name, _holder, _parent); break;
+		case Rise: comp = new Component_Rise(_name, _holder, _parent); break;
+		case Rotation: comp = new Component_Rotation(_name, _holder, _parent); break;
+		case RotationX: comp = new Component_RotationX(_name, _holder, _parent); break;
+		case RotationY: comp = new Component_RotationY(_name, _holder, _parent); break;
+		case RotationZ: comp = new Component_RotationZ(_name, _holder, _parent); break;
+		case ShootAttack: comp = new Component_ShootAttack(_name, _holder, _parent); break;
+		case TackleMove: comp = new Component_TackleMove(_name, _holder, _parent); break;
+		case Timer: comp = new Component_Timer(_name, _holder, _parent); break;
+		case WASDInputMove: comp = new Component_WASDInputMove(_name, _holder, _parent); break;
+		case PlayerMotion: comp = new Component_PlayerMotion(_name, _holder, _parent); break;
+		case Teleporter: comp = new Component_Teleporter(_name, _holder, _parent); break;
+		case PlantGenerator: comp = new Component_PlantGenerator(_name, _holder, _parent); break;
+		case Plant: comp = new Component_Plant(_name, _holder, _parent); break;
+		case StaminaGauge: comp = new Component_StaminaGauge(_name, _holder, _parent); break;
+		case Accessory: comp = new Component_Accessory(_name, _holder, _parent); break;
+		case MeleeEnemyBehavior: comp = new Component_MeleeEnemyBehavior(_name, _holder, _parent); break;
+		default: /* その他コンポーネントを追加する時は上記のように追加 */ break;
+	}
+	return comp;
 }
 
 Component* CreateComponent(string _name, ComponentType _type, StageObject* _holder)
@@ -280,6 +282,7 @@ string ComponentTypeToString(ComponentType _type)
 	case Plant: return "PlantComponent";
 	case StaminaGauge: return "StaminaGaugeComponent";
 	case Accessory: return "AccessoryComponent";
+	case MeleeEnemyBehavior: return "MeleeEnemyBehaviorComponent";
 		// その他コンポーネントを追加する時は上記のように追加
 
 	default: return "None";
