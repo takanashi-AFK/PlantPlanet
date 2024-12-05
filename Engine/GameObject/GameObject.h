@@ -134,6 +134,7 @@ public:
 	//RootJobを取得
 	GameObject* GetRootJob();
 
+	inline Transform GetTransform() { return this->transform_; };
 
 	//各アクセス関数
 	XMFLOAT3 GetPosition() { return transform_.position_; }

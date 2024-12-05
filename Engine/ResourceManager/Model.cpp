@@ -89,6 +89,11 @@ namespace Model
 		}
 	}
 
+	std::string GetModelName(int handle)
+	{
+		return _datas[handle]->fileName;
+	}
+
 
 	//”CˆÓ‚Ìƒ‚ƒfƒ‹‚ðŠJ•ú
 	void Release(int handle)
