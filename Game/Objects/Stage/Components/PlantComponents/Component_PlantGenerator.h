@@ -14,6 +14,10 @@ private:
 	int maxRarity_;	// 最大稀少度
 	int minRarity_;	// 最小稀少度
 	int areaId_;	// 出現エリア
+
+	float rare1Weight_;
+	float rare2Weight_;
+	float rare3Weight_;
 public:
 	/// <summary> コンストラクタ </summary>
 	Component_PlantGenerator(string _name, StageObject* _holder, Component* _parent);
