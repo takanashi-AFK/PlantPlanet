@@ -40,7 +40,7 @@ void Component_Accessory::Initialize()
 			// ディレクトリを戻す
 			SetCurrentDirectory(defaultCurrentDir);
 
-			gun_ = CreateStageObject("Player's gun", path, holder_->GetRootJob());
+			gun_ = CreateStageObject("Player's gun", path, holder_);
 
 		}
 	}
@@ -53,7 +53,7 @@ void Component_Accessory::Update()
 	Model::SetTransform(playerHandle, transform);
 
 	auto bonePos = Model::GetBonePosition(playerHandle, bone_);
-	auto boneRot = Model::GetBoneRotation(playerHandle, bone_,holder_->GetRotate());
+	auto boneRot = Model::GetBoneRotation(playerHandle, bone_);
 	auto boneScale = Model::GetBoneScale(playerHandle, bone_);
 
 	gun_->SetPosition(bonePos + originalPosition_);
