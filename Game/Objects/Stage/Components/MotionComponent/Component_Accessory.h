@@ -3,7 +3,7 @@
 #include <vector>
 #include "../../Components/BehaviorComponents/Component_PlayerBehavior.h"
 
-class Component_Accessory : public Component_Motion
+class Component_Accessory : public Component
 {
 public:
 	/// <summary> コンストラクタ </summary>
