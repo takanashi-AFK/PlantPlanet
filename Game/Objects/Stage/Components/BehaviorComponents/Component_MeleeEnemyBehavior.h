@@ -19,6 +19,9 @@ private:
 	float speed_;
 	float deltaDistance_;
 	float power_;
+	float attackCoolTime_;
+	float attackDelayTime_;
+	bool isAttacked_;
 
 public:
 	Component_MeleeEnemyBehavior(string _name, StageObject* _holder, Component* _parent);
