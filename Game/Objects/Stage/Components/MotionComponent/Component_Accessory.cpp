@@ -6,6 +6,7 @@ Component_Accessory::Component_Accessory(string _name, StageObject* _holder, Com
 	:Component(_holder, _name, ComponentType::Accessory, _parent), originalPosition_{}, originalRotate_{}, originalScale_{1,1,1},
 	accessory_{}, accessoryModelHandle_{},bone_{ "mixamorig:LeftHand" }
 {
+	accessory_ = CreateStageObject(name_, holder_->GetModelFilePath(), holder_);
 }
 
 Component_Accessory::~Component_Accessory()
@@ -15,7 +16,6 @@ Component_Accessory::~Component_Accessory()
 
 void Component_Accessory::Initialize()
 {
-	
 }
 
 void Component_Accessory::Update()
@@ -142,13 +142,12 @@ void Component_Accessory::Load(json& _loadObj)
 	}
 
 	if (_loadObj.contains("Accessory Original Position")) originalPosition_
-		={ _loadObj["Accessory Original Position"][0].get<float>(),_loadObj["Original Position"][1],_loadObj["Original Position"][2]};
+		={ _loadObj["Accessory Original Position"][0].get<float>(),_loadObj["Accessory Original Position"][1].get<float>(),_loadObj["Accessory Original Position"][2].get<float>()};
 	if (_loadObj.contains("Accessory Original Rotate")) originalRotate_
-		= { _loadObj["Accessory Original Rotate"][0],_loadObj["Original Rotate"][1],_loadObj["Original Rotate"][2] };
+		= { _loadObj["Accessory Original Rotate"][0].get<float>(),_loadObj["Accessory Original Rotate"][1].get<float>(),_loadObj["Accessory Original Rotate"][2].get<float>() };
 	if (_loadObj.contains("Accessory Original Scale"))originalScale_
-		= { _loadObj["Accessory Original Scale"][0],_loadObj["Original Scale"][1],_loadObj["Original Scale"][2] };
+		= { _loadObj["Accessory Original Scale"][0].get<float>(),_loadObj["Accessory Original Scale"][1].get<float>(),_loadObj["Accessory Original Scale"][2].get<float>() };
 
-	accessory_ = CreateStageObject(name_, path, holder_);
 	ExchangeModel(_loadObj["Accessory ModelPath"].get<string>());
 }
 
