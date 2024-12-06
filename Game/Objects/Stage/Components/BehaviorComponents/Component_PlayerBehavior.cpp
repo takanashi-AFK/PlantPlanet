@@ -93,6 +93,8 @@ void Component_PlayerBehavior::Initialize()
 	// コライダーの追加
 	holder_->AddCollider(new BoxCollider(PLAYER_COLLIDER_POSITION, PLAYER_COLLIDER_SIZE));
 
+	holder_->SetObjectType(StageObject::TYPE_PLAYER);
+
 	// effekseer: :Effectの読み込み
 	EFFEKSEERLIB::gEfk->AddEffect("dodge", "Effects/Lazer01.efk");
 	EFFEKSEERLIB::gEfk->AddEffect("impact", "Effects/Attack_Impact.efk");

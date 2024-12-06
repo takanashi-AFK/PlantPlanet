@@ -56,7 +56,7 @@ namespace {
 
 StageObject::StageObject(string _name, string _modelFilePath, GameObject* _parent)
 	:GameObject(_parent, _name), modelFilePath_(_modelFilePath), modelHandle_(-1), myComponents_(), fallSpeed_(1), isOnGround_(false)
-	,shaderType_(Direct3D::SHADER_3D), isColliding_(true)
+	,shaderType_(Direct3D::SHADER_3D), isColliding_(true),objectType_(ObjectType::TYPE_NONE)
 {
 }
 

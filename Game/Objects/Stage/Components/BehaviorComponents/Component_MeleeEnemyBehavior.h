@@ -1,5 +1,7 @@
 #pragma once
 #include "../Component.h"
+class StageObject;
+
 class Component_MeleeEnemyBehavior :
 	public Component
 {
@@ -12,6 +14,11 @@ private:
 		E_DEAD,
 		E_MAX
 	}enemyState_;
+
+	StageObject* playerObjects_;
+	float speed_;
+	float deltaDistance_;
+	float power_;
 
 public:
 	Component_MeleeEnemyBehavior(string _name, StageObject* _holder, Component* _parent);
@@ -26,6 +33,8 @@ public:
 	void Move();
 	void Attack();
 	void Dead();
+
+	void SetState(EnemyState _state) { enemyState_ = _state; }
 
 };
 

@@ -17,7 +17,6 @@ private:
 
 	float speed_;			//速度
 	float limitDistance_;	//追従の限界距離
-	bool isActive_;			//追従が有効かどうか
 public:
 	/// <summary>
 	/// コンストラクタ
@@ -61,21 +60,6 @@ public:
 	/// ターゲットの設定
 	/// </summary>
 	void SetTarget(StageObject* _target) { target_ = _target; }
-
-	/// <summary>
-	/// 追従の開始
-	/// </summary>
-	void Start() { isActive_ = true; }
-
-	/// <summary>
-	/// 追従の停止
-	/// </summary>
-	void Stop() { isActive_ = false; }
-
-	/// <summary>
-	/// 追従が有効かどうか
-	/// </summary>
-	bool IsActive() { return isActive_; }
 
 	/// <summary>
 	/// 追跡をやめる距離の設定
