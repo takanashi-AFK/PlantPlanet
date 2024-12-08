@@ -66,6 +66,13 @@ public:
 	/// </summary>
 	/// <returns></returns>
 	float GetLimitDistance() { return limitDistance_; }
+	
+
+	/// <summary>
+	/// ‘¬“x‚ğİ’è
+	/// </summary>
+	/// <param name="_speed">‘¬“x</param>
+	void SetSpeed(float _speed) { speed_ = _speed; }
 
 private:
 

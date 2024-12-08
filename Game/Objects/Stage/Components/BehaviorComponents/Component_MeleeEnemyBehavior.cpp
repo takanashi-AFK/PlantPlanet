@@ -47,10 +47,16 @@ void Component_MeleeEnemyBehavior::Release()
 
 void Component_MeleeEnemyBehavior::Save(json& _saveObj)
 {
+	_saveObj["speed_"] = speed_;
+	_saveObj["power_"] = power_;
+	_saveObj["attackCoolTime_"] = attackCoolTime_;
 }
 
 void Component_MeleeEnemyBehavior::Load(json& _loadObj)
 {
+	if (_loadObj.contains("speed_"))speed_ = _loadObj["speed_"];
+	if (_loadObj.contains("power_"))power_ = _loadObj["power_"];
+	if (_loadObj.contains("attackCoolTime_"))attackCoolTime_ = _loadObj["attackCoolTime_"];
 }
 
 void Component_MeleeEnemyBehavior::DrawData()
@@ -118,6 +124,7 @@ void Component_MeleeEnemyBehavior::Move()
 
 	// ターゲットを設定、追跡開始
 	chase->SetTarget(playerObjects_);
+	chase->SetSpeed(speed_);
 	chase->Execute();
 
 	XMFLOAT3 playerPos = playerObjects_->GetPosition();
