@@ -17,7 +17,6 @@ private:
 	}sequence_;
 
 	XMVECTOR forward_; 
-	XMVECTOR prevFrontVec_;
 	float distance_;
 	float speed_;
 	bool isHit_;
