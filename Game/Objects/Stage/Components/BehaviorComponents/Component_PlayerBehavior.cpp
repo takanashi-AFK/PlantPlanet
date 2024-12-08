@@ -536,10 +536,6 @@ void Component_PlayerBehavior::Dodge()
 			hg->Unlock();
 		}
 	}	
-	XMFLOAT3 holderPos = holder_->GetPosition();
-	XMFLOAT3 bossPos = bossBehavior->GetHolder()->GetPosition();
-	XMFLOAT3 bossToPlayer = bossPos - holderPos;
-	XMVECTOR vBossToPlayer = XMLoadFloat3(&bossToPlayer);
 
 	// ボス衝突判定
 	BossState bossState = BOSS_STATE_MAX;
