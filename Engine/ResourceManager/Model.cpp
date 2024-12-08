@@ -181,7 +181,7 @@ namespace Model
 		roll = std::atan2(m32, m33); 
 
 		rotation.x = XMConvertToDegrees(roll);
-		rotation.y = XMConvertToDegrees(pitch);
+		rotation.y = -XMConvertToDegrees(pitch);
 		rotation.z = XMConvertToDegrees(yaw);
 		
 		return rotation;
