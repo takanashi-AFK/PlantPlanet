@@ -93,6 +93,8 @@ void Component_PlayerBehavior::Initialize()
 	// コライダーの追加
 	holder_->AddCollider(new BoxCollider(PLAYER_COLLIDER_POSITION, PLAYER_COLLIDER_SIZE));
 
+	holder_->SetObjectType(StageObject::TYPE_PLAYER);
+
 	// effekseer: :Effectの読み込み
 	EFFEKSEERLIB::gEfk->AddEffect("dodge", "Effects/Lazer01.efk");
 	EFFEKSEERLIB::gEfk->AddEffect("impact", "Effects/Attack_Impact.efk");
@@ -534,10 +536,6 @@ void Component_PlayerBehavior::Dodge()
 			hg->Unlock();
 		}
 	}	
-	XMFLOAT3 holderPos = holder_->GetPosition();
-	XMFLOAT3 bossPos = bossBehavior->GetHolder()->GetPosition();
-	XMFLOAT3 bossToPlayer = bossPos - holderPos;
-	XMVECTOR vBossToPlayer = XMLoadFloat3(&bossToPlayer);
 
 	// ボス衝突判定
 	BossState bossState = BOSS_STATE_MAX;

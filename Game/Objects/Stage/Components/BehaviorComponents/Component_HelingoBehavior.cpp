@@ -52,7 +52,7 @@ void Component_HelingoBehavior::Update()
 
 		// 追跡ターゲットの設定、追跡開始
 		chase->SetTarget(target_);
-		chase->Start();
+		chase->Execute();
 
 		// 落下範囲の設定
 		detector->SetRadius(fallrange_);

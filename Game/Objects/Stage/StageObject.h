@@ -22,6 +22,7 @@ public:
 		TYPE_PLAYER = 0,
 		TYPE_ENEMY,
 		TYPE_PLANT,
+		TYPE_NONE
 	};
 protected:
 
