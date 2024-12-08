@@ -3,12 +3,8 @@
 #include "../../../Engine/ImGui/imgui.h"
 
 namespace {
-	const int STAMINA_DECREASE_SHOOT = 10;
-	const int STAMINA_DECREASE_MELEE = 20;
-	const int STAMINA_DECREASE_DODGE = 30;
 	const float STAMINA_RECOVERY = 0.17f;
 	const float STAMINA_MAX = 100.f;
-
 }
 
 Component_StaminaGauge::Component_StaminaGauge(string _name, StageObject* _holder, Component* _parent)

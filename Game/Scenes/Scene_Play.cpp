@@ -160,15 +160,15 @@ void Scene_Play::InitStage()
 	}
 	
 	// 植物の生成
-	//{
-	//	// 植物データの読み込み
-	//	json loadData;
-	//	JsonReader::Load("Datas/PlantData/TentativeFlowers.json", loadData);
-	//	PlantCollection::Load(loadData);
+	{
+		// 植物データの読み込み
+		json loadData;
+		JsonReader::Load("Datas/PlantData/TentativeFlowers.json", loadData);
+		PlantCollection::Load(loadData);
 
-	//	// generatorの起動
-	//	for (auto pg : (pStage_->GetStageObject("generator"))->FindComponent(ComponentType::PlantGenerator))pg->Execute();
-	//}
+		// generatorの起動
+		for (auto pg : (pStage_->GetStageObject("generator"))->FindComponent(ComponentType::PlantGenerator))pg->Execute();
+	}
 }
 
 void Scene_Play::InitCamera()

@@ -35,15 +35,19 @@ using namespace Constants;
 
 namespace {
 	constexpr int SHOOT_FRAME = 115;
-	constexpr float DODGE_DISTANCE = 5.0f;
 	constexpr XMFLOAT3 PLAYER_COLLIDER_SIZE = { 1,1,1 };
 	constexpr XMFLOAT3 PLAYER_COLLIDER_POSITION = { 0,0.5,0 };
 	constexpr XMVECTOR INITIALIZE_DIRECTION_Z = { 0,0,1,0 };
+
+	constexpr float DODGE_DISTANCE = 5.0f;
 	constexpr float DODGE_RAY_OFFSET = 0.5f;
 	constexpr float DODGE_DISTANCE_LIMIT = 0.7;
+
 	constexpr int EFFECT_FRAME = 60;
 	constexpr int EFFECT_SPEED = 1;
+
 	constexpr float BOSS_TACKLE_DISTANCE = 2.0f;
+
 	constexpr int STAMINA_DECREASE_SHOOT = 10;
 	constexpr int STAMINA_DECREASE_MELEE = 20;
 	constexpr int STAMINA_DECREASE_DODGE = 30;
@@ -82,7 +86,7 @@ Component_PlayerBehavior::Component_PlayerBehavior(string _name, StageObject* _h
 	bossBehavior(nullptr),
 	effectModelTransform(nullptr),
 	effectData_(),
-	researchPoint_(95),
+	researchPoint_(0),
 	myPlants_(),
 	isMeleeStart_(true)
 {
@@ -94,6 +98,7 @@ void Component_PlayerBehavior::Initialize()
 	holder_->AddCollider(new BoxCollider(PLAYER_COLLIDER_POSITION, PLAYER_COLLIDER_SIZE));
 
 	holder_->SetObjectType(StageObject::TYPE_PLAYER);
+
 
 	// effekseer: :Effectの読み込み
 	EFFEKSEERLIB::gEfk->AddEffect("dodge", "Effects/Lazer01.efk");
@@ -169,9 +174,6 @@ void Component_PlayerBehavior::Update()
 
 		// スタミナバーの値を設定
 		if (staminaBar != nullptr && sg != nullptr)staminaBar->SetProgress(sg->now_, sg->max_);
-
-		ImGui::Text("Stamina : %f", sg->now_);
-
 	}
 
 	// 移動コンポーネントの取得 & 有無の確認
@@ -186,16 +188,16 @@ void Component_PlayerBehavior::Update()
 
 	switch (nowState_)
 	{
-	case PLAYER_STATE_IDLE:           Idle();         break;  // 現在の状態がIDLEの場合
+	case PLAYER_STATE_IDLE:					Idle();         break;  // 現在の状態がIDLEの場合
 	case PLAYER_STATE_SHOOT_WALK_LEFT:
 	case PLAYER_STATE_SHOOT_WALK_RIGHT:
 	case PLAYER_STATE_SHOOT_WALK_FORWARD:
 	case PLAYER_STATE_SHOOT_WALK_BACK:
-	case PLAYER_STATE_WALK:           Walk();         break;  // 現在の状態がWALKの場合
-	case PLAYER_STATE_DODGE:          Dodge();         break;  // 現在の状態がDASHの場合
-	case PLAYER_STATE_DEAD:            Dead();         break;  // 現在の状態がDEADの場合
-	case PLAYER_STATE_INTRACT:        Interact();      break;  // 現在の状態がINTRACTの場合
-	case PLAYER_STATE_MELEE:			Melee();     break;  // 現在の状態がMELEEの場合
+	case PLAYER_STATE_WALK:					Walk();         break;  // 現在の状態がWALKの場合
+	case PLAYER_STATE_DODGE:				Dodge();         break;  // 現在の状態がDASHの場合
+	case PLAYER_STATE_DEAD:					Dead();         break;  // 現在の状態がDEADの場合
+	case PLAYER_STATE_INTRACT:				Interact();      break;  // 現在の状態がINTRACTの場合
+	case PLAYER_STATE_MELEE:				Melee();     break;  // 現在の状態がMELEEの場合
 	}
 
 	if (isShootAttack_)	Shoot();
