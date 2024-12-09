@@ -12,10 +12,13 @@
 
 #include"../../../Engine/Global.h"
 
+#include"../../../Engine/ResourceManager/Model.h"
+
 Component_RangeEnemyBehavior::Component_RangeEnemyBehavior(string _name, StageObject* _holder, Component* _parent)
-	:Component(_holder, _name, CactanBehavior, _parent), shotAmount_{}, shotInterval_{}, isFire_{ false }
+	:Component(_holder, _name, WeakRangeEnemy, _parent), shotAmount_{}, shotInterval_{}, isFire_{ false }
 {
 	currentProcess_ = [this]() {SleepProcess(); };
+	isActive_ = true;
 }
 
 void Component_RangeEnemyBehavior::Initialize()
@@ -31,10 +34,9 @@ void Component_RangeEnemyBehavior::Initialize()
 
 void Component_RangeEnemyBehavior::Update()
 {
+
 	if (isDead())	currentProcess_ = [this](){DeadProcess();};
 	currentProcess_();
-
-	
 }
 
 void Component_RangeEnemyBehavior::Release()
@@ -43,10 +45,12 @@ void Component_RangeEnemyBehavior::Release()
 
 void Component_RangeEnemyBehavior::Save(json& _saveObj)
 {
+	_saveObj["TargetName"] = targetName_;
 }
 
 void Component_RangeEnemyBehavior::Load(json& _loadObj)
 {
+	if (_loadObj.contains("TargetName"))	targetName_ = _loadObj["TargetName"].get<string>();
 }
 
 void Component_RangeEnemyBehavior::DrawData()
@@ -144,8 +148,34 @@ void Component_RangeEnemyBehavior::WalkTo(XMFLOAT3 dir)
 	float length = sqrt(std::powf(dir.x, 2) + std::powf(dir.y, 2) + std::powf(dir.z, 2));
 	dir = dir * (1 / length);
 	
-	//raycast--
-	// 
+	//raycast-----------
+	Stage* pStage = (Stage*)(holder_->FindObject("Stage"));
+	if (pStage == nullptr) return;
+	std::vector<StageObject*> stageObj = pStage->GetStageObjects();
+
+	for (auto obj : stageObj) {
+		// 自分自身のオブジェクトだったらスキップ
+		if (obj->GetObjectName() == holder_->GetObjectName() || !obj->GetIsColliding())
+			continue;
+
+		// モデルハンドルを取得
+		int hGroundModel = obj->GetModelHandle();
+		if (hGroundModel < 0) continue;
+
+		RayCastData RayData; {
+			RayData.start = holder_->GetPosition(); // レイの発射位置
+			RayData.start.y += .5f;
+			RayData.dir = dir;
+			Model::RayCast(hGroundModel, &RayData); // レイを発射
+		}
+
+		// レイが何かに当たったら且つ、その距離が突進距離以下だったら突進距離の再設定
+		if (RayData.hit && RayData.dist <= moveAmount) {
+
+			return;
+		}
+		
+	}
 	//--------
 	
 	XMFLOAT3 vec = dir * moveAmount;
