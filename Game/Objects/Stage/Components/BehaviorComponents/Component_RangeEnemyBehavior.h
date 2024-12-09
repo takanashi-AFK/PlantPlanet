@@ -40,6 +40,7 @@ protected:
 
 	void WalkTo(XMFLOAT3 dir);
 	void Attack();
+	void FaceToTarget();
 
 protected:
 

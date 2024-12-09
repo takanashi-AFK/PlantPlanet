@@ -139,6 +139,8 @@ float Component_RangeEnemyBehavior::GetLengthTo(XMFLOAT3 tgt)
 void Component_RangeEnemyBehavior::WalkTo(XMFLOAT3 dir)
 {
 	constexpr float moveAmount = 0.05f;
+
+	dir.y = 0;
 	float length = sqrt(std::powf(dir.x, 2) + std::powf(dir.y, 2) + std::powf(dir.z, 2));
 	dir = dir * (1 / length);
 	
@@ -147,9 +149,11 @@ void Component_RangeEnemyBehavior::WalkTo(XMFLOAT3 dir)
 	//--------
 	
 	XMFLOAT3 vec = dir * moveAmount;
-	XMFLOAT3 pos = vec + holder_->GetPosition() ;
+	XMFLOAT3 pos = vec + holder_->GetPosition();
 	pos.y = 0;
 	holder_->SetPosition(pos);
+
+	ImGui::Text(std::format("{}, {}, {}",dir.x,dir.y,dir.z).c_str());
 }
 
 void Component_RangeEnemyBehavior::Attack()
@@ -167,11 +171,12 @@ void Component_RangeEnemyBehavior::Attack()
 
 		shoot->SetPower(1);
 		shoot->SetShootingSpeed(.1f);
+
 		shoot->SetShootingDirection(XMVector3TransformCoord(dir, XMMatrixRotationY(XMConvertToRadians(holder_->GetRotate().y))));
 		shoot->SetShootingPosition(holder_->GetPosition());
 		shoot->SetBulletColliderRadius(0.5f);
-		shoot->SetBulletLifeTime(100);
-		shoot.Set
+		shoot->SetBulletLifeTime(1.5);
+		//shoot->SetEffectData();
 		shoot->Execute();
 
 		constexpr int rapidAmount = 5;
@@ -182,6 +187,12 @@ void Component_RangeEnemyBehavior::Attack()
 
 		if (!isFire_) shotAmount_ = 0;
 	}
+}
+
+void Component_RangeEnemyBehavior::FaceToTarget()
+{
+	XMFLOAT3 angle = target_->GetPosition() - holder_->GetPosition();
+	holder_->SetRotateY(XMConvertToDegrees(atan2f(angle.x, angle.z)));
 }
 
 //----------------------------------------------------
@@ -196,6 +207,8 @@ void Component_RangeEnemyBehavior::CombatProcess()
 {
 	constexpr float stalkbleLength = 7.0f;
 	constexpr float wishDistance = 5.0f;
+
+	FaceToTarget();
 
 	float toTargetLength = GetLengthTo(target_->GetPosition());
 	Component_Timer* timer = dynamic_cast<Component_Timer*>(GetChildComponent("Timer"));
@@ -214,9 +227,8 @@ void Component_RangeEnemyBehavior::CombatProcess()
 	WalkTo
 	(
 		toTargetLength < wishDistance?
-		target_->GetPosition() - holder_->GetPosition() *-1:
+		(target_->GetPosition() - holder_->GetPosition()) *-1:
 		target_->GetPosition() - holder_->GetPosition()//inverse direction
-
 	);
 
 	isFire_ = timer->IsIntervalTime(3.f) || isFire_;
