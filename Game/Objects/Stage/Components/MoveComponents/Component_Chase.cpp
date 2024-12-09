@@ -53,7 +53,6 @@ void Component_Chase::Release()
 void Component_Chase::Save(json& _saveobj)
 {
 	_saveobj["speed_"] = speed_;
-	_saveobj["isActive_"] = isActive_;
 	_saveobj["limitDistance_"] = limitDistance_;
 	if(target_ != nullptr)_saveobj["target_"] = target_->GetObjectName();
 }
@@ -61,7 +60,6 @@ void Component_Chase::Save(json& _saveobj)
 void Component_Chase::Load(json& _loadObj)
 {
 	if(_loadObj.contains("speed_"))speed_ = _loadObj["speed_"];
-	if(_loadObj.contains("isActive_"))isActive_ = _loadObj["isActive_"];
 	if(_loadObj.contains("target_"))targetName_ = _loadObj["target_"];
 	if(_loadObj.contains("limitDistance_"))limitDistance_ = _loadObj["limitDistance_"];
 }
@@ -69,9 +67,6 @@ void Component_Chase::Load(json& _loadObj)
 void Component_Chase::DrawData()
 {
 
-	// ’Ç]‚Ì—LŒø–³Œø
-	ImGui::Checkbox("isActive", &isActive_);
-	
 	// ‘¬“x‚Ìİ’è
 	ImGui::DragFloat("speed", &speed_, 0.01f, 0.0f, 10.0f);
 

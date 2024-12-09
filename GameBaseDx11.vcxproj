@@ -141,6 +141,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Game\Objects\Stage\Components\BehaviorComponents\Component_RangeEnemyBehavior.cpp" />
+    <ClCompile Include="Game\Objects\Stage\Components\BehaviorComponents\Component_MeleeEnemyBehavior.cpp" />
     <ClCompile Include="Game\Objects\Stage\Components\MotionComponent\Component_Accessory.cpp" />
     <ClCompile Include="Game\Objects\Stage\Components\PlantComponents\Component_Plant.cpp" />
     <ClCompile Include="Game\Objects\Stage\Components\GaugeComponents\Component_StaminaGauge.cpp" />
@@ -237,6 +238,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game\Objects\Stage\Components\BehaviorComponents\Component_RangeEnemyBehavior.h" />
+    <ClInclude Include="Game\Objects\Stage\Components\BehaviorComponents\Component_MeleeEnemyBehavior.h" />
     <ClInclude Include="Game\Objects\Stage\Components\MotionComponent\Component_Accessory.h" />
     <ClInclude Include="Game\Objects\Stage\Components\PlantComponents\Component_Plant.h" />
     <ClInclude Include="Game\Objects\Stage\Components\PlantComponents\Component_PlantGenerator.h" />

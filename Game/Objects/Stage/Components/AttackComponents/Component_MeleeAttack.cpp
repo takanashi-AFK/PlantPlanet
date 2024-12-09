@@ -7,17 +7,22 @@
 #include "../../../../../Engine/DirectX/Direct3D.h"
 #include "../DetectorComponents/Component_FanRangeDetector.h"
 #include "../../Stage.h"
+#include "../MoveComponents/Component_TackleMove.h"
+#include "../MoveComponents/Component_WASDInputMove.h"
+#include "../../../../../Engine/ResourceManager/Model.h"
 
 namespace
 {
 	const float MOVE_SPEED = 0.1f;
-	const float MOVE_DISTANCE = 5.f;
+	const float MOVE_DISTANCE = 2.5f;
+	const float MOVE_RAY_OFFSET = 0.5f;
+	const float MOVE_DISTANCE_LIMIT = 0.7f;
 }
 
 Component_MeleeAttack::Component_MeleeAttack(string _name, StageObject* _holder, Component* _parent)
 	:Component_Attack(_holder, _name, MeleeAttack, _parent), 
 	isHit_(false),
-	isFirstMove_(true),
+	isFirstMove_(false),
 	startPosition_(XMFLOAT3(0, 0, 0)),
 	easingType_("Linear"), 
 	rate_(0),
@@ -29,13 +34,12 @@ Component_MeleeAttack::Component_MeleeAttack(string _name, StageObject* _holder,
 
 void Component_MeleeAttack::Initialize()
 {
-	if (!FindChildComponent("Timer")) {
-		AddChildComponent(CreateComponent("Timer", Timer, holder_, this));
-	}
 
 	holder_->AddCollider(new BoxCollider(XMFLOAT3(0, 0, 0), XMFLOAT3(1, 1, 1)));
 	power_ = 20;
+	if (FindChildComponent("Timer") == false) AddChildComponent(CreateComponent("Timer", Timer, holder_, this));
 	if (FindChildComponent("attackRange") == false)AddChildComponent(CreateComponent("attackRange", FanRangeDetector, holder_, this));
+	if (FindChildComponent("tackle") == false)AddChildComponent(CreateComponent("tackle", TackleMove, holder_, this));
 }
 
 void Component_MeleeAttack::Update()
@@ -58,25 +62,6 @@ void Component_MeleeAttack::Release()
 
 void Component_MeleeAttack::DrawData()
 {
-
-	ImGui::Separator();
-
-	ImGui::Text("StepForward");
-	// 移動距離を設定
-	ImGui::DragFloat("distance_", &distance_);
-
-	// 移動速度を設定
-	ImGui::DragFloat("speed_", &speed_, 0.001, 0, 1);
-
-	// イージングの種類を設定
-	if (ImGui::BeginCombo("EaseFunc", easingType_.c_str())) {
-		for (const auto& pair : Direct3D::EaseFunc) {
-			bool is_selected = (easingType_ == pair.first);
-			if (ImGui::Selectable(pair.first.c_str(), is_selected)) easingType_ = pair.first;
-			if (is_selected) ImGui::SetItemDefaultFocus();
-		}
-		ImGui::EndCombo();
-	}
 	ImGui::Separator();
 
 	ImGui::Text("Slash");
@@ -92,9 +77,6 @@ void Component_MeleeAttack::DrawData()
 
 void Component_MeleeAttack::Save(json& _saveObj)
 {
-	_saveObj["distance_"] = distance_;
-	_saveObj["speed_"] = speed_;
-	_saveObj["easingType_"] = easingType_;
 	_saveObj["power_"] = power_;
 	_saveObj["angle_"] = angle_;
 	_saveObj["range_"] = range_;
@@ -102,9 +84,6 @@ void Component_MeleeAttack::Save(json& _saveObj)
 
 void Component_MeleeAttack::Load(json& _loadObj)
 {
-	if (_loadObj.contains("distance_")) distance_ = _loadObj["distance_"];
-	if (_loadObj.contains("speed_")) speed_ = _loadObj["speed_"];
-	if (_loadObj.contains("easingType_")) easingType_ = _loadObj["easingType_"];
 	if (_loadObj.contains("power_")) power_ = _loadObj["power_"];
 	if (_loadObj.contains("angle_")) angle_ = _loadObj["angle_"];
 	if (_loadObj.contains("range_")) range_ = _loadObj["range_"];
@@ -112,41 +91,78 @@ void Component_MeleeAttack::Load(json& _loadObj)
 
 void Component_MeleeAttack::StepForward()
 {
+	Component_TackleMove* tackleMove = (Component_TackleMove*)holder_->FindComponent("TackleMove");
+	if (tackleMove == nullptr)return;
 
-	// ボタンが押された瞬間だけ、初期位置を取得
-	if (isFirstMove_ == true) {
-		startPosition_ = holder_->GetPosition();
-		isFirstMove_ = false;
-	}
-	else {
+
+	if (isFirstMove_ == false) {
+		// 突進方向を設定
 		forward_ = Camera::GetSightLine();
-		if (XMVector3Equal(forward_, XMVectorZero()))forward_ = XMVectorSet(0, 0, 1, 0);
-		XMFLOAT3 holderPosition = startPosition_;
+		forward_ = XMVector3Normalize(XMVectorSet(XMVectorGetX(forward_), 0, XMVectorGetZ(forward_), 0));
 
-		XMVECTOR move = XMLoadFloat3(&holderPosition) + XMVector3Normalize(forward_) * ((distance_)*Direct3D::EaseFunc[easingType_](rate_));
+		// 突進方向を設定
+		tackleMove->SetDirection(forward_);
 
-		move = XMVectorSet(XMVectorGetX(move), 0, XMVectorGetZ(move), 0.f);
+		// ステージ情報を取得
+		Stage* pStage = (Stage*)(holder_->FindObject("Stage"));
+		if (pStage == nullptr) return;
+		std::vector<StageObject*> stageObj = pStage->GetStageObjects();
 
-		XMStoreFloat3(&holderPosition, move);
+		// ステージオブジェクトすべてにレイを撃つ
+		for (auto obj : stageObj) {
+			// 自分自身のオブジェクトだったらスキップ
+			if (obj->GetObjectName() == holder_->GetObjectName() || !obj->GetIsColliding())
+				continue;
 
-		// 位置を更新
-		holder_->SetPosition(holderPosition);
+			// モデルハンドルを取得
+			int hGroundModel = obj->GetModelHandle();
+			if (hGroundModel < 0) continue;
 
-		rate_ += speed_;
+			// 正面方向にレイを発射
+			RayCastData tackleRayData; {
+				tackleRayData.start = holder_->GetPosition(); // レイの発射位置
+				tackleRayData.start.y += MOVE_RAY_OFFSET;
+				XMStoreFloat3(&tackleRayData.dir, forward_); // レイの方向
+				Model::RayCast(hGroundModel, &tackleRayData); // レイを発射
+			}
 
-		// MOVE_DISTANCEに到達したら停止
-		if (rate_ >= 1) {
-			isFirstMove_ = true;
-			rate_ = 0;
-			SetSequence(E_SLASH);
+			// レイが何かに当たったら且つ、その距離が突進距離以下だったら突進距離の再設定
+			if (tackleRayData.hit && tackleRayData.dist <= distance_) {
+
+				// 近すぎたら0にする
+				if (tackleRayData.dist <= MOVE_DISTANCE_LIMIT) {
+					distance_ = 0;
+					break;
+				}
+				else {
+					distance_ = tackleRayData.dist;
+					break;
+
+				}
+			}
+			else
+				distance_ = MOVE_DISTANCE;
 		}
+
+		// 突進距離を設定
+		tackleMove->SetDistance(distance_);
+
+		// 突進処理を実行
+		tackleMove->Execute();
+
+		// ダッシュフラグを立てる
+		isFirstMove_ = true;
+	}
+	if (tackleMove->IsActived() == false) {
+		isFirstMove_ = false;
+
+		distance_ = MOVE_DISTANCE;
+		SetSequence(E_SLASH);
 	}
 }
 
 void Component_MeleeAttack::Slash()
 {
-
-
 	// 全敵オブジェクトを取得
 	vector<StageObject*> enemyObjects; {
 

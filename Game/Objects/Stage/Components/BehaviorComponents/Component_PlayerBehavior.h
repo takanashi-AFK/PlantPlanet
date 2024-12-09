@@ -24,7 +24,7 @@ enum PlayerState {
 	PLAYER_STATE_SHOOT_WALK_FORWARD,
 	PLAYER_STATE_SHOOT_IDLE,
 	PLAYER_STATE_INTRACT,
-  PLAYER_STATE_MELEE,	
+	PLAYER_STATE_MELEE,	
 	PLAYER_STATE_MAX
 };
 
@@ -33,7 +33,6 @@ class Component_PlayerBehavior : public Component
 private:
 	PlayerState nowState_, prevState_;	// 現在の状態、前の状態
 	float shootHeight_;					// 射撃の高さ
-	float stamina_;						// スタミナ
 	XMFLOAT3 prevAngles_;				// 前フレームの回転
 	Component_BossBehavior* bossBehavior;
 	int invincibilityFrame_;			// 無敵フレーム
