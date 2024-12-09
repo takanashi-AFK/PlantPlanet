@@ -11,6 +11,7 @@
 #include "Component_MeleeEnemyBehavior.h"
 #include "../../../../Plants/PlantCollection.h"
 #include <unordered_map>
+#include "../PlantComponents/Component_Plant.h"
 
 
 Component_MeleeEnemyBehavior::Component_MeleeEnemyBehavior(string _name, StageObject* _holder, Component* _parent):
@@ -218,7 +219,6 @@ void Component_MeleeEnemyBehavior::Attack()
 
 void Component_MeleeEnemyBehavior::Dead()
 {
-	holder_->KillMe();
 	// その場に指定した花を出す
 	if (isFlowerSpawned_ == true)return;
 	if (dropFlowerName_ == "")return;
@@ -226,15 +226,36 @@ void Component_MeleeEnemyBehavior::Dead()
 	unordered_map<int, PlantData> plantData = PlantCollection::GetPlants();
 	if (plantData.size() <= 0)return;
 
-	for (auto plant : plantData) {
+	for (auto& plant : plantData) {
 		if (plant.second.name_ == dropFlowerName_) {
 			// その場に花を生成
 			Stage* pStage = (Stage*)(holder_->FindObject("Stage"));
 			if (pStage == nullptr)return;
 
-			StageObject* plantObject = CreateStageObject("EnemyDropPlant1", plant.second.modelFilePath_, holder_->GetParent());
+			StageObject* plantObject = CreateStageObject("EnemyDropPlant1", plant.second.modelFilePath_, pStage);
+
+			// 当たり判定を設定
+			plantObject->SetIsColliding(false);
+
+			// プラントコンポーネントを作成
+			Component_Plant* plantComponent = (Component_Plant*)CreateComponent("Plant", Plant, plantObject, this);
+
+			// 植物情報を設定
+			plantComponent->SetData(plant.second);
+
+			// コンポーネントを追加
+			plantObject->AddComponent(plantComponent);
+
+			// サイズを設定
+			plantObject->SetScale({ 0.3f,0.3f,0.3f });
 			plantObject->SetPosition(holder_->GetPosition());
-			pStage->AddStageObject(plantObject);
+
+			// 属性を設定
+			plantObject->SetObjectType(StageObject::TYPE_PLANT);
+
+			pStage->DeleteStageObject(holder_);
+			// ステージに追加
+			((Stage*)holder_->GetParent())->AddStageObject(plantObject);
 
 			isFlowerSpawned_ = true;
 			break;
