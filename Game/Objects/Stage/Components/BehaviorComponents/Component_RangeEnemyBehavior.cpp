@@ -51,6 +51,32 @@ void Component_RangeEnemyBehavior::Load(json& _loadObj)
 
 void Component_RangeEnemyBehavior::DrawData()
 {
+	// アクティブフラグを表示
+	ImGui::Checkbox("isActive_", &isActive_);
+	// 対象を設定
+	{
+		// ステージ上に存在するオブジェクトの名前を全て取得
+		vector<string> nameList{}; nameList.push_back("None");
+		for (auto obj : ((Stage*)holder_->FindObject("Stage"))->GetStageObjects()) nameList.push_back(obj->GetObjectName());
+
+		// コンボボックスで選択
+		static int select = 0;
+		if (ImGui::BeginCombo("target_", nameList[select].c_str())) {
+			for (int i = 0; i < nameList.size(); i++) {
+				bool is_selected = (select == i);
+				if (ImGui::Selectable(nameList[i].c_str(), is_selected)) select = i;
+				if (is_selected) ImGui::SetItemDefaultFocus();
+			}
+			ImGui::EndCombo();
+		}
+
+		// 選択された名前から対象を設定
+		if (select != 0) target_ = (StageObject*)holder_->FindObject(nameList[select]);
+	}
+}
+
+void Component_RangeEnemyBehavior::OnCollision(GameObject* _target, Collider* _collider)
+{
 }
 
 bool Component_RangeEnemyBehavior::isSerchTargetSuccess()
@@ -68,6 +94,8 @@ bool Component_RangeEnemyBehavior::isDetectTarget()
 {
 	Component_CircleRangeDetector* detector = (Component_CircleRangeDetector*)(GetChildComponent("CircleRangeDetector"));
 	if (!detector)return false;
+	detector->SetRadius(5.f);
+	detector->SetTarget(target_);
 
 	return detector->IsContains();
 }
@@ -120,6 +148,7 @@ void Component_RangeEnemyBehavior::WalkTo(XMFLOAT3 dir)
 	
 	XMFLOAT3 vec = dir * moveAmount;
 	XMFLOAT3 pos = vec + holder_->GetPosition() ;
+	pos.y = 0;
 	holder_->SetPosition(pos);
 }
 
@@ -127,20 +156,31 @@ void Component_RangeEnemyBehavior::Attack()
 {
 	++shotInterval_;
 
-	constexpr int burstInterval = 0;
+	constexpr int burstInterval = 10;
 
 	if (shotInterval_ >= burstInterval)
 	{
-		//shoot bullet
-
 		Component_ShootAttack* shoot = (Component_ShootAttack*)(GetChildComponent("ShootAttack"));
-		if (shoot == nullptr)return;//
+		if (!shoot)return;
+
+		XMVECTOR dir = { 0,0,1,0 };
+
+		shoot->SetPower(1);
+		shoot->SetShootingSpeed(.1f);
+		shoot->SetShootingDirection(XMVector3TransformCoord(dir, XMMatrixRotationY(XMConvertToRadians(holder_->GetRotate().y))));
+		shoot->SetShootingPosition(holder_->GetPosition());
+		shoot->SetBulletColliderRadius(0.5f);
+		shoot->SetBulletLifeTime(100);
+		shoot.Set
+		shoot->Execute();
 
 		constexpr int rapidAmount = 5;
 
 		++shotAmount_;
 		isFire_ = shotAmount_ >= rapidAmount ? false : true;
 		shotInterval_ = 0;
+
+		if (!isFire_) shotAmount_ = 0;
 	}
 }
 
@@ -174,11 +214,13 @@ void Component_RangeEnemyBehavior::CombatProcess()
 	WalkTo
 	(
 		toTargetLength < wishDistance?
-		target_->GetPosition() - holder_->GetPosition():
-		target_->GetPosition() - holder_->GetPosition() * -1//inverse direction
+		target_->GetPosition() - holder_->GetPosition() *-1:
+		target_->GetPosition() - holder_->GetPosition()//inverse direction
+
 	);
 
-	if (isFire_)	Attack();
+	isFire_ = timer->IsIntervalTime(3.f) || isFire_;
+	if(isFire_)		Attack();
 }
 
 void Component_RangeEnemyBehavior::DeadProcess()

@@ -21,6 +21,7 @@ public:
 	void Load(json& _loadObj) override;
 
 	void DrawData() override;
+	void OnCollision(GameObject* _target, Collider* _collider) override;
 
 	enum class STATE
 	{
