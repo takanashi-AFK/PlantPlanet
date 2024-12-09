@@ -20,7 +20,7 @@
 
 Component_RangeEnemyBehavior::Component_RangeEnemyBehavior(string _name, StageObject* _holder, Component* _parent)
 	:Component(_holder, _name, WeakRangeEnemy, _parent), shotAmount_{}, shotInterval_{}, isFire_{ false },isFlowerSpawned_{false}
-	,moveAmount_(.05f),burstInterval_(10),rapidAmount_(5),stalkbleLength_(7.0f),wishDistance_(5.0f), fireInterval_(3.f)
+	, moveAmount_(.05f), burstInterval_(10), rapidAmount_(5), stalkbleLength_(7.0f), wishDistance_(5.0f), fireInterval_(3.f), detectorRange_(10.f)
 {
 	currentProcess_ = [this]() {SleepProcess(); };
 	isActive_ = true;
@@ -59,6 +59,7 @@ void Component_RangeEnemyBehavior::Save(json& _saveObj)
 	_saveObj["StalkableLength"] = stalkbleLength_;
 	_saveObj["WishDistance"] = wishDistance_;
 	_saveObj["FireInterval"] = fireInterval_;
+	_saveObj["detectorRange_"] = detectorRange_;
 }
 
 void Component_RangeEnemyBehavior::Load(json& _loadObj)
@@ -72,7 +73,7 @@ void Component_RangeEnemyBehavior::Load(json& _loadObj)
 	if (_loadObj.contains("RapidAmount"))		const_cast<uint8_t&>(rapidAmount_)	 = _loadObj["RapidAmount"].get<uint8_t>();
 	if (_loadObj.contains("StalkableLength"))	const_cast<float&>(stalkbleLength_)	 = _loadObj["StalkableLength"].get<float>();
 	if (_loadObj.contains("WishDistance"))		const_cast<float&>(wishDistance_)	 = _loadObj["WishDistance"].get<float>();
-
+	if (_loadObj.contains("detectorRange_"))	const_cast<float&>(detectorRange_) = _loadObj["detectorRange_"].get<float>();
 }
 
 void Component_RangeEnemyBehavior::DrawData()
@@ -132,6 +133,7 @@ void Component_RangeEnemyBehavior::DrawData()
 	ImGui::DragFloat("StalkableLength:", &const_cast<float&>(stalkbleLength_), 0.01, .0f);
 	ImGui::DragFloat("WishDistance   :", &const_cast<float&>(wishDistance_), 0.01, .0f);
 	ImGui::DragFloat("FireInterval   :", &(fireInterval_), 0.01, .0f);
+	ImGui::DragFloat("DetectorRange  :", &const_cast<float&>(detectorRange_), 0.01, .0f);
 
 	const_cast<uint16_t&>(burstInterval_) = tempBurstInterval;
 	const_cast<uint8_t&>(rapidAmount_) = tempRapidAmount;
@@ -141,7 +143,7 @@ void Component_RangeEnemyBehavior::OnCollision(GameObject* _target, Collider* _c
 {
 }
 
-bool Component_RangeEnemyBehavior::isSerchTargetSuccess()
+bool Component_RangeEnemyBehavior::isSearchTargetSuccess()
 {
 	if (!target_)
 	{
@@ -156,7 +158,7 @@ bool Component_RangeEnemyBehavior::isDetectTarget()
 {
 	Component_CircleRangeDetector* detector = (Component_CircleRangeDetector*)(GetChildComponent("CircleRangeDetector"));
 	if (!detector)return false;
-	detector->SetRadius(5.f);
+	detector->SetRadius(detectorRange_);
 	detector->SetTarget(target_);
 
 	return detector->IsContains();
@@ -280,7 +282,7 @@ void Component_RangeEnemyBehavior::FaceToTarget()
 //----------------------------------------------------
 void Component_RangeEnemyBehavior::SleepProcess()
 {
-	if (!isSerchTargetSuccess())return;
+	if (!isSearchTargetSuccess())return;
 
 	if (isDetectTarget()) currentProcess_ = [this]() {CombatProcess(); };
 }

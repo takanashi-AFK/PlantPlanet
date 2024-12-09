@@ -20,6 +20,8 @@ private:
 	const uint16_t burstInterval_;
 	const uint8_t rapidAmount_;
 
+	float detectorRange_;
+
 public:
 	Component_RangeEnemyBehavior(string _name, StageObject* _holder, Component* _parent);
 	void Initialize() override;
@@ -41,7 +43,7 @@ public:
 
 protected:
 	
-	bool isSerchTargetSuccess();
+	bool isSearchTargetSuccess();
 	bool isDetectTarget();
 	bool isDead();
 

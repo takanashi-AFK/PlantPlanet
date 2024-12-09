@@ -34,7 +34,7 @@ void Scene_Result::Initialize()
 	UIPanel* uiPanel = UIPanel::GetInstance();
 	
 	// UIƒpƒlƒ‹î•ñ‚ð“Ç‚Ýž‚Þ
-	if (JsonReader::Load("Datas/resultTent.json", loadData)) uiPanel->Load(loadData);
+	if (JsonReader::Load("Datas/Test/resultTent.json", loadData)) uiPanel->Load(loadData);
 
 	std::unordered_map<int, PlantData>allPlantData = PlantCollection::GetPlants();
 
