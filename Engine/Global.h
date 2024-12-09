@@ -19,8 +19,10 @@
 #define REFERENCE_XMINT2(p) p.x,p.y
 
 // オペレーターのオーバーロード
-XMFLOAT3 operator+(XMFLOAT3& a, const XMFLOAT3& b);
-XMFLOAT3 operator-(XMFLOAT3& a, const XMFLOAT3& b);
+XMFLOAT3 operator+(XMFLOAT3 a, const XMFLOAT3 b);
+XMFLOAT3 operator-(XMFLOAT3 a, const XMFLOAT3 b);
+XMFLOAT3 operator*(XMFLOAT3 a, const float b);
+XMFLOAT3 operator*(XMFLOAT3 a, const XMFLOAT3 b);
 
 // ＝＝ 定数 ＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝ //
 

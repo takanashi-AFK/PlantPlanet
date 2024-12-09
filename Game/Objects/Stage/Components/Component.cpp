@@ -32,6 +32,7 @@
 #include "PlantComponents/Component_Plant.h"
 #include "GaugeComponents/Component_StaminaGauge.h"
 #include "MotionComponent/Component_Accessory.h"
+#include "BehaviorComponents/Component_RangeEnemyBehavior.h"
 #include "BehaviorComponents/Component_MeleeEnemyBehavior.h"
 
 Component::Component(StageObject* _holder, string _name,ComponentType _type)
@@ -256,6 +257,8 @@ Component* CreateComponent(string _name, ComponentType _type, StageObject* _hold
 		case StaminaGauge: comp = new Component_StaminaGauge(_name, _holder, _parent); break;
 		case Accessory: comp = new Component_Accessory(_name, _holder, _parent); break;
 		case MeleeEnemyBehavior: comp = new Component_MeleeEnemyBehavior(_name, _holder, _parent); break;
+    case WeakRangeEnemy : comp = new Component_RangeEnemyBehavior(_name, _holder, _parent); break;
+
 		default: /* その他コンポーネントを追加する時は上記のように追加 */ break;
 	}
 	return comp;
@@ -297,6 +300,7 @@ string ComponentTypeToString(ComponentType _type)
 	case Plant: return "PlantComponent";
 	case StaminaGauge: return "StaminaGaugeComponent";
 	case Accessory: return "AccessoryComponent";
+	case WeakRangeEnemy: return "Weak RangeEnemy";
 	case MeleeEnemyBehavior: return "MeleeEnemyBehaviorComponent";
 		// その他コンポーネントを追加する時は上記のように追加
 

@@ -295,7 +295,7 @@ void GameEditor::UIObjectCreateWindow()
 			static UIType uitype = UIType::UI_NONE;	// 初期選択項目
 			static std::string type = "NONE";		// 初期選択項目
 
-			if (ImGui::BeginCombo(":seting type", type.c_str())) {
+			if (ImGui::BeginCombo(":setting type", type.c_str())) {
 				for (int i = 0; i < UIType::UI_MAX; i++) {
 					std::string uiTypeString = UIObject::GetUITypeString((UIType)i);
 					if (uiTypeString.empty()) continue; // 空文字列を無視

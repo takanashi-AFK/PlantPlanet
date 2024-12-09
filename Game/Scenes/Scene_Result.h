@@ -5,7 +5,7 @@ class Scene_Result :public GameObject
 {
 private:
 	int scoreNum_;	// スコア
-
+	int layerNumberCount_;
 public:
 	/// <summary> コンストラクタ </summary>
 	Scene_Result(GameObject* parent_);
@@ -27,3 +27,4 @@ private:
 	int CalculateScore(bool isCleared, int remainingTime, int remainingHP);
 };
 
+	

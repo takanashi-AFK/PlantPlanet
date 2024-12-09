@@ -12,12 +12,14 @@
 #include "../Objects/UI/UIText.h"
 #include "../Otheres/RankingManager.h"
 #include "../../Engine/DirectX/Input.h"
+#include "../Plants/PlantCollection.h"
+#include "../Objects/UI/UIImage.h"
 
 using namespace Constants;
 
 
 Scene_Result::Scene_Result(GameObject* parent_)
-	: GameObject(parent_, "Scene_Result"), scoreNum_(0)
+	: GameObject(parent_, "Scene_Result"), scoreNum_(0), layerNumberCount_(-1)
 {
 }
 
@@ -30,34 +32,45 @@ void Scene_Result::Initialize()
 
 	// UIパネルを取得
 	UIPanel* uiPanel = UIPanel::GetInstance();
-
+	
 	// UIパネル情報を読み込む
-	if (JsonReader::Load("Datas/Test/Prottype_ResultScene_Layout.json", loadData)) uiPanel->Load(loadData);
+	if (JsonReader::Load("Datas/resultTent.json", loadData)) uiPanel->Load(loadData);
 
-	// flowerをカウントする
-	{
-		XMFLOAT3 flowerCount = { 0,0,0 };
+	std::unordered_map<int, PlantData>allPlantData = PlantCollection::GetPlants();
 
-		for (auto plant : g_playerPlantData) {
+	// 同じ植物の数をカウント
+	std::unordered_map<std::string, int> countedPlant;
+	for (const auto& plant : g_playerPlantData) {
+		countedPlant[plant.name_]++;
+	}
 
-			switch (plant.rarity_)
-			{
-			case 1:flowerCount.x++; break;
-			case 2:flowerCount.y++; break;
-			case 3:flowerCount.z++; break;
+
+	for (int i = 0; i <= 9; i++) {
+		// カウントした植物の数を取得
+		int plantSize = countedPlant.size();
+		// UIImageを取得
+		UIObject* image = uiPanel->GetUIObject("GetPlant" + std::to_string(i + 1));
+		UIObject* text = uiPanel->GetUIObject("GetPlant" + std::to_string(i + 1) + "Text");
+		// 植物の数がiより大きい場合(取得できる場合)
+		if (i <= plantSize - 1) {
+			// countedPlantの中からi番目の植物を取得
+			for (auto p : allPlantData) {
+				if (p.second.name_ == g_playerPlantData[i].name_) {
+					PlantData plantData = p.second;
+					((UIImage*)image)->SetImage(plantData.imageFilePath_);
+					((UIText*)text)->SetText("x" + std::to_string(countedPlant[plantData.name_]));
+					break;
+				}
 			}
 		}
-
-		// テキストを取得してカウントを表示
-		UIText* text1 = (UIText*)uiPanel->GetUIObject("flower1Count");
-		text1->SetText("x" + std::to_string((int)flowerCount.x));
-
-		UIText* text2 = (UIText*)uiPanel->GetUIObject("flower2Count");
-		text2->SetText("x" + std::to_string((int)flowerCount.y));
-
-		UIText* text3 = (UIText*)uiPanel->GetUIObject("flower3Count");
-		text3->SetText("x" + std::to_string((int)flowerCount.z));
+		else {
+			// 取得できない場合は空の画像とテキストを表示
+			((UIImage*)image)->SetImage("Models/tentativeFlowers/BlankFlowerImage.png");
+			((UIText*)text)->SetText("");
+		}
 	}
+
+
 }
 
 void Scene_Result::Update()
