@@ -35,14 +35,24 @@ std::string FileManager::GetFileNameFromPath(const std::string& path)
 std::string FileManager::GetFileNameWithoutExtension(const std::string& path) {
 	return std::filesystem::path(path).stem().string();
 }
-XMFLOAT3 operator+(XMFLOAT3& a, const XMFLOAT3& b)
+XMFLOAT3 operator+(XMFLOAT3 a, const XMFLOAT3 b)
 {
 	return XMFLOAT3(a.x + b.x, a.y + b.y, a.z + b.z);
 }
 
-XMFLOAT3 operator-(XMFLOAT3& a, const XMFLOAT3& b)
+XMFLOAT3 operator-(XMFLOAT3 a, const XMFLOAT3 b)
 {
 	return XMFLOAT3(a.x - b.x, a.y - b.y, a.z - b.z);
+}
+
+XMFLOAT3 operator*(XMFLOAT3 a, const float b)
+{
+	return XMFLOAT3(a.x * b, a.y * b, a.z * b);
+}
+
+XMFLOAT3 operator*(XMFLOAT3 a, const XMFLOAT3 b)
+{
+	return XMFLOAT3(a.x * b.x, a.y * b.y, a.z * b.z);
 }
 
 // ゲームのスコア
