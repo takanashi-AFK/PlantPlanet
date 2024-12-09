@@ -9,6 +9,9 @@
 #include "../GaugeComponents/Component_HealthGauge.h"
 #include "../TimerComponent/Component_Timer.h"
 #include "Component_MeleeEnemyBehavior.h"
+#include "../../../../Plants/PlantCollection.h"
+#include <unordered_map>
+
 
 Component_MeleeEnemyBehavior::Component_MeleeEnemyBehavior(string _name, StageObject* _holder, Component* _parent):
 	Component(_holder, _name, MeleeEnemyBehavior, _parent),
@@ -16,17 +19,21 @@ Component_MeleeEnemyBehavior::Component_MeleeEnemyBehavior(string _name, StageOb
 	playerObjects_(nullptr),
 	deltaDistance_(1.f),
 	power_(5.f),
-	isAttacked_(false)
+	isAttacked_(false),
+	isFlowerSpawned_(false)
 {
 }
 
 void Component_MeleeEnemyBehavior::Initialize()
 {
+	holder_->AddCollider(new BoxCollider(XMFLOAT3(0, 0, 0), XMFLOAT3(1, 1, 1)));
+	holder_->SetObjectType(StageObject::TYPE_ENEMY);
 	// 子コンポーネントを追加
 	if (FindChildComponent("CircleRangeDetector") == false)AddChildComponent(CreateComponent("CircleRangeDetector", CircleRangeDetector, holder_, this));
 	if (FindChildComponent("Chase") == false)AddChildComponent(CreateComponent("Chase", Chase, holder_, this));
 	if (FindChildComponent("FanRangeDetector") == false)AddChildComponent(CreateComponent("FanRangeDetector", FanRangeDetector, holder_, this));
 	if (FindChildComponent("timer")==false)AddChildComponent(CreateComponent("timer", Timer, holder_, this));
+	if (FindChildComponent("HealthGauge") == false)AddChildComponent(CreateComponent("HealthGauge", HealthGauge, holder_, this));
 }
 
 void Component_MeleeEnemyBehavior::Update()
@@ -50,6 +57,7 @@ void Component_MeleeEnemyBehavior::Save(json& _saveObj)
 	_saveObj["speed_"] = speed_;
 	_saveObj["power_"] = power_;
 	_saveObj["attackCoolTime_"] = attackCoolTime_;
+	_saveObj["dropFlowerName_"] = dropFlowerName_;
 }
 
 void Component_MeleeEnemyBehavior::Load(json& _loadObj)
@@ -57,6 +65,7 @@ void Component_MeleeEnemyBehavior::Load(json& _loadObj)
 	if (_loadObj.contains("speed_"))speed_ = _loadObj["speed_"];
 	if (_loadObj.contains("power_"))power_ = _loadObj["power_"];
 	if (_loadObj.contains("attackCoolTime_"))attackCoolTime_ = _loadObj["attackCoolTime_"];
+	if (_loadObj.contains("dropFlowerName_"))dropFlowerName_ = _loadObj["dropFlowerName_"];
 }
 
 void Component_MeleeEnemyBehavior::DrawData()
@@ -67,6 +76,30 @@ void Component_MeleeEnemyBehavior::DrawData()
 	ImGui::DragFloat("power_", &power_, 0.1, 0);
 	// 攻撃クールタイム
 	ImGui::DragFloat("attackCoolTime_",&attackCoolTime_, 0.1, 0);
+
+	static int select = 1;
+
+	unordered_map<int, PlantData> plant = PlantCollection::GetPlants();
+
+	if (plant.size() == 0)ImGui::TextColored(ImVec4(1.0f, 0.0f, 0.0f, 1.0f), "No plant data!"); \
+	else {
+		// コンボボックス
+		if (ImGui::BeginCombo("FlowerSetData", plant[select].name_.c_str())) {
+			for (const auto& [key, data] : plant) { // `unordered_map` をループ
+				bool is_selected = (select == key); // 現在選択中か確認
+				if (ImGui::Selectable(data.name_.c_str(), is_selected)) {
+					select = key; // キーを更新
+					dropFlowerName_ = data.name_;
+				}
+				if (is_selected) {
+					ImGui::SetItemDefaultFocus(); // デフォルトフォーカス
+				}
+			}
+			ImGui::EndCombo();
+		}
+	}
+
+	ImGui::Text("nowState %d", enemyState_);
 }
 
 void Component_MeleeEnemyBehavior::Idle()
@@ -111,6 +144,12 @@ void Component_MeleeEnemyBehavior::Idle()
 			}
 		}
 	}
+	Component_HealthGauge *hg = (Component_HealthGauge*)(GetChildComponent("HealthGauge"));
+	if (hg == nullptr)return;
+
+	if (hg->IsDead())
+		SetState(E_DEAD);
+
 }
 
 void Component_MeleeEnemyBehavior::Move()
@@ -143,6 +182,12 @@ void Component_MeleeEnemyBehavior::Move()
 		SetState(E_IDLE);
 	}
 
+	Component_HealthGauge* hg = (Component_HealthGauge*)(GetChildComponent("HealthGauge"));
+	if (hg == nullptr)return;
+
+	if (hg->IsDead())SetState(E_DEAD);
+
+
 }
 
 void Component_MeleeEnemyBehavior::Attack()
@@ -161,12 +206,38 @@ void Component_MeleeEnemyBehavior::Attack()
 		// フラグを立てる
 		isAttacked_ = true;
 	}
-	// プレイヤーが攻撃範囲外に出たら待機状態に遷移
+	if (isAttacked_ == true) {
 		SetState(E_IDLE);
+	}
 
+	Component_HealthGauge* hg = (Component_HealthGauge*)(GetChildComponent("HealthGauge"));
+	if (hg == nullptr)return;
+
+	if (hg->IsDead())SetState(E_DEAD);
 }
 
 void Component_MeleeEnemyBehavior::Dead()
 {
+	holder_->KillMe();
 	// その場に指定した花を出す
+	if (isFlowerSpawned_ == true)return;
+	if (dropFlowerName_ == "")return;
+
+	unordered_map<int, PlantData> plantData = PlantCollection::GetPlants();
+	if (plantData.size() <= 0)return;
+
+	for (auto plant : plantData) {
+		if (plant.second.name_ == dropFlowerName_) {
+			// その場に花を生成
+			Stage* pStage = (Stage*)(holder_->FindObject("Stage"));
+			if (pStage == nullptr)return;
+
+			StageObject* plantObject = CreateStageObject("EnemyDropPlant1", plant.second.modelFilePath_, holder_->GetParent());
+			plantObject->SetPosition(holder_->GetPosition());
+			pStage->AddStageObject(plantObject);
+
+			isFlowerSpawned_ = true;
+			break;
+		}
+	}
 }

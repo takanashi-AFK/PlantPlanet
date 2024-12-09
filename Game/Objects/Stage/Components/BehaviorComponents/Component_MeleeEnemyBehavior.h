@@ -22,6 +22,9 @@ private:
 	float attackCoolTime_;
 	float attackDelayTime_;
 	bool isAttacked_;
+	bool isFlowerSpawned_;
+
+	string dropFlowerName_;
 
 public:
 	Component_MeleeEnemyBehavior(string _name, StageObject* _holder, Component* _parent);
