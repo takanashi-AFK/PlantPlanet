@@ -89,7 +89,7 @@ void TPSCamera::DrawData()
     std::vector<string> objNames;
     objNames.push_back("null");
 
-    for (auto obj : (((Stage*)FindObject("Stage"))->GetStageObjects()))
+    for (auto& obj : (((Stage*)FindObject("Stage"))->GetStageObjects()))
         objNames.push_back(obj->GetObjectName());
 
     static int select = 0;
