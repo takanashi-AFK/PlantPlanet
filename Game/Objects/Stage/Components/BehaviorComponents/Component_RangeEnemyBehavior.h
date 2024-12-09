@@ -7,9 +7,18 @@ class Component_RangeEnemyBehavior : public Component
 private:
 	StageObject* target_;
 	string targetName_;
-	bool isFire_;
+	bool isFire_:1;
+	bool isFlowerSpawned_ : 1;
 	int shotAmount_;
 	int shotInterval_;
+	string dropFlowerName_;
+
+	float fireInterval_;
+	const float moveAmount_;
+	const float stalkbleLength_;
+	const float wishDistance_; 
+	const uint16_t burstInterval_;
+	const uint8_t rapidAmount_;
 
 public:
 	Component_RangeEnemyBehavior(string _name, StageObject* _holder, Component* _parent);

@@ -13,9 +13,14 @@
 #include"../../../Engine/Global.h"
 
 #include"../../../Engine/ResourceManager/Model.h"
+#include "../../../../Plants/PlantCollection.h"
+#include "../PlantComponents/Component_Plant.h"
+
+#include<limits>
 
 Component_RangeEnemyBehavior::Component_RangeEnemyBehavior(string _name, StageObject* _holder, Component* _parent)
-	:Component(_holder, _name, WeakRangeEnemy, _parent), shotAmount_{}, shotInterval_{}, isFire_{ false }
+	:Component(_holder, _name, WeakRangeEnemy, _parent), shotAmount_{}, shotInterval_{}, isFire_{ false },isFlowerSpawned_{false}
+	,moveAmount_(.05f),burstInterval_(10),rapidAmount_(5),stalkbleLength_(7.0f),wishDistance_(5.0f), fireInterval_(3.f)
 {
 	currentProcess_ = [this]() {SleepProcess(); };
 	isActive_ = true;
@@ -46,11 +51,28 @@ void Component_RangeEnemyBehavior::Release()
 void Component_RangeEnemyBehavior::Save(json& _saveObj)
 {
 	_saveObj["TargetName"] = targetName_;
+	_saveObj["DropFlowerName"] = dropFlowerName_;
+
+	_saveObj["MoveAmount"] = moveAmount_;
+	_saveObj["BurstInterval"] = burstInterval_;
+	_saveObj["RapidAmount"] = rapidAmount_;
+	_saveObj["StalkableLength"] = stalkbleLength_;
+	_saveObj["WishDistance"] = wishDistance_;
+	_saveObj["FireInterval"] = fireInterval_;
 }
 
 void Component_RangeEnemyBehavior::Load(json& _loadObj)
 {
 	if (_loadObj.contains("TargetName"))	targetName_ = _loadObj["TargetName"].get<string>();
+	if (_loadObj.contains("DropFlowerName"))	dropFlowerName_ = _loadObj["DropFlowerName"].get<string>();
+	if (_loadObj.contains("FireInterval"))		fireInterval_ = _loadObj["FireInterval"].get<float>();
+
+	if (_loadObj.contains("MoveAmount"))		const_cast<float&>(moveAmount_)		 = _loadObj["MoveAmount"].get<float>();
+	if (_loadObj.contains("BurstInterval"))		const_cast<uint16_t&>(burstInterval_)= _loadObj["BurstInterval"].get<uint16_t>();
+	if (_loadObj.contains("RapidAmount"))		const_cast<uint8_t&>(rapidAmount_)	 = _loadObj["RapidAmount"].get<uint8_t>();
+	if (_loadObj.contains("StalkableLength"))	const_cast<float&>(stalkbleLength_)	 = _loadObj["StalkableLength"].get<float>();
+	if (_loadObj.contains("WishDistance"))		const_cast<float&>(wishDistance_)	 = _loadObj["WishDistance"].get<float>();
+
 }
 
 void Component_RangeEnemyBehavior::DrawData()
@@ -77,6 +99,42 @@ void Component_RangeEnemyBehavior::DrawData()
 		// 選択された名前から対象を設定
 		if (select != 0) target_ = (StageObject*)holder_->FindObject(nameList[select]);
 	}
+
+	static int select = 1;
+	unordered_map<int, PlantData> plant = PlantCollection::GetPlants();
+	if (plant.size() == 0)ImGui::TextColored(ImVec4(1.0f, 0.0f, 0.0f, 1.0f), "No plant data!"); \
+	else {
+		// コンボボックス
+		if (ImGui::BeginCombo("FlowerSetData", plant[select].name_.c_str())) {
+			for (const auto& [key, data] : plant) { // `unordered_map` をループ
+				bool is_selected = (select == key); // 現在選択中か確認
+				if (ImGui::Selectable(data.name_.c_str(), is_selected)) {
+					select = key; // キーを更新
+					dropFlowerName_ = data.name_;
+				}
+				if (is_selected) {
+					ImGui::SetItemDefaultFocus(); // デフォルトフォーカス
+				}
+			}
+			ImGui::EndCombo();
+		}
+	}
+
+	ImGui::DragFloat("MoveAmount     :", &const_cast<float&>(moveAmount_), 0.01, .0f);
+	//お行儀良くないけどReleaseでは
+	//constで挙動してほしいのでcosnt cast
+
+	int tempBurstInterval = burstInterval_;
+	int tempRapidAmount = rapidAmount_;
+
+	ImGui::DragInt  ("BurstInterval  :", &const_cast<int&>(tempBurstInterval), 1, .0f,(std::numeric_limits<decltype(burstInterval_)>::max)());
+	ImGui::DragInt  ("RapidAmount    :", &const_cast<int&>(tempRapidAmount), 1, .0f, (std::numeric_limits<decltype(rapidAmount_)>::max)());
+	ImGui::DragFloat("StalkableLength:", &const_cast<float&>(stalkbleLength_), 0.01, .0f);
+	ImGui::DragFloat("WishDistance   :", &const_cast<float&>(wishDistance_), 0.01, .0f);
+	ImGui::DragFloat("FireInterval   :", &(fireInterval_), 0.01, .0f);
+
+	const_cast<uint16_t&>(burstInterval_) = tempBurstInterval;
+	const_cast<uint8_t&>(rapidAmount_) = tempRapidAmount;
 }
 
 void Component_RangeEnemyBehavior::OnCollision(GameObject* _target, Collider* _collider)
@@ -142,8 +200,6 @@ float Component_RangeEnemyBehavior::GetLengthTo(XMFLOAT3 tgt)
 
 void Component_RangeEnemyBehavior::WalkTo(XMFLOAT3 dir)
 {
-	constexpr float moveAmount = 0.05f;
-
 	dir.y = 0;
 	float length = sqrt(std::powf(dir.x, 2) + std::powf(dir.y, 2) + std::powf(dir.z, 2));
 	dir = dir * (1 / length);
@@ -170,7 +226,7 @@ void Component_RangeEnemyBehavior::WalkTo(XMFLOAT3 dir)
 		}
 
 		// レイが何かに当たったら且つ、その距離が突進距離以下だったら突進距離の再設定
-		if (RayData.hit && RayData.dist <= moveAmount) {
+		if (RayData.hit && RayData.dist <= moveAmount_) {
 
 			return;
 		}
@@ -178,7 +234,7 @@ void Component_RangeEnemyBehavior::WalkTo(XMFLOAT3 dir)
 	}
 	//--------
 	
-	XMFLOAT3 vec = dir * moveAmount;
+	XMFLOAT3 vec = dir * moveAmount_;
 	XMFLOAT3 pos = vec + holder_->GetPosition();
 	pos.y = 0;
 	holder_->SetPosition(pos);
@@ -190,9 +246,7 @@ void Component_RangeEnemyBehavior::Attack()
 {
 	++shotInterval_;
 
-	constexpr int burstInterval = 10;
-
-	if (shotInterval_ >= burstInterval)
+	if (shotInterval_ >= burstInterval_)
 	{
 		Component_ShootAttack* shoot = (Component_ShootAttack*)(GetChildComponent("ShootAttack"));
 		if (!shoot)return;
@@ -209,10 +263,8 @@ void Component_RangeEnemyBehavior::Attack()
 		//shoot->SetEffectData();
 		shoot->Execute();
 
-		constexpr int rapidAmount = 5;
-
 		++shotAmount_;
-		isFire_ = shotAmount_ >= rapidAmount ? false : true;
+		isFire_ = shotAmount_ >= rapidAmount_ ? false : true;
 		shotInterval_ = 0;
 
 		if (!isFire_) shotAmount_ = 0;
@@ -235,9 +287,6 @@ void Component_RangeEnemyBehavior::SleepProcess()
 
 void Component_RangeEnemyBehavior::CombatProcess()
 {
-	constexpr float stalkbleLength = 7.0f;
-	constexpr float wishDistance = 5.0f;
-
 	FaceToTarget();
 
 	float toTargetLength = GetLengthTo(target_->GetPosition());
@@ -245,7 +294,7 @@ void Component_RangeEnemyBehavior::CombatProcess()
 	if (!timer)	return;
 	timer->Start();
 
-	if ( toTargetLength >= stalkbleLength)
+	if ( toTargetLength >= stalkbleLength_)
 	{
 		currentProcess_ = [this]() {SleepProcess(); };
 		timer->Stop();
@@ -256,15 +305,58 @@ void Component_RangeEnemyBehavior::CombatProcess()
 
 	WalkTo
 	(
-		toTargetLength < wishDistance?
+		toTargetLength < wishDistance_?
 		(target_->GetPosition() - holder_->GetPosition()) *-1:
 		target_->GetPosition() - holder_->GetPosition()//inverse direction
 	);
 
-	isFire_ = timer->IsIntervalTime(3.f) || isFire_;
+	isFire_ = timer->IsIntervalTime(fireInterval_) || isFire_;
 	if(isFire_)		Attack();
 }
 
 void Component_RangeEnemyBehavior::DeadProcess()
 {
+	Stage* pStage = (Stage*)(holder_->FindObject("Stage"));
+	if (pStage == nullptr)return;
+	pStage->DeleteStageObject(holder_);
+
+	if (isFlowerSpawned_ == true)return;
+	if (dropFlowerName_ == "")return;
+
+	std::unordered_map<int, PlantData> plantData = PlantCollection::GetPlants();
+	if (plantData.size() <= 0)return;
+
+	for (auto& plant : plantData) {
+		if (plant.second.name_ == dropFlowerName_) {
+			// その場に花を生成
+			
+
+			StageObject* plantObject = CreateStageObject("EnemyDropPlant1", plant.second.modelFilePath_, pStage);
+
+			// 当たり判定を設定
+			plantObject->SetIsColliding(false);
+
+			// プラントコンポーネントを作成
+			Component_Plant* plantComponent = (Component_Plant*)CreateComponent("Plant", Plant, plantObject, this);
+
+			// 植物情報を設定
+			plantComponent->SetData(plant.second);
+
+			// コンポーネントを追加
+			plantObject->AddComponent(plantComponent);
+
+			// サイズを設定
+			plantObject->SetScale({ 0.3f,0.3f,0.3f });
+			plantObject->SetPosition(holder_->GetPosition());
+
+			// 属性を設定
+			plantObject->SetObjectType(StageObject::TYPE_PLANT);
+
+			// ステージに追加
+			((Stage*)holder_->GetParent())->AddStageObject(plantObject);
+
+			isFlowerSpawned_ = true;
+			return;
+		}
+	}
 }
