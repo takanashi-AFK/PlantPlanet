@@ -14,6 +14,7 @@
 #include "../../Engine/DirectX/Input.h"
 #include "../Plants/PlantCollection.h"
 #include "../Objects/UI/UIImage.h"
+#include "../Objects/UI/UICursor.h"
 
 
 using namespace Constants;
@@ -22,12 +23,11 @@ using namespace Constants;
 Scene_Result::Scene_Result(GameObject* parent_)
 	: GameObject(parent_, "Scene_Result"), scoreNum_(0), layerNumberCount_(-1)
 {
+	UICursor::ToHide(false);
 }
 
 void Scene_Result::Initialize()
 {
-	ShowCursor(true);
-
 	// jsonファイル読込用オブジェクトを用意
 	json loadData;
 
@@ -49,17 +49,25 @@ void Scene_Result::Initialize()
 	for (int i = 0; i <= 9; i++) {
 		// カウントした植物の数を取得
 		int plantSize = countedPlant.size();
+
 		// UIImageを取得
 		UIObject* image = uiPanel->GetUIObject("GetPlant" + std::to_string(i + 1));
 		UIObject* text = uiPanel->GetUIObject("GetPlant" + std::to_string(i + 1) + "Text");
+
 		// 植物の数がiより大きい場合(取得できる場合)
 		if (i <= plantSize - 1) {
 			// countedPlantの中からi番目の植物を取得
-			for (auto p : allPlantData) {
-				if (p.second.name_ == g_playerPlantData[i].name_) {
+			auto it = countedPlant.begin();
+			std::advance(it, i); // i番目の要素に移動
+
+			const std::string& plantName = it->first; // 植物の名前
+			int plantCount = it->second;             // 植物の数
+
+			for (const auto& p : allPlantData) {
+				if (plantName == p.second.name_) {
 					PlantData plantData = p.second;
 					((UIImage*)image)->SetImage(plantData.imageFilePath_);
-					((UIText*)text)->SetText("x" + std::to_string(countedPlant[plantData.name_]));
+					((UIText*)text)->SetText("x" + std::to_string(plantCount));
 					break;
 				}
 			}
