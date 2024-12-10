@@ -24,6 +24,12 @@ Component_RangeEnemyBehavior::Component_RangeEnemyBehavior(string _name, StageOb
 {
 	currentProcess_ = [this]() {SleepProcess(); };
 	isActive_ = true;
+
+#ifdef _DEBUG 
+
+	selectTarget_ = 0;
+	selectFlower_ = 0;
+#endif
 }
 
 void Component_RangeEnemyBehavior::Initialize()
@@ -60,11 +66,17 @@ void Component_RangeEnemyBehavior::Save(json& _saveObj)
 	_saveObj["WishDistance"] = wishDistance_;
 	_saveObj["FireInterval"] = fireInterval_;
 	_saveObj["detectorRange_"] = detectorRange_;
+
+#ifdef _DEBUG
+	_saveObj["SelectTarget"] = selectTarget_;
+	_saveObj["SelectFlower"] = selectFlower_;
+#endif
 }
 
 void Component_RangeEnemyBehavior::Load(json& _loadObj)
 {
 	if (_loadObj.contains("TargetName"))	targetName_ = _loadObj["TargetName"].get<string>();
+	target_ = ((StageObject*)holder_->FindObject(targetName_));
 	if (_loadObj.contains("DropFlowerName"))	dropFlowerName_ = _loadObj["DropFlowerName"].get<string>();
 	if (_loadObj.contains("FireInterval"))		fireInterval_ = _loadObj["FireInterval"].get<float>();
 
@@ -74,10 +86,17 @@ void Component_RangeEnemyBehavior::Load(json& _loadObj)
 	if (_loadObj.contains("StalkableLength"))	const_cast<float&>(stalkbleLength_)	 = _loadObj["StalkableLength"].get<float>();
 	if (_loadObj.contains("WishDistance"))		const_cast<float&>(wishDistance_)	 = _loadObj["WishDistance"].get<float>();
 	if (_loadObj.contains("detectorRange_"))	const_cast<float&>(detectorRange_) = _loadObj["detectorRange_"].get<float>();
+
+#ifdef _DEBUG
+	if (_loadObj.contains("SelectTarget"))	selectTarget_= _loadObj["SelectTarget"].get<int>();
+	if (_loadObj.contains("SelectFlower"))	selectFlower_ = _loadObj["SelectFlower"].get<int>();
+#endif
 }
 
 void Component_RangeEnemyBehavior::DrawData()
 {
+#ifdef DEBUG
+
 	// アクティブフラグを表示
 	ImGui::Checkbox("isActive_", &isActive_);
 	// 対象を設定
@@ -87,30 +106,33 @@ void Component_RangeEnemyBehavior::DrawData()
 		for (auto obj : ((Stage*)holder_->FindObject("Stage"))->GetStageObjects()) nameList.push_back(obj->GetObjectName());
 
 		// コンボボックスで選択
-		static int select = 0;
-		if (ImGui::BeginCombo("target_", nameList[select].c_str())) {
+		
+		if (ImGui::BeginCombo("target_", nameList[selectTarget_].c_str())) {
 			for (int i = 0; i < nameList.size(); i++) {
-				bool is_selected = (select == i);
-				if (ImGui::Selectable(nameList[i].c_str(), is_selected)) select = i;
+				bool is_selected = (selectTarget_ == i);
+				if (ImGui::Selectable(nameList[i].c_str(), is_selected)) selectTarget_ = i;
 				if (is_selected) ImGui::SetItemDefaultFocus();
 			}
 			ImGui::EndCombo();
 		}
 
 		// 選択された名前から対象を設定
-		if (select != 0) target_ = (StageObject*)holder_->FindObject(nameList[select]);
+		if (selectTarget_ != 0)
+		{
+			target_ = (StageObject*)holder_->FindObject(nameList[selectTarget_]);
+			targetName_ = target_->GetObjectName();
+		}
 	}
 
-	static int select = 1;
 	unordered_map<int, PlantData> plant = PlantCollection::GetPlants();
 	if (plant.size() == 0)ImGui::TextColored(ImVec4(1.0f, 0.0f, 0.0f, 1.0f), "No plant data!"); \
 	else {
 		// コンボボックス
-		if (ImGui::BeginCombo("FlowerSetData", plant[select].name_.c_str())) {
+		if (ImGui::BeginCombo("FlowerSetData", plant[selectFlower_].name_.c_str())) {
 			for (const auto& [key, data] : plant) { // `unordered_map` をループ
-				bool is_selected = (select == key); // 現在選択中か確認
+				bool is_selected = (selectFlower_ == key); // 現在選択中か確認
 				if (ImGui::Selectable(data.name_.c_str(), is_selected)) {
-					select = key; // キーを更新
+					selectFlower_ = key; // キーを更新
 					dropFlowerName_ = data.name_;
 				}
 				if (is_selected) {
@@ -137,6 +159,8 @@ void Component_RangeEnemyBehavior::DrawData()
 
 	const_cast<uint16_t&>(burstInterval_) = tempBurstInterval;
 	const_cast<uint8_t&>(rapidAmount_) = tempRapidAmount;
+
+#endif
 }
 
 void Component_RangeEnemyBehavior::OnCollision(GameObject* _target, Collider* _collider)
@@ -240,8 +264,6 @@ void Component_RangeEnemyBehavior::WalkTo(XMFLOAT3 dir)
 	XMFLOAT3 pos = vec + holder_->GetPosition();
 	pos.y = 0;
 	holder_->SetPosition(pos);
-
-	ImGui::Text(std::format("{}, {}, {}",dir.x,dir.y,dir.z).c_str());
 }
 
 void Component_RangeEnemyBehavior::Attack()
