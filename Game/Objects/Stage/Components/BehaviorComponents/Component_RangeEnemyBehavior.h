@@ -22,12 +22,10 @@ private:
 
 	float detectorRange_;
 
-#ifdef _DEBUG
-
 	int selectTarget_;
 	int selectFlower_;
 
-#endif
+
 
 public:
 	Component_RangeEnemyBehavior(string _name, StageObject* _holder, Component* _parent);

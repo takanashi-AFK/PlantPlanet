@@ -25,11 +25,8 @@ Component_RangeEnemyBehavior::Component_RangeEnemyBehavior(string _name, StageOb
 	currentProcess_ = [this]() {SleepProcess(); };
 	isActive_ = true;
 
-#ifdef _DEBUG 
-
 	selectTarget_ = 0;
 	selectFlower_ = 0;
-#endif
 }
 
 void Component_RangeEnemyBehavior::Initialize()
@@ -67,10 +64,8 @@ void Component_RangeEnemyBehavior::Save(json& _saveObj)
 	_saveObj["FireInterval"] = fireInterval_;
 	_saveObj["detectorRange_"] = detectorRange_;
 
-#ifdef _DEBUG
 	_saveObj["SelectTarget"] = selectTarget_;
 	_saveObj["SelectFlower"] = selectFlower_;
-#endif
 }
 
 void Component_RangeEnemyBehavior::Load(json& _loadObj)
@@ -87,15 +82,12 @@ void Component_RangeEnemyBehavior::Load(json& _loadObj)
 	if (_loadObj.contains("WishDistance"))		const_cast<float&>(wishDistance_)	 = _loadObj["WishDistance"].get<float>();
 	if (_loadObj.contains("detectorRange_"))	const_cast<float&>(detectorRange_) = _loadObj["detectorRange_"].get<float>();
 
-#ifdef _DEBUG
 	if (_loadObj.contains("SelectTarget"))	selectTarget_= _loadObj["SelectTarget"].get<int>();
 	if (_loadObj.contains("SelectFlower"))	selectFlower_ = _loadObj["SelectFlower"].get<int>();
-#endif
 }
 
 void Component_RangeEnemyBehavior::DrawData()
 {
-#ifdef DEBUG
 
 	// アクティブフラグを表示
 	ImGui::Checkbox("isActive_", &isActive_);
@@ -160,7 +152,7 @@ void Component_RangeEnemyBehavior::DrawData()
 	const_cast<uint16_t&>(burstInterval_) = tempBurstInterval;
 	const_cast<uint8_t&>(rapidAmount_) = tempRapidAmount;
 
-#endif
+
 }
 
 void Component_RangeEnemyBehavior::OnCollision(GameObject* _target, Collider* _collider)
