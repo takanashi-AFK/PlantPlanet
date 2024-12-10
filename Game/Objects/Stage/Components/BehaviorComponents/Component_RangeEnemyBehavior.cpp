@@ -20,7 +20,7 @@
 
 Component_RangeEnemyBehavior::Component_RangeEnemyBehavior(string _name, StageObject* _holder, Component* _parent)
 	:Component(_holder, _name, WeakRangeEnemy, _parent), shotAmount_{}, shotInterval_{}, isFire_{ false },isFlowerSpawned_{false}
-	, moveAmount_(.05f), burstInterval_(10), rapidAmount_(5), stalkbleLength_(7.0f), wishDistance_(5.0f), fireInterval_(3.f), detectorRange_(10.f)
+	, moveAmount_(.05f), burstInterval_(10), rapidAmount_(5), stalkbleLength_(7.0f), wishDistance_(10.f), fireInterval_(3.f), detectorRange_(10.f)
 {
 	currentProcess_ = [this]() {SleepProcess(); };
 	isActive_ = true;
