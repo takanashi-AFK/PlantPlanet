@@ -4,9 +4,10 @@
 namespace UICursor
 {
 
-	DirectX::XMFLOAT2 GetPosition();
-	void SetPosition(DirectX::XMFLOAT2 pos);
+	DirectX::XMINT2 GetPosition();
+	void SetPosition(DirectX::XMINT2 pos);
 
+	void Initialize();
 	void Update();
 
 	bool IsHide();

@@ -5,40 +5,56 @@
 
 namespace UICursor
 {
-	XMFLOAT2 position_ = { Direct3D::screenWidth_ / 2.f, Direct3D::screenHeight_ / 2.f };
+	XMINT2 position_;
+	XMINT2 prevPos_;
 	bool isHide_ = false;
 	XMFLOAT2 sensitivityPad_ = { 10.f,10.f };
 	XMFLOAT2 sensitivityMouse_ = { 1.f,1.f };
 
-	DirectX::XMFLOAT2 GetPosition()
+	DirectX::XMINT2 GetPosition()
 	{
 		return position_;
 	}
 
-	void SetPosition(DirectX::XMFLOAT2 pos)
+	void SetPosition(DirectX::XMINT2 pos)
 	{
 		position_ = pos;
 	}
 
+	void Initialize()
+	{
+		POINT mousePos;
+		GetCursorPos(&mousePos);
+
+		position_ = { mousePos.x,mousePos.y };
+		SetCursorPos(position_.x, position_.y);
+		prevPos_ = position_;
+	}
+
 	void Update()
 	{
-		SetCursorPos(position_.x, position_.y);
 
-		if (isHide_)	return;
+		XMINT2 vecCursor = { (int)(Input::GetPadStickL(0).x),(int)(Input::GetPadStickL(0).y) };
 
-		auto vecCursor = Input::GetMouseMove();
-		position_ =
+		POINT mousePos;
+		GetCursorPos(&mousePos);
+
+		position_ = { mousePos.x,mousePos.y };
+
+		if (vecCursor.x > .0f || vecCursor.y > .0f)
 		{
-			position_.x + (vecCursor.x*sensitivityMouse_.x) ,
-			position_.y + (vecCursor.y*sensitivityMouse_.y) 
-		};
+			
+			position_ =
+			{
+				position_.x + (int)(vecCursor.x * sensitivityPad_.x) ,
+				position_.y + (int)(-vecCursor.y * sensitivityPad_.y)
+			};
 
-		vecCursor = Input::GetPadStickL(0);
-		position_ =
-		{
-			position_.x + (vecCursor.x * sensitivityPad_.x) ,
-			position_.y + (-vecCursor.y * sensitivityPad_.y)
-		};
+			//SetCursorPos(position_.x, position_.y);
+		}
+
+		prevPos_ = position_;
+
 	}
 
 	bool IsHide()

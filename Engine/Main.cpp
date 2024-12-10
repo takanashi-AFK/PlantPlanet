@@ -105,15 +105,14 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	//UIPanelのインスタンス取得と初期化
 	UIPanel* pUIPanel_ = UIPanel::GetInstance();
 	pUIPanel_->Initialize();
-
-
-
-
+	UICursor::Initialize();
 	//メッセージループ（何か起きるのを待つ）
 	MSG msg;
 	ZeroMemory(&msg, sizeof(msg));
 	while (msg.message != WM_QUIT)
 	{
+		UICursor::Update();
+
 		//メッセージあり（こっちが優先）
 		if (PeekMessage(&msg, nullptr, 0U, 0U, PM_REMOVE))
 		{
@@ -160,7 +159,6 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
 				//入力（キーボード、マウス、コントローラー）情報を更新
 				Input::Update();
-				UICursor::Update();
 
 				if (Input::IsKeyDown(DIK_F4)) {
 					// 画面表示切替
