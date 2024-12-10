@@ -19,12 +19,14 @@
 #include "../Objects/UI/UIProgressBar.h"
 #include "../Objects/Stage/Components/GaugeComponents/Component_StaminaGauge.h"
 #include "../Objects/UI/UIProgressCircle.h"
+#include "../../Game/Objects/UI/UICursor.h"
 
 using namespace Constants;
 
 Scene_Play::Scene_Play(GameObject* parent)
 	:GameObject(parent, "Scene_Play"), pStage_(nullptr), tpsCamera_(nullptr), fixedCursorPos(true), cursorVisible(true), isGameStart_(false), isBossSpawn_(false)
 {
+	UICursor::ToHide(true);
 }
 
 void Scene_Play::Initialize()
@@ -39,7 +41,6 @@ void Scene_Play::Initialize()
 	InitCamera();
 
 	// カーソルの非表示化
-	ShowCursor(false);
 }
 
 void Scene_Play::Update()
@@ -198,7 +199,7 @@ void Scene_Play::SetCursorMode()
 
 		// カーソルの表示状態を切り替える
 		cursorVisible = !fixedCursorPos;
-		ShowCursor(cursorVisible);
+		UICursor::ToHide(!cursorVisible);
 	}
 
 	// カーソルの位置を中央に固定
