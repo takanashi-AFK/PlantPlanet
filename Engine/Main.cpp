@@ -20,6 +20,7 @@
 #include "../Game/Otheres/AudioController.h"
 #include "ResourceManager/VFX.h"
 #include "ResourceManager/Transition.h"
+#include "../Game/Objects/UI/UICursor.h"
 
 // effekseerのヘッダーをインクルード
 
@@ -159,6 +160,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
 				//入力（キーボード、マウス、コントローラー）情報を更新
 				Input::Update();
+				UICursor::Update();
 
 				if (Input::IsKeyDown(DIK_F4)) {
 					// 画面表示切替
