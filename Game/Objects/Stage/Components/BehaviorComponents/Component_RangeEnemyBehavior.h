@@ -22,11 +22,6 @@ private:
 
 	float detectorRange_;
 
-	int selectTarget_;
-	int selectFlower_;
-
-
-
 public:
 	Component_RangeEnemyBehavior(string _name, StageObject* _holder, Component* _parent);
 	void Initialize() override;
