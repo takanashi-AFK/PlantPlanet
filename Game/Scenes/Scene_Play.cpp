@@ -24,7 +24,14 @@
 using namespace Constants;
 
 Scene_Play::Scene_Play(GameObject* parent)
-	:GameObject(parent, "Scene_Play"), pStage_(nullptr), tpsCamera_(nullptr), fixedCursorPos(true), cursorVisible(true), isGameStart_(false), isBossSpawn_(false)
+	:GameObject(parent, "Scene_Play"),
+	pStage_(nullptr),
+	tpsCamera_(nullptr), 
+	fixedCursorPos(true), 
+	cursorVisible(true),
+	isGameStart_(false), 
+	isBossSpawn_(false),
+	isDebugDataEditWindowOpen_(false)
 {
 	UICursor::ToHide(true);
 }
@@ -127,6 +134,17 @@ void Scene_Play::Update()
 		// 
 		//else playerBehavior->SetResearchPoint(playerBehavior->GetResearchPoint() + 1);
 	}
+
+	if (Input::IsKeyDown(DIK_O)) {
+		// カーソル固定化の切り替え
+		fixedCursorPos = !fixedCursorPos;
+
+		// カーソルの表示状態を切り替える
+		cursorVisible = !fixedCursorPos;
+		UICursor::ToHide(!cursorVisible);
+		isDebugDataEditWindowOpen_ = !isDebugDataEditWindowOpen_;
+	}
+	DrawDebugDataEditWindow();
 }
 void Scene_Play::Draw()
 {
@@ -254,4 +272,74 @@ void Scene_Play::SpawnBossEnemy()
 	
 	// ステージに追加
 	pStage_->AddStageObject(stageObject_Boss);
+}
+
+void Scene_Play::DrawDebugDataEditWindow()
+{
+	if (!isDebugDataEditWindowOpen_) return;
+
+
+
+	Component_PlayerBehavior* playerBehavior = nullptr;
+	for (auto pb : pStage_->FindComponents(ComponentType::PlayerBehavior))
+		playerBehavior = (Component_PlayerBehavior*)pb;
+	if (playerBehavior == nullptr)return;
+
+	Component_HealthGauge* playerHealthGauge = (Component_HealthGauge*)
+		playerBehavior->GetChildComponent("PlayerHealthGauge");
+	if (playerHealthGauge == nullptr)return;
+
+	Component_StaminaGauge* playerStaminaGauge = (Component_StaminaGauge*)
+		playerBehavior->GetChildComponent("StaminaGauge");
+	if (playerStaminaGauge == nullptr)return;
+
+	ImGui::Begin("Debug Mode"); {
+		ImGui::Text("Player param Edit");
+		ImGui::Text("Player HP : %f / %f", playerHealthGauge->now_, playerHealthGauge->max_);
+		ImGui::Text("Player ST : %f / %f", playerStaminaGauge->now_, playerStaminaGauge->max_);
+		ImGui::Text("Player Research Point : %d", playerBehavior->GetResearchPoint());
+
+		static int playerMAXHP = 100;
+		static int playerHP = 100;
+		static int playerMAXST = 100;
+		static int playerST = 100;
+		static int playerResearchPoint = 0;
+
+		ImGui::DragInt("Player MAX HP", &playerMAXHP, 1, 0, 1000);
+		ImGui::DragInt("Player HP", &playerHP, 1, 0, playerMAXHP);
+		ImGui::DragInt("Player MAX ST", &playerMAXST, 1, 0, 1000);
+		ImGui::DragInt("Player ST", &playerST, 1, 0, playerMAXST);
+		ImGui::DragInt("Player Research Point", &playerResearchPoint, 1, 0, 100);
+
+		if (ImGui::Button("MAXHP APPLY"))playerHealthGauge->max_ = playerMAXHP;                          ImGui::SameLine();
+		if (ImGui::Button("HP APPLY"))playerHealthGauge->now_ = playerHP;                                ImGui::SameLine();
+		if (ImGui::Button("MAXST APPLY"))playerStaminaGauge->max_ = playerMAXST;                         ImGui::SameLine();
+		if (ImGui::Button("ST APPLY"))playerStaminaGauge->now_ = playerST;                               ImGui::SameLine();
+		if (ImGui::Button("Research Point APPLY"))playerBehavior->SetResearchPoint(playerResearchPoint);
+
+		ImGui::Separator();
+		ImGui::Text("ST Decrease Edit");
+		ImGui::Text("Player Decrease ST SHOOT : %f", playerBehavior->GetStaminaDecrease_Shoot());
+		ImGui::Text("Player Decrease ST DODGE : %f", playerBehavior->GetStaminaDecrease_Dodge());
+		ImGui::Text("Player Decrease ST MELEE : %f", playerBehavior->GetStaminaDecrease_Melee());
+
+		static int playerDecreaseST_Shoot = 10;
+		static int playerDecreaseST_Melee = 20;
+		static int playerDecreaseST_Dodge = 30;
+
+		ImGui::DragInt("Player Decrease ST SHOOT", &playerDecreaseST_Shoot, 1, 0, 1000);
+		ImGui::DragInt("Player Decrease ST MELEE", &playerDecreaseST_Melee, 1, 0, 1000);
+		ImGui::DragInt("Player Decrease ST DODGE", &playerDecreaseST_Dodge, 1, 0, 1000);
+
+		if (ImGui::Button("ST Decrease SHOOT APPLY"))playerBehavior->SetStaminaDecrease_Shoot(playerDecreaseST_Shoot);   ImGui::SameLine();
+		if (ImGui::Button("ST Decrease MELEE APPLY"))playerBehavior->SetStaminaDecrease_Melee(playerDecreaseST_Melee);   ImGui::SameLine();
+		if (ImGui::Button("ST Decrease DODGE APPLY"))playerBehavior->SetStaminaDecrease_Dodge(playerDecreaseST_Dodge);
+		ImGui::Separator();
+		ImGui::Text("Camera Edit");
+		static float sens = 0.1f;
+		ImGui::Text("Camera Sensitivity %f", tpsCamera_->GetSensitivity());
+		ImGui::DragFloat("Camera Sensitivity", &sens, 0.01f, 0.0f, 1.0f);
+		if (ImGui::Button("Apply Camera Sensitivity"))tpsCamera_->SetSensitivity(sens);
+	}
+	ImGui::End();
 }
