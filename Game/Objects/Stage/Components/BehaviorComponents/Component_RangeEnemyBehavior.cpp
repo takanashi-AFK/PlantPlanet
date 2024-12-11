@@ -20,13 +20,11 @@
 
 Component_RangeEnemyBehavior::Component_RangeEnemyBehavior(string _name, StageObject* _holder, Component* _parent)
 	:Component(_holder, _name, WeakRangeEnemy, _parent), shotAmount_{}, shotInterval_{}, isFire_{ false },isFlowerSpawned_{false}
-	, moveAmount_(.05f), burstInterval_(10), rapidAmount_(5), stalkbleLength_(7.0f), wishDistance_(10.f), fireInterval_(3.f), detectorRange_(10.f)
+	, moveAmount_(.05f), burstInterval_(10), rapidAmount_(5), stalkbleLength_(7.0f), wishDistance_(5.0f), fireInterval_(3.f), detectorRange_(10.f)
 {
 	currentProcess_ = [this]() {SleepProcess(); };
 	isActive_ = true;
 
-	selectTarget_ = 0;
-	selectFlower_ = 0;
 }
 
 void Component_RangeEnemyBehavior::Initialize()
@@ -64,8 +62,7 @@ void Component_RangeEnemyBehavior::Save(json& _saveObj)
 	_saveObj["FireInterval"] = fireInterval_;
 	_saveObj["detectorRange_"] = detectorRange_;
 
-	_saveObj["SelectTarget"] = selectTarget_;
-	_saveObj["SelectFlower"] = selectFlower_;
+
 }
 
 void Component_RangeEnemyBehavior::Load(json& _loadObj)
@@ -81,9 +78,6 @@ void Component_RangeEnemyBehavior::Load(json& _loadObj)
 	if (_loadObj.contains("StalkableLength"))	const_cast<float&>(stalkbleLength_)	 = _loadObj["StalkableLength"].get<float>();
 	if (_loadObj.contains("WishDistance"))		const_cast<float&>(wishDistance_)	 = _loadObj["WishDistance"].get<float>();
 	if (_loadObj.contains("detectorRange_"))	const_cast<float&>(detectorRange_) = _loadObj["detectorRange_"].get<float>();
-
-	if (_loadObj.contains("SelectTarget"))	selectTarget_= _loadObj["SelectTarget"].get<int>();
-	if (_loadObj.contains("SelectFlower"))	selectFlower_ = _loadObj["SelectFlower"].get<int>();
 }
 
 void Component_RangeEnemyBehavior::DrawData()
@@ -94,37 +88,44 @@ void Component_RangeEnemyBehavior::DrawData()
 	// 対象を設定
 	{
 		// ステージ上に存在するオブジェクトの名前を全て取得
+
+		static int selectTarget = 0;
 		vector<string> nameList{}; nameList.push_back("None");
-		for (auto obj : ((Stage*)holder_->FindObject("Stage"))->GetStageObjects()) nameList.push_back(obj->GetObjectName());
+		for (auto obj : ((Stage*)holder_->FindObject("Stage"))->GetStageObjects()) {
+			
+			nameList.push_back(obj->GetObjectName());
+			if (obj->GetObjectName() == targetName_) selectTarget = nameList.size() - 1;
+		}
 
 		// コンボボックスで選択
 		
-		if (ImGui::BeginCombo("target_", nameList[selectTarget_].c_str())) {
+		if (ImGui::BeginCombo("target_", nameList[selectTarget].c_str())) {
 			for (int i = 0; i < nameList.size(); i++) {
-				bool is_selected = (selectTarget_ == i);
-				if (ImGui::Selectable(nameList[i].c_str(), is_selected)) selectTarget_ = i;
+				bool is_selected = (selectTarget == i);
+				if (ImGui::Selectable(nameList[i].c_str(), is_selected)) selectTarget = i;
 				if (is_selected) ImGui::SetItemDefaultFocus();
 			}
 			ImGui::EndCombo();
 		}
 
 		// 選択された名前から対象を設定
-		if (selectTarget_ != 0)
+		if (selectTarget != 0)
 		{
-			target_ = (StageObject*)holder_->FindObject(nameList[selectTarget_]);
+			target_ = (StageObject*)holder_->FindObject(nameList[selectTarget]);
 			targetName_ = target_->GetObjectName();
 		}
 	}
 
+	static int selectFlower = 0;
 	unordered_map<int, PlantData> plant = PlantCollection::GetPlants();
 	if (plant.size() == 0)ImGui::TextColored(ImVec4(1.0f, 0.0f, 0.0f, 1.0f), "No plant data!"); \
 	else {
 		// コンボボックス
-		if (ImGui::BeginCombo("FlowerSetData", plant[selectFlower_].name_.c_str())) {
+		if (ImGui::BeginCombo("FlowerSetData", plant[selectFlower].name_.c_str())) {
 			for (const auto& [key, data] : plant) { // `unordered_map` をループ
-				bool is_selected = (selectFlower_ == key); // 現在選択中か確認
+				bool is_selected = (selectFlower == key); // 現在選択中か確認
 				if (ImGui::Selectable(data.name_.c_str(), is_selected)) {
-					selectFlower_ = key; // キーを更新
+					selectFlower = key; // キーを更新
 					dropFlowerName_ = data.name_;
 				}
 				if (is_selected) {
@@ -151,7 +152,6 @@ void Component_RangeEnemyBehavior::DrawData()
 
 	const_cast<uint16_t&>(burstInterval_) = tempBurstInterval;
 	const_cast<uint8_t&>(rapidAmount_) = tempRapidAmount;
-
 
 }
 

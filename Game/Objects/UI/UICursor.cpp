@@ -22,6 +22,7 @@ namespace UICursor
 
 	void Update()
 	{
+		/*
 		SetCursorPos(position_.x, position_.y);
 
 		if (isHide_)	return;
@@ -39,6 +40,7 @@ namespace UICursor
 			position_.x + (vecCursor.x * sensitivityPad_.x) ,
 			position_.y + (-vecCursor.y * sensitivityPad_.y)
 		};
+		*/
 	}
 
 	bool IsHide()
