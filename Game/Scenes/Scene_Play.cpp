@@ -135,8 +135,15 @@ void Scene_Play::Update()
 		//else playerBehavior->SetResearchPoint(playerBehavior->GetResearchPoint() + 1);
 	}
 
-	if (Input::IsKeyDown(DIK_O))isDebugDataEditWindowOpen_ = !isDebugDataEditWindowOpen_;
+	if (Input::IsKeyDown(DIK_O)) {
+		// カーソル固定化の切り替え
+		fixedCursorPos = !fixedCursorPos;
 
+		// カーソルの表示状態を切り替える
+		cursorVisible = !fixedCursorPos;
+		UICursor::ToHide(!cursorVisible);
+		isDebugDataEditWindowOpen_ = !isDebugDataEditWindowOpen_;
+	}
 	DrawDebugDataEditWindow();
 }
 void Scene_Play::Draw()
@@ -269,7 +276,10 @@ void Scene_Play::SpawnBossEnemy()
 
 void Scene_Play::DrawDebugDataEditWindow()
 {
-	if (!isDebugDataEditWindowOpen_)return;
+	if (!isDebugDataEditWindowOpen_) return;
+
+
+
 	Component_PlayerBehavior* playerBehavior = nullptr;
 	for (auto pb : pStage_->FindComponents(ComponentType::PlayerBehavior))
 		playerBehavior = (Component_PlayerBehavior*)pb;
