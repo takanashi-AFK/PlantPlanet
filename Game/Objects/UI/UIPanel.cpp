@@ -79,12 +79,19 @@ void UIPanel::DeleteUIObject(UIObject* _object)
 	auto it = std::find(childList_.begin(), childList_.end(), _object);
 	// イテレータが見つかった場合、ベクターから削除する
 	if (it != childList_.end()) childList_.erase(it);
+
+	delete _object;
+	_object = nullptr;
 }
 
 void UIPanel::DeleteAllUIObject()
 {
 	// 全てのオブジェクトを削除
-	for (auto obj : childList_)obj->KillMe();
+	for (auto obj : childList_) {
+		obj->KillMe();
+		delete obj;
+		obj = nullptr;
+	}
 	childList_.clear();
 }
 
