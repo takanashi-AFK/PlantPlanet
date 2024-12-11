@@ -95,11 +95,16 @@ vector<Component*> StageObject::FindComponent(ComponentType _type)
 	vector<Component*> result;
 
 	for (auto comp : myComponents_) {
-		if (comp->GetType() == _type)result.push_back(comp);
-
-		// 子コンポーネントを再帰的に検索
-		auto childComps = comp->GetChildComponent(_type);
-		result.insert(result.end(), childComps.begin(), childComps.end());
+		if (comp == nullptr) {
+			continue;
+		}
+		else
+		{
+			if (comp->GetType() == _type)result.push_back(comp);
+			// 子コンポーネントを再帰的に検索
+			auto childComps = comp->GetChildComponent(_type);
+			result.insert(result.end(), childComps.begin(), childComps.end());
+		}
 	}
 	return result;
 }

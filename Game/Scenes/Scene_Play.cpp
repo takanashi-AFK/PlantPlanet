@@ -46,8 +46,6 @@ void Scene_Play::Initialize()
 
 	// カメラの初期化
 	InitCamera();
-
-	// カーソルの非表示化
 }
 
 void Scene_Play::Update()
