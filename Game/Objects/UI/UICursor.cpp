@@ -6,7 +6,6 @@
 namespace UICursor
 {
 	XMINT2 position_;
-	XMINT2 prevPos_;
 	bool isHide_ = false;
 	XMFLOAT2 sensitivityPad_ = { 10.f,10.f };
 	XMFLOAT2 sensitivityMouse_ = { 1.f,1.f };
@@ -28,7 +27,6 @@ namespace UICursor
 
 		position_ = { mousePos.x,mousePos.y };
 		SetCursorPos(position_.x, position_.y);
-		prevPos_ = position_;
 	}
 
 	void Update()
@@ -50,10 +48,8 @@ namespace UICursor
 				position_.y + (int)(-vecCursor.y * sensitivityPad_.y)
 			};
 
-			//SetCursorPos(position_.x, position_.y);
+			SetCursorPos(position_.x, position_.y);
 		}
-
-		prevPos_ = position_;
 
 	}
 
