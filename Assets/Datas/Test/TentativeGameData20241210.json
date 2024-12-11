@@ -69,9 +69,9 @@
             "type_": 9
           },
           "PlayerHealthGauge": {
-            "max_": 1000.0,
+            "max_": 100.0,
             "name_": "PlayerHealthGauge",
-            "now_": 1000.0,
+            "now_": 100.0,
             "type_": 6
           },
           "PlayerMotion": {
