@@ -4,12 +4,18 @@
 #include "../../../Engine/DirectX/Direct3D.h"
 #include "../../../Engine/DirectX/Input.h"
 #include "../../../Engine/Global.h"
+#include "UIPanel.h"
 
 using namespace FileManager;
 
 UIButton::UIButton(string _name, UIObject* parent , int _layerNum)
-	: UIObject(_name, UIType::UI_BUTTON, parent, _layerNum), imageHandle_(-1), imageFilePath_()
+	: UIObject(_name, UIType::UI_BUTTON, parent, _layerNum), imageHandle_(-1), imageFilePath_(), arrayPlaceX_(0), arrayPlaceY_(0)
 {
+}
+
+UIButton::~UIButton()
+{
+    UIPanel::GetInstance()->RemoveButtonFromArray(this);
 }
 
 void UIButton::Initialize()
@@ -52,6 +58,8 @@ void UIButton::Release()
 void UIButton::Save(json& saveObj)
 {
 	saveObj["imageFilePath_"] = imageFilePath_;
+    saveObj["ArrayPlace_X"] = arrayPlaceX_;
+    saveObj["ArrayPlace_Y"] = arrayPlaceY_;
 }
 
 void UIButton::Load(json& loadObj)
@@ -60,6 +68,9 @@ void UIButton::Load(json& loadObj)
         imageFilePath_ = loadObj["imageFilePath_"].get<string>();
         SetImage(imageFilePath_);
     }
+
+    if (loadObj.contains("ArrayPlace_X")) arrayPlaceX_ = loadObj["ArrayPlace_X"].get<int16_t>();
+    if (loadObj.contains("ArrayPlace_Y")) arrayPlaceX_ = loadObj["ArrayPlace_Y"].get<int16_t>();
 }
 
 void UIButton::DrawData()
@@ -125,6 +136,34 @@ void UIButton::DrawData()
 
 		ImGui::TreePop();
 	}
+
+    if (ImGui::TreeNode("ButtonArray"))
+    {
+        int tempX = arrayPlaceX_;
+        int tempY = arrayPlaceY_;
+
+        ImGui::DragInt(" X ", &tempX, 1,
+            (std::numeric_limits<decltype(arrayPlaceX_)>::min)(), (std::numeric_limits<decltype(arrayPlaceX_)>::max)() );
+
+        ImGui::DragInt(" Y ", &tempY, 1,
+            (std::numeric_limits<decltype(arrayPlaceY_)>::min)(), (std::numeric_limits<decltype(arrayPlaceY_)>::max)() );
+
+        SetArrayPlace(tempX, tempY);
+
+        ImGui::TreePop();
+    }
+}
+
+void UIButton::SetArrayPlace(int16_t x, int16_t y)
+{
+    arrayPlaceX_ = x;
+    arrayPlaceY_ = y;
+}
+
+void UIButton::GetArrayPlace(int16_t* x, int16_t* y) const
+{
+    *x = arrayPlaceX_;
+    *y = arrayPlaceY_;
 }
 
 void UIButton::SetImage(string _imageFilePath)

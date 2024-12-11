@@ -6,10 +6,15 @@ class UIButton : public UIObject
 private:
 	string imageFilePath_; // 画像ファイルパス
 	int imageHandle_;		// 画像ハンドル
+
+	int16_t arrayPlaceX_;
+	int16_t arrayPlaceY_;
+
 public:
 	/// <summary> コンストラクタ </summary>
 	UIButton(string _name, UIObject* parent, int _layerNum);
-	
+	~UIButton() override;
+
 	/// <summary> 初期化 </summary>
 	void Initialize() override;
 	
@@ -31,6 +36,8 @@ public:
 	/// <summary> ImGui表示 </summary>
 	void DrawData() override;
 
+	void SetArrayPlace(int16_t x, int16_t y);
+	void GetArrayPlace(int16_t* x, int16_t* y) const;
 /*
 setter :*/
 	/// <summary> 画像ファイルパスを設定 </summary>

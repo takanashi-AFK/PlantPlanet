@@ -5,6 +5,7 @@
 
 
 using std::vector;
+class UIButton;
 
 
 class UIPanel : public UIObject
@@ -72,5 +73,42 @@ private:
 	/// <summary> 代入演算子の除外 </summary>
 	UIPanel& operator=(const UIPanel&) = delete;
 
+//---------------------------------マウス以外で座標を取得する
+
+private:
+
+	std::list<UIButton*>  arrayButton_;
+	int16_t buttonIndexX_;
+	int16_t buttonIndexY_;
+	UIButton* selectingButton_;
+
+public:
+
+	enum class SELECTOR_MOVE_TO
+	{
+		UP=0,
+		LEFT,
+		RIGHT,
+		BOTTOM,
+
+		AMOUNT
+	};
+
+	bool SetButtonArrayIndex(uint16_t x, uint16_t y);
+	void GetButtonIndex(uint16_t* x, uint16_t* y);
+	UIObject* GetSelectingButton();
+	void SetCursorToSelectingButton();
+	void SelectorMove(SELECTOR_MOVE_TO way);
+
+	void PushButtonToArray(UIButton* b);
+	void RemoveButtonFromArray(UIButton* b);
+	void ResetArrayOfButton();
+
+	void CheckSelectingButton();
+
+private:
+
+	std::vector<UIButton*> GetSelectorMovable(SELECTOR_MOVE_TO way);
+	
 };
 

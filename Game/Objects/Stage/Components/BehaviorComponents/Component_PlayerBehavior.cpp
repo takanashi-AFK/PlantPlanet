@@ -254,8 +254,8 @@ void Component_PlayerBehavior::Idle()
 	// `InputMove`コンポーネントの移動フラグが立っていたら...歩行状態に遷移
 	if (move->IsMove()) SetState(PLAYER_STATE_WALK);
 
-	// マウスの左ボタンが押されていたかつ、マウスの左ボタンが押されてたら、射撃状態に遷移
-	else if (Input::IsMouseButtonDown(0) || Input::GetPadTriggerR(0)) {
+	// マウスの左ボタンが押されていたまたは、マウスの左ボタンが押されてたら、射撃状態に遷移
+	else if (Input::IsMouseButtonDown(0) || Input::IsPadTriggerDownR(0)) {
 		if (!sg->CanUseStamina(STAMINA_DECREASE_SHOOT)) {
 			// 状態を遷移
 			IsWASDKey() ? SetState(PLAYER_STATE_WALK) : SetState(PLAYER_STATE_IDLE);
@@ -265,7 +265,7 @@ void Component_PlayerBehavior::Idle()
 		isShootAttack_ = true;
 	}
 	// スペースキーが押されていたら...ダッシュ状態に遷移
-	else if (Input::IsKeyDown(DIK_SPACE) || Input::GetPadTriggerL(0)) {
+	else if (Input::IsKeyDown(DIK_SPACE) || Input::IsPadTriggerDownL(0)) {
 		if (!sg->CanUseStamina(STAMINA_DECREASE_DODGE)) {
 			// 状態を遷移
 			IsWASDKey() ? SetState(PLAYER_STATE_WALK) : SetState(PLAYER_STATE_IDLE);
@@ -301,7 +301,7 @@ void Component_PlayerBehavior::Walk()
 	}
 
 	// マウスの左ボタンが押されていたかつ、マウスの左ボタンが押されてたら、射撃状態に遷移
-	else if (Input::IsMouseButtonDown(0) || Input::GetPadTriggerR(0)) {
+	else if (Input::IsMouseButtonDown(0) || Input::IsPadTriggerDownR(0)) {
 		if (!sg->CanUseStamina(STAMINA_DECREASE_SHOOT)) {
 			// 状態を遷移
 			IsWASDKey() ? SetState(PLAYER_STATE_WALK) : SetState(PLAYER_STATE_IDLE);
@@ -310,7 +310,7 @@ void Component_PlayerBehavior::Walk()
 		isShootAttack_ = true;
 	}
 	// スペースキーが押されていたら...ダッシュ状態に遷移
-	else if (Input::IsKeyDown(DIK_SPACE) || Input::GetPadTriggerL(0)) {
+	else if (Input::IsKeyDown(DIK_SPACE) || Input::IsPadTriggerDownL(0)) {
 		if (!sg->CanUseStamina(STAMINA_DECREASE_DODGE)) {
 			// 状態を遷移
 			IsWASDKey() ? SetState(PLAYER_STATE_WALK) : SetState(PLAYER_STATE_IDLE);
@@ -391,7 +391,7 @@ void Component_PlayerBehavior::Shoot()
 	// NOTE: 終了するためのフラグ
 	bool isEnd = false;
 
-	if (Input::IsKeyDown(DIK_SPACE) || Input::GetPadTriggerL(0)) {
+	if (Input::IsKeyDown(DIK_SPACE) || Input::IsPadTriggerDownL(0)) {
 		if (!sg->CanUseStamina(STAMINA_DECREASE_DODGE)) {
 			// 状態を遷移
 			IsWASDKey() ? SetState(PLAYER_STATE_WALK) : SetState(PLAYER_STATE_IDLE);
