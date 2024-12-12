@@ -70,7 +70,7 @@ void UIButton::Load(json& loadObj)
     }
 
     if (loadObj.contains("ArrayPlace_X")) arrayPlaceX_ = loadObj["ArrayPlace_X"].get<int16_t>();
-    if (loadObj.contains("ArrayPlace_Y")) arrayPlaceX_ = loadObj["ArrayPlace_Y"].get<int16_t>();
+    if (loadObj.contains("ArrayPlace_Y")) arrayPlaceY_ = loadObj["ArrayPlace_Y"].get<int16_t>();
 }
 
 void UIButton::DrawData()

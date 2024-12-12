@@ -134,7 +134,7 @@ void UIPanel::SetVisible(string _name, bool _visible)
 	}
 }
 //---------------------
-bool UIPanel::SetButtonArrayIndex(uint16_t x, uint16_t y)
+bool UIPanel::SetButtonArrayIndex(int16_t x, int16_t y)
 {
 	for (auto& itr : arrayButton_)
 	{
@@ -154,7 +154,7 @@ bool UIPanel::SetButtonArrayIndex(uint16_t x, uint16_t y)
 	return false;
 }
 
-void UIPanel::GetButtonIndex(uint16_t* x, uint16_t* y)
+void UIPanel::GetButtonIndex(int16_t* x, int16_t* y)
 {
 	*x = buttonIndexX_;
 	*y = buttonIndexY_;
@@ -178,23 +178,23 @@ void UIPanel::SelectorMove(SELECTOR_MOVE_TO way)
 
 	if (!sameLineButtons.size())	return;
 
-	auto asc = [](const UIButton& l,const UIButton& r)->bool
+	auto asc = [](const UIButton* l,const UIButton* r)->bool
 		{
-			int16_t x, y; l.GetArrayPlace(&x, &y);
+			int16_t x, y; l->GetArrayPlace(&x, &y);
 			auto left = x + y;
 
-			r.GetArrayPlace(&x, &y);
+			r->GetArrayPlace(&x, &y);
 			auto right = x + y;
 
 			return left < right;
 		};
 
-	auto des = [](const UIButton& l, const UIButton& r)->bool
+	auto des = [](const UIButton* l, const UIButton* r)->bool
 		{
-			int16_t x, y; l.GetArrayPlace(&x, &y);
+			int16_t x, y; l->GetArrayPlace(&x, &y);
 			auto left = x + y;
 
-			r.GetArrayPlace(&x, &y);
+			r->GetArrayPlace(&x, &y);
 			auto right = x + y;
 
 			return left > right;
@@ -206,6 +206,8 @@ void UIPanel::SelectorMove(SELECTOR_MOVE_TO way)
 	);
 
 	selectingButton_ = sameLineButtons[0];
+
+	if(selectingButton_) selectingButton_->GetArrayPlace(&buttonIndexX_, &buttonIndexY_);
 }
 
 void UIPanel::PushButtonToArray(UIButton* b)
@@ -256,7 +258,7 @@ std::vector<UIButton*> UIPanel::GetSelectorMovable(SELECTOR_MOVE_TO way)
 			int16_t tempY = NULL;
 			btn->GetArrayPlace(&tempX, &tempY);
 
-			if (tempY != buttonIndexY_)	return;
+			if (tempX != buttonIndexX_)	return;
 
 			switch (way)
 			{
@@ -276,7 +278,7 @@ std::vector<UIButton*> UIPanel::GetSelectorMovable(SELECTOR_MOVE_TO way)
 			int16_t tempY = NULL;
 			btn->GetArrayPlace(&tempX, &tempY);
 
-			if (tempX != buttonIndexX_)	return;
+			if (tempY != buttonIndexY_)	return;
 
 			switch (way)
 			{

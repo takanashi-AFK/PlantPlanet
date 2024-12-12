@@ -94,8 +94,8 @@ public:
 		AMOUNT
 	};
 
-	bool SetButtonArrayIndex(uint16_t x, uint16_t y);
-	void GetButtonIndex(uint16_t* x, uint16_t* y);
+	bool SetButtonArrayIndex(int16_t x, int16_t y);
+	void GetButtonIndex(int16_t* x, int16_t* y);
 	UIObject* GetSelectingButton();
 	void SetCursorToSelectingButton();
 	void SelectorMove(SELECTOR_MOVE_TO way);
