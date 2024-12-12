@@ -88,7 +88,10 @@ Component_PlayerBehavior::Component_PlayerBehavior(string _name, StageObject* _h
 	effectData_(),
 	researchPoint_(0),
 	myPlants_(),
-	isMeleeStart_(true)
+	isMeleeStart_(true),
+	stamina_decrease_dodge_(30),
+	stamina_decrease_melee_(20),
+	stamina_decrease_shoot_(10)
 {
 }
 
@@ -257,6 +260,7 @@ void Component_PlayerBehavior::Idle()
 	// マウスの左ボタンが押されていたまたは、マウスの左ボタンが押されてたら、射撃状態に遷移
 	else if (Input::IsMouseButtonDown(0) || Input::IsPadTriggerDownR(0)) {
 		if (!sg->CanUseStamina(STAMINA_DECREASE_SHOOT)) {
+
 			// 状態を遷移
 			IsWASDKey() ? SetState(PLAYER_STATE_WALK) : SetState(PLAYER_STATE_IDLE);
 			return;
@@ -267,6 +271,7 @@ void Component_PlayerBehavior::Idle()
 	// スペースキーが押されていたら...ダッシュ状態に遷移
 	else if (Input::IsKeyDown(DIK_SPACE) || Input::IsPadTriggerDownL(0)) {
 		if (!sg->CanUseStamina(STAMINA_DECREASE_DODGE)) {
+
 			// 状態を遷移
 			IsWASDKey() ? SetState(PLAYER_STATE_WALK) : SetState(PLAYER_STATE_IDLE);
 			return;
@@ -275,7 +280,7 @@ void Component_PlayerBehavior::Idle()
 	}
 	// スペースキーが押されていたら...ダッシュ状態に遷移
 	else if (Input::IsKeyDown(DIK_V) || Input::IsPadButton(XINPUT_GAMEPAD_RIGHT_SHOULDER)) {
-		if (!sg->CanUseStamina(STAMINA_DECREASE_MELEE)) {
+		if (!sg->CanUseStamina(stamina_decrease_melee_)) {
 			// 状態を遷移
 			IsWASDKey() ? SetState(PLAYER_STATE_WALK) : SetState(PLAYER_STATE_IDLE);
 			return;
@@ -303,6 +308,7 @@ void Component_PlayerBehavior::Walk()
 	// マウスの左ボタンが押されていたかつ、マウスの左ボタンが押されてたら、射撃状態に遷移
 	else if (Input::IsMouseButtonDown(0) || Input::IsPadTriggerDownR(0)) {
 		if (!sg->CanUseStamina(STAMINA_DECREASE_SHOOT)) {
+
 			// 状態を遷移
 			IsWASDKey() ? SetState(PLAYER_STATE_WALK) : SetState(PLAYER_STATE_IDLE);
 			return;
@@ -312,6 +318,7 @@ void Component_PlayerBehavior::Walk()
 	// スペースキーが押されていたら...ダッシュ状態に遷移
 	else if (Input::IsKeyDown(DIK_SPACE) || Input::IsPadTriggerDownL(0)) {
 		if (!sg->CanUseStamina(STAMINA_DECREASE_DODGE)) {
+
 			// 状態を遷移
 			IsWASDKey() ? SetState(PLAYER_STATE_WALK) : SetState(PLAYER_STATE_IDLE);
 			return;
@@ -320,7 +327,7 @@ void Component_PlayerBehavior::Walk()
 	}
 	// Vが押されていたら...近接攻撃状態に遷移
 	else if (Input::IsKeyDown(DIK_V) || Input::IsPadButton(XINPUT_GAMEPAD_RIGHT_SHOULDER)) {
-		if (!sg->CanUseStamina(STAMINA_DECREASE_MELEE)) {
+		if (!sg->CanUseStamina(stamina_decrease_melee_)) {
 			// 状態を遷移
 			IsWASDKey() ? SetState(PLAYER_STATE_WALK) : SetState(PLAYER_STATE_IDLE);
 			return;
@@ -393,6 +400,7 @@ void Component_PlayerBehavior::Shoot()
 
 	if (Input::IsKeyDown(DIK_SPACE) || Input::IsPadTriggerDownL(0)) {
 		if (!sg->CanUseStamina(STAMINA_DECREASE_DODGE)) {
+
 			// 状態を遷移
 			IsWASDKey() ? SetState(PLAYER_STATE_WALK) : SetState(PLAYER_STATE_IDLE);
 			return;
@@ -410,7 +418,7 @@ void Component_PlayerBehavior::Shoot()
 		// 射撃フラグをリセット
 		isShootStart_ = false;
 
-		sg->UseStamina(STAMINA_DECREASE_SHOOT);
+		sg->UseStamina(stamina_decrease_shoot_);
 
 		// 移動コンポーネントの再開
 		//if (move != nullptr) move->Execute();
@@ -593,7 +601,7 @@ void Component_PlayerBehavior::Dodge()
 
 		dodgeDistance = DODGE_DISTANCE;
 
-		sg->UseStamina(STAMINA_DECREASE_DODGE);
+		sg->UseStamina(stamina_decrease_dodge_);
 
 		// 状態を遷移
 		IsWASDKey() ? SetState(PLAYER_STATE_WALK) : SetState(PLAYER_STATE_IDLE);
@@ -708,7 +716,7 @@ void Component_PlayerBehavior::Melee()
 		// 移動を可能にする
 		move->Execute();
 
-		sg->UseStamina(STAMINA_DECREASE_MELEE);
+		sg->UseStamina(stamina_decrease_melee_);
 
 		// 状態を遷移
 		IsWASDKey() ? SetState(PLAYER_STATE_WALK) : SetState(PLAYER_STATE_IDLE);

@@ -32,6 +32,11 @@ void Scene_Title::Update()
 			SceneManager* sceneManager = (SceneManager*)FindObject("SceneManager");
 			sceneManager->ChangeScene(SCENE_ID_PLAY, TID_BLACKOUT);
 		}
+
+		// ƒ{ƒ^ƒ“‚ª‰Ÿ‚³‚ê‚½‚ç
+		if (((UIButton*)UIPanel::GetInstance()->GetUIObject("EndButton"))->OnClick() || Input::IsPadButtonDown(XINPUT_GAMEPAD_A)) {
+			PostQuitMessage(0);
+		}
 	}
 }
 

@@ -54,6 +54,10 @@ private:
   
 	bool isMeleeStart_;
 
+	float stamina_decrease_dodge_;
+	float stamina_decrease_melee_;
+	float stamina_decrease_shoot_;
+
 
 public:
 	/// <summary> コンストラクタ </summary>
@@ -91,6 +95,10 @@ public:
 	/// <param name="_point"> リサーチポイント </param>
 	void SetResearchPoint(int _point) { researchPoint_ = _point; }
 
+	void SetStaminaDecrease_Shoot(int _stamina_decrease_shoot) { stamina_decrease_shoot_ = _stamina_decrease_shoot; }
+	void SetStaminaDecrease_Dodge(int _stamina_decrease_dodge) { stamina_decrease_dodge_ = _stamina_decrease_dodge; }
+	void SetStaminaDecrease_Melee(int _stamina_decrease_melee) { stamina_decrease_melee_ = _stamina_decrease_melee; }
+
 	/*
 	getter :*/
 	/// <returns> プレイヤーの状態 </returns>
@@ -116,6 +124,10 @@ public:
 
 	/// <returns> プレイヤーの植物データ </returns>
 	vector<PlantData> GetMyPlants() { return myPlants_; }
+
+	float GetStaminaDecrease_Shoot() { return stamina_decrease_shoot_; }
+	float GetStaminaDecrease_Dodge() { return stamina_decrease_dodge_; }
+	float GetStaminaDecrease_Melee() { return stamina_decrease_melee_; }
 
 /*
 predicate :*/
