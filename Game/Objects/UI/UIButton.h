@@ -1,14 +1,17 @@
 #pragma once
 #include "UIObject.h"
+#include"../../../Engine/DirectX/Direct3D.h"
 
 class UIButton : public UIObject
 {
 private:
 	string imageFilePath_; // 画像ファイルパス
 	int imageHandle_;		// 画像ハンドル
+	Direct3D::SHADER_TYPE shaderType_;
 
 	int16_t arrayPlaceX_;
 	int16_t arrayPlaceY_;
+	bool isSetShader_;
 
 public:
 	/// <summary> コンストラクタ </summary>
@@ -38,6 +41,9 @@ public:
 
 	void SetArrayPlace(int16_t x, int16_t y);
 	void GetArrayPlace(int16_t* x, int16_t* y) const;
+
+	void SetShader(Direct3D::SHADER_TYPE type);
+	Direct3D::SHADER_TYPE  GetShader()const;
 /*
 setter :*/
 	/// <summary> 画像ファイルパスを設定 </summary>
@@ -50,6 +56,10 @@ predicate :*/
 
 	/// <summary> マウスがボタンの上にあるか </summary>
 	bool IsMouseOver(XMFLOAT2 _position);
+
+	static constexpr int ALPHA_MAX = 256;
+	static constexpr int ALPHA_MIDDLE = 192;
+
 private:
 	/// <summary> 画像座標を画面座標に変換 </summary>
 	void ConvertToImageCoordinates(XMFLOAT2& _position);

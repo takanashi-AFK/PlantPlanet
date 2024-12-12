@@ -160,7 +160,7 @@ void UIPanel::GetButtonIndex(int16_t* x, int16_t* y)
 	*y = buttonIndexY_;
 }
 
-UIObject* UIPanel::GetSelectingButton()
+UIButton* UIPanel::GetSelectingButton()
 {
 	return selectingButton_;
 }
@@ -242,6 +242,7 @@ void UIPanel::CheckSelectingButton()
 		if (tempX == buttonIndexX_ && tempY == buttonIndexY_)
 		{
 			selectingButton_ = itr;
+			return;
 		}
 	}
 

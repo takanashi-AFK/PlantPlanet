@@ -4,10 +4,10 @@
 //„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ
 VS_OUTPUT VS(float4 pos : POSITION, float4 uv : TEXCOORD)
 {
-	VS_OUTPUT output;
-	output.pos = mul(pos, g_matWorld);
-	output.uv = mul(uv, g_matTexture);
-	return output;
+    VS_OUTPUT output;
+    output.pos = mul(pos, g_matWorld);
+    output.uv = mul(uv, g_matTexture);
+    return output;
 }
 
 //„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ
@@ -15,6 +15,18 @@ VS_OUTPUT VS(float4 pos : POSITION, float4 uv : TEXCOORD)
 //„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ
 float4 PS(VS_OUTPUT input) : SV_Target
 {
-    return g_vecColor * g_texture.Sample(g_sampler, input.uv);
+    float4 col= g_vecColor * g_texture.Sample(g_sampler, input.uv);
+    
+    int p = 2;
+    float edge = pow(abs(0.5 - input.uv.x),p);
+    edge += pow(abs(0.5 - input.uv.y), p);
+    
+    edge = pow((0.5-input.uv.x), 2) + pow((0.5-input.uv.y), 2);
+    edge = pow(edge, 2);
+    edge *= 3;
+    
+    col.rg += edge;
+    col.b -= edge;
 
+    return col;
 }

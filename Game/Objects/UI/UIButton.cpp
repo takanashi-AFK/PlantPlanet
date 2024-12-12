@@ -8,8 +8,10 @@
 
 using namespace FileManager;
 
+
 UIButton::UIButton(string _name, UIObject* parent , int _layerNum)
-	: UIObject(_name, UIType::UI_BUTTON, parent, _layerNum), imageHandle_(-1), imageFilePath_(), arrayPlaceX_(0), arrayPlaceY_(0)
+	: UIObject(_name, UIType::UI_BUTTON, parent, _layerNum), imageHandle_(-1), 
+    imageFilePath_(), arrayPlaceX_(0), arrayPlaceY_(0),isSetShader_(false)
 {
 }
 
@@ -28,16 +30,21 @@ void UIButton::Update()
 {
     if (imageHandle_ < 0)return;
 
+    if (isSetShader_)
+    {
+        isSetShader_ = false;
+        return;
+    }
+
     // マウスの座標を取得
     XMFLOAT2 mousePos = { Input::GetMousePosition().x,Input::GetMousePosition().y };
 
     // マウスの座標を画像の座標に変換
     ConvertToImageCoordinates(mousePos);
 
-	if (IsMouseOver(mousePos))
-        Image::SetAlpha(imageHandle_, 192);
-	else 
-        Image::SetAlpha(imageHandle_, 256);
+    shaderType_ = IsMouseOver(mousePos) ? Direct3D::SHADER_BUTTON_SELECT : Direct3D::SHADER_BUTTON_NOTSELECT;
+
+    Image::SetAlpha(imageHandle_, 256);
 }
 
 void UIButton::Draw()
@@ -48,7 +55,7 @@ void UIButton::Draw()
     auto t = this->GetCalcTransform();
 
 	Image::SetTransform(imageHandle_,t);
-	Image::Draw(imageHandle_);
+	Image::Draw(imageHandle_,shaderType_);
 }
 
 void UIButton::Release()
@@ -164,6 +171,18 @@ void UIButton::GetArrayPlace(int16_t* x, int16_t* y) const
 {
     *x = arrayPlaceX_;
     *y = arrayPlaceY_;
+}
+
+void UIButton::SetShader(Direct3D::SHADER_TYPE type)
+{
+    shaderType_ = type;
+
+    isSetShader_ = true;
+}
+
+Direct3D::SHADER_TYPE UIButton::GetShader() const
+{
+    return shaderType_;
 }
 
 void UIButton::SetImage(string _imageFilePath)

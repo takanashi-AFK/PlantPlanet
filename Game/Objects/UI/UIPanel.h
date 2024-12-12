@@ -96,7 +96,7 @@ public:
 
 	bool SetButtonArrayIndex(int16_t x, int16_t y);
 	void GetButtonIndex(int16_t* x, int16_t* y);
-	UIObject* GetSelectingButton();
+	UIButton* GetSelectingButton();
 	void SetCursorToSelectingButton();
 	void SelectorMove(SELECTOR_MOVE_TO way);
 

@@ -14,6 +14,7 @@
 #include "../../Engine/magic_enum/magic_enum.hpp"
 #include "WinUser.h"
 #include<format>
+#include "../Objects/UI/UIButton.h"
 
 using namespace FileManager;
 
@@ -162,26 +163,20 @@ void GameEditor::DrawUIPanelOutLiner()
 
 		ImGui::Text(std::format("<{},{}>",x,y ).c_str());
 
-		auto process = [&](UIPanel::SELECTOR_MOVE_TO way)->void
-			{
-				ins->SelectorMove(way);
-				auto ptr = ins->GetSelectingButton();
-				if (ptr)
-				{
-					auto pos = ptr->GetTransform().position_;
-
-					SetCursorPos(pos.x, pos.y);
-				}
-			};
-
-		if (ImGui::Button("->")) process(UIPanel::SELECTOR_MOVE_TO::RIGHT);
-		if (ImGui::Button("<-"))process(UIPanel::SELECTOR_MOVE_TO::LEFT);
-		if (ImGui::Button("up")) process(UIPanel::SELECTOR_MOVE_TO::UP);
-		if (ImGui::Button("btm")) process(UIPanel::SELECTOR_MOVE_TO::BOTTOM);
+		if (ImGui::Button("->")) ins->SelectorMove(UIPanel::SELECTOR_MOVE_TO::RIGHT);
+		if (ImGui::Button("<-"))ins->SelectorMove(UIPanel::SELECTOR_MOVE_TO::LEFT);
+		if (ImGui::Button("up"))ins->SelectorMove(UIPanel::SELECTOR_MOVE_TO::UP);
+		if (ImGui::Button("btm")) ins->SelectorMove(UIPanel::SELECTOR_MOVE_TO::BOTTOM);
 
 		auto ptr = ins->GetSelectingButton();
-		if (ptr)ImGui::Text(ptr->GetObjectName().c_str());
+		if (ptr)
+		{
+			ImGui::SameLine(); ImGui::Text(ptr->GetObjectName().c_str());
+
+			ptr->SetShader(Direct3D::SHADER_BUTTON_SELECT);
+		}
 	}
+
 	ImGui::Separator();
 
 	ImGui::BeginChild("ObjectList"); {
