@@ -100,6 +100,20 @@ void Component_WASDInputMove::Update()
 		if (isRotate) holder_->SetRotateY(XMConvertToDegrees(newAngle));
 
 		isMove_ = true;
+
+		//回転を検出
+		float padAngle = atan2f(padMove.y, padMove.x);
+		padAngle = XMConvertToDegrees(padAngle);
+
+		if (padAngle < 0)	padAngle = (-1 * padAngle) + 180.f;
+		constexpr float upperRight = 45.f;
+		constexpr float upperLeft = upperRight + 90.f;
+		constexpr float lowerLeft = upperLeft + 90.f;
+		constexpr float lowerRight = lowerLeft + 90.f;
+		if (upperRight <= padAngle && padAngle <= upperLeft)		direcionType_ = DIRECTION::FORWARD;
+		else if (upperLeft <= padAngle && padAngle <= lowerLeft)	direcionType_ = DIRECTION::LEFT;
+		else if (lowerLeft <= padAngle && padAngle <= lowerRight)	direcionType_ = DIRECTION::BACK;
+		else if (lowerRight <= padAngle || padAngle <= upperRight)	direcionType_ = DIRECTION::RIGHT;
 	}
 
 	// 移動ベクトルを正規化し、速度を掛け合わせる
