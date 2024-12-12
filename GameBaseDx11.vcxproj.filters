@@ -311,6 +311,8 @@
     <ClCompile Include="Game\Objects\UI\UIProgressCircle.cpp" />
     <ClCompile Include="Game\Objects\Stage\Components\MotionComponent\Component_Accessory.cpp" />
     <ClCompile Include="Game\Objects\Stage\Components\BehaviorComponents\Component_RangeEnemyBehavior.cpp" />
+    <ClCompile Include="Game\Objects\Stage\Components\BehaviorComponents\Component_MeleeEnemyBehavior.cpp" />
+    <ClCompile Include="Game\Objects\UI\UICursor.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Collider\BoxCollider.h">
@@ -549,6 +551,8 @@
     <ClInclude Include="Game\Objects\UI\UIProgressCircle.h" />
     <ClInclude Include="Game\Objects\Stage\Components\MotionComponent\Component_Accessory.h" />
     <ClInclude Include="Game\Objects\Stage\Components\BehaviorComponents\Component_RangeEnemyBehavior.h" />
+    <ClInclude Include="Game\Objects\Stage\Components\BehaviorComponents\Component_MeleeEnemyBehavior.h" />
+    <ClInclude Include="Game\Objects\UI\UICursor.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Assets\Shader\Simple2D.hlsl">
@@ -584,9 +588,16 @@
     <FxCompile Include="Assets\Shader\Enemy_BOSS.hlsl">
       <Filter>02Shader</Filter>
     </FxCompile>
+    <FxCompile Include="Assets\Shader\NotSelectingButton.hlsl">
+      <Filter>02Shader</Filter>
+    </FxCompile>
+    <FxCompile Include="Assets\Shader\SelectingButton.hlsl">
+      <Filter>02Shader</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
     <None Include="Assets\Shader\CB3D.hlsli" />
+    <None Include="Assets\Shader\CB2D.hlsli" />
   </ItemGroup>
 </Project>

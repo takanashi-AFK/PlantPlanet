@@ -25,8 +25,11 @@ namespace Input
 	XINPUT_STATE controllerState_[MAX_PAD_NUM];
 	XINPUT_STATE prevControllerState_[MAX_PAD_NUM];
 
-
-
+	struct
+	{
+		bool LDown : 1;
+		bool RDown : 1;
+	}prevTrigger[MAX_PAD_NUM],Trigger[MAX_PAD_NUM];
 
 	//‰Šú‰»
 	void Initialize(HWND hWnd)
@@ -68,6 +71,10 @@ namespace Input
 		{
 			memcpy(&prevControllerState_[i], &controllerState_[i], sizeof(controllerState_[i]));
 			XInputGetState(i, &controllerState_[i]);
+			
+			prevTrigger[i] = Trigger[i];
+			Trigger[i].LDown = GetPadTriggerL(i) > .2f ? true : false;
+			Trigger[i].RDown = GetPadTriggerR(i) > .2f ? true : false;
 		}
 
 	}
@@ -317,10 +324,20 @@ namespace Input
 		return GetAnalogValue(controllerState_[padID].Gamepad.bLeftTrigger, 255, XINPUT_GAMEPAD_TRIGGER_THRESHOLD);
 	}
 
+	bool IsPadTriggerDownL(int padID)
+	{
+		return (!prevTrigger[padID].LDown) && Trigger[padID].LDown;
+	}
+
 	//‰EƒgƒŠƒK[‚Ì‰Ÿ‚µ‚İ‹ï‡‚ğæ“¾
 	float GetPadTriggerR(int padID)
 	{
 		return GetAnalogValue(controllerState_[padID].Gamepad.bRightTrigger, 255, XINPUT_GAMEPAD_TRIGGER_THRESHOLD);
+	}
+
+	bool IsPadTriggerDownR(int padID)
+	{
+		return (!prevTrigger[padID].RDown) && Trigger[padID].RDown;
 	}
 
 	//U“®‚³‚¹‚é

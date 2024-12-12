@@ -13,6 +13,9 @@
 #include "../../Engine/SceneManager.h"
 #include "../../Engine/magic_enum/magic_enum.hpp"
 #include "WinUser.h"
+#include<format>
+#include "../Objects/UI/UIButton.h"
+
 using namespace FileManager;
 
 namespace {
@@ -151,6 +154,28 @@ void GameEditor::DrawUIPanelOutLiner()
 	ImGui::SameLine();
 
 	if (ImGui::Button("Delete"))editUIPanel_->DeleteAllUIObject();
+
+	{
+		auto ins = UIPanel::GetInstance();
+		ins->CheckSelectingButton();
+		int16_t x, y;
+		ins->GetButtonIndex(&x, &y);
+
+		ImGui::Text(std::format("<{},{}>",x,y ).c_str());
+
+		if (ImGui::Button("->")) ins->SelectorMove(UIPanel::SELECTOR_MOVE_TO::RIGHT);
+		if (ImGui::Button("<-"))ins->SelectorMove(UIPanel::SELECTOR_MOVE_TO::LEFT);
+		if (ImGui::Button("up"))ins->SelectorMove(UIPanel::SELECTOR_MOVE_TO::UP);
+		if (ImGui::Button("btm")) ins->SelectorMove(UIPanel::SELECTOR_MOVE_TO::BOTTOM);
+
+		auto ptr = ins->GetSelectingButton();
+		if (ptr)
+		{
+			ImGui::SameLine(); ImGui::Text(ptr->GetObjectName().c_str());
+
+			ptr->SetShader(Direct3D::SHADER_BUTTON_SELECT);
+		}
+	}
 
 	ImGui::Separator();
 

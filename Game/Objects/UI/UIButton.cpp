@@ -4,12 +4,20 @@
 #include "../../../Engine/DirectX/Direct3D.h"
 #include "../../../Engine/DirectX/Input.h"
 #include "../../../Engine/Global.h"
+#include "UIPanel.h"
 
 using namespace FileManager;
 
+
 UIButton::UIButton(string _name, UIObject* parent , int _layerNum)
-	: UIObject(_name, UIType::UI_BUTTON, parent, _layerNum), imageHandle_(-1), imageFilePath_()
+	: UIObject(_name, UIType::UI_BUTTON, parent, _layerNum), imageHandle_(-1), 
+    imageFilePath_(), arrayPlaceX_(0), arrayPlaceY_(0),isSetShader_(false)
 {
+}
+
+UIButton::~UIButton()
+{
+    UIPanel::GetInstance()->RemoveButtonFromArray(this);
 }
 
 void UIButton::Initialize()
@@ -22,16 +30,21 @@ void UIButton::Update()
 {
     if (imageHandle_ < 0)return;
 
+    if (isSetShader_)
+    {
+        isSetShader_ = false;
+        return;
+    }
+
     // マウスの座標を取得
     XMFLOAT2 mousePos = { Input::GetMousePosition().x,Input::GetMousePosition().y };
 
     // マウスの座標を画像の座標に変換
     ConvertToImageCoordinates(mousePos);
 
-	if (IsMouseOver(mousePos))
-        Image::SetAlpha(imageHandle_, 192);
-	else 
-        Image::SetAlpha(imageHandle_, 256);
+    shaderType_ = IsMouseOver(mousePos) ? Direct3D::SHADER_BUTTON_SELECT : Direct3D::SHADER_BUTTON_NOTSELECT;
+
+    Image::SetAlpha(imageHandle_, 256);
 }
 
 void UIButton::Draw()
@@ -42,7 +55,7 @@ void UIButton::Draw()
     auto t = this->GetCalcTransform();
 
 	Image::SetTransform(imageHandle_,t);
-	Image::Draw(imageHandle_);
+	Image::Draw(imageHandle_,shaderType_);
 }
 
 void UIButton::Release()
@@ -52,6 +65,8 @@ void UIButton::Release()
 void UIButton::Save(json& saveObj)
 {
 	saveObj["imageFilePath_"] = imageFilePath_;
+    saveObj["ArrayPlace_X"] = arrayPlaceX_;
+    saveObj["ArrayPlace_Y"] = arrayPlaceY_;
 }
 
 void UIButton::Load(json& loadObj)
@@ -60,6 +75,9 @@ void UIButton::Load(json& loadObj)
         imageFilePath_ = loadObj["imageFilePath_"].get<string>();
         SetImage(imageFilePath_);
     }
+
+    if (loadObj.contains("ArrayPlace_X")) arrayPlaceX_ = loadObj["ArrayPlace_X"].get<int16_t>();
+    if (loadObj.contains("ArrayPlace_Y")) arrayPlaceY_ = loadObj["ArrayPlace_Y"].get<int16_t>();
 }
 
 void UIButton::DrawData()
@@ -125,6 +143,46 @@ void UIButton::DrawData()
 
 		ImGui::TreePop();
 	}
+
+    if (ImGui::TreeNode("ButtonArray"))
+    {
+        int tempX = arrayPlaceX_;
+        int tempY = arrayPlaceY_;
+
+        ImGui::DragInt(" X ", &tempX, 1,
+            (std::numeric_limits<decltype(arrayPlaceX_)>::min)(), (std::numeric_limits<decltype(arrayPlaceX_)>::max)() );
+
+        ImGui::DragInt(" Y ", &tempY, 1,
+            (std::numeric_limits<decltype(arrayPlaceY_)>::min)(), (std::numeric_limits<decltype(arrayPlaceY_)>::max)() );
+
+        SetArrayPlace(tempX, tempY);
+
+        ImGui::TreePop();
+    }
+}
+
+void UIButton::SetArrayPlace(int16_t x, int16_t y)
+{
+    arrayPlaceX_ = x;
+    arrayPlaceY_ = y;
+}
+
+void UIButton::GetArrayPlace(int16_t* x, int16_t* y) const
+{
+    *x = arrayPlaceX_;
+    *y = arrayPlaceY_;
+}
+
+void UIButton::SetShader(Direct3D::SHADER_TYPE type)
+{
+    shaderType_ = type;
+
+    isSetShader_ = true;
+}
+
+Direct3D::SHADER_TYPE UIButton::GetShader() const
+{
+    return shaderType_;
 }
 
 void UIButton::SetImage(string _imageFilePath)

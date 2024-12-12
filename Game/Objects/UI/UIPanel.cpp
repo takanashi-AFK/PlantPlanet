@@ -1,5 +1,6 @@
 #include "UIPanel.h"
 #include "../../Otheres/GameEditor.h"
+#include"UIButton.h"
 
 UIPanel* UIPanel::instance_ = nullptr;
 
@@ -86,6 +87,8 @@ void UIPanel::DeleteUIObject(UIObject* _object)
 
 void UIPanel::DeleteAllUIObject()
 {
+	//ボタンのポインタを保存してあるコンテナのリセット
+	ResetArrayOfButton();
 	// 全てのオブジェクトを削除
 	for (auto obj : childList_) {
 		obj->KillMe();
@@ -129,4 +132,175 @@ void UIPanel::SetVisible(string _name, bool _visible)
 	{
 		if (obj->GetObjectName() == _name)obj->SetVisible(_visible);
 	}
+}
+//---------------------
+bool UIPanel::SetButtonArrayIndex(int16_t x, int16_t y)
+{
+	for (auto& itr : arrayButton_)
+	{
+		int16_t tempX;
+		int16_t tempY;
+
+		itr->GetArrayPlace(&tempX, &tempY);
+
+		if(tempX==x && tempY ==y)
+		{
+			buttonIndexX_ = x;
+			buttonIndexY_ = y;
+			return true;
+		}
+	}
+
+	return false;
+}
+
+void UIPanel::GetButtonIndex(int16_t* x, int16_t* y)
+{
+	*x = buttonIndexX_;
+	*y = buttonIndexY_;
+}
+
+UIButton* UIPanel::GetSelectingButton()
+{
+	return selectingButton_;
+}
+
+void UIPanel::SetCursorToSelectingButton()
+{
+	auto tempPos = selectingButton_->GetTransform().position_;
+
+	SetCursorPos((int)(tempPos.x), (int)(tempPos.y));
+}
+
+void UIPanel::SelectorMove(SELECTOR_MOVE_TO way)
+{
+	auto sameLineButtons = GetSelectorMovable(way);
+
+	if (!sameLineButtons.size())	return;
+
+	auto asc = [](const UIButton* l,const UIButton* r)->bool
+		{
+			int16_t x, y; l->GetArrayPlace(&x, &y);
+			auto left = x + y;
+
+			r->GetArrayPlace(&x, &y);
+			auto right = x + y;
+
+			return left < right;
+		};
+
+	auto des = [](const UIButton* l, const UIButton* r)->bool
+		{
+			int16_t x, y; l->GetArrayPlace(&x, &y);
+			auto left = x + y;
+
+			r->GetArrayPlace(&x, &y);
+			auto right = x + y;
+
+			return left > right;
+		};
+
+	std::sort
+	(sameLineButtons.begin(), sameLineButtons.end(),
+		(way == SELECTOR_MOVE_TO::RIGHT) || (way == SELECTOR_MOVE_TO::UP) ? asc:des
+	);
+
+	selectingButton_ = sameLineButtons[0];
+
+	if(selectingButton_) selectingButton_->GetArrayPlace(&buttonIndexX_, &buttonIndexY_);
+}
+
+void UIPanel::PushButtonToArray(UIButton* b)
+{
+	arrayButton_.push_back(b);
+}
+
+void UIPanel::RemoveButtonFromArray(UIButton* b)
+{
+	for (auto itr = arrayButton_.begin(); itr != arrayButton_.end();) {
+
+		if (*itr == b)	itr = arrayButton_.erase(itr);
+		
+		else ++itr;
+	}
+}
+
+void UIPanel::ResetArrayOfButton()
+{
+	arrayButton_.clear();
+}
+
+void UIPanel::CheckSelectingButton()
+{
+	for (auto& itr : arrayButton_)
+	{
+		int16_t tempX;
+		int16_t tempY;
+
+		itr->GetArrayPlace(&tempX, &tempY);
+
+		if (tempX == buttonIndexX_ && tempY == buttonIndexY_)
+		{
+			selectingButton_ = itr;
+			return;
+		}
+	}
+
+	selectingButton_ = nullptr;
+}
+
+std::vector<UIButton*> UIPanel::GetSelectorMovable(SELECTOR_MOVE_TO way)
+{
+	std::vector<UIButton*> sameLinebuttons{};
+	
+	auto sameVert = [&](UIButton* btn)->void
+		{
+			int16_t tempX = NULL;
+			int16_t tempY = NULL;
+			btn->GetArrayPlace(&tempX, &tempY);
+
+			if (tempX != buttonIndexX_)	return;
+
+			switch (way)
+			{
+			case SELECTOR_MOVE_TO::UP :
+				if (tempY > buttonIndexY_)	sameLinebuttons.push_back(btn);
+				return;
+
+			case  SELECTOR_MOVE_TO::BOTTOM:
+				if (tempY < buttonIndexY_)	sameLinebuttons.push_back(btn);
+				return;
+			}
+		};
+
+	auto sameHori = [&](UIButton* btn)->void
+		{
+			int16_t tempX = NULL;
+			int16_t tempY = NULL;
+			btn->GetArrayPlace(&tempX, &tempY);
+
+			if (tempY != buttonIndexY_)	return;
+
+			switch (way)
+			{
+			case SELECTOR_MOVE_TO::RIGHT: 
+				if (tempX > buttonIndexX_)	sameLinebuttons.push_back(btn);
+				return;
+
+			case  SELECTOR_MOVE_TO::LEFT:
+				if (tempX < buttonIndexX_)	sameLinebuttons.push_back(btn);
+				return;
+			}
+		};
+
+	std::function<void(UIButton*)>func =(way == SELECTOR_MOVE_TO::UP || way == SELECTOR_MOVE_TO::BOTTOM) ?
+		static_cast<std::function<void(UIButton*)>>(sameVert) : 
+		static_cast<std::function<void(UIButton*)>>(sameHori);
+
+	for (auto& itr : arrayButton_) {
+
+		func(itr);
+	}
+
+	return sameLinebuttons;
 }
