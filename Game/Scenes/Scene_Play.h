@@ -19,6 +19,7 @@ private:
 	bool fixedCursorPos;	// カーソル固定化
 	bool cursorVisible;		// カーソル表示
 	bool isBossSpawn_;
+	bool isDebugDataEditWindowOpen_;
 public:
 	/// <summary> コンストラクタ </summary>
 	Scene_Play(GameObject* parent);
@@ -55,5 +56,7 @@ private:
 other :*/
 	/// <summary> ボス敵の生成 </summary>
 	void SpawnBossEnemy();
+
+	void DrawDebugDataEditWindow();
 };
 

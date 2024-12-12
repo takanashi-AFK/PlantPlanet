@@ -78,6 +78,7 @@ void Component_PlantGenerator::Update()
 
 		// 当たり判定を設定
 		stagePlantObject->SetIsColliding(false);
+
 		// プラントコンポーネントを作成
 		Component_Plant* plantComponent = (Component_Plant*)CreateComponent("Plant", Plant, stagePlantObject, this);
 
