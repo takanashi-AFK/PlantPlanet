@@ -117,6 +117,12 @@ void Component_PlayerBehavior::Initialize()
 	if (FindChildComponent("IsInteractableDetector") == false)AddChildComponent(CreateComponent("IsInteractableDetector", CircleRangeDetector, holder_, this));
 	if (FindChildComponent("StaminaGauge") == false)AddChildComponent(CreateComponent("StaminaGauge", StaminaGauge, holder_, this));
 	if (FindChildComponent("MeleeAttack") == false)AddChildComponent(CreateComponent("MeleeAttack", MeleeAttack, holder_, this));
+
+	UIProgressCircle* interactTimeCircle = (UIProgressCircle*)UIPanel::GetInstance()->FindObject("interactTimeCircle");
+	if (interactTimeCircle != nullptr) {
+		interactTimeCircle->SetVisible(false);
+		interactTimeCircle->SetProgress(0, 5);
+	}
 }
 
 void Component_PlayerBehavior::Update()
@@ -182,6 +188,20 @@ void Component_PlayerBehavior::Update()
 	// 移動コンポーネントの取得 & 有無の確認
 	Component_WASDInputMove* move = (Component_WASDInputMove*)(GetChildComponent("InputMove"));
 	if (GetChildComponent("InputMove") != nullptr)move->Execute();
+
+	if (IsInteractable()) {
+		UIImage* interactTimeCircleFrame = (UIImage*)UIPanel::GetInstance()->FindObject("interactTimeCircleFrame");
+		UIProgressCircle* interactTimeCircle = (UIProgressCircle*)UIPanel::GetInstance()->FindObject("interactTimeCircle");
+		interactTimeCircleFrame->SetVisible(true);
+		interactTimeCircle->SetVisible(true);
+	}
+	else {
+		UIImage* interactTimeCircleFrame = (UIImage*)UIPanel::GetInstance()->FindObject("interactTimeCircleFrame");
+		UIProgressCircle* interactTimeCircle = (UIProgressCircle*)UIPanel::GetInstance()->FindObject("interactTimeCircle");
+		interactTimeCircleFrame->SetVisible(false);
+		interactTimeCircle->SetVisible(false);
+	}
+
 
 	// ＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝
 	// 状態ごとの処理
@@ -288,7 +308,10 @@ void Component_PlayerBehavior::Idle()
 		SetState(PLAYER_STATE_MELEE);
 	}
 	// Aボタン もしくは Eキー が押されていたら...インタラクト状態に遷移
-	else if (Input::IsKeyDown(DIK_E) || Input::IsPadButtonDown(XINPUT_GAMEPAD_A)) SetState(PLAYER_STATE_INTRACT);
+	else if (Input::IsKeyDown(DIK_E) || Input::IsPadButtonDown(XINPUT_GAMEPAD_A) && IsInteractable()) {
+
+		SetState(PLAYER_STATE_INTRACT);
+	}
 }
 
 void Component_PlayerBehavior::Walk()
@@ -335,7 +358,9 @@ void Component_PlayerBehavior::Walk()
 		SetState(PLAYER_STATE_MELEE);
 	}
 	// Aボタン もしくは Eキー が押されていたら...インタラクト状態に遷移
-	else if (Input::IsKeyDown(DIK_E) || Input::IsPadButtonDown(XINPUT_GAMEPAD_A)) SetState(PLAYER_STATE_INTRACT);
+	else if (Input::IsKeyDown(DIK_E) || Input::IsPadButtonDown(XINPUT_GAMEPAD_A) && IsInteractable()) {
+		SetState(PLAYER_STATE_INTRACT);
+	}
 }
 
 void Component_PlayerBehavior::Shoot()
@@ -618,7 +643,7 @@ void Component_PlayerBehavior::Dead()
 void Component_PlayerBehavior::Interact()
 {
 	// 必要情報の取得 & 宣言定義
-	Component_Timer* intractTimer = (Component_Timer*)(GetChildComponent("InteractTimer"));
+	Component_Timer* interactTimer = (Component_Timer*)(GetChildComponent("InteractTimer"));
 	bool isInteractNow = true;
 
 	// 移動コンポーネントの取得 & 有無の確認
@@ -627,7 +652,7 @@ void Component_PlayerBehavior::Interact()
 
 	// UIProgressBarを取得
 	UIProgressCircle* interactTimeCircle = (UIProgressCircle*)UIPanel::GetInstance()->FindObject("interactTimeCircle");
-	interactTimeCircle->SetProgress(intractTimer->GetNowTime(), 5.0f);
+	interactTimeCircle->SetProgress(interactTimer->GetNowTime(), 5.0f);
 
 	UIImage* interactTimeCircleFrame = (UIImage*)UIPanel::GetInstance()->FindObject("interactTimeCircleFrame");
 
@@ -638,14 +663,14 @@ void Component_PlayerBehavior::Interact()
 
 
 	// タイマーコンポーネントが存在する場合、カウントを開始
-	if (intractTimer != nullptr)intractTimer->Start();
+	if (interactTimer != nullptr)interactTimer->Start();
 
 	// Aボタン もしくは Eキー が押されている場合...
 	if (Input::IsKey(DIK_E) || Input::IsPadButton(XINPUT_GAMEPAD_A)) {
 		interactTimeCircle->SetVisible(true);
 		interactTimeCircleFrame->SetVisible(true);
 		// カウントが 5秒 経過していたら...
-		if (intractTimer->IsOnTime(5)) {
+		if (interactTimer->IsOnTime(5)) {
 
 			// 最も近い植物オブジェクトを取得
 			PlantData plantData;
@@ -657,7 +682,12 @@ void Component_PlayerBehavior::Interact()
 				// 調査ポイントを加算
 				researchPoint_ += GetResearchPointByRarity(plantData);
 
+				Stage* pStage = ((Stage*)holder_->FindObject("Stage"));
+
+
 				// 植物オブジェクトを削除
+				PlantCollection::RemovePlant(plantData.id_);
+				pStage->DeleteStageObject(nearestPlant);
 				nearestPlant->KillMe();
 
 				interactTimeCircle->SetVisible(false);
@@ -674,16 +704,21 @@ void Component_PlayerBehavior::Interact()
 
 		interactTimeCircle->SetVisible(false);
 		interactTimeCircleFrame->SetVisible(false);
+		interactTimer->Reset();
+		interactTimeCircle->SetProgress(interactTimer->GetNowTime(), 5.0f);
 	}
 	// 終了処理
 	if (isInteractNow == false) {
 
 		// タイマーをリセット
-		intractTimer->Reset();
-
+		interactTimer->Reset();
+		interactTimeCircle->SetProgress(interactTimer->GetNowTime(), 5.0f);
 		// 移動を可能にする
-		if (move != nullptr) move->Execute();
 
+		interactTimeCircle->SetVisible(false);
+		interactTimeCircleFrame->SetVisible(false);
+
+		if (move != nullptr) move->Execute();
 		// 待機状態に遷移
 		SetState(PLAYER_STATE_IDLE);
 	}
