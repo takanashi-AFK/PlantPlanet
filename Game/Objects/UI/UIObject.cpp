@@ -106,7 +106,10 @@ void UIObject::ChildDrawData()
 	// ＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝
 	// オブジェクトの削除ボタン
 	// ＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝
-	if (ImGui::SmallButton("delete"))((UIPanel*)GetParent())->DeleteUIObject(this);
+	 
+	static bool isDelete = false;
+	isDelete = false;
+	if (ImGui::SmallButton("delete")) isDelete = true;
 	ImGui::Separator();
 
 	// ＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝
@@ -198,6 +201,7 @@ void UIObject::ChildDrawData()
 
 	// 固有情報を描画
 	this->DrawData();
+	if(isDelete)((UIPanel*)GetParent())->DeleteUIObject(this);
 }
 
 void UIObject::KillMe()

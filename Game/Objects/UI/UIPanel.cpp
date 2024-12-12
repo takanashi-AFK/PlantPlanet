@@ -291,8 +291,6 @@ std::vector<UIButton*> UIPanel::GetSelectorMovable(SELECTOR_MOVE_TO way)
 				if (tempX < buttonIndexX_)	sameLinebuttons.push_back(btn);
 				return;
 			}
-
-		
 		};
 
 	std::function<void(UIButton*)>func =(way == SELECTOR_MOVE_TO::UP || way == SELECTOR_MOVE_TO::BOTTOM) ?
