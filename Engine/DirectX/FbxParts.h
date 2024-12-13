@@ -32,6 +32,8 @@ class FbxParts
 		XMMATRIX normalTrans;	//回転行列と拡大行列の逆行列を合成したもの（法線の変形に使用）
 		XMMATRIX world;			//ワールド行列
 		XMFLOAT4 lightDirection;//ライトの向き
+		XMFLOAT4 globalLight;	//R, G, B, Intensity
+		XMFLOAT4 ambientLight;	//R, G, B, Intensity
 		XMFLOAT4 diffuse;		//ディフューズカラー。マテリアルの色。（テクスチャ貼ってるときは使わない）
 		XMFLOAT4 ambient;		//アンビエント
 		XMFLOAT4 speculer;		//スペキュラー（Lambertの場合は0）

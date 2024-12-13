@@ -482,7 +482,9 @@ void FbxParts::Draw(Transform& transform)
 		cb.speculer = pMaterial_[i].specular;
 		cb.shininess = pMaterial_[i].shininess;
 		cb.cameraPosition = XMFLOAT4(Camera::GetPosition().x, Camera::GetPosition().y, Camera::GetPosition().z, 0);
-		cb.lightDirection = XMFLOAT4(1, -1, 1, 0);
+		cb.lightDirection = Light::sunLightDir;
+		cb.globalLight = Light::sunLight;
+		cb.ambientLight = Light::ambientLight;
 		cb.isTexture = pMaterial_[i].pTexture != nullptr;
 		cb.val0 = val0;
 		cb.val1 = val1;
