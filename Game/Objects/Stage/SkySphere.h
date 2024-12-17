@@ -2,6 +2,7 @@
 
 // インクルード
 #include "StageObject.h"
+#include<array>
 
 /// <summary>
 /// スカイスフィアを管理するクラス
@@ -28,10 +29,7 @@ public:
 	enum class TIME_ZONE
 	{
 		MORNING ,
-		NOON,
-		EVENING,
 		NIGHT,
-		MIDNIGHT,
 
 		AMOUNT
 	};
@@ -45,15 +43,17 @@ private:
 
 	TIME_ZONE timeZone_;
 
-	static std::array<int,static_cast<int>(TIME_ZONE::AMOUNT)> modelHandles_;
+	inline static std::array<int, static_cast<int>(TIME_ZONE::AMOUNT)> modelHandles_ = {};
 
 	inline static std::array<XMFLOAT4, static_cast<int>(TIME_ZONE::AMOUNT)> globalLightColors_ =
 	{
-
+		XMFLOAT4{.4f,.4f,.4f,1.f},
+				{.4f,.5f,.6f,.5f},
 	};
 	inline static std::array<XMFLOAT4, static_cast<int>(TIME_ZONE::AMOUNT)> AmbientLightColors_ =
 	{
-
+		XMFLOAT4{.15f,.15f,.15f,.6f},
+				{.2f,.2f,.25f,.2f}
 	};
 };
 

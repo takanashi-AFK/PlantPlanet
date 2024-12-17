@@ -66,7 +66,8 @@ float4 PS(VS_OUT inData) : SV_Target
 	
 	//拡散反射光（ディフューズ）
 	//法線と光のベクトルの内積が、そこの明るさになる
-	float4 shade = saturate(dot(inData.normal, -lightDir));
+    float4 shade = saturate(dot(inData.normal, -lightDir)) * (g_light );
+    shade.rgb *= g_light.a;
 	shade.a = 1;	//暗いところが透明になるので、強制的にアルファは1
 
 	//環境光（アンビエント）
@@ -85,14 +86,19 @@ float4 PS(VS_OUT inData) : SV_Target
 	//最終的な色
 	
     float grad = 4.0f;
-    float base = 0.6f;
+    float base = g_ambinetLight.a;
 	
-    int temp = (shade - floor(shade)) * grad;
-    float th = (temp /grad) + base;
+    int3 temp = int3((shade.rgb - floor(shade.rgb)) * grad);
+    float3 th = float3((temp.rgb / grad) + base);
 	
-    th = min(th, 1);
+    th.r = min(th.r, 1);
+    th.g = min(th.g, 1);
+    th.b = min(th.b, 1);
 	
-    return float4(diffuse.rgb * th,1);
-    //return diffuse * (shade + ambient + speculer);
-    
+    diffuse.rgb += (g_ambinetLight.rgb) ;
+	
+    float4 col = float4(diffuse.rgb * th + shade.rgb, 1);//beautiful shader
+    //float4 col = float4(diffuse.rgb * th.rgb,1);
+	
+    return float4(col);
 }

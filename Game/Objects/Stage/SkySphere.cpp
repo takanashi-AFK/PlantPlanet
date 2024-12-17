@@ -6,27 +6,25 @@
 #include "../../../Engine/ResourceManager/Model.h"
 
 SkySphere::SkySphere(GameObject* _parent)
-	:StageObject("SkySphere", "Models/SkySphere/SkySphere.fbx", _parent), timeZone_{TIME_ZONE::NOON}
+	:StageObject("SkySphere", "Models/SkySphere/SkySphere.fbx", _parent), timeZone_{ TIME_ZONE::MORNING}
 {
 }
 
 void SkySphere::Initialize()
 {
 	// モデルの読み込み
+	transform_.pParent_ = nullptr;
 
 	string modelNames[static_cast<int>(TIME_ZONE::AMOUNT)] =
 	{
 		"Models/SkySphere/SkySphere.fbx",
 		"Models/SkySphere/SkySphere.fbx",
-		"Models/SkySphere/SkySphere.fbx",
-		"Models/SkySphere/SkySphere.fbx",
-		"Models/SkySphere/SkySphere.fbx"
 	};
 
 	for (auto i = 0u; i < static_cast<int>(TIME_ZONE::AMOUNT); ++i) {
 
 		modelHandles_[i] = Model::Load(modelNames[i]);
-		assert(modelHandle_ >= 0);
+		assert(modelHandles_[i] >= 0);
 	}
 
 	// 保有するコンポーネントの初期化処理
@@ -44,6 +42,7 @@ void SkySphere::Draw()
 	modelHandle_ = modelHandles_[static_cast<int>(timeZone_)];
 
 	// モデルの描画
+
 	Model::SetTransform(modelHandle_, transform_);
 	Model::Draw(modelHandle_);
 
