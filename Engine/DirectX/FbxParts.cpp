@@ -470,10 +470,11 @@ void FbxParts::Draw(Transform& transform)
 		static float val0 = 0;
 		static float val1 = 0;
 
-		val0 += 0.001; val1 += 0.01;
+		val0 += 0.00001; val1 += 0.0001;
 		// パラメータの受け渡し
 		D3D11_MAPPED_SUBRESOURCE pdata;
 		CONSTANT_BUFFER cb;
+
 		cb.worldVewProj = XMMatrixTranspose(transform.GetWorldMatrix() * Camera::GetViewMatrix() * Camera::GetProjectionMatrix());						// リソースへ送る値をセット
 		cb.world = XMMatrixTranspose(transform.GetWorldMatrix());
 		cb.normalTrans = XMMatrixTranspose(transform.matRotate_ * XMMatrixInverse(nullptr, transform.matScale_));
@@ -482,7 +483,9 @@ void FbxParts::Draw(Transform& transform)
 		cb.speculer = pMaterial_[i].specular;
 		cb.shininess = pMaterial_[i].shininess;
 		cb.cameraPosition = XMFLOAT4(Camera::GetPosition().x, Camera::GetPosition().y, Camera::GetPosition().z, 0);
-		cb.lightDirection = XMFLOAT4(1, -1, 1, 0);
+		cb.lightDirection = Light::sunLightDir;
+		cb.globalLight = Light::sunLight;
+		cb.ambientLight = Light::ambientLight;
 		cb.isTexture = pMaterial_[i].pTexture != nullptr;
 		cb.val0 = val0;
 		cb.val1 = val1;

@@ -64,7 +64,7 @@ void Component_PlantGenerator::Update()
 
 		// プラントを重み付けで選択
 		randomPlants.push_back(WeightedPickPlants(PlantCollection::GetPlants()));
-
+		
 	}
 
 	// 植物オブジェクトをステージ上に生成
@@ -93,6 +93,9 @@ void Component_PlantGenerator::Update()
 
 		// 属性を設定
 		stagePlantObject->SetObjectType(StageObject::TYPE_PLANT);
+		
+		constexpr int rarest = 3;
+		stagePlantObject->SetShader(randomPlants[i].rarity_ == rarest? Direct3D::SHADER_RAREFLOWER: Direct3D::SHADER_3D);
 
 		// ステージに追加
 		((Stage*)holder_->GetParent())->AddStageObject(stagePlantObject);

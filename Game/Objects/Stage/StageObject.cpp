@@ -400,16 +400,9 @@ void StageObject::DrawData()
 
 		constexpr uint8_t shader3d_MAX = Direct3D::SHADER_TYPE::SHADER_MAX;
 
-#ifdef _DEBUG
+		ImGui::InputInt("shaderType_", (int*)&shaderType_);
+		shaderType_ = shaderType_ < 0 ?static_cast<Direct3D::SHADER_TYPE>( Direct3D::SHADER_MAX-1) :static_cast<Direct3D::SHADER_TYPE>(shaderType_ % shader3d_MAX);
 
-		mutex_.lock();
-		{
-			ImGui::InputInt("shaderType_", (int*)&shaderType_);
-			shaderType_ = shaderType_ < 0 ?static_cast<Direct3D::SHADER_TYPE>( Direct3D::SHADER_MAX-1) :static_cast<Direct3D::SHADER_TYPE>(shaderType_ % shader3d_MAX);
-		}
-		mutex_.unlock();
-
-#endif
 		ImGui::TreePop();
 	}
 

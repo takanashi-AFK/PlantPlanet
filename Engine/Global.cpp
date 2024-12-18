@@ -67,6 +67,13 @@ valeable :*/
 	string userName;	// ÉÜÅ[ÉUÅ[ñº
 }
 
+namespace Light
+{
+	XMFLOAT4 sunLight;
+	XMFLOAT4 sunLightDir = { 1, -1, 1, 0 };
+	XMFLOAT4 ambientLight = { 0,0,0,0 };
+}
+
 string g_selectedStage = "";
 int g_selectedGameMode = 0;
 std::vector<PlantData> g_playerPlantData;
