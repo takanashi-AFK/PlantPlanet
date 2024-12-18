@@ -25,6 +25,7 @@ void Component_CactanBehavior::Initialize()
 	if (FindChildComponent("Timer") == false)AddChildComponent(CreateComponent("Timer", Timer, holder_, this));
 	if (FindChildComponent("HealthGauge") == false)AddChildComponent(CreateComponent("HealthGauge", HealthGauge, holder_, this));
 
+	holder_->SetShader(Direct3D::SHADER_BOSS);
 }
 
 void Component_CactanBehavior::Update()

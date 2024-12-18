@@ -6,7 +6,7 @@
 #include "../../../Engine/ResourceManager/Model.h"
 
 SkySphere::SkySphere(GameObject* _parent)
-	:StageObject("SkySphere", "Models/SkySphere/SkySphere.fbx", _parent), timeZone_{ TIME_ZONE::MORNING}
+	:StageObject("SkySphere", "Models/SkySphere/SkySphere.fbx", _parent), timeZone_{ TIME_ZONE::NIGHT}
 {
 }
 
@@ -18,7 +18,7 @@ void SkySphere::Initialize()
 	string modelNames[static_cast<int>(TIME_ZONE::AMOUNT)] =
 	{
 		"Models/SkySphere/SkySphere.fbx",
-		"Models/SkySphere/SkySphere.fbx",
+		"Models/SkySphere/SkySphere_Night.fbx",
 	};
 
 	for (auto i = 0u; i < static_cast<int>(TIME_ZONE::AMOUNT); ++i) {

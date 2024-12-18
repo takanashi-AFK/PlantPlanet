@@ -97,8 +97,8 @@ float4 PS(VS_OUT inData) : SV_Target
 	
     diffuse.rgb += (g_ambinetLight.rgb) ;
 	
-    float4 col = float4(diffuse.rgb * th + shade.rgb, 1);//beautiful shader
-    //float4 col = float4(diffuse.rgb * th.rgb,1);
+    //float4 col = float4(diffuse.rgb * th + shade.rgb, 1);//beautiful shader
+    float4 col = float4(diffuse.rgb * th.rgb,1);
 	
     return float4(col);
 }

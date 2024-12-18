@@ -53,7 +53,7 @@ private:
 	inline static std::array<XMFLOAT4, static_cast<int>(TIME_ZONE::AMOUNT)> AmbientLightColors_ =
 	{
 		XMFLOAT4{.15f,.15f,.15f,.6f},
-				{.2f,.2f,.25f,.2f}
+				{.2f,.2f,.25f,.4f}
 	};
 };
 

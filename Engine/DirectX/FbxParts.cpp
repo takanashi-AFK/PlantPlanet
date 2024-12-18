@@ -470,7 +470,7 @@ void FbxParts::Draw(Transform& transform)
 		static float val0 = 0;
 		static float val1 = 0;
 
-		val0 += 0.001; val1 += 0.01;
+		val0 += 0.00001; val1 += 0.0001;
 		// ƒpƒ‰ƒ[ƒ^‚Ìó‚¯“n‚µ
 		D3D11_MAPPED_SUBRESOURCE pdata;
 		CONSTANT_BUFFER cb;
