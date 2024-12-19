@@ -208,6 +208,7 @@
     <ClCompile Include="Game\Objects\Stage\Components\RotationComponents\Component_RotationY.cpp" />
     <ClCompile Include="Game\Objects\Stage\StageObject.cpp" />
     <ClCompile Include="Game\Objects\UI\UIProgressBar.cpp" />
+    <ClCompile Include="Game\Plants\Plant.cpp" />
     <ClCompile Include="Game\Scenes\Scene_Result.cpp" />
     <ClCompile Include="Game\Scenes\Scene_Play.cpp" />
     <ClCompile Include="Game\Scenes\Scene_Test.cpp" />

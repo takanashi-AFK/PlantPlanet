@@ -4,8 +4,8 @@
 
 struct Salad
 {
-	std::function<void(Component_PlayerBehavior* pb)> effect_0;
-	std::function<void(Component_PlayerBehavior* pb)> effect_1;
-	std::function<void(Component_PlayerBehavior* pb)> effect_2;
+	std::function<bool(Component_PlayerBehavior*)> effect_0;
+	std::function<bool(Component_PlayerBehavior*)> effect_1;
+	std::function<bool(Component_PlayerBehavior*)> effect_2;
 };
 

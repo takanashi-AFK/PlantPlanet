@@ -29,7 +29,9 @@ void MakeSalad::SetArray(typeArray* arr)
 
 void MakeSalad::Make()
 {
-
+	salad_.effect_0 = PlantData::GetFunction(recipe_[0].id_);
+	salad_.effect_1 = PlantData::GetFunction(recipe_[1].id_);
+	salad_.effect_2 = PlantData::GetFunction(recipe_[2].id_);
 }
 
 Salad MakeSalad::GetSalad()
