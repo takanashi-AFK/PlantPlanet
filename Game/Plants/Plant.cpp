@@ -12,7 +12,7 @@ std::function<bool(Component_PlayerBehavior*)> PlantData::GetFunction(int id)
 	{
 	case 0: return [](Component_PlayerBehavior* pb)->bool
 		{
-
+			return false;
 		};
 
 
