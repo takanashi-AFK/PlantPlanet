@@ -2,6 +2,8 @@
 #include <string>
 using std::string;
 
+class Componet_PlayerBehavior;
+
 // 植物構造体
 struct PlantData {
 	int id_;				// 識別番号
@@ -11,4 +13,6 @@ struct PlantData {
 	bool isSpawn_;
 	string modelFilePath_;	// モデルファイルパス
 	string imageFilePath_;	// 画像ファイルパス
+
+	
 };
