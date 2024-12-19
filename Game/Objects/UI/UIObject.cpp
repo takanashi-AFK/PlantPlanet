@@ -12,6 +12,7 @@
 #include "UITimer.h"
 #include "UIInputString.h"
 #include "UIProgressCircle.h"
+#include "UIItemTable.h"
 
 #include "Components/Component_UIEasing.h"
 
@@ -340,6 +341,7 @@ UIObject* UIObject::CreateUIObject(string _name, UIType _type,UIObject* _parent,
 		case UI_TIMER:obj = new UITimer(_name, _parent, _layerNum); break;
 		case UI_INPUTSTRING:obj = new UIInputString(_name, _parent, _layerNum); break;
 		case UI_PROGRESSCIRCLE:obj = new UIProgressCircle(_name, _parent, _layerNum); break;
+		case UI_ITEMTABLE:obj = new UIItemTable(_name, _parent, _layerNum); break;
         default:obj = nullptr; break;
 	}
 	// インスタンスが生成できなかった場合はnullptrを返す
@@ -366,6 +368,7 @@ string UIObject::GetUITypeString(UIType _type)
 	case UI_TIMER:return "TIMER";
 	case UI_INPUTSTRING:return "INPUTSTRING";
 	case UI_PROGRESSCIRCLE:return "PROGRESSCIRCLE";
+	case UI_ITEMTABLE:return "ITEMTABLE";
 	default:return "UNKNOWN";
 	}
 }
@@ -424,6 +427,7 @@ bool UIObject::IsDead()
 {
 	return (state_.dead != 0);
 }
+
 
 Component_UIEasing* UIObject::GetEasing()
 {

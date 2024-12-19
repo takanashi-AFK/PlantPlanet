@@ -236,6 +236,7 @@
     <ClCompile Include="Game\Plants\PlantCollection.cpp" />
     <ClCompile Include="Game\Objects\UI\UIProgressCircle.cpp" />
     <ClCompile Include="Game\Objects\UI\UICursor.cpp" />
+    <ClCompile Include="Game\Objects\UI\UIItemTable.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game\Objects\Stage\Components\BehaviorComponents\Component_RangeEnemyBehavior.h" />
@@ -338,6 +339,7 @@
     <ClInclude Include="Game\Plants\PlantCollection.h" />
     <ClInclude Include="Game\Objects\UI\UIProgressCircle.h" />
     <ClInclude Include="Game\Objects\UI\UICursor.h" />
+    <ClInclude Include="Game\Objects\UI\UIItemTable.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Assets\Shader\BillBoard.hlsl">

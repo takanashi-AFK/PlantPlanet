@@ -20,6 +20,7 @@ private:
 	bool cursorVisible;		// カーソル表示
 	bool isBossSpawn_;
 	bool isDebugDataEditWindowOpen_;
+	bool isShowInventory_;
 public:
 	/// <summary> コンストラクタ </summary>
 	Scene_Play(GameObject* parent);
@@ -52,11 +53,12 @@ private:
 	/// <summary> プレイ情報の表示設定 </summary>
 	void SetPlayInfo();
 
-/*
-other :*/
 	/// <summary> ボス敵の生成 </summary>
 	void SpawnBossEnemy();
 
 	void DrawDebugDataEditWindow();
+
+	/// <summary> インベントリを表示 </summary>
+	void ShowInventory();
 };
 

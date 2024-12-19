@@ -20,6 +20,7 @@ enum UIType {
 	UI_TIMER,
 	UI_INPUTSTRING,
 	UI_PROGRESSCIRCLE,
+	UI_ITEMTABLE,
 	UI_MAX,
 };
 
@@ -158,6 +159,8 @@ getter :*/
 	
 	/// <summary> ƒŒƒCƒ„[”Ô†‚ğæ“¾ </summary>
 	int GetLayerNumber() const { return layerNumber_; }
+
+	int GetMaxLayerNumber();
 
 	Component_UIEasing* GetEasing();
 
