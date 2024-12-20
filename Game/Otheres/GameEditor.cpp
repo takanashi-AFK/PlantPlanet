@@ -314,7 +314,7 @@ void GameEditor::UIObjectCreateWindow()
 			ImGui::Separator();
 
 			// 名前を入力
-			ImGui::InputTextWithHint(":seting name", "Input object name...", nameBuffer, IM_ARRAYSIZE(nameBuffer));
+			ImGui::InputTextWithHint(":setting name", "Input object name...", nameBuffer, IM_ARRAYSIZE(nameBuffer));
 
 			// タイプを選択
 			static UIType uitype = UIType::UI_NONE;	// 初期選択項目
@@ -368,9 +368,7 @@ void GameEditor::UIObjectCreateWindow()
 				//イージングの生成
 				if (isEasing)	obj->CreateEasing();
 
-				// 初期化を行う
-				obj->Initialize();
-
+			
 				if (obj != nullptr) {
 					isShowCreateUIObjectWindow_ = false;
 					//レイヤー番号の更新

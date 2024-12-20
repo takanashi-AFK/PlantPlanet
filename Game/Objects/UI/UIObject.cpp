@@ -331,9 +331,7 @@ UIObject* UIObject::CreateUIObject(string _name, UIType _type,UIObject* _parent,
 	UIObject* obj = nullptr;
 	switch (_type)
 	{
-		case UI_BUTTON:obj = new UIButton(_name, _parent,_layerNum);
-			UIPanel::GetInstance()->PushButtonToArray(static_cast<UIButton*>(obj));
-			break;
+		case UI_BUTTON:obj = new UIButton(_name, _parent,_layerNum);UIPanel::GetInstance()->PushButtonToArray(static_cast<UIButton*>(obj));break;
 		case UI_IMAGE:obj = new UIImage(_name, _parent,_layerNum); break;
 		case UI_TEXT:obj = new UIText(_name, _parent, _layerNum); break;
 		case UI_PANEL:obj = UIPanel::GetInstance(); break;
