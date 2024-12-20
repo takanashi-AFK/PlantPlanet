@@ -10,7 +10,6 @@
 
 namespace
 {
-	float speed = 0.1f;
 	const int EFFECT_RATE = 15;
 	const int ROTATE_OFFSET = 25;
 	const int ROTATE_BESIDE = 90;

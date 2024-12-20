@@ -91,7 +91,8 @@ Component_PlayerBehavior::Component_PlayerBehavior(string _name, StageObject* _h
 	isMeleeStart_(true),
 	stamina_decrease_dodge_(30),
 	stamina_decrease_melee_(20),
-	stamina_decrease_shoot_(10)
+	stamina_decrease_shoot_(10),
+	timeCollectPlant(defaultTime_CollectPlant)
 {
 }
 
@@ -189,19 +190,23 @@ void Component_PlayerBehavior::Update()
 	Component_WASDInputMove* move = (Component_WASDInputMove*)(GetChildComponent("InputMove"));
 	if (GetChildComponent("InputMove") != nullptr)move->Execute();
 
+	UIProgressCircle* interactTimeCircle = (UIProgressCircle*)UIPanel::GetInstance()->FindObject("interactTimeCircle");
+	bool isVisible{};
+
 	if (IsInteractable()) {
 		UIImage* interactTimeCircleFrame = (UIImage*)UIPanel::GetInstance()->FindObject("interactTimeCircleFrame");
-		UIProgressCircle* interactTimeCircle = (UIProgressCircle*)UIPanel::GetInstance()->FindObject("interactTimeCircle");
-		interactTimeCircleFrame->SetVisible(true);
-		interactTimeCircle->SetVisible(true);
+		isVisible = true;
 	}
 	else {
 		UIImage* interactTimeCircleFrame = (UIImage*)UIPanel::GetInstance()->FindObject("interactTimeCircleFrame");
-		UIProgressCircle* interactTimeCircle = (UIProgressCircle*)UIPanel::GetInstance()->FindObject("interactTimeCircle");
-		interactTimeCircleFrame->SetVisible(false);
-		interactTimeCircle->SetVisible(false);
+		isVisible = false;
 	}
 
+	if (interactTimeCircle)
+	{
+		interactTimeCircle->SetVisible(isVisible);
+		interactTimeCircle->SetVisible(isVisible);
+	}
 
 	// ＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝
 	// 状態ごとの処理
@@ -264,6 +269,11 @@ void Component_PlayerBehavior::DrawData()
 	
 	// 無敵フレームの設定
 	ImGui::DragInt("invincibilityFrame", &invincibilityFrame_, 1);
+}
+
+void Component_PlayerBehavior::SetTimeCollectPlant(float time)
+{
+	timeCollectPlant = time;
 }
 
 void Component_PlayerBehavior::Idle()
@@ -669,8 +679,8 @@ void Component_PlayerBehavior::Interact()
 	if (Input::IsKey(DIK_E) || Input::IsPadButton(XINPUT_GAMEPAD_A)) {
 		interactTimeCircle->SetVisible(true);
 		interactTimeCircleFrame->SetVisible(true);
-		// カウントが 5秒 経過していたら...
-		if (interactTimer->IsOnTime(5)) {
+		//指定した秒数経過しているか
+		if (interactTimer->IsOnTime(timeCollectPlant)) {
 
 			// 最も近い植物オブジェクトを取得
 			PlantData plantData;
@@ -770,6 +780,11 @@ int Component_PlayerBehavior::GetResearchPointByRarity(PlantData _plantData)
 		return INCLEACE_RESEARCH_POINT_RARITY_1;
 	}
 	return 0;
+}
+
+float Component_PlayerBehavior::GetTimeCollectPlant()
+{
+	return timeCollectPlant;
 }
 
 bool Component_PlayerBehavior::IsDead()
