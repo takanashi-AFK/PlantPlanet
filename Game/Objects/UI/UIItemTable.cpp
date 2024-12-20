@@ -43,7 +43,6 @@ void UIItemTable::DrawData()
 	// タイプを選択
 	static UIType uitype = UIType::UI_NONE;	// 初期選択項目
 	static std::string type = "NONE";		// 初期選択項目
-
 	if (ImGui::BeginCombo(":setting type", type.c_str())) {
 		for (int i = 0; i < UIType::UI_MAX; i++) {
 			std::string uiTypeString = UIObject::GetUITypeString((UIType)i);
@@ -72,6 +71,8 @@ void UIItemTable::DrawData()
 	ImGui::DragFloat3("PreviewPos", &previewTransform_.position_.x, 0.01f);
 	((UIImage*)previewImage_)->SetTrasform(previewTransform_);
 
+	ImGui::DragFloat3("ItemSize", &itemTransform_.scale_.x, 0.01f);
+
 	if (ImGui::Button("Create")) {
 
 
@@ -93,8 +94,7 @@ void UIItemTable::DrawData()
 			itemTable_.push_back(newItem);
 
 			// Transform を取得して位置を設定
-			Transform itemTransform = newItem->GetTransform();
-			itemTransform.position_ = { currentPos.x, currentPos.y, 0.0f };
+			itemTransform_.position_ = { currentPos.x, currentPos.y, 0.0f };
 
 			// 折り返しチェック
 			if ((i + 1) % lineBreakCount_ == 0) {
@@ -110,15 +110,15 @@ void UIItemTable::DrawData()
 			// UIImage 特有の設定
 			if (uitype == UIType::UI_IMAGE) {
 				((UIImage*)itemTable_[i])->SetImage("Images/TT.png");
-				((UIImage*)itemTable_[i])->SetTrasform(itemTransform);
+				((UIImage*)itemTable_[i])->SetTrasform(itemTransform_);
 			}
 			else if (uitype == UIType::UI_BUTTON) {
 				((UIButton*)itemTable_[i])->SetImage("Images/TT.png");
-				((UIButton*)itemTable_[i])->SetTrasform(itemTransform);
+				((UIButton*)itemTable_[i])->SetTrasform(itemTransform_);
 			}
 
 			// Transform を適用
-			newItem->SetTrasform(itemTransform);
+			newItem->SetTrasform(itemTransform_);
 		}
 	}
 

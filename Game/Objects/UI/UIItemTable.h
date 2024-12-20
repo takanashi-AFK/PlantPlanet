@@ -19,6 +19,7 @@ private:
 	int lineBreakCount_;
 	UIObject* previewImage_;
 	Transform previewTransform_;
+	Transform itemTransform_;
 public:
 
 	UIItemTable(string _name, UIObject* parent, int _layerNum);
