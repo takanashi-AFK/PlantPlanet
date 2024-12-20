@@ -16,15 +16,16 @@ std::function<bool(Component_PlayerBehavior*)> PlantData::GetFunction(int id)
 		{
 			return sec * 60;
 		};
+
 	switch (id)
 	{
 	case 1: return [time = SecToFrame(20.f)](Component_PlayerBehavior* pb) mutable ->bool
 		{
 			if (time > 0)
 			{
-				auto time = pb->GetTimeCollectPlant() * 0.9;
+				auto waitTime = pb->GetTimeCollectPlant() * 0.9;
 
-				pb->SetTimeCollectPlant(time);
+				pb->SetTimeCollectPlant(waitTime);
 
 				--time;
 				return true;
@@ -39,7 +40,7 @@ std::function<bool(Component_PlayerBehavior*)> PlantData::GetFunction(int id)
 
 	case 2: return[](Component_PlayerBehavior* pb) mutable ->bool
 		{
-			Component_HealthGauge* hp = static_cast<Component_HealthGauge*>(pb->GetChildComponent("PlayerHealthGauge"));
+			auto* hp = static_cast<Component_HealthGauge*>(pb->GetChildComponent("PlayerHealthGauge"));
 			if (!hp)	return false;
 
 			auto healedHP = (hp->GetMax() * 0.05f) + (hp->GetNow());
@@ -71,7 +72,7 @@ std::function<bool(Component_PlayerBehavior*)> PlantData::GetFunction(int id)
 
 	case 4: return[](Component_PlayerBehavior* pb) mutable ->bool
 		{
-			Component_HealthGauge* hp = static_cast<Component_HealthGauge*>(pb->GetChildComponent("PlayerHealthGauge"));
+			auto* hp = static_cast<Component_HealthGauge*>(pb->GetChildComponent("PlayerHealthGauge"));
 			if (!hp)	return false;
 
 			auto healedHP = (hp->GetMax() * 0.1f) + (hp->GetNow());
@@ -103,7 +104,7 @@ std::function<bool(Component_PlayerBehavior*)> PlantData::GetFunction(int id)
 
 	case 6: return[](Component_PlayerBehavior* pb) mutable ->bool
 		{
-			Component_HealthGauge* hp = static_cast<Component_HealthGauge*>(pb->GetChildComponent("PlayerHealthGauge"));
+			auto* hp = static_cast<Component_HealthGauge*>(pb->GetChildComponent("PlayerHealthGauge"));
 			if (!hp)	return false;
 
 			auto healedHP = (hp->GetMax() * -0.2f) + (hp->GetNow());
@@ -114,7 +115,7 @@ std::function<bool(Component_PlayerBehavior*)> PlantData::GetFunction(int id)
 
 	case 7: return[](Component_PlayerBehavior* pb) mutable ->bool
 		{
-			Component_HealthGauge* hp = static_cast<Component_HealthGauge*>(pb->GetChildComponent("PlayerHealthGauge"));
+			auto* hp = static_cast<Component_HealthGauge*>(pb->GetChildComponent("PlayerHealthGauge"));
 			if (!hp)	return false;
 
 			auto fixedHP = (hp->GetMax() * 1.25);
@@ -147,7 +148,7 @@ std::function<bool(Component_PlayerBehavior*)> PlantData::GetFunction(int id)
 
 	case 9: return[](Component_PlayerBehavior* pb) mutable ->bool
 		{
-			Component_HealthGauge* hp = static_cast<Component_HealthGauge*>(pb->GetChildComponent("PlayerHealthGauge"));
+			auto* hp = static_cast<Component_HealthGauge*>(pb->GetChildComponent("PlayerHealthGauge"));
 			if (!hp)	return false;
 
 			auto healedHP = (hp->GetMax());
@@ -159,7 +160,6 @@ std::function<bool(Component_PlayerBehavior*)> PlantData::GetFunction(int id)
 
 	case 10: return[time = SecToFrame(20)](Component_PlayerBehavior* pb) mutable ->bool
 		{
-
 			auto* mel = static_cast<Component_MeleeAttack*>(pb->GetChildComponent("MeleeAttack"));
 
 			if (time > 0)
