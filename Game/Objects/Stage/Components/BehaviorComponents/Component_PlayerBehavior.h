@@ -46,8 +46,10 @@ private:
 	int walkingFrame_;					// 連続して歩いている時間
 	int lockRotateFrame_;				// 回転を固定する時間
 	int lockRotateFrameLeft_;			// 回転を固定してから経過した時間
-	vector<PlantData> myPlants_;
 	int researchPoint_;
+	
+	vector<PlantData> myPlants_;
+	std::list<std::function<bool(Component_PlayerBehavior*)>> saladEffects_;
 
 	// effekseer: 変形行列
 	std::shared_ptr<EFFEKSEERLIB::EFKTransform> effectModelTransform;
@@ -186,4 +188,7 @@ private:
 
 	/// <summary> 近接攻撃時の処理 </summary>
 	void Melee();
+
+	/// <summary> アイテム(サラダ)によるバフ、デバフの適用</summary>
+	void ApplyEffects();
 };

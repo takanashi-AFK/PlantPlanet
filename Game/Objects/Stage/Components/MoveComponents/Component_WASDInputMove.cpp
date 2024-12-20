@@ -22,7 +22,8 @@ namespace
 Component_WASDInputMove::Component_WASDInputMove(string _name, StageObject* _holder, Component* _parent)
 	:Component(_holder, _name, WASDInputMove, _parent), isRotate(true),
 	isMove_(false),
-	dir_(XMVectorSet(0, 0, 0, 0))
+	dir_(XMVectorSet(0, 0, 0, 0)),
+	speed_(.1f)
 {
 }
 
@@ -117,7 +118,7 @@ void Component_WASDInputMove::Update()
 
 	// 移動ベクトルを正規化し、速度を掛け合わせる
 	dir_ = XMVector3Normalize(dir_);
-	XMVECTOR move = dir_ * speed;
+	XMVECTOR move = dir_ * speed_;
 
 	// 移動ベクトルをXMFLOAT3に変換し、キャラクターの新しい位置を設定
 	XMFLOAT3 pos = holder_->GetPosition();
@@ -158,19 +159,19 @@ void Component_WASDInputMove::Release()
 void Component_WASDInputMove::DrawData()
 {
 	ImGui::Checkbox("Active", &isActive_);
-	ImGui::SliderFloat("Speed", &speed, 0.01f, 1.0f);
+	ImGui::SliderFloat("Speed", &speed_, 0.01f, 1.0f);
 }
 
 void Component_WASDInputMove::Save(json& _saveObj)
 {
 	_saveObj["isActive_"] = isActive_;
-	_saveObj["speed_"] = speed;
+	_saveObj["speed_"] = speed_;
 }
 
 void Component_WASDInputMove::Load(json& _loadObj)
 {
 	if (_loadObj.contains("isActive_"))isActive_ = _loadObj["isActive_"];
-	if (_loadObj.contains("speed_"))speed = _loadObj["speed_"];
+	if (_loadObj.contains("speed_"))speed_ = _loadObj["speed_"];
 }
 
 void Component_WASDInputMove::Move(XMVECTOR _dir, float _speed)

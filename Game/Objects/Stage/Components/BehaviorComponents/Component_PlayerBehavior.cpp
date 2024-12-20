@@ -92,7 +92,8 @@ Component_PlayerBehavior::Component_PlayerBehavior(string _name, StageObject* _h
 	stamina_decrease_dodge_(30),
 	stamina_decrease_melee_(20),
 	stamina_decrease_shoot_(10),
-	timeCollectPlant(defaultTime_CollectPlant)
+	timeCollectPlant(defaultTime_CollectPlant),
+	saladEffects_{}
 {
 }
 
@@ -124,6 +125,8 @@ void Component_PlayerBehavior::Initialize()
 		interactTimeCircle->SetVisible(false);
 		interactTimeCircle->SetProgress(0, 5);
 	}
+	auto* move = static_cast<Component_WASDInputMove*>(GetChildComponent("InputMove"));
+	move->SetSpeed(this->defaultSpeed_Walk);
 }
 
 void Component_PlayerBehavior::Update()
@@ -765,6 +768,15 @@ void Component_PlayerBehavior::Melee()
 
 		// 状態を遷移
 		IsWASDKey() ? SetState(PLAYER_STATE_WALK) : SetState(PLAYER_STATE_IDLE);
+	}
+}
+
+void Component_PlayerBehavior::ApplyEffects()
+{
+	for (auto itr = saladEffects_.begin(); itr != saladEffects_.end();) {
+
+		if ((*itr)(this)) ++itr;
+		else itr = saladEffects_.erase(itr);
 	}
 }
 
