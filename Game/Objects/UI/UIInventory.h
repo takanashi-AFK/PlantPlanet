@@ -1,21 +1,14 @@
 #pragma once
 #include "UIObject.h"
 #include "UIPanel.h"
+#include "../Stage/Stage.h"
 
-class UIItemTable;
 
-class UIInventory : public UIObject
+namespace UIInventory
 {
-	private:
-	vector<UIObject*> itemTable_;
-	UIPanel* itemPanel_ = UIPanel::GetInstance();
-
-public:	
-	
-	void Initialize() override;
-	void Update() override;
-	void Draw() override;
-	void Release() override;
-	void DrawData() override;
-};
-
+	void Initialize();
+	void Update();
+	void Draw();
+	void SwitchInventory(bool isShow);
+	void InventoryDataSet(Stage* pStage);
+}

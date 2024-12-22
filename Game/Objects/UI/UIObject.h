@@ -34,7 +34,7 @@ private:
 protected:
 	std::unique_ptr<Component_UIEasing> easing_;
 
-protected:
+public:
 	string objectName_;		// オブジェクトの名前
 	UIType type_;			// オブジェクトの種類
 	int layerNumber_;		// レイヤー番号
@@ -134,7 +134,9 @@ setter :*/
 	void SetLayerNumber(int newLayerNumber_);
 
 	/// <summary> 可視化を設定 </summary>
-	void SetVisible(bool _visible) { isVisible_ = _visible; }
+	void SetVisible(bool _visible) {
+		isVisible_ = _visible; 
+	}
 
 	inline void SetTrasform(Transform t) { this->transform_ = t; }
 /*

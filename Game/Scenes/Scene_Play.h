@@ -20,7 +20,15 @@ private:
 	bool cursorVisible;		// カーソル表示
 	bool isBossSpawn_;
 	bool isDebugDataEditWindowOpen_;
-	bool isShowInventory_;
+	bool isShowInventoryFirstTime_;
+
+	enum PlaySceneState {
+		PlaySceneState_None = 0,
+		PlaySceneState_Play,
+		PlaySceneState_Inventory,
+		PlaySceneState_Max
+	}currentState_;
+
 public:
 	/// <summary> コンストラクタ </summary>
 	Scene_Play(GameObject* parent);
@@ -60,5 +68,7 @@ private:
 
 	/// <summary> インベントリを表示 </summary>
 	void ShowInventory();
+
+	void SetState(PlaySceneState state) { currentState_ = state; };
 };
 
