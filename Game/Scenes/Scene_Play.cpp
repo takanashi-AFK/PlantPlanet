@@ -142,14 +142,17 @@ void Scene_Play::Update()
 
 		if (Input::IsKeyDown(DIK_I)) {
 			SetState(PlaySceneState::PlaySceneState_Inventory);
-			UIInventory::InventoryDataSet(pStage_);
+			UIInventory::SetStage(pStage_);
+			UIInventory::InventoryDataSet();
 
 			isShowInventoryFirstTime_ = true;
 		}
 	}
 	else if (currentState_ == PlaySceneState::PlaySceneState_Inventory) {
 		if (isShowInventoryFirstTime_ == true) {
-			UIInventory::InventoryDataSet(pStage_);
+			UIInventory::SetStage(pStage_);
+
+			UIInventory::InventoryDataSet();
 			UIInventory::SwitchInventory(true);
 			isShowInventoryFirstTime_ = false;
 		}
@@ -160,9 +163,9 @@ void Scene_Play::Update()
 			UIInventory::SwitchInventory(false);
 			isShowInventoryFirstTime_ = true;
 		}
+	UIInventory::Update();
 	}
 
-	UIInventory::Update();
 
 	if (Input::IsKeyDown(DIK_O)) {
 		// カーソル固定化の切り替え

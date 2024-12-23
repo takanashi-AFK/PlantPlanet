@@ -34,7 +34,7 @@ private:
 protected:
 	std::unique_ptr<Component_UIEasing> easing_;
 
-public:
+protected:
 	string objectName_;		// オブジェクトの名前
 	UIType type_;			// オブジェクトの種類
 	int layerNumber_;		// レイヤー番号

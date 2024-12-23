@@ -10,5 +10,6 @@ namespace UIInventory
 	void Update();
 	void Draw();
 	void SwitchInventory(bool isShow);
-	void InventoryDataSet(Stage* pStage);
+	void InventoryDataSet();
+	void SetStage(Stage* pStage);
 }
