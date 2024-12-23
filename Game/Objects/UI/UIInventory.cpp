@@ -22,6 +22,9 @@ namespace UIInventory {
 	StageObject* playerObjects_;
 	Stage* pStage_;
 
+	std::vector<std::string> decPlant_;
+	std::vector<std::string> incPlant_;
+
 	void Initialize()
 	{
 		itemPanel_ = UIPanel::GetInstance();
@@ -47,38 +50,34 @@ namespace UIInventory {
 		for (auto inv : getPlantTable_) {
 			if (((UIButton*)inv)->OnClick()) {
 				if (((UIButton*)inv)->GetObjectName().starts_with("INV-GetPlant")) {
+
+					if (decPlant_.size() >= 3)continue;
+
+
 					//　クリックされたら、INV-Ingredients0の画像を差し替え
 					// INV-Ingredients0がもう入ってたら1に、1が入ってたら2に
-					if (((UIButton*)ingredientTable_[0])->GetImageFilePath() == "Models/tentativeFlowers/BlankFlowerImage.png") {
-						((UIButton*)ingredientTable_[0])->SetImage(((UIButton*)inv)->GetImageFilePath());
+					for (auto& ingredient : ingredientTable_) {
+						if (((UIButton*)ingredient)->GetImageFilePath() == "Models/tentativeFlowers/BlankFlowerImage.png") {
+							((UIButton*)ingredient)->SetImage(((UIButton*)inv)->GetImageFilePath());
+							break;
+						}
 					}
-					else if (((UIButton*)ingredientTable_[1])->GetImageFilePath() == "Models/tentativeFlowers/BlankFlowerImage.png") {
-						((UIButton*)ingredientTable_[1])->SetImage(((UIButton*)inv)->GetImageFilePath());
-					}
-					else if (((UIButton*)ingredientTable_[2])->GetImageFilePath() == "Models/tentativeFlowers/BlankFlowerImage.png") {
-						((UIButton*)ingredientTable_[2])->SetImage(((UIButton*)inv)->GetImageFilePath());
-					}
-					else return;
 
-					for (auto a : allPlantData) {
+					for (auto& a : allPlantData) {
 						if (a.second.imageFilePath_ == ((UIButton*)inv)->GetImageFilePath()) {
-							countedPlant[a.second.name_]--;
+							decPlant_.push_back(a.second.name_);
 							break;
 						}
 					}
 				}
 				else if (((UIButton*)inv)->GetObjectName().starts_with("INV-Ingredients")) {
 					((UIButton*)inv)->SetImage("Models/tentativeFlowers/BlankFlowerImage.png");
+
 				}
 					InventoryDataSet();
 			}
 		}
 	}
-
-	void Draw()
-	{
-	}
-
 
 	void SwitchInventory(bool isShow)
 	{
@@ -103,6 +102,14 @@ namespace UIInventory {
 			countedPlant[plant.name_]++;
 		}
 
+		for (auto dec : decPlant_) {
+			if (dec != "")countedPlant[dec]--;
+		}
+
+		for (auto inc : incPlant_) {
+			if (inc != "")countedPlant[inc]++;
+		}
+
 		for (int i = 0; i < getPlantTable_.size(); i++) {
 
 			// カウントした植物の数を取得
@@ -125,6 +132,11 @@ namespace UIInventory {
 						break;
 					}
 				}
+				if (plantCount == 0) {
+					((UIButton*)getPlantTable_[i])->SetImage("Models/tentativeFlowers/BlankFlowerImage.png");
+					((UIText*)invTextTable_[i])->SetText("");
+
+				}
 			}
 			else {
 				// 取得できない場合は空の画像とテキストを表示
@@ -141,4 +153,30 @@ namespace UIInventory {
 	{
 		pStage_ = pStage;
 	}
+
+	void Release()
+	{
+		getPlantTable_.clear();
+		invTable_.clear();
+		invTextTable_.clear();
+		ingredientTable_.clear();
+		countedPlant.clear();
+		allPlantData.clear();
+		decPlant_.clear();
+		incPlant_.clear();
+
+		for (auto deleteobj : getPlantTable_) {
+			itemPanel_->DeleteUIObject(deleteobj);
+		}
+		for (auto deleteobj : invTable_) {
+			itemPanel_->DeleteUIObject(deleteobj);
+		}
+		for (auto deleteobj : invTextTable_) {
+			itemPanel_->DeleteUIObject(deleteobj);
+		}
+		for (auto deleteobj : ingredientTable_) {
+			itemPanel_->DeleteUIObject(deleteobj);
+		}
+		
+	}	
 }

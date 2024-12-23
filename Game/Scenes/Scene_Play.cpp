@@ -122,6 +122,7 @@ void Scene_Play::Update()
 
 				// プレイヤーが取得した植物情報を取得
 				g_playerPlantData = playerBehavior->GetMyPlants();
+				UIInventory::Release();
 
 				SceneManager* sceneManager = (SceneManager*)FindObject("SceneManager");
 				sceneManager->ChangeScene(SCENE_ID_RESULT, TID_BLACKOUT);

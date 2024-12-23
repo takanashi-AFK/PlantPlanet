@@ -8,8 +8,8 @@ namespace UIInventory
 {
 	void Initialize();
 	void Update();
-	void Draw();
 	void SwitchInventory(bool isShow);
 	void InventoryDataSet();
 	void SetStage(Stage* pStage);
+	void Release();
 }
