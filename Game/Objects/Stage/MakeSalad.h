@@ -1,14 +1,15 @@
 #include<array>
+#include<vector>
 #include<utility>
-#include"../../../Game/Objects/Stage/Components/BehaviorComponents/Component_PlayerBehavior.h"
 #include"Salad.h"
+#include "../../Plants/Plant.h"
 
 class MakeSalad
 {
 public:
 
 	static constexpr int NEED_PLANT_NUM = 3;
-	using typeArray = decltype(std::declval<Component_PlayerBehavior>().GetMyPlants());
+	using typeArray = std::vector<PlantData>;
 	using type = typeArray::value_type;
 
 public:

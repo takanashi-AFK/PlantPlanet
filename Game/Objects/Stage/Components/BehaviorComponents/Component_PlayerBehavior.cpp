@@ -131,7 +131,9 @@ void Component_PlayerBehavior::Initialize()
 
 void Component_PlayerBehavior::Update()
 {
+	TestSalad();
 
+	ApplyEffects();
 	// ＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝
 	// カウント制御されている場合の処理
 	// ＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝
@@ -277,6 +279,20 @@ void Component_PlayerBehavior::DrawData()
 void Component_PlayerBehavior::SetTimeCollectPlant(float time)
 {
 	timeCollectPlant = time;
+}
+
+void Component_PlayerBehavior::TestSalad()
+{
+	if (!Input::IsKeyDown(DIK_G))	return;
+
+	PlantData p0, p1, p2;
+	p0.id_ = 1; p1.id_ = 4; p2.id_ = 8;
+
+	maker_.SetRecipeDatum(p0, 0); maker_.SetRecipeDatum(p1, 1); maker_.SetRecipeDatum(p2, 2);
+	maker_.Make();
+	auto salad = maker_.GetSalad();
+
+	saladEffects_.push_back(salad.effect_0); saladEffects_.push_back(salad.effect_1); saladEffects_.push_back(salad.effect_2);
 }
 
 void Component_PlayerBehavior::Idle()

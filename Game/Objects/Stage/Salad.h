@@ -1,6 +1,7 @@
 #pragma once
 #include<functional>
-#include"../../../Game/Objects/Stage/Components/BehaviorComponents/Component_PlayerBehavior.h"
+
+class Component_PlayerBehavior;
 
 struct Salad
 {

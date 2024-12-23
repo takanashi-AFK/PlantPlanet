@@ -1,9 +1,10 @@
-#include "Plant.h"
 #include"../Objects/Stage/Components/BehaviorComponents/Component_PlayerBehavior.h"
 #include "../Objects/Stage/Components/GaugeComponents/Component_HealthGauge.h"
 #include "../Objects/Stage/Components/AttackComponents/Component_ShootAttack.h"
 #include "../Objects/Stage/Components/AttackComponents/Component_MeleeAttack.h"
 #include "../Objects/Stage/Components/MoveComponents/Component_WASDInputMove.h"
+
+#include "Plant.h"
 
 bool PlantData::Effect(Component_PlayerBehavior* pb)
 {
@@ -19,15 +20,20 @@ std::function<bool(Component_PlayerBehavior*)> PlantData::GetFunction(int id)
 
 	switch (id)
 	{
-	case 1: return [time = SecToFrame(20.f)](Component_PlayerBehavior* pb) mutable ->bool
+	case 1: return [&,time = SecToFrame(20.f)](Component_PlayerBehavior* pb) mutable ->bool
 		{
-			if (time > 0)
+			if (time >= SecToFrame(20.f))
 			{
 				auto waitTime = pb->GetTimeCollectPlant() * 0.9;
 
 				pb->SetTimeCollectPlant(waitTime);
 
 				--time;
+				return true;
+			}
+
+			else if (time > 0) 
+			{
 				return true;
 			}
 

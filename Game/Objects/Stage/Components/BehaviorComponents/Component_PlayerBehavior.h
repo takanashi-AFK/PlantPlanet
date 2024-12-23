@@ -7,6 +7,7 @@
 #include "../../../EffekseeLib/EffekseerVFX.h"
 #include "../../../../../Engine/Global.h"
 #include "../../../../Plants/Plant.h"
+#include "../../MakeSalad.h"
 
 // 前方宣言
 class CountDown;
@@ -112,6 +113,11 @@ public:
 
 	void SetTimeCollectPlant(float time);
 
+	//------TEST SALAD
+	void TestSalad();
+
+	MakeSalad maker_;
+	//----------------
 	/*
 	getter :*/
 	/// <returns> プレイヤーの状態 </returns>
