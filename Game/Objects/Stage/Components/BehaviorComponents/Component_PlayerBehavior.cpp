@@ -670,7 +670,7 @@ void Component_PlayerBehavior::Interact()
 		interactTimeCircle->SetVisible(true);
 		interactTimeCircleFrame->SetVisible(true);
 		// カウントが 5秒 経過していたら...
-		if (interactTimer->IsOnTime(5)) {
+		if (interactTimer->IsOnTime(1)) {
 
 			// 最も近い植物オブジェクトを取得
 			PlantData plantData;
@@ -686,7 +686,6 @@ void Component_PlayerBehavior::Interact()
 
 
 				// 植物オブジェクトを削除
-				PlantCollection::RemovePlant(plantData.id_);
 				pStage->DeleteStageObject(nearestPlant);
 				nearestPlant->KillMe();
 
