@@ -142,13 +142,15 @@ void Scene_Play::Update()
 
 		if (Input::IsKeyDown(DIK_I)) {
 			SetState(PlaySceneState::PlaySceneState_Inventory);
+			UIInventory::InventoryDataSet(pStage_);
+
 			isShowInventoryFirstTime_ = true;
 		}
 	}
 	else if (currentState_ == PlaySceneState::PlaySceneState_Inventory) {
 		if (isShowInventoryFirstTime_ == true) {
-			UIInventory::SwitchInventory(true);
 			UIInventory::InventoryDataSet(pStage_);
+			UIInventory::SwitchInventory(true);
 			isShowInventoryFirstTime_ = false;
 		}
 

@@ -86,7 +86,8 @@ namespace UIInventory {
 	{
 		for (auto item : itemTable_) {
 			for (auto inv : invTable_) {
-				inv->SetVisible((item == inv) == isShow);
+
+				inv->SetVisible(isShow);
 			}
 		}
 	}
