@@ -70,11 +70,38 @@ namespace UIInventory {
 						}
 					}
 				}
-				else if (((UIButton*)inv)->GetObjectName().starts_with("INV-Ingredients")) {
-					((UIButton*)inv)->SetImage("Models/tentativeFlowers/BlankFlowerImage.png");
-
-				}
+				
 					InventoryDataSet();
+			}
+		}
+		// レシピのボタンを押した場合
+		for (auto ingre : ingredientTable_) {
+			if (((UIButton*)ingre)->OnClick()) {
+				if (((UIButton*)ingre)->GetObjectName().starts_with("INV-Ingredients")) {
+					// 空にする
+					std::string removedPlant = "";
+					for (auto& a : allPlantData) {
+						if (a.second.imageFilePath_ == ((UIButton*)ingre)->GetImageFilePath()) {
+							removedPlant = a.second.name_;
+							break;
+						}
+					}
+					((UIButton*)ingre)->SetImage("Models/tentativeFlowers/BlankFlowerImage.png");
+
+					// インベントリに戻す
+					if (!removedPlant.empty()) {
+						incPlant_.push_back(removedPlant);
+
+						for (auto d : decPlant_) {
+							if (d == removedPlant) {
+								decPlant_.erase(std::remove(decPlant_.begin(), decPlant_.end(), d), decPlant_.end());
+								break;
+							}
+						}
+					}
+
+					InventoryDataSet();
+				}
 			}
 		}
 	}
