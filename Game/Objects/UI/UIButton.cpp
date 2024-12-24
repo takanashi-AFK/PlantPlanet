@@ -11,7 +11,7 @@ using namespace FileManager;
 
 UIButton::UIButton(string _name, UIObject* parent , int _layerNum)
 	: UIObject(_name, UIType::UI_BUTTON, parent, _layerNum), imageHandle_(-1), 
-    imageFilePath_(), arrayPlaceX_(0), arrayPlaceY_(0),isSetShader_(false)
+    imageFilePath_(), arrayPlaceX_(1), arrayPlaceY_(1),isSetShader_(false)
 {
 }
 
@@ -22,6 +22,7 @@ UIButton::~UIButton()
 
 void UIButton::Initialize()
 {
+
     LockRotate();
 
 }
@@ -200,7 +201,7 @@ bool UIButton::OnClick()
     ConvertToImageCoordinates(mousePos);
 
     //マウスのポジションが画像の領域に入っているかつ左クリックが押されたら
-    return IsMouseOver(mousePos) && Input::IsMouseButtonDown(0);
+    return IsMouseOver(mousePos) && Input::IsMouseButtonDown(0) && this->isVisible_;
 }
 
 bool UIButton::IsMouseOver(XMFLOAT2 _mousePosition)

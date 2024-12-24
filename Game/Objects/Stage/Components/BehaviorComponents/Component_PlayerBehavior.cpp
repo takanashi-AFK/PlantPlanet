@@ -698,8 +698,10 @@ void Component_PlayerBehavior::Interact()
 	if (Input::IsKey(DIK_E) || Input::IsPadButton(XINPUT_GAMEPAD_A)) {
 		interactTimeCircle->SetVisible(true);
 		interactTimeCircleFrame->SetVisible(true);
+
 		//指定した秒数経過しているか
 		if (interactTimer->IsOnTime(timeCollectPlant)) {
+
 
 			// 最も近い植物オブジェクトを取得
 			PlantData plantData;
@@ -715,7 +717,6 @@ void Component_PlayerBehavior::Interact()
 
 
 				// 植物オブジェクトを削除
-				PlantCollection::RemovePlant(plantData.id_);
 				pStage->DeleteStageObject(nearestPlant);
 				nearestPlant->KillMe();
 

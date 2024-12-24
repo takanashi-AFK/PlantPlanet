@@ -42,6 +42,8 @@ public:
 	void SetArrayPlace(int16_t x, int16_t y);
 	void GetArrayPlace(int16_t* x, int16_t* y) const;
 
+	string GetImageFilePath() const { return imageFilePath_; }
+
 	void SetShader(Direct3D::SHADER_TYPE type);
 	Direct3D::SHADER_TYPE  GetShader()const;
 /*

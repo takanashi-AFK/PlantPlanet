@@ -313,6 +313,7 @@
     <ClCompile Include="Game\Objects\Stage\Components\BehaviorComponents\Component_RangeEnemyBehavior.cpp" />
     <ClCompile Include="Game\Objects\Stage\Components\BehaviorComponents\Component_MeleeEnemyBehavior.cpp" />
     <ClCompile Include="Game\Objects\UI\UICursor.cpp" />
+    <ClCompile Include="Game\Objects\UI\UIItemTable.cpp" />
     <ClCompile Include="Game\Objects\Stage\MakeSalad.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -554,6 +555,7 @@
     <ClInclude Include="Game\Objects\Stage\Components\BehaviorComponents\Component_RangeEnemyBehavior.h" />
     <ClInclude Include="Game\Objects\Stage\Components\BehaviorComponents\Component_MeleeEnemyBehavior.h" />
     <ClInclude Include="Game\Objects\UI\UICursor.h" />
+    <ClInclude Include="Game\Objects\UI\UIItemTable.h" />
     <ClInclude Include="Game\Objects\Stage\MakeSalad.h" />
   </ItemGroup>
   <ItemGroup>
