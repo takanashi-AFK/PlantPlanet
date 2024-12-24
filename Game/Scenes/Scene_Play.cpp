@@ -144,8 +144,6 @@ void Scene_Play::Update()
 		if (Input::IsKeyDown(DIK_I)) {
 			SetState(PlaySceneState::PlaySceneState_Inventory);
 			UIInventory::SetStage(pStage_);
-			UIInventory::InventoryDataSet();
-
 			isShowInventoryFirstTime_ = true;
 		}
 	}
@@ -376,44 +374,4 @@ void Scene_Play::DrawDebugDataEditWindow()
 		if (ImGui::Button("Apply Camera Sensitivity"))tpsCamera_->SetSensitivity(sens);
 	}
 	ImGui::End();
-}
-
-void Scene_Play::ShowInventory()
-{
-		// プレイヤーの情報を設定しUIパネルに反映
-	{
-		// `PlayerBehavior`コンポーネントの取得
-		Component_PlayerBehavior* playerBehavior = nullptr;
-		for (auto pb : pStage_->FindComponents(ComponentType::PlayerBehavior))playerBehavior = (Component_PlayerBehavior*)pb;
-
-		// プレイヤーのHP情報を取得 & 反映
-		Component_HealthGauge* playerHealthGauge = (Component_HealthGauge*)playerBehavior->GetChildComponent("PlayerHealthGauge");
-		UIProgressBar* playerHPBar = (UIProgressBar*)UIPanel::GetInstance()->FindObject("HPBar");
-		if (playerHPBar != nullptr && playerHealthGauge != nullptr)playerHPBar->SetProgress(playerHealthGauge->now_, playerHealthGauge->max_);
-
-		// プレイヤーのスタミナ情報を取得 & 反映
-		Component_StaminaGauge* playerStaminaGauge = (Component_StaminaGauge*)playerBehavior->GetChildComponent("StaminaGauge");
-		UIProgressBar* playerSTBar = (UIProgressBar*)UIPanel::GetInstance()->FindObject("STBar");
-		if (playerSTBar != nullptr && playerStaminaGauge != nullptr)playerSTBar->SetProgress(playerStaminaGauge->now_, playerStaminaGauge->max_);
-
-		// プレイヤーの調査度情報を取得 & 反映
-		UIProgressCircle* playerResearchPointCircle = (UIProgressCircle*)UIPanel::GetInstance()->FindObject("ResearchCircle");
-		if (playerResearchPointCircle != nullptr)playerResearchPointCircle->SetProgress(playerBehavior->GetResearchPoint(), 100);
-	}
-
-	// インベントリの表示
-	{
-		ImGui::Begin("Inventory"); {
-			ImGui::Text("Inventory");
-
-			// プレイヤーの情報を取得
-			Component_PlayerBehavior* playerBehavior = nullptr;
-			for (auto pb : pStage_->FindComponents(ComponentType::PlayerBehavior))
-				playerBehavior = (Component_PlayerBehavior*)pb;
-
-			// プレイヤーが取得した
-			std::vector<PlantData> playerPlantData = playerBehavior->GetMyPlants();
-
-		}
-	}
 }

@@ -12,4 +12,6 @@ namespace UIInventory
 	void InventoryDataSet();
 	void SetStage(Stage* pStage);
 	void Release();
+	bool Check();
+	void Make();
 }

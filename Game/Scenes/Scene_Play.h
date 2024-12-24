@@ -3,6 +3,7 @@
 // インクルード
 #include"../../Engine/GameObject/GameObject.h"
 
+
 // 前方宣言
 class Stage;
 class CountDown;
@@ -66,9 +67,7 @@ private:
 
 	void DrawDebugDataEditWindow();
 
-	/// <summary> インベントリを表示 </summary>
-	void ShowInventory();
-
 	void SetState(PlaySceneState state) { currentState_ = state; };
+
 };
 

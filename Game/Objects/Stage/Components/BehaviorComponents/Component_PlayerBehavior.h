@@ -7,11 +7,11 @@
 #include "../../../EffekseeLib/EffekseerVFX.h"
 #include "../../../../../Engine/Global.h"
 #include "../../../../Plants/Plant.h"
-#include "../../MakeSalad.h"
 
 // 前方宣言
 class CountDown;
 class Component_BossBehavior;
+class Salad;
 
 enum PlayerState {
 	PLAYER_STATE_IDLE = 0,
@@ -93,6 +93,8 @@ public:
 	/// <summary> ImGuiパネル表示 </summary>
 	void DrawData() override;
 
+	void EatSalad(Salad salad);
+
 	/*
 	setter :*/
 	/// <param name="_state"> プレイヤーの状態 </param>
@@ -113,13 +115,6 @@ public:
 
 	void SetTimeCollectPlant(float time);
 
-	//------TEST SALAD
-	void TestSalad();
-
-	MakeSalad maker_;
-	//----------------
-	/*
-	getter :*/
 	/// <returns> プレイヤーの状態 </returns>
 	PlayerState GetState() const { return nowState_; }
 

@@ -8,6 +8,7 @@
 #include "../../Plants/PlantCollection.h"
 #include "../../../Engine/ImGui/imgui.h"
 #include "UIText.h"
+#include "../Stage/MakeSalad.h"
 
 namespace UIInventory {
 	UIPanel* itemPanel_;
@@ -21,22 +22,26 @@ namespace UIInventory {
 
 	StageObject* playerObjects_;
 	Stage* pStage_;
+	Component_PlayerBehavior* playerBehavior_;
 
 	std::vector<std::string> selectedPlant_;
-	
+	MakeSalad maker_;
+	UIButton* makeButton_;
 
 	void Initialize()
 	{
 		itemPanel_ = UIPanel::GetInstance();
 		allPlantData = PlantCollection::GetPlants();
 		// アイテムテーブルのみを取得
-		for (auto item : itemPanel_->GetUIObjects()) {
+		for (auto& item : itemPanel_->GetUIObjects()) {
 			if (item->GetObjectName().starts_with("INV")) {
 				invTable_.push_back(item);
 
-				if(item->GetObjectName().starts_with("INV-Ingredients"))ingredientTable_.push_back(item);
+				if (item->GetObjectName().starts_with("INV-Ingredients"))ingredientTable_.push_back(item);
 				else if (item->GetObjectName().starts_with("INV-GetPlantText"))invTextTable_.push_back(item);
-				else if(item->GetObjectName().starts_with("INV-GetPlant"))getPlantTable_.push_back(item);
+				else if (item->GetObjectName().starts_with("INV-GetPlant"))getPlantTable_.push_back(item);
+
+				else if (item->GetObjectName() == "INV-MakeButton")makeButton_ = static_cast<UIButton*>(item);
 			}
 		}
 
@@ -104,6 +109,16 @@ namespace UIInventory {
 					InventoryDataSet();
 			}
 		}
+
+		if (makeButton_->OnClick())
+		{
+			if (!Check()) return;
+
+			Make();
+
+			//インベントリから素材を消す
+			//インベントリを抜ける
+		}
 	}
 
 	void SwitchInventory(bool isShow)
@@ -112,6 +127,8 @@ namespace UIInventory {
 
 			inv->SetVisible(isShow);
 		}
+
+		makeButton_->SetVisible(isShow);
 	}
 
 	void InventoryDataSet()
@@ -119,13 +136,13 @@ namespace UIInventory {
 		if (pStage_ == nullptr)return;
 
 		// プレイヤー情報を取得
-		Component_PlayerBehavior* playerBehavior = nullptr; {
-			for (auto pb : pStage_->FindComponents(ComponentType::PlayerBehavior))playerBehavior = (Component_PlayerBehavior*)pb;
+		{
+			for (auto pb : pStage_->FindComponents(ComponentType::PlayerBehavior))playerBehavior_ = (Component_PlayerBehavior*)pb;
 		}
 		// そのアイテム画像をアイテムテーブルに追加
 		countedPlant.clear();
 		// 同じ植物の数をカウント
-		for (const auto& plant : playerBehavior->GetMyPlants()) {
+		for (const auto& plant : playerBehavior_->GetMyPlants()) {
 			countedPlant[plant.name_]++;
 		}
 
@@ -141,7 +158,7 @@ namespace UIInventory {
 			int plantSize = countedPlant.size();
 
 			// 植物の数がiより大きい場合(取得できる場合)
-			if (i <= plantSize - 1) {
+			if (i < plantSize ) {
 				// countedPlantの中からi番目の植物を取得
 				auto it = countedPlant.begin();
 				std::advance(it, i); // i番目の要素に移動
@@ -202,5 +219,33 @@ namespace UIInventory {
 			itemPanel_->DeleteUIObject(deleteobj);
 		}
 		
-	}	
+	}
+	bool Check()
+	{
+		if (selectedPlant_.size() < 3) return false;
+
+		return selectedPlant_[0] != "" && selectedPlant_[1] != "" && selectedPlant_[2] != "";
+	}
+
+	void Make()
+	{
+		for (const auto& plant : allPlantData) {
+		
+			bool isMake = false;
+			int index = -1;
+
+			if (selectedPlant_[0] == plant.second.name_)	maker_.SetRecipeDatum(plant.second, 0);
+			if (selectedPlant_[1] == plant.second.name_)	maker_.SetRecipeDatum(plant.second, 1);
+			if (selectedPlant_[2] == plant.second.name_)	maker_.SetRecipeDatum(plant.second, 2);
+		}
+
+		maker_.Make();
+
+		auto salad = maker_.GetSalad();
+
+		if (!playerBehavior_)	return;
+
+		playerBehavior_->EatSalad(salad);
+	}
+
 }

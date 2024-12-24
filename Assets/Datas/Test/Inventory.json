@@ -731,6 +731,18 @@
     "scale_": [ 1.0, 1.0, 1.0 ],
     "type_": 2
   },
+  "INV-MakeButton": {
+    "ArrayPlace_X": 1,
+    "ArrayPlace_Y": 1,
+    "imageFilePath_": "Images/playScene/space.png",
+    "isVisible_": false,
+    "layerNumber_": 10,
+    "objectName_": "INV-MakeButton",
+    "position_": [ 0.25, 0.699999988079071, 0.0 ],
+    "rotate_": [ 0.0, 0.0, 0.0 ],
+    "scale_": [ 0.15000000596046448, 0.15000000596046448, 0.10000000149011612 ],
+    "type_": 1
+  },
   "ResearchBack": {
     "imageFilePath_": "Images/defaults/default_ProgressCircle.png",
     "isVisible_": true,
