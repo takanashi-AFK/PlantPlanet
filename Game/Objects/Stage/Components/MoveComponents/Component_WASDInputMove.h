@@ -21,12 +21,15 @@ public:
 		AMOUNT
 	};
 
+	static constexpr float defaultSpeed = .1f;
+
 private:
 	bool isMove_ : 1;
 	bool isRotate: 1;
 	DIRECTION direcionType_;
 	XMVECTOR dir_;
 	XMFLOAT3 angles_;
+	float speed_;
 
 	// effekseer: ïœå`çsóÒ
 	std::shared_ptr<EFFEKSEERLIB::EFKTransform> mt;/*ÅöÅöÅö*/
@@ -46,6 +49,10 @@ public:
 
 	void SetRotateLock(bool flag) { this->isRotate = flag; };
 	bool GetRotateLock() { return this->isRotate; };
+
+	void SetSpeed(float spd) { this->speed_ = spd; };
+	float GetSpeed() { return this->speed_; };
+
 	DIRECTION GetDirectionType() { return this->direcionType_; };
 private:
 	void Move(XMVECTOR _dir, float _speed);

@@ -1,6 +1,10 @@
 #pragma once
 #include <string>
+#include<functional>
+
 using std::string;
+
+class Component_PlayerBehavior;
 
 // 植物構造体
 struct PlantData {
@@ -11,4 +15,7 @@ struct PlantData {
 	bool isSpawn_;
 	string modelFilePath_;	// モデルファイルパス
 	string imageFilePath_;	// 画像ファイルパス
+
+	bool Effect(Component_PlayerBehavior* pb);
+	static std::function<bool(Component_PlayerBehavior*)> GetFunction(int id);
 };

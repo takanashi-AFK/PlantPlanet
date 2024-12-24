@@ -54,7 +54,12 @@ namespace FileManager {
 	std::string GetFileNameWithoutExtension(const std::string& path);
 }
 
-
+namespace Light
+{
+	extern XMFLOAT4 sunLight;
+	extern XMFLOAT4 sunLightDir;
+	extern XMFLOAT4 ambientLight;
+}
 
 /// 臨時のグローバル変数 fix: 本来はここに置くべきではない 
 extern string g_selectedStage;	// 選択されたステージ

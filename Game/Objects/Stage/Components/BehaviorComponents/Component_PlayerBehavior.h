@@ -7,6 +7,7 @@
 #include "../../../EffekseeLib/EffekseerVFX.h"
 #include "../../../../../Engine/Global.h"
 #include "../../../../Plants/Plant.h"
+#include "../../MakeSalad.h"
 
 // 前方宣言
 class CountDown;
@@ -30,6 +31,13 @@ enum PlayerState {
 
 class Component_PlayerBehavior : public Component
 {
+public :
+	static constexpr float defaultSpeed_Walk = .1f;
+	static constexpr float defaultTime_CollectPlant = 5;
+	static constexpr int defaultMax_HP = 100;
+	static constexpr int defaultPow_Range = 10.f;
+	static constexpr int defaultPow_Melee = 20.f;
+
 private:
 	PlayerState nowState_, prevState_;	// 現在の状態、前の状態
 	float shootHeight_;					// 射撃の高さ
@@ -39,8 +47,10 @@ private:
 	int walkingFrame_;					// 連続して歩いている時間
 	int lockRotateFrame_;				// 回転を固定する時間
 	int lockRotateFrameLeft_;			// 回転を固定してから経過した時間
-	vector<PlantData> myPlants_;
 	int researchPoint_;
+	
+	vector<PlantData> myPlants_;
+	std::list<std::function<bool(Component_PlayerBehavior*)>> saladEffects_;
 
 	// effekseer: 変形行列
 	std::shared_ptr<EFFEKSEERLIB::EFKTransform> effectModelTransform;
@@ -57,6 +67,8 @@ private:
 	float stamina_decrease_dodge_;
 	float stamina_decrease_melee_;
 	float stamina_decrease_shoot_;
+
+	float timeCollectPlant;
 
 
 public:
@@ -99,6 +111,13 @@ public:
 	void SetStaminaDecrease_Dodge(int _stamina_decrease_dodge) { stamina_decrease_dodge_ = _stamina_decrease_dodge; }
 	void SetStaminaDecrease_Melee(int _stamina_decrease_melee) { stamina_decrease_melee_ = _stamina_decrease_melee; }
 
+	void SetTimeCollectPlant(float time);
+
+	//------TEST SALAD
+	void TestSalad();
+
+	MakeSalad maker_;
+	//----------------
 	/*
 	getter :*/
 	/// <returns> プレイヤーの状態 </returns>
@@ -129,6 +148,7 @@ public:
 	float GetStaminaDecrease_Dodge() { return stamina_decrease_dodge_; }
 	float GetStaminaDecrease_Melee() { return stamina_decrease_melee_; }
 
+	float GetTimeCollectPlant();
 /*
 predicate :*/
 	/// <returns> プレイヤーが死んでいるか </returns>
@@ -174,4 +194,7 @@ private:
 
 	/// <summary> 近接攻撃時の処理 </summary>
 	void Melee();
+
+	/// <summary> アイテム(サラダ)によるバフ、デバフの適用</summary>
+	void ApplyEffects();
 };
