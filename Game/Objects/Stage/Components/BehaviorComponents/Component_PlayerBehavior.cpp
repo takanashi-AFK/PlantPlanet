@@ -31,6 +31,7 @@
 #include "../PlantComponents/Component_Plant.h"
 #include "../GaugeComponents/Component_StaminaGauge.h"
 #include "../../Salad.h"
+#include "../../MakeSalad.h"
 
 using namespace Constants;
 
@@ -126,6 +127,7 @@ void Component_PlayerBehavior::Initialize()
 		interactTimeCircle->SetVisible(false);
 		interactTimeCircle->SetProgress(0, 5);
 	}
+
 	auto* move = static_cast<Component_WASDInputMove*>(GetChildComponent("InputMove"));
 	move->SetSpeed(this->defaultSpeed_Walk);
 }
@@ -133,6 +135,7 @@ void Component_PlayerBehavior::Initialize()
 void Component_PlayerBehavior::Update()
 {
 	ApplyEffects();
+	DrawPopUp();
 	// ＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝
 	// カウント制御されている場合の処理
 	// ＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝
@@ -278,6 +281,8 @@ void Component_PlayerBehavior::DrawData()
 
 void Component_PlayerBehavior::EatSalad(Salad salad)
 {
+	saladEffects_.clear();
+
 	saladEffects_.push_back(salad.effect_0);
 	saladEffects_.push_back(salad.effect_1);
 	saladEffects_.push_back(salad.effect_2);
@@ -788,9 +793,38 @@ void Component_PlayerBehavior::ApplyEffects()
 		auto data = (*itr)(this);
 		if (!data.isUsable) itr = saladEffects_.erase(itr);
 		continue;
+		if (!isMadeSalad_) continue;
 
 
 	}
+}
+
+void Component_PlayerBehavior::DrawPopUp()
+{
+	bool flag = false;
+	if (popUpInfo_.time <= 0)
+	{
+		popUpInfo_.backGround_->SetVisible(flag);
+		popUpInfo_.info_->SetVisible(flag);
+
+		for (auto i = 0u; i < MakeSalad::NEED_PLANT_NUM; ++i) {
+			popUpInfo_.backGround_[i].SetVisible(flag);
+			popUpInfo_.texts_[i]->SetVisible(flag);
+		}
+
+		return;
+	}
+
+	flag = true;
+	popUpInfo_.backGround_->SetVisible(flag);
+	popUpInfo_.info_->SetVisible(flag);
+
+	for (auto i = 0u; i < MakeSalad::NEED_PLANT_NUM; ++i) {
+		popUpInfo_.backGround_[i].SetVisible(flag);
+		popUpInfo_.texts_[i]->SetVisible(flag);
+	}
+
+
 }
 
 int Component_PlayerBehavior::GetResearchPointByRarity(PlantData _plantData)
