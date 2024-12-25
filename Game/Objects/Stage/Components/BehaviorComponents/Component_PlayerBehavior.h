@@ -114,6 +114,7 @@ public:
 	void SetStaminaDecrease_Melee(int _stamina_decrease_melee) { stamina_decrease_melee_ = _stamina_decrease_melee; }
 
 	void SetTimeCollectPlant(float time);
+	void SetMyPlants(vector<PlantData> _plants) { myPlants_.clear(); myPlants_ = _plants; }
 
 	/// <returns> プレイヤーの状態 </returns>
 	PlayerState GetState() const { return nowState_; }

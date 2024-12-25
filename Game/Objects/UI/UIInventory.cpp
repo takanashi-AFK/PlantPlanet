@@ -9,7 +9,6 @@
 #include "../../../Engine/ImGui/imgui.h"
 #include "UIText.h"
 #include "../Stage/MakeSalad.h"
-
 namespace UIInventory {
 	UIPanel* itemPanel_;
 	std::vector<UIObject*> getPlantTable_;
@@ -27,6 +26,7 @@ namespace UIInventory {
 	std::vector<std::string> selectedPlant_;
 	MakeSalad maker_;
 	UIButton* makeButton_;
+	bool inventoryEnd_ = false;
 
 	void Initialize()
 	{
@@ -118,6 +118,26 @@ namespace UIInventory {
 
 			//インベントリから素材を消す
 			//インベントリを抜ける
+
+			vector<PlantData>pPlant = playerBehavior_->GetMyPlants();
+
+
+			for (const auto& selected : selectedPlant_) {
+				for (auto it = pPlant.begin(); it != pPlant.end(); ++it) {
+					if (it->name_ == selected) {
+						pPlant.erase(it); // 最初に見つかった1つだけを削除
+						break;
+					}
+				}
+			}
+
+			playerBehavior_->SetMyPlants(pPlant);
+			selectedPlant_.clear();
+
+			for (auto& ingredient : ingredientTable_) {
+				((UIButton*)ingredient)->SetImage("Models/tentativeFlowers/BlankFlowerImage.png");
+			}
+			inventoryEnd_ = true;
 		}
 	}
 
@@ -127,7 +147,7 @@ namespace UIInventory {
 
 			inv->SetVisible(isShow);
 		}
-
+		inventoryEnd_ = false;
 		makeButton_->SetVisible(isShow);
 	}
 
@@ -246,6 +266,11 @@ namespace UIInventory {
 		if (!playerBehavior_)	return;
 
 		playerBehavior_->EatSalad(salad);
+	}
+
+	bool isEnd()
+	{
+		return inventoryEnd_;
 	}
 
 }

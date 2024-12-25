@@ -157,7 +157,7 @@ void Scene_Play::Update()
 		}
 
 
-		if (Input::IsKeyDown(DIK_I)) {
+		if (Input::IsKeyDown(DIK_I) || UIInventory::isEnd()) {
 			SetState(PlaySceneState::PlaySceneState_Play);
 			UIInventory::SwitchInventory(false);
 			isShowInventoryFirstTime_ = true;

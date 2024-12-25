@@ -196,14 +196,17 @@ void Component_PlayerBehavior::Update()
 
 	UIProgressCircle* interactTimeCircle = (UIProgressCircle*)UIPanel::GetInstance()->FindObject("interactTimeCircle");
 	bool isVisible{};
-
 	if (IsInteractable()) {
 		UIImage* interactTimeCircleFrame = (UIImage*)UIPanel::GetInstance()->FindObject("interactTimeCircleFrame");
-		isVisible = true;
+		UIProgressCircle* interactTimeCircle = (UIProgressCircle*)UIPanel::GetInstance()->FindObject("interactTimeCircle");
+		interactTimeCircleFrame->SetVisible(true);
+		interactTimeCircle->SetVisible(true);
 	}
 	else {
 		UIImage* interactTimeCircleFrame = (UIImage*)UIPanel::GetInstance()->FindObject("interactTimeCircleFrame");
-		isVisible = false;
+		UIProgressCircle* interactTimeCircle = (UIProgressCircle*)UIPanel::GetInstance()->FindObject("interactTimeCircle");
+		interactTimeCircleFrame->SetVisible(false);
+		interactTimeCircle->SetVisible(false);
 	}
 
 	if (interactTimeCircle)

@@ -14,4 +14,5 @@ namespace UIInventory
 	void Release();
 	bool Check();
 	void Make();
+	bool isEnd();
 }
