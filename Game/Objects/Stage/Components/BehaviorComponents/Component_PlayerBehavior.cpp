@@ -784,9 +784,12 @@ void Component_PlayerBehavior::Melee()
 void Component_PlayerBehavior::ApplyEffects()
 {
 	for (auto itr = saladEffects_.begin(); itr != saladEffects_.end();) {
+		
+		auto data = (*itr)(this);
+		if (!data.isUsable) itr = saladEffects_.erase(itr);
+		continue;
 
-		if ((*itr)(this)) ++itr;
-		else itr = saladEffects_.erase(itr);
+
 	}
 }
 

@@ -50,7 +50,7 @@ private:
 	int researchPoint_;
 	
 	vector<PlantData> myPlants_;
-	std::list<std::function<bool(Component_PlayerBehavior*)>> saladEffects_;
+	std::list<std::function<PlantData::FuncValue(Component_PlayerBehavior*)>> saladEffects_;
 
 	// effekseer: 変形行列
 	std::shared_ptr<EFFEKSEERLIB::EFKTransform> effectModelTransform;

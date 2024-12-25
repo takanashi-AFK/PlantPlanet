@@ -21,7 +21,10 @@ public:
 	void DrawData() override;
 
 	float GetNow() const { return now_; }
-	void SetNow(float _newNow) { now_ = _newNow; }
+	void SetNow(float _newNow)
+	{
+		now_ = max_ > _newNow ? _newNow : max_; 
+	}
 	float GetMax() const { return max_; }
 	void SetMax(float _newMax) { max_ = _newMax; }
 
