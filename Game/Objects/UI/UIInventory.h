@@ -15,4 +15,5 @@ namespace UIInventory
 	bool Check();
 	void Make();
 	bool IsShowInventory();
+	bool IsMadeSalad();
 }
