@@ -13,19 +13,18 @@ PlantData::FuncValue PlantData::Effect(Component_PlayerBehavior* pb)
 
 std::function<PlantData::FuncValue(Component_PlayerBehavior*)> PlantData::GetFunction(int id)
 {
-	constexpr float FRAME_RATE = 60.f;
 	auto SecToFrame = [](float sec)->int
 		{
-			return sec * FRAME_RATE;
+			return sec * FPS;
 		};
-	FuncValue ret{};
+	static FuncValue ret{};
 
 	switch (id)
 	{
-	case 1: return [&,time = SecToFrame(20.f)](Component_PlayerBehavior* pb) mutable ->PlantData::FuncValue
+	case 0: return [&,time = SecToFrame(20.f)](Component_PlayerBehavior* pb) mutable ->PlantData::FuncValue
 		{
 			ret.isUsable = false;
-			ret.time = time / FRAME_RATE;
+			ret.time = time / FPS;
 			ret.id = id;
 			ret.filePath = "Images/SaladEffectLogo/PickUp.png";
 			ret.amount = 10;
@@ -55,7 +54,7 @@ std::function<PlantData::FuncValue(Component_PlayerBehavior*)> PlantData::GetFun
 			return ret;
 		};
 
-	case 2: return[&](Component_PlayerBehavior* pb) mutable ->PlantData::FuncValue
+	case 1: return[&](Component_PlayerBehavior* pb) mutable ->PlantData::FuncValue
 		{
 			ret.isUsable = false;
 			ret.time = -1;
@@ -71,10 +70,10 @@ std::function<PlantData::FuncValue(Component_PlayerBehavior*)> PlantData::GetFun
 			return ret;
 		};
 
-	case 3: return[&,time = SecToFrame(30)](Component_PlayerBehavior* pb) mutable ->PlantData::FuncValue
+	case 2: return[&,time = SecToFrame(30)](Component_PlayerBehavior* pb) mutable ->PlantData::FuncValue
 		{
 			ret.isUsable = false;
-			ret.time = time / FRAME_RATE;
+			ret.time = time / FPS;
 			ret.id = id;
 			ret.filePath = "Images/SaladEffectLogo/MeleeUp.png";
 			ret.amount = 8;
@@ -99,7 +98,7 @@ std::function<PlantData::FuncValue(Component_PlayerBehavior*)> PlantData::GetFun
 			return ret;
 		};
 
-	case 4: return[&](Component_PlayerBehavior* pb) mutable ->PlantData::FuncValue
+	case 3: return[&](Component_PlayerBehavior* pb) mutable ->PlantData::FuncValue
 		{
 			ret.isUsable = false;
 			ret.time = -1;
@@ -116,10 +115,10 @@ std::function<PlantData::FuncValue(Component_PlayerBehavior*)> PlantData::GetFun
 			return ret;
 		};
 
-	case 5: return[&,time = SecToFrame(30)](Component_PlayerBehavior* pb) mutable ->PlantData::FuncValue
+	case 4: return[&,time = SecToFrame(30)](Component_PlayerBehavior* pb) mutable ->PlantData::FuncValue
 		{
 			ret.isUsable = false;
-			ret.time = time / FRAME_RATE;
+			ret.time = time / FPS;
 			ret.id = id;
 			ret.filePath = "Images/SaladEffectLogo/RangeUp.png";
 			ret.amount = 8;
@@ -143,7 +142,7 @@ std::function<PlantData::FuncValue(Component_PlayerBehavior*)> PlantData::GetFun
 			return ret;
 		};
 
-	case 6: return[&](Component_PlayerBehavior* pb) mutable ->PlantData::FuncValue
+	case 5: return[&](Component_PlayerBehavior* pb) mutable ->PlantData::FuncValue
 		{
 			ret.isUsable = false;
 			ret.time = -1;
@@ -160,7 +159,7 @@ std::function<PlantData::FuncValue(Component_PlayerBehavior*)> PlantData::GetFun
 			return ret;
 		};
 
-	case 7: return[&](Component_PlayerBehavior* pb) mutable ->PlantData::FuncValue
+	case 6: return[&](Component_PlayerBehavior* pb) mutable ->PlantData::FuncValue
 		{
 			ret.isUsable = false;
 			ret.time = -1;
@@ -178,10 +177,10 @@ std::function<PlantData::FuncValue(Component_PlayerBehavior*)> PlantData::GetFun
 			return ret;
 		};
 
-	case 8: return[&,time = SecToFrame(100)](Component_PlayerBehavior* pb) mutable ->PlantData::FuncValue
+	case 7: return[&,time = SecToFrame(100)](Component_PlayerBehavior* pb) mutable ->PlantData::FuncValue
 		{
 			ret.isUsable = false;
-			ret.time = time / FRAME_RATE;
+			ret.time = time / FPS;
 			ret.id = id;
 			ret.filePath = "Images/SaladEffectLogo/SpeedUp.png";
 			ret.amount = 50;
@@ -205,7 +204,7 @@ std::function<PlantData::FuncValue(Component_PlayerBehavior*)> PlantData::GetFun
 			return ret;
 		};
 
-	case 9: return[&](Component_PlayerBehavior* pb) mutable ->PlantData::FuncValue
+	case 8: return[&](Component_PlayerBehavior* pb) mutable ->PlantData::FuncValue
 		{
 			ret.isUsable = false;
 			ret.time = -1;
@@ -223,10 +222,10 @@ std::function<PlantData::FuncValue(Component_PlayerBehavior*)> PlantData::GetFun
 			return ret;
 		};
 
-	case 10: return[&,time = SecToFrame(20)](Component_PlayerBehavior* pb) mutable ->PlantData::FuncValue
+	case 9: return[&,time = SecToFrame(20)](Component_PlayerBehavior* pb) mutable ->PlantData::FuncValue
 		{
 			ret.isUsable = false;
-			ret.time = time / FRAME_RATE;
+			ret.time = time / FPS;
 			ret.id = id;
 			ret.filePath = "Images/SaladEffectLogo/MeleeUp.png";
 			ret.amount = 20;

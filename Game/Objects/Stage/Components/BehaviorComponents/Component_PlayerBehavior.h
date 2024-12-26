@@ -65,7 +65,7 @@ private:
 	bool isShootAttack_: 1;					
   
 	bool isMeleeStart_: 1;
-	bool isMadeSalad_ : 1;
+	bool isRenewalPopUp_ : 1;
 
 	float stamina_decrease_dodge_;
 	float stamina_decrease_melee_;
