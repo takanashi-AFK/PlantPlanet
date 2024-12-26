@@ -24,6 +24,7 @@ public:
 getter :*/
 	/// <summary> 現在のフレームを取得 </summary>
 	int GetNowFrame();
+
 /*
 predicate :*/
 	/// <summary> アニメーションが終了したか </summary>

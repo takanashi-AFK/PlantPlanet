@@ -28,6 +28,7 @@ namespace UIInventory {
 	UIButton* makeButton_;
 	bool showInventory_ = false;
 
+	bool isMadeSalad_ = false;
 	void Initialize()
 	{
 		itemPanel_ = UIPanel::GetInstance();
@@ -52,6 +53,7 @@ namespace UIInventory {
 
 	void Update()
 	{
+		
 		for (auto inv : getPlantTable_) {
 			if (((UIButton*)inv)->OnClick()) {
 				if (((UIButton*)inv)->GetObjectName().starts_with("INV-GetPlant")) {
@@ -115,6 +117,7 @@ namespace UIInventory {
 			if (!Check()) return;
 
 			Make();
+			isMadeSalad_ = true;
 
 			//インベントリから素材を消す
 			//インベントリを抜ける
@@ -271,5 +274,10 @@ namespace UIInventory {
 	bool IsShowInventory()
 	{
 		return showInventory_;
+	}
+
+	bool IsMadeSalad()
+	{
+		return isMadeSalad_;
 	}
 }
