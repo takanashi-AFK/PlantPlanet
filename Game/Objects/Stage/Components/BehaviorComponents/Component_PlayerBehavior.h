@@ -7,6 +7,8 @@
 #include "../../../EffekseeLib/EffekseerVFX.h"
 #include "../../../../../Engine/Global.h"
 #include "../../../../Plants/Plant.h"
+#include "../../../UI/UIImage.h"
+#include "../../../UI/UIText.h"
 
 // 前方宣言
 class CountDown;
@@ -51,7 +53,7 @@ private:
 	int researchPoint_;
 	bool isEatSaladEnd_;
 	vector<PlantData> myPlants_;
-	std::list<std::function<bool(Component_PlayerBehavior*)>> saladEffects_;
+	std::list<std::function<PlantData::FuncValue(Component_PlayerBehavior*)>> saladEffects_;
 
 	// effekseer: 変形行列
 	std::shared_ptr<EFFEKSEERLIB::EFKTransform> effectModelTransform;
@@ -63,14 +65,25 @@ private:
 	bool isUseStamina_ : 1;					// スタミナを使用したか
 	bool isShootAttack_: 1;					
   
-	bool isMeleeStart_;
+	bool isMeleeStart_: 1;
+	bool isRenewalPopUp_ : 1;
 
 	float stamina_decrease_dodge_;
 	float stamina_decrease_melee_;
 	float stamina_decrease_shoot_;
 
 	float timeCollectPlant;
+	struct PopUpInfo
+	{
+		int time;
+		
+		UIText*  info_;
+		UIText*	 texts_[3];
 
+		UIImage* backGround_;
+		UIImage* images_[3];
+
+	}popUpInfo_;
 
 public:
 	/// <summary> コンストラクタ </summary>
@@ -196,4 +209,6 @@ private:
 
 	/// <summary> アイテム(サラダ)によるバフ、デバフの適用</summary>
 	void ApplyEffects();
+
+	void DrawPopUp();
 };

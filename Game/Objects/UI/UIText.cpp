@@ -38,10 +38,11 @@ void UIText::Draw()
 {
 	// 表示サイズを計算
 	pText_->SetScale(size_);
+	auto t = GetCalcTransform();
 
 	// 表示位置を計算
-	float drawX = (transform_.position_.x * (Direct3D::screenWidth_ / 2)) + (Direct3D::screenWidth_ / 2);		
-	float drawY = (transform_.position_.y * (Direct3D::screenHeight_ / 2)) + (Direct3D::screenHeight_ / 2);
+	float drawX = (t.position_.x * (Direct3D::screenWidth_ / 2)) + (Direct3D::screenWidth_ / 2);		
+	float drawY = (t.position_.y * (Direct3D::screenHeight_ / 2)) + (Direct3D::screenHeight_ / 2);
 	
 	// テキストを描画
 	if (intNum_ == nullptr)pText_->Draw(drawX, drawY, drawText_.c_str());

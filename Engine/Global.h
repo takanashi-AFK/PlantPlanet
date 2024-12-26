@@ -26,7 +26,7 @@ XMFLOAT3 operator*(XMFLOAT3 a, const XMFLOAT3 b);
 
 // ＝＝ 定数 ＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝ //
 
-const float FPS = 60.0f;	// フレームレート
+constexpr float FPS = 60.0f;	// フレームレート
 
 // ＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝ //
 

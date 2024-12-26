@@ -19,7 +19,9 @@
 #include <directxmath.h> 
 #include "../../../UI/UIProgressCircle.h"
 #include "../../../UI/UIImage.h"
+#include "../../../UI/Components/Component_UIEasing.h"
 #include "../../../UI/UIInventory.h"
+
 
 // child components include
 #include "../AttackComponents/Component_MeleeAttack.h"
@@ -32,6 +34,7 @@
 #include "../PlantComponents/Component_Plant.h"
 #include "../GaugeComponents/Component_StaminaGauge.h"
 #include "../../Salad.h"
+#include "../../MakeSalad.h"
 
 using namespace Constants;
 
@@ -128,6 +131,17 @@ void Component_PlayerBehavior::Initialize()
 		interactTimeCircle->SetVisible(false);
 		interactTimeCircle->SetProgress(0, timeCollectPlant);
 	}
+
+	popUpInfo_.backGround_ = static_cast<UIImage*>(UIPanel::GetInstance()->FindObject("PopUp-Image-BackGround"));
+	popUpInfo_.images_[0] = static_cast<UIImage*>(UIPanel::GetInstance()->FindObject("PopUp-Image-Effect-Icon0"));
+	popUpInfo_.images_[1] = static_cast<UIImage*>(UIPanel::GetInstance()->FindObject("PopUp-Image-Effect-Icon1"));
+	popUpInfo_.images_[2] = static_cast<UIImage*>(UIPanel::GetInstance()->FindObject("PopUp-Image-Effect-Icon2"));
+
+	popUpInfo_.info_ = static_cast<UIText*>(UIPanel::GetInstance()->FindObject("PopUp-Text-Title"));
+	popUpInfo_.texts_[0] = static_cast<UIText*>(UIPanel::GetInstance()->FindObject("PopUp-Text-Effect0"));
+	popUpInfo_.texts_[1] = static_cast<UIText*>(UIPanel::GetInstance()->FindObject("PopUp-Text-Effect1"));
+	popUpInfo_.texts_[2] = static_cast<UIText*>(UIPanel::GetInstance()->FindObject("PopUp-Text-Effect2"));
+
 	auto* move = static_cast<Component_WASDInputMove*>(GetChildComponent("InputMove"));
 	move->SetSpeed(this->defaultSpeed_Walk);
 }
@@ -135,6 +149,7 @@ void Component_PlayerBehavior::Initialize()
 void Component_PlayerBehavior::Update()
 {
 	ApplyEffects();
+	DrawPopUp();
 
 	// ＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝
 	// カウント制御されている場合の処理
@@ -283,11 +298,16 @@ void Component_PlayerBehavior::DrawData()
 
 void Component_PlayerBehavior::EatSalad(Salad salad)
 {
+	saladEffects_.clear();
+
 	saladEffects_.push_back(salad.effect_0);
 	saladEffects_.push_back(salad.effect_1);
 	saladEffects_.push_back(salad.effect_2);
 
+	isRenewalPopUp_ = true;
+
 	isEatSaladEnd_ = true;
+
 }
 
 void Component_PlayerBehavior::SetTimeCollectPlant(float time)
@@ -812,11 +832,92 @@ void Component_PlayerBehavior::MadeSalad()
 
 void Component_PlayerBehavior::ApplyEffects()
 {
+	int index = 0;
 	for (auto itr = saladEffects_.begin(); itr != saladEffects_.end();) {
+		
+		auto data = (*itr)(this);
+		if (!data.isUsable) itr = saladEffects_.erase(itr);
+		else ++itr;
+		if (!isRenewalPopUp_) continue;
+		
+		popUpInfo_.images_[index]->SetImage(data.filePath);
 
-		if ((*itr)(this)) ++itr;
-		else itr = saladEffects_.erase(itr);
+		string info = data.time != -1 ?
+			std::format("{}% ,{}sec",data.amount,data.time) :
+			std::format("{}%",data.amount);
+		popUpInfo_.texts_[index]->SetText(info);
+
+		popUpInfo_.time = (3 + 0.5 * 2) * FPS;
+
+		++index;
+		
 	}
+	isRenewalPopUp_ = false;
+}
+
+void Component_PlayerBehavior::DrawPopUp()
+{
+	bool flag = false;
+	if (popUpInfo_.time <= 0)
+	{
+		popUpInfo_.backGround_->SetVisible(flag);
+		popUpInfo_.info_->SetVisible(flag);
+
+		for (auto i = 0u; i < MakeSalad::NEED_PLANT_NUM; ++i) {
+			popUpInfo_.images_[i]->SetVisible(flag);
+			popUpInfo_.texts_[i]->SetVisible(flag);
+		}
+
+		return;
+	}
+
+	flag = true;
+	popUpInfo_.backGround_->SetVisible(flag);
+	popUpInfo_.info_->SetVisible(flag);
+
+	for (auto i = 0u; i < MakeSalad::NEED_PLANT_NUM; ++i) {
+		popUpInfo_.images_[i]->SetVisible(flag);
+		popUpInfo_.texts_[i]->SetVisible(flag);
+	}
+	
+	constexpr float FALLING = FPS * .5f;
+	constexpr float STABLE = FPS * (.5f + 3.f);
+	constexpr float RISING = FPS * (.5f + 3.f + .5f);
+
+	auto SetEasingValue = [&](float val)
+		{
+			popUpInfo_.backGround_->GetEasing()->GetEasing()->pile_ = val;
+			
+			popUpInfo_.info_->GetEasing()->GetEasing()->pile_ = val;
+
+			for (auto i = 0u; i < MakeSalad::NEED_PLANT_NUM; ++i) {
+				popUpInfo_.images_[i]->GetEasing()->GetEasing()->pile_ = val;
+				popUpInfo_.texts_[i]->GetEasing()->GetEasing()->pile_ = val;
+			}
+
+		};
+	auto RisePopUp = [&]()
+		{
+			auto time = popUpInfo_.time - STABLE;
+			auto thr = RISING - STABLE;
+			SetEasingValue(1-(time/thr));
+		};
+
+	auto StablePopUp = [&]()
+		{
+			SetEasingValue(1.f);
+		};
+
+	auto FallPopUp = [&]()
+		{
+			SetEasingValue((popUpInfo_.time / FALLING));
+		};
+
+	if (popUpInfo_.time >= STABLE)RisePopUp();
+	else if (popUpInfo_.time >= FALLING) StablePopUp();
+	else FallPopUp();
+
+	--popUpInfo_.time;
 }
 
 int Component_PlayerBehavior::GetResearchPointByRarity(PlantData _plantData)

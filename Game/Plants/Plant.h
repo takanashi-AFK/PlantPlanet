@@ -16,6 +16,15 @@ struct PlantData {
 	string modelFilePath_;	// モデルファイルパス
 	string imageFilePath_;	// 画像ファイルパス
 
-	bool Effect(Component_PlayerBehavior* pb);
-	static std::function<bool(Component_PlayerBehavior*)> GetFunction(int id);
+	struct FuncValue
+	{
+		bool isUsable;		 //when false then delete Function
+		std::string filePath;//image path
+		int id;    //plant id
+		int time;  //left time of effect
+		int amount;//amount of effect
+	};
+
+	FuncValue Effect(Component_PlayerBehavior* pb);
+	static std::function<FuncValue(Component_PlayerBehavior*)> GetFunction(int id);
 };
