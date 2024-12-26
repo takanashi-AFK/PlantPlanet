@@ -144,24 +144,45 @@ void Scene_Play::Update()
 		if (Input::IsKeyDown(DIK_I)) {
 			SetState(PlaySceneState::PlaySceneState_Inventory);
 			UIInventory::SetStage(pStage_);
+			UIInventory::InventoryDataSet();
+			UIInventory::ShowInventory(true);
+			LeaveOtherObject(this);
 			isShowInventoryFirstTime_ = true;
+
+
+			
+				// カーソル固定化の切り替え
+				fixedCursorPos = !fixedCursorPos;
+
+				// カーソルの表示状態を切り替える
+				cursorVisible = !fixedCursorPos;
+				UICursor::ToHide(!cursorVisible);
+			
+
 		}
 	}
 	else if (currentState_ == PlaySceneState::PlaySceneState_Inventory) {
 		if (isShowInventoryFirstTime_ == true) {
-			UIInventory::SetStage(pStage_);
-
-			UIInventory::InventoryDataSet();
-			UIInventory::SwitchInventory(true);
 			isShowInventoryFirstTime_ = false;
 		}
 
 
-		if (Input::IsKeyDown(DIK_I) || UIInventory::isEnd()) {
+		if (Input::IsKeyDown(DIK_I) || UIInventory::IsShowInventory() == false) {
 			SetState(PlaySceneState::PlaySceneState_Play);
-			UIInventory::SwitchInventory(false);
+			UIInventory::ShowInventory(false);
+			EnterOtherObject(this);
 			isShowInventoryFirstTime_ = true;
+
+
+				// カーソル固定化の切り替え
+				fixedCursorPos = !fixedCursorPos;
+
+				// カーソルの表示状態を切り替える
+				cursorVisible = !fixedCursorPos;
+				UICursor::ToHide(!cursorVisible);
+			
 		}
+
 	UIInventory::Update();
 	}
 

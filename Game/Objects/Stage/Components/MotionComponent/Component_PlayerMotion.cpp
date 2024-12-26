@@ -26,7 +26,9 @@ void Component_PlayerMotion::Initialize()
     modelHandleList_[PLAYER_STATE_SHOOT_WALK_FORWARD] = MotionData(PLAYER_STATE_SHOOT_WALK_FORWARD_FBX, 0, shotWalkFrame_, 1, true);
     modelHandleList_[PLAYER_STATE_SHOOT_IDLE] = MotionData(PLAYER_STATE_SHOOT_IDLE_FBX, 0, shotWalkFrame_, 1, true);
     modelHandleList_[PLAYER_STATE_INTRACT] = MotionData(PLAYER_STATE_INTRACT_FBX, 0, 280, 1,false);
-	modelHandleList_[PLAYER_STATE_MELEE] = MotionData(PLAYER_STATE_DODGE_FBX, 0, 60, 1, false);
+	modelHandleList_[PLAYER_STATE_MELEE] = MotionData(PLAYER_STATE_MELEE_FBX, 0, 60, 1, false);
+	modelHandleList_[PLAYER_STATE_MADESALAD] = MotionData(PLAYER_STATE_MADESALAD_FBX, 0, 120, 1, false);
+
 }
 
 void Component_PlayerMotion::Update()
@@ -101,6 +103,7 @@ void Component_PlayerMotion::Update()
             // HACK:アニメーションの速度を0に設定することで停止できる
             modelHandleList_[state].isLoop ? modelHandleList_[state].speed : 0
         );
+
     }
 }
 

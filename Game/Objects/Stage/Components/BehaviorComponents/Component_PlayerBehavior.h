@@ -28,6 +28,7 @@ enum PlayerState {
 	PLAYER_STATE_SHOOT_IDLE,
 	PLAYER_STATE_INTRACT,
 	PLAYER_STATE_MELEE,	
+	PLAYER_STATE_MADESALAD,
 	PLAYER_STATE_MAX
 };
 
@@ -35,7 +36,7 @@ class Component_PlayerBehavior : public Component
 {
 public :
 	static constexpr float defaultSpeed_Walk = .1f;
-	static constexpr float defaultTime_CollectPlant = 5;
+	static constexpr float defaultTime_CollectPlant = 1;
 	static constexpr int defaultMax_HP = 100;
 	static constexpr int defaultPow_Range = 10.f;
 	static constexpr int defaultPow_Melee = 20.f;
@@ -50,7 +51,7 @@ private:
 	int lockRotateFrame_;				// 回転を固定する時間
 	int lockRotateFrameLeft_;			// 回転を固定してから経過した時間
 	int researchPoint_;
-	
+	bool isEatSaladEnd_;
 	vector<PlantData> myPlants_;
 	std::list<std::function<PlantData::FuncValue(Component_PlayerBehavior*)>> saladEffects_;
 
@@ -203,6 +204,8 @@ private:
 
 	/// <summary> 近接攻撃時の処理 </summary>
 	void Melee();
+
+	void MadeSalad();
 
 	/// <summary> アイテム(サラダ)によるバフ、デバフの適用</summary>
 	void ApplyEffects();

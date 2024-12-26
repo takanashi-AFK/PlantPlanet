@@ -20,6 +20,8 @@
 #include "../../../UI/UIProgressCircle.h"
 #include "../../../UI/UIImage.h"
 #include "../../../UI/Components/Component_UIEasing.h"
+#include "../../../UI/UIInventory.h"
+
 
 // child components include
 #include "../AttackComponents/Component_MeleeAttack.h"
@@ -96,7 +98,8 @@ Component_PlayerBehavior::Component_PlayerBehavior(string _name, StageObject* _h
 	stamina_decrease_melee_(20),
 	stamina_decrease_shoot_(10),
 	timeCollectPlant(defaultTime_CollectPlant),
-	saladEffects_{}
+	saladEffects_{},
+	isEatSaladEnd_(false)
 {
 }
 
@@ -126,7 +129,7 @@ void Component_PlayerBehavior::Initialize()
 	UIProgressCircle* interactTimeCircle = (UIProgressCircle*)UIPanel::GetInstance()->FindObject("interactTimeCircle");
 	if (interactTimeCircle != nullptr) {
 		interactTimeCircle->SetVisible(false);
-		interactTimeCircle->SetProgress(0, 5);
+		interactTimeCircle->SetProgress(0, timeCollectPlant);
 	}
 
 	popUpInfo_.backGround_ = static_cast<UIImage*>(UIPanel::GetInstance()->FindObject("PopUp-Image-BackGround"));
@@ -147,6 +150,7 @@ void Component_PlayerBehavior::Update()
 {
 	ApplyEffects();
 	DrawPopUp();
+
 	// ＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝
 	// カウント制御されている場合の処理
 	// ＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝
@@ -247,6 +251,8 @@ void Component_PlayerBehavior::Update()
 	case PLAYER_STATE_DEAD:					Dead();         break;  // 現在の状態がDEADの場合
 	case PLAYER_STATE_INTRACT:				Interact();      break;  // 現在の状態がINTRACTの場合
 	case PLAYER_STATE_MELEE:				Melee();     break;  // 現在の状態がMELEEの場合
+	case PLAYER_STATE_MADESALAD:			
+		MadeSalad();     break;  // 現在の状態がMADESALADの場合
 	}
 
 	if (isShootAttack_)	Shoot();
@@ -299,6 +305,9 @@ void Component_PlayerBehavior::EatSalad(Salad salad)
 	saladEffects_.push_back(salad.effect_2);
 
 	isRenewalPopUp_ = true;
+
+	isEatSaladEnd_ = true;
+
 }
 
 void Component_PlayerBehavior::SetTimeCollectPlant(float time)
@@ -349,8 +358,11 @@ void Component_PlayerBehavior::Idle()
 	}
 	// Aボタン もしくは Eキー が押されていたら...インタラクト状態に遷移
 	else if (Input::IsKeyDown(DIK_E) || Input::IsPadButtonDown(XINPUT_GAMEPAD_A) && IsInteractable()) {
-
+	
 		SetState(PLAYER_STATE_INTRACT);
+	}
+	else if (nowState_ == PLAYER_STATE_DEAD && isEatSaladEnd_ == true) {
+		SetState(PLAYER_STATE_MADESALAD);
 	}
 }
 
@@ -400,6 +412,9 @@ void Component_PlayerBehavior::Walk()
 	// Aボタン もしくは Eキー が押されていたら...インタラクト状態に遷移
 	else if (Input::IsKeyDown(DIK_E) || Input::IsPadButtonDown(XINPUT_GAMEPAD_A) && IsInteractable()) {
 		SetState(PLAYER_STATE_INTRACT);
+	}
+	else if (nowState_ == PLAYER_STATE_DEAD && isEatSaladEnd_ == true) {
+		SetState(PLAYER_STATE_MADESALAD);
 	}
 }
 
@@ -692,7 +707,7 @@ void Component_PlayerBehavior::Interact()
 
 	// UIProgressBarを取得
 	UIProgressCircle* interactTimeCircle = (UIProgressCircle*)UIPanel::GetInstance()->FindObject("interactTimeCircle");
-	interactTimeCircle->SetProgress(interactTimer->GetNowTime(), 5.0f);
+	interactTimeCircle->SetProgress(interactTimer->GetNowTime(), timeCollectPlant);
 
 	UIImage* interactTimeCircleFrame = (UIImage*)UIPanel::GetInstance()->FindObject("interactTimeCircleFrame");
 
@@ -746,14 +761,14 @@ void Component_PlayerBehavior::Interact()
 		interactTimeCircle->SetVisible(false);
 		interactTimeCircleFrame->SetVisible(false);
 		interactTimer->Reset();
-		interactTimeCircle->SetProgress(interactTimer->GetNowTime(), 5.0f);
+		interactTimeCircle->SetProgress(interactTimer->GetNowTime(), timeCollectPlant);
 	}
 	// 終了処理
 	if (isInteractNow == false) {
 
 		// タイマーをリセット
 		interactTimer->Reset();
-		interactTimeCircle->SetProgress(interactTimer->GetNowTime(), 5.0f);
+		interactTimeCircle->SetProgress(interactTimer->GetNowTime(), timeCollectPlant);
 		// 移動を可能にする
 
 		interactTimeCircle->SetVisible(false);
@@ -795,6 +810,22 @@ void Component_PlayerBehavior::Melee()
 		sg->UseStamina(stamina_decrease_melee_);
 
 		// 状態を遷移
+		IsWASDKey() ? SetState(PLAYER_STATE_WALK) : SetState(PLAYER_STATE_IDLE);
+	}
+}
+
+void Component_PlayerBehavior::MadeSalad()
+{
+	Component_PlayerMotion* motion = (Component_PlayerMotion*)(GetChildComponent("PlayerMotion"));
+	if (motion == nullptr)return;
+	// 移動コンポーネントの取得 & 有無の確認
+	Component_WASDInputMove* move = (Component_WASDInputMove*)(GetChildComponent("InputMove"));
+	if (move == nullptr)return;
+
+	move->Stop();
+	if (motion->IsEnd() == true) {
+		move->Execute();
+		isEatSaladEnd_ = false;
 		IsWASDKey() ? SetState(PLAYER_STATE_WALK) : SetState(PLAYER_STATE_IDLE);
 	}
 }
