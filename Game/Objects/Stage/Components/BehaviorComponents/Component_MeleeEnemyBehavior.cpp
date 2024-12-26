@@ -29,6 +29,7 @@ void Component_MeleeEnemyBehavior::Initialize()
 {
 	holder_->AddCollider(new BoxCollider(XMFLOAT3(0, 0, 0), XMFLOAT3(1, 1, 1)));
 	holder_->SetObjectType(StageObject::TYPE_ENEMY);
+
 	// 子コンポーネントを追加
 	if (FindChildComponent("CircleRangeDetector") == false)AddChildComponent(CreateComponent("CircleRangeDetector", CircleRangeDetector, holder_, this));
 	if (FindChildComponent("Chase") == false)AddChildComponent(CreateComponent("Chase", Chase, holder_, this));

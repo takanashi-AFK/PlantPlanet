@@ -156,7 +156,7 @@ void StageObject::OnGround(float _fallSpeed)
 	vector<StageObject*> stageObj = pStage->GetStageObjects();
 
 	// モデルのサイズを考慮した足元位置（中心位置からモデル高さの半分下）
-	float modelHeight = 3.5f;  // モデルの高さ
+	float modelHeight = 1.f;  // モデルの高さ
 	XMFLOAT3 rayStart = transform_.position_ + onGroundOffset_;
 
 	// 全てのオブジェクトに対してレイキャストを行う

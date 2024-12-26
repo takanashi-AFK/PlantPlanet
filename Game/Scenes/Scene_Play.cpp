@@ -148,6 +148,17 @@ void Scene_Play::Update()
 			UIInventory::ShowInventory(true);
 			LeaveOtherObject(this);
 			isShowInventoryFirstTime_ = true;
+
+
+			
+				// カーソル固定化の切り替え
+				fixedCursorPos = !fixedCursorPos;
+
+				// カーソルの表示状態を切り替える
+				cursorVisible = !fixedCursorPos;
+				UICursor::ToHide(!cursorVisible);
+			
+
 		}
 	}
 	else if (currentState_ == PlaySceneState::PlaySceneState_Inventory) {
@@ -161,7 +172,17 @@ void Scene_Play::Update()
 			UIInventory::ShowInventory(false);
 			EnterOtherObject(this);
 			isShowInventoryFirstTime_ = true;
+
+
+				// カーソル固定化の切り替え
+				fixedCursorPos = !fixedCursorPos;
+
+				// カーソルの表示状態を切り替える
+				cursorVisible = !fixedCursorPos;
+				UICursor::ToHide(!cursorVisible);
+			
 		}
+
 	UIInventory::Update();
 	}
 
