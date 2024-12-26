@@ -124,7 +124,7 @@ void Component_PlayerBehavior::Initialize()
 	UIProgressCircle* interactTimeCircle = (UIProgressCircle*)UIPanel::GetInstance()->FindObject("interactTimeCircle");
 	if (interactTimeCircle != nullptr) {
 		interactTimeCircle->SetVisible(false);
-		interactTimeCircle->SetProgress(0, 5);
+		interactTimeCircle->SetProgress(0, timeCollectPlant);
 	}
 	auto* move = static_cast<Component_WASDInputMove*>(GetChildComponent("InputMove"));
 	move->SetSpeed(this->defaultSpeed_Walk);
@@ -674,7 +674,7 @@ void Component_PlayerBehavior::Interact()
 
 	// UIProgressBarを取得
 	UIProgressCircle* interactTimeCircle = (UIProgressCircle*)UIPanel::GetInstance()->FindObject("interactTimeCircle");
-	interactTimeCircle->SetProgress(interactTimer->GetNowTime(), 5.0f);
+	interactTimeCircle->SetProgress(interactTimer->GetNowTime(), timeCollectPlant);
 
 	UIImage* interactTimeCircleFrame = (UIImage*)UIPanel::GetInstance()->FindObject("interactTimeCircleFrame");
 
@@ -728,14 +728,14 @@ void Component_PlayerBehavior::Interact()
 		interactTimeCircle->SetVisible(false);
 		interactTimeCircleFrame->SetVisible(false);
 		interactTimer->Reset();
-		interactTimeCircle->SetProgress(interactTimer->GetNowTime(), 5.0f);
+		interactTimeCircle->SetProgress(interactTimer->GetNowTime(), timeCollectPlant);
 	}
 	// 終了処理
 	if (isInteractNow == false) {
 
 		// タイマーをリセット
 		interactTimer->Reset();
-		interactTimeCircle->SetProgress(interactTimer->GetNowTime(), 5.0f);
+		interactTimeCircle->SetProgress(interactTimer->GetNowTime(), timeCollectPlant);
 		// 移動を可能にする
 
 		interactTimeCircle->SetVisible(false);
