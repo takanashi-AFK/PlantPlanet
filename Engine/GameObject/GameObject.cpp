@@ -1,7 +1,8 @@
 #include "gameObject.h"
 #include <assert.h>
 #include "../global.h"
-
+#include "../SceneManager.h"
+#include "../../Game/Objects/UI/UIInventory.h"
 //コンストラクタ（親も名前もなし）
 GameObject::GameObject(void) :
 	GameObject(nullptr, "")
@@ -59,10 +60,30 @@ void GameObject::Enter()
 	state_.entered = 1;
 }
 
+void GameObject::EnterOtherObject(GameObject* _target)
+{
+	for (auto it = childList_.begin(); it != childList_.end(); it++) {
+		if ((*it) != _target) {
+			(*it)->Enter();
+		}
+	}
+}
+
 // Updateを拒否
 void GameObject::Leave()
 {
 	state_.entered = 0;
+}
+
+void GameObject::LeaveOtherObject(GameObject *_target)
+{
+	for (auto it = childList_.begin(); it != childList_.end(); it++){
+
+		if ((*it) != _target){
+			(*it)->Leave();
+		}
+
+	}
 }
 
 // Drawを許可
@@ -313,9 +334,11 @@ void GameObject::UpdateSub()
 {
 	Update();
 	//Transform();
+	SceneManager* sceneManager = (SceneManager*)FindObject("SceneManager");
 
 	for (auto it = childList_.begin(); it != childList_.end(); it++)
 	{
+		if((*it)->IsEntered() == true)
 		(*it)->UpdateSub();
 	}
 

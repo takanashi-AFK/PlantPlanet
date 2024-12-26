@@ -26,7 +26,7 @@ namespace UIInventory {
 	std::vector<std::string> selectedPlant_;
 	MakeSalad maker_;
 	UIButton* makeButton_;
-	bool inventoryEnd_ = false;
+	bool showInventory_ = false;
 
 	void Initialize()
 	{
@@ -76,7 +76,7 @@ namespace UIInventory {
 					}
 				}
 
-				InventoryDataSet();
+				UIInventory:: InventoryDataSet();
 			}
 		}
 
@@ -137,17 +137,17 @@ namespace UIInventory {
 			for (auto& ingredient : ingredientTable_) {
 				((UIButton*)ingredient)->SetImage("Models/tentativeFlowers/BlankFlowerImage.png");
 			}
-			inventoryEnd_ = true;
+			ShowInventory(false);
 		}
 	}
 
-	void SwitchInventory(bool isShow)
+	void ShowInventory(bool isShow)
 	{
 		for (auto inv : invTable_) {
 
 			inv->SetVisible(isShow);
 		}
-		inventoryEnd_ = false;
+		showInventory_ = isShow;
 		makeButton_->SetVisible(isShow);
 	}
 
@@ -268,9 +268,8 @@ namespace UIInventory {
 		playerBehavior_->EatSalad(salad);
 	}
 
-	bool isEnd()
+	bool IsShowInventory()
 	{
-		return inventoryEnd_;
+		return showInventory_;
 	}
-
 }
