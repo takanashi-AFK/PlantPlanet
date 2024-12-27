@@ -26,8 +26,9 @@ namespace UIInventory {
 	std::vector<std::string> selectedPlant_;
 	MakeSalad maker_;
 	UIButton* makeButton_;
-	bool inventoryEnd_ = false;
+	bool showInventory_ = false;
 
+	bool isMadeSalad_ = false;
 	void Initialize()
 	{
 		itemPanel_ = UIPanel::GetInstance();
@@ -52,6 +53,7 @@ namespace UIInventory {
 
 	void Update()
 	{
+		
 		for (auto inv : getPlantTable_) {
 			if (((UIButton*)inv)->OnClick()) {
 				if (((UIButton*)inv)->GetObjectName().starts_with("INV-GetPlant")) {
@@ -76,7 +78,7 @@ namespace UIInventory {
 					}
 				}
 
-				InventoryDataSet();
+				UIInventory:: InventoryDataSet();
 			}
 		}
 
@@ -115,6 +117,7 @@ namespace UIInventory {
 			if (!Check()) return;
 
 			Make();
+			isMadeSalad_ = true;
 
 			//インベントリから素材を消す
 			//インベントリを抜ける
@@ -137,17 +140,17 @@ namespace UIInventory {
 			for (auto& ingredient : ingredientTable_) {
 				((UIButton*)ingredient)->SetImage("Models/tentativeFlowers/BlankFlowerImage.png");
 			}
-			inventoryEnd_ = true;
+			ShowInventory(false);
 		}
 	}
 
-	void SwitchInventory(bool isShow)
+	void ShowInventory(bool isShow)
 	{
 		for (auto inv : invTable_) {
 
 			inv->SetVisible(isShow);
 		}
-		inventoryEnd_ = false;
+		showInventory_ = isShow;
 		makeButton_->SetVisible(isShow);
 	}
 
@@ -268,9 +271,13 @@ namespace UIInventory {
 		playerBehavior_->EatSalad(salad);
 	}
 
-	bool isEnd()
+	bool IsShowInventory()
 	{
-		return inventoryEnd_;
+		return showInventory_;
 	}
 
+	bool IsMadeSalad()
+	{
+		return isMadeSalad_;
+	}
 }

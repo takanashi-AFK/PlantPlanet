@@ -66,7 +66,9 @@ public:
 	bool IsDead();			// 削除するかどうか
 	void KillMe();			// 自分を削除する
 	void Enter();			// Updateを許可
+	void EnterOtherObject(GameObject* _target);	// 自分以外のオブジェクトのUpdateを許可
 	void Leave();			// Updateを拒否
+	void LeaveOtherObject(GameObject *_target);	// 自分以外のオブジェクトのUpdateを拒否
 	void Visible();			// Drawを許可
 	void Invisible();		// Drawを拒否
 	bool IsInitialized();	// 初期化済みかどうか
