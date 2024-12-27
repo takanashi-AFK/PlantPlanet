@@ -85,6 +85,12 @@ private:
 
 	}popUpInfo_;
 
+	struct SaladEffectLogo
+	{
+		UIText* texts_[3];
+		UIImage* images_[3];
+	}saladEffectLogo_;
+
 public:
 	/// <summary> コンストラクタ </summary>
 	Component_PlayerBehavior(string _name, StageObject* _holder, Component* _parent);
@@ -209,6 +215,8 @@ private:
 
 	/// <summary> アイテム(サラダ)によるバフ、デバフの適用</summary>
 	void ApplyEffects();
+
+	void ResetSaladEffectLogo();
 
 	void DrawPopUp();
 };

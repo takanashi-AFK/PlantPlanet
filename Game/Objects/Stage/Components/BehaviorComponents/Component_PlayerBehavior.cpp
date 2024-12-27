@@ -142,12 +142,21 @@ void Component_PlayerBehavior::Initialize()
 	popUpInfo_.texts_[1] = static_cast<UIText*>(UIPanel::GetInstance()->FindObject("PopUp-Text-Effect1"));
 	popUpInfo_.texts_[2] = static_cast<UIText*>(UIPanel::GetInstance()->FindObject("PopUp-Text-Effect2"));
 
+	saladEffectLogo_.images_[0]= static_cast<UIImage*>(UIPanel::GetInstance()->FindObject("INV-Effect-Logo0"));
+	saladEffectLogo_.images_[1] = static_cast<UIImage*>(UIPanel::GetInstance()->FindObject("INV-Effect-Logo1"));
+	saladEffectLogo_.images_[2] = static_cast<UIImage*>(UIPanel::GetInstance()->FindObject("INV-Effect-Logo2"));
+
+	saladEffectLogo_.texts_[0] = static_cast<UIText*>(UIPanel::GetInstance()->FindObject("INV-Effect-Text0"));
+	saladEffectLogo_.texts_[1] = static_cast<UIText*>(UIPanel::GetInstance()->FindObject("INV-Effect-Text1"));
+	saladEffectLogo_.texts_[2] = static_cast<UIText*>(UIPanel::GetInstance()->FindObject("INV-Effect-Text2"));
+
 	auto* move = static_cast<Component_WASDInputMove*>(GetChildComponent("InputMove"));
 	move->SetSpeed(this->defaultSpeed_Walk);
 }
 
 void Component_PlayerBehavior::Update()
 {
+	ResetSaladEffectLogo();
 	ApplyEffects();
 	DrawPopUp();
 
@@ -832,27 +841,50 @@ void Component_PlayerBehavior::MadeSalad()
 
 void Component_PlayerBehavior::ApplyEffects()
 {
+
 	int index = 0;
 	for (auto itr = saladEffects_.begin(); itr != saladEffects_.end();) {
 		
 		auto data = (*itr)(this);
 		if (!data.isUsable) itr = saladEffects_.erase(itr);
 		else ++itr;
-		if (!isRenewalPopUp_) continue;
-		
-		popUpInfo_.images_[index]->SetImage(data.filePath);
 
-		string info = data.time != -1 ?
-			std::format("{}% ,{}sec",data.amount,data.time) :
-			std::format("{}%",data.amount);
-		popUpInfo_.texts_[index]->SetText(info);
+		if (isRenewalPopUp_)
+		{
 
-		popUpInfo_.time = (3 + 0.5 * 2) * FPS;
+			popUpInfo_.images_[index]->SetImage(data.filePath);
 
-		++index;
+			string info = data.time != -1 ?
+				std::format("{}% ,{}sec", data.amount, data.time) :
+				std::format("{}%", data.amount);
+			popUpInfo_.texts_[index]->SetText(info);
+
+			popUpInfo_.time = (3 + 0.5 * 2) * FPS;
+
+			++index;
+		}
+
+		else
+		{
+			saladEffectLogo_.images_[index]->SetImage(data.filePath);
+			string info = data.time != -1 ?
+				std::format("{}% ,{}sec", data.amount, data.time) :
+				std::format("{}%", data.amount);
+			saladEffectLogo_.texts_[index]->SetText(info);
+
+			++index;
+		}
 		
 	}
 	isRenewalPopUp_ = false;
+}
+
+void Component_PlayerBehavior::ResetSaladEffectLogo()
+{
+	for (auto i = 0u; i < MakeSalad::NEED_PLANT_NUM; ++i) {
+		saladEffectLogo_.images_[i]->SetImage("Images/SaladEffectLogo/None.png");
+		saladEffectLogo_.texts_[i]->SetText("");
+	}
 }
 
 void Component_PlayerBehavior::DrawPopUp()
