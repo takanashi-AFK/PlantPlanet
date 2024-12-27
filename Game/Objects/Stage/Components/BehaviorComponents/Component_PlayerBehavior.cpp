@@ -882,7 +882,7 @@ void Component_PlayerBehavior::ApplyEffects()
 void Component_PlayerBehavior::ResetSaladEffectLogo()
 {
 	for (auto i = 0u; i < MakeSalad::NEED_PLANT_NUM; ++i) {
-		saladEffectLogo_.images_[i]->SetImage("Images/SaladEffectLogo/None.png");
+		saladEffectLogo_.images_[i]->SetImage("Models/tentativeFlowers/BlankFlowerImage.png");
 		saladEffectLogo_.texts_[i]->SetText("");
 	}
 }
