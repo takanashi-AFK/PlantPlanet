@@ -43,6 +43,7 @@ std::function<PlantData::FuncValue(Component_PlayerBehavior*)> PlantData::GetFun
 			else if (time > 0) 
 			{
 				ret.isUsable = true;
+				--time;
 			}
 
 			else
