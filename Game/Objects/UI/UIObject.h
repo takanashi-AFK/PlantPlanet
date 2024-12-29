@@ -135,6 +135,7 @@ setter :*/
 
 	/// <summary> ‰Â‹‰»‚ğİ’è </summary>
 	void SetVisible(bool _visible) {
+		if (this == nullptr) return;
 		isVisible_ = _visible; 
 	}
 

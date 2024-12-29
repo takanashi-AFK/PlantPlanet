@@ -237,12 +237,10 @@
     <ClCompile Include="Game\Plants\PlantCollection.cpp" />
     <ClCompile Include="Game\Objects\UI\UIProgressCircle.cpp" />
     <ClCompile Include="Game\Objects\UI\UICursor.cpp" />
-
     <ClCompile Include="Game\Objects\UI\UIItemTable.cpp" />
     <ClCompile Include="Game\Objects\UI\UIInventory.cpp" />
-
     <ClCompile Include="Game\Objects\Stage\MakeSalad.cpp" />
-
+    <ClCompile Include="Game\Scenes\Scene_Menu.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game\Objects\Stage\Components\BehaviorComponents\Component_RangeEnemyBehavior.h" />
@@ -349,6 +347,7 @@
     <ClInclude Include="Game\Objects\UI\UIInventory.h" />
     <ClInclude Include="Game\Objects\Stage\MakeSalad.h" />
     <ClInclude Include="Game\Objects\Stage\Salad.h" />
+    <ClInclude Include="Game\Scenes\Scene_Menu.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Assets\Shader\BillBoard.hlsl">

@@ -30,7 +30,7 @@ void Scene_Title::Update()
 		// ボタンが押されたら
 		if (((UIButton*)UIPanel::GetInstance()->GetUIObject("startButton"))->OnClick() || Input::IsPadButtonDown(XINPUT_GAMEPAD_A)) {
 			SceneManager* sceneManager = (SceneManager*)FindObject("SceneManager");
-			sceneManager->ChangeScene(SCENE_ID_PLAY, TID_BLACKOUT);
+			sceneManager->ChangeScene(SCENE_ID_MENU, TID_BLACKOUT);
 		}
 
 		// ボタンが押されたら
