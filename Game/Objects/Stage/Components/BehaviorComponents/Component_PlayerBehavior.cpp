@@ -370,7 +370,7 @@ void Component_PlayerBehavior::Idle()
 	
 		SetState(PLAYER_STATE_INTRACT);
 	}
-	else if (nowState_ == PLAYER_STATE_DEAD && isEatSaladEnd_ == true) {
+	else if (nowState_ != PLAYER_STATE_DEAD && isEatSaladEnd_ == true) {
 		SetState(PLAYER_STATE_MADESALAD);
 	}
 }
@@ -422,7 +422,7 @@ void Component_PlayerBehavior::Walk()
 	else if (Input::IsKeyDown(DIK_E) || Input::IsPadButtonDown(XINPUT_GAMEPAD_A) && IsInteractable()) {
 		SetState(PLAYER_STATE_INTRACT);
 	}
-	else if (nowState_ == PLAYER_STATE_DEAD && isEatSaladEnd_ == true) {
+	else if (nowState_ != PLAYER_STATE_DEAD && isEatSaladEnd_ == true) {
 		SetState(PLAYER_STATE_MADESALAD);
 	}
 }
