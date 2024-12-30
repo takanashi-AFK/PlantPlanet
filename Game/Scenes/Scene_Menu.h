@@ -2,6 +2,7 @@
 #include "../../Engine/GameObject/GameObject.h"
 #include <vector>
 #include "../Objects/UI/UIImage.h"
+#include "../Plants/Plant.h"
 class UIButton;
 class UIPanel;
 class UIObject;
@@ -22,14 +23,16 @@ private:
 	UIButton* playReturnButton;
 	UIImage* backGround;
 	UIImage* playBackGround;
+	std::vector<PlantData> countedPlantData_;
+
 	std::vector<UIObject*> uiObject_;
 
-	std::vector<UIButton*> tabButtonList;
-	std::vector<UIObject*>	  playUIList_;
-	std::vector<UIObject*>	  popUpUIList_;
-	std::vector<UIObject*>	 indexUIList_;
-	std::vector<UIObject*> rankingUIList_;
-	std::vector<UIObject*>  optionUIList_;
+	std::vector<UIButton*>	tabButtonList;
+	std::vector<UIObject*>  playUIList_;
+	std::vector<UIObject*>  popUpUIList_;
+	std::vector<UIObject*>	indexUIList_;
+	std::vector<UIObject*>	rankingUIList_;
+	std::vector<UIObject*>	optionUIList_;
 	bool isFirstChange_;
 public:
 	/// <summary> コンストラクタ </summary>

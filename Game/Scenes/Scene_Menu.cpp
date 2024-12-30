@@ -3,6 +3,7 @@
 #include "../Objects/UI/UIButton.h"
 #include "../Constants.h"
 #include "../../Engine/SceneManager.h"
+#include "../Plants/PlantCollection.h"
 using namespace Constants;
 
 
@@ -157,12 +158,48 @@ void Scene_Menu::Play()
 void Scene_Menu::Index()
 {
 	if (isFirstChange_ == true) {
-		for (auto allUI : panel->GetUIObjects()) {
-			if (allUI->GetObjectName().starts_with("TAB")||
-				allUI == backGround ||
-				allUI->GetObjectName() == "INDEX-BACKGROUND") allUI->SetVisible(true);
-			else allUI->SetVisible(false);
+
+		std::unordered_map<std::string, PlantData> plantDataMap;
+		for (const auto plant : g_playerPlantData) {
+			plantDataMap[plant.name_] = plant;
 		}
+
+		for (auto item : panel->GetUIObjects()) {
+			if (std::find(tabButtonList.begin(), tabButtonList.end(), item) == tabButtonList.end() &&
+				std::find(indexUIList_.begin(), indexUIList_.end(), item) == indexUIList_.end() &&
+				item != backGround) {
+				item->SetVisible(false);
+			}
+			else {
+				item->SetVisible(true);
+
+			}
+		}
+
+		int plantDataSize = countedPlantData_.size();
+		std::vector<UIButton*> plantButtonList;
+
+		for (auto item : panel->GetUIObjects()) {
+
+			if (item->GetObjectName().starts_with("INDEX-Plant")) {
+				plantButtonList.push_back((UIButton*)item);
+			}
+		}
+
+		for (auto button : plantButtonList) {
+			// 初期状態を非表示に設定
+			button->SetVisible(false);
+
+			// 対応するPlantDataがあるか確認
+			for ( auto [key, plantData] : plantDataMap) {
+				if (button->GetObjectName() == "INDEX-Plant" + std::to_string(plantData.id_)) {
+					button->SetImage(plantData.imageFilePath_);
+					button->SetVisible(true); // 条件を満たした場合のみ表示
+					break; // マッチしたらループ終了
+				}
+			}
+		}
+
 		isFirstChange_ = false;
 	}
 }
