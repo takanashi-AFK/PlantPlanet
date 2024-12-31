@@ -4,6 +4,7 @@
 #include "../Constants.h"
 #include "../../Engine/SceneManager.h"
 #include "../Plants/PlantCollection.h"
+#include "../../Engine/ImGui/ImGui.h"
 using namespace Constants;
 
 
@@ -33,12 +34,13 @@ void Scene_Menu::Initialize()
 	// すべてのオブジェクトを各リストに打ち分ける
 	for (auto uiItem : uiObject_) {
 		uiItem->SetVisible(true);
-		if ((uiItem)->GetObjectName().starts_with("TAB"))		tabButtonList.push_back(((UIButton*)uiItem));
-		else if (uiItem->GetObjectName().starts_with("PLAY"))	playUIList_.push_back(uiItem);
-		else if (uiItem->GetObjectName().starts_with("INDEX"))	indexUIList_.push_back(uiItem);
-		else if (uiItem->GetObjectName().starts_with("RANKING"))rankingUIList_.push_back(uiItem);
-		else if (uiItem->GetObjectName().starts_with("OPTION"))	optionUIList_.push_back(uiItem);
-		else if (uiItem->GetObjectName() == "BackGround")		backGround = (UIImage*)uiItem;
+		if ((uiItem)->GetObjectName().starts_with("TAB")) { tabButtonList.push_back(((UIButton*)uiItem));  }
+		else if (uiItem->GetObjectName() == "INDEX-DescriptionImage") { descriptionImage = (UIImage*)uiItem; }
+		else if (uiItem->GetObjectName().starts_with("PLAY")) { playUIList_.push_back(uiItem);  }
+		else if (uiItem->GetObjectName().starts_with("INDEX")) { indexUIList_.push_back(uiItem);  }
+		else if (uiItem->GetObjectName().starts_with("RANKING")) { rankingUIList_.push_back(uiItem);  }
+		else if (uiItem->GetObjectName().starts_with("OPTION")) { optionUIList_.push_back(uiItem); }
+		else if (uiItem->GetObjectName() == "BackGround") { backGround = (UIImage*)uiItem; }
 	}
 
 
@@ -177,7 +179,6 @@ void Scene_Menu::Index()
 		}
 
 		int plantDataSize = countedPlantData_.size();
-		std::vector<UIButton*> plantButtonList;
 
 		for (auto item : panel->GetUIObjects()) {
 
@@ -199,9 +200,34 @@ void Scene_Menu::Index()
 				}
 			}
 		}
-
+		descriptionImage->SetVisible(false);
 		isFirstChange_ = false;
 	}
+		const string buttonObjectHeadName = "INDEX-Plant";
+
+		for (auto plantButton : plantButtonList) {
+			if (((UIButton*)plantButton)->OnClick()) {
+
+				std::string buttonName = ((UIButton*)plantButton)->GetObjectName();
+
+				std::string idString = buttonName.substr(buttonObjectHeadName.size());
+
+				int id = std::stoi(idString);
+
+				for (auto plant : g_playerPlantData) {
+					if (plant.id_ == id) { 
+						std::string imagePath = plant.descriptionImageFilePath_;
+						imagePath.erase(0, imagePath.find_first_not_of(' ')); // 先頭のスペースを削除
+						imagePath.erase(imagePath.find_last_not_of(' ') + 1); // 末尾のスペースを削除
+
+						descriptionImage->SetImage(imagePath.c_str());
+						descriptionImage->SetVisible(true);
+						break; 
+					}
+				}
+			}
+		}
+
 }
 
 void Scene_Menu::Ranking()

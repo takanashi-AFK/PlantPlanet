@@ -15,6 +15,7 @@ struct PlantData {
 	bool isSpawn_;
 	string modelFilePath_;	// モデルファイルパス
 	string imageFilePath_;	// 画像ファイルパス
+	string descriptionImageFilePath_;	// 図鑑用説明画像ファイルパス
 
 	struct FuncValue
 	{

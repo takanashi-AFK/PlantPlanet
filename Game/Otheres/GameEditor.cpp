@@ -246,6 +246,7 @@ void GameEditor::DrawPlantDatails()
 		ImGui::Checkbox("isSpawn", &PlantCollection::GetPlants()[selectEditPlantIndex_].isSpawn_);
 		ImGui::Text("modelFilePath:%s",PlantCollection::GetPlants()[selectEditPlantIndex_].modelFilePath_.c_str());
 		ImGui::Text("imageFilePath:%s",PlantCollection::GetPlants()[selectEditPlantIndex_].imageFilePath_.c_str());
+		ImGui::Text("descriptionImageFilePath:%s",PlantCollection::GetPlants()[selectEditPlantIndex_].descriptionImageFilePath_.c_str());
 	}
 	else ImGui::Text("No object selected");
 }
@@ -650,7 +651,8 @@ void GameEditor::DrawPlantOutLiner()
 					3,
 					true,
 					"defaultPlant.fbx",
-					"dafaultPlant.png"
+					"dafaultPlant.png",
+					"defaultPlantDescription.png"
 					});
 			}
 
@@ -828,6 +830,11 @@ void GameEditor::DrawAddPlantWindow()
 	ImGui::SameLine();
 	if (ImGui::Button(":set Image")) imageFilePath = GetPNGFilePath();
 
+	static string descriptionImageFilePath = "defaultPlant.png";
+	ImGui::InputText(":setting descriptionImageFilePath", &descriptionImageFilePath[0], descriptionImageFilePath.size());
+	ImGui::SameLine();
+	if (ImGui::Button(":set DescriptionImage")) descriptionImageFilePath = GetPNGFilePath();
+
 	ImGui::Separator();
 
 	// 「Add」ボタンを無効化する
@@ -839,7 +846,8 @@ void GameEditor::DrawAddPlantWindow()
 			areaNumber,
 			isSpawn,
 			modelFilePath,
-			imageFilePath
+			imageFilePath,
+			descriptionImageFilePath
 			});
 	}
 	else if (!isValid) {

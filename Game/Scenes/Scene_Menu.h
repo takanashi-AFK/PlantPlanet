@@ -23,7 +23,9 @@ private:
 	UIButton* playReturnButton;
 	UIImage* backGround;
 	UIImage* playBackGround;
+	UIImage* descriptionImage;
 	std::vector<PlantData> countedPlantData_;
+	std::vector<UIButton*> plantButtonList;
 
 	std::vector<UIObject*> uiObject_;
 
