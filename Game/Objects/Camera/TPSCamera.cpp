@@ -124,11 +124,11 @@ void TPSCamera::CalcRotateAngle(XMFLOAT3 _mouseMove, XMFLOAT3 _padMove)
 
 void TPSCamera::CalcCameraPositionAndTarget(XMFLOAT3& _cameraPosition, XMFLOAT3& _camaraTarget)
 {
-    // 回転の中心を設定１⃣
+    // 回転の中心を設定
     XMFLOAT3 center = pTarget_->GetPosition();
     center.y += targetHeight_;
 
-    // ｙ軸の回転を行うs
+    // y軸の回転を行う
     {
         // 回転行列を作成
         XMMATRIX rotateY = XMMatrixRotationY(XMConvertToRadians(angle_.y));
