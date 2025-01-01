@@ -249,6 +249,21 @@ void UIPanel::CheckSelectingButton()
 	selectingButton_ = nullptr;
 }
 
+void UIPanel::SetSelectingButton(int16_t x, int16_t y)
+{
+	for (auto& itr : arrayButton_)
+	{
+		int16_t tempX;
+		int16_t tempY;
+		itr->GetArrayPlace(&tempX, &tempY);
+		if (tempX == x && tempY == y)
+		{
+			selectingButton_ = itr;
+			return;
+		}
+	}
+}
+
 std::vector<UIButton*> UIPanel::GetSelectorMovable(SELECTOR_MOVE_TO way)
 {
 	std::vector<UIButton*> sameLinebuttons{};

@@ -37,6 +37,7 @@ void UIButton::Update()
         return;
     }
 
+	static UIPanel* panel = UIPanel::GetInstance();
     // マウスの座標を取得
     XMFLOAT2 mousePos = { Input::GetMousePosition().x,Input::GetMousePosition().y };
 
@@ -44,6 +45,12 @@ void UIButton::Update()
     ConvertToImageCoordinates(mousePos);
 
     shaderType_ = IsMouseOver(mousePos) ? Direct3D::SHADER_BUTTON_SELECT : Direct3D::SHADER_BUTTON_NOTSELECT;
+
+    if(panel->GetSelectingButton() != nullptr)
+	if (panel->GetSelectingButton() == this){
+			shaderType_ = Direct3D::SHADER_BUTTON_SELECT;
+	}
+	
 
     Image::SetAlpha(imageHandle_, 256);
 }

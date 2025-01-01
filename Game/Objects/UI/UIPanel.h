@@ -106,6 +106,9 @@ public:
 
 	void CheckSelectingButton();
 
+	// 選択するボタンのarrayを強制的に決定
+	void SetSelectingButton(int16_t x, int16_t y);
+
 private:
 
 	std::vector<UIButton*> GetSelectorMovable(SELECTOR_MOVE_TO way);
