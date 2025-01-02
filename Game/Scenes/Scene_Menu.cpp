@@ -51,7 +51,7 @@ void Scene_Menu::Update()
 {
 	// タブボタンの処理
 	for (auto tabButton : tabButtonList) {
-		if (tabButton->OnClick() || tabButton == panel->GetSelectingButton()) {
+		if (tabButton->OnClick()) {
 			const std::string& objectName = tabButton->GetObjectName();
 
 			if (objectName == "TAB-PlayButton" && currentMenuType != PLAY) {
@@ -68,35 +68,19 @@ void Scene_Menu::Update()
 			}
 		}
 	}
-	int x, y;
-	panel->GetButtonIndex(&x, &y);
 
-	// 現在の選択中ボタン
-	UIButton* currentButton = panel->GetSelectingButton();
-
+	
+	// LB,RBでタブを切り替える
 	if (Input::IsPadButtonDown(XINPUT_GAMEPAD_LEFT_SHOULDER)) {
-		// 現在の選択中のボタンを取得
-
-		if (currentButton == nullptr) {
-			panel->SetSelectingButton(0,0);
-		}
-		else {
-			// 現在のタブを取得して左に移動
-				panel->SelectorMove(UIPanel::SELECTOR_MOVE_TO::LEFT);
-			
+		// プレイ(一番左)の場合、左には移動しない
+		if (currentMenuType != PLAY) {
+			SetMenuType((MenuType)((currentMenuType - 1)));
 		}
 	}
-
 	if (Input::IsPadButtonDown(XINPUT_GAMEPAD_RIGHT_SHOULDER)) {
-		// 現在の選択中のボタンを取得
-
-		if (currentButton == nullptr) {
-			panel->SetSelectingButton(0,0);
-		}
-		else {
-			// 現在のタブを取得して右に移動
-			panel->SelectorMove(UIPanel::SELECTOR_MOVE_TO::RIGHT);
-
+		// オプション(一番右)の場合、右には移動しない
+		if (currentMenuType != OPTION) {
+			SetMenuType((MenuType)((currentMenuType + 1)));
 		}
 	}
 
@@ -125,8 +109,6 @@ void Scene_Menu::Update()
 	default:
 		break;
 	}
-
-	ImGui::Text("%d,%d", x, y);
 }
 
 void Scene_Menu::Draw()
@@ -166,6 +148,13 @@ void Scene_Menu::Play()
 			if (playUI->GetObjectName().starts_with("PLAY-POPUP"))
 				popUpUIList_.push_back(playUI);
 
+		}
+
+		for (auto tab : tabButtonList) {
+			if (tab->GetObjectName() == "TAB-PlayButton")tab->SetImage("Images/MenuScene/PlayButton_Selected.png");
+			else if (tab->GetObjectName() == "TAB-IndexButton")tab->SetImage("Images/MenuScene/IndexButton_UnSelected.png");
+			else if (tab->GetObjectName() == "TAB-RankingButton")tab->SetImage("Images/MenuScene/RankingButton_UnSelected.png");
+			else if (tab->GetObjectName() == "TAB-OptionButton")tab->SetImage("Images/MenuScene/OptionButton_UnSelected.png");
 		}
 		isFirstChange_ = false;
 
@@ -247,6 +236,14 @@ void Scene_Menu::Index()
 				}
 			}
 		}
+
+		for (auto tab : tabButtonList) {
+			if (tab->GetObjectName() == "TAB-PlayButton")tab->SetImage("Images/MenuScene/PlayButton_UnSelected.png");
+			else if (tab->GetObjectName() == "TAB-IndexButton")tab->SetImage("Images/MenuScene/IndexButton_Selected.png");
+			else if (tab->GetObjectName() == "TAB-RankingButton")tab->SetImage("Images/MenuScene/RankingButton_UnSelected.png");
+			else if (tab->GetObjectName() == "TAB-OptionButton")tab->SetImage("Images/MenuScene/OptionButton_UnSelected.png");
+		}
+
 		descriptionImage->SetVisible(false);
 		isFirstChange_ = false;
 	}

@@ -12,7 +12,7 @@ private:
 
 	enum MenuType
 	{
-		PLAY,
+		PLAY = 0,
 		INDEX,
 		RANKING,
 		OPTION,
