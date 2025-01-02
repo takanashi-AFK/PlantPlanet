@@ -959,31 +959,34 @@ void Component_PlayerBehavior::AdjustCameraDistance()
 	TPSCamera* cam = (TPSCamera*)holder_->FindObject("TPSCamera");
 
 	float distance = 3;
-	
+
 	Stage* pStage = (Stage*)(holder_->FindObject("Stage"));
 	if (pStage == nullptr) return;
 	std::vector<StageObject*> stageObj = pStage->GetStageObjects();
 	for (auto obj : stageObj) {
-		// 自分自身のオブジェクトだったらスキップ
-		auto str =obj->GetObjectName();
-		if (obj->GetObjectName() == holder_->GetObjectName() || !obj->GetIsColliding())
+		
+		// タイプがNONE以外だったらスキップ
+		if (obj->GetObjectType() != StageObject::TYPE_NONE )
 			continue;
 
-		// モデルハンドルを取得
 		int hGroundModel = obj->GetModelHandle();
 		if (hGroundModel < 0) continue;
 
 		auto tgt = cam->GetTarget()->GetPosition();
-		// 正面方向にレイを発射
 		RayCastData rayData;
 		{
-			XMStoreFloat3(&rayData.dir, XMVector3Normalize(Camera::GetSightLine()));
-			rayData.start = cam->GetPosition(); // レイの発射位置
+			XMStoreFloat3(&rayData.dir, XMVector3Normalize(-Camera::GetSightLine()));
+			rayData.start = Camera::GetTarget(); // レイの発射位置
 			Model::RayCast(hGroundModel, &rayData); // レイを発射
 		}
 
 		distance = rayData.hit && (rayData.dist <= distance) && (rayData.dist > .0) ? rayData.dist : distance;
 	}
+	
+	ImGui::Text(std::format("CAM : {},{},{}\nPLY : {},{},{}",
+		Camera::GetTarget().x, Camera::GetTarget().y, Camera::GetTarget().z,
+		holder_->GetPosition().x, holder_->GetPosition().y, holder_->GetPosition().z).c_str());
+
 	cam->SetTargetDistance(distance);
 }
 
