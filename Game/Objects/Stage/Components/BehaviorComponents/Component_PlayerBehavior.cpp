@@ -963,31 +963,21 @@ void Component_PlayerBehavior::AdjustCameraDistance()
 	Stage* pStage = (Stage*)(holder_->FindObject("Stage"));
 	if (pStage == nullptr) return;
 	std::vector<StageObject*> stageObj = pStage->GetStageObjects();
+	std::list<int> forRaycastModels = {};
+
 	for (auto obj : stageObj) {
-		
+
 		// タイプがNONE以外だったらスキップ
-		if (obj->GetObjectType() != StageObject::TYPE_NONE )
+		if (obj->GetObjectType() != StageObject::TYPE_NONE)
 			continue;
 
 		int hGroundModel = obj->GetModelHandle();
 		if (hGroundModel < 0) continue;
 
-		auto tgt = cam->GetTarget()->GetPosition();
-		RayCastData rayData;
-		{
-			XMStoreFloat3(&rayData.dir, XMVector3Normalize(-Camera::GetSightLine()));
-			rayData.start = Camera::GetTarget(); // レイの発射位置
-			Model::RayCast(hGroundModel, &rayData); // レイを発射
-		}
-
-		distance = rayData.hit && (rayData.dist <= distance) && (rayData.dist > .0) ? rayData.dist : distance;
+		forRaycastModels.push_back(obj->GetModelHandle());
 	}
-	
-	ImGui::Text(std::format("CAM : {},{},{}\nPLY : {},{},{}",
-		Camera::GetTarget().x, Camera::GetTarget().y, Camera::GetTarget().z,
-		holder_->GetPosition().x, holder_->GetPosition().y, holder_->GetPosition().z).c_str());
 
-	cam->SetTargetDistance(distance);
+	cam->SetRayCastList(forRaycastModels);
 }
 
 int Component_PlayerBehavior::GetResearchPointByRarity(PlantData _plantData)
