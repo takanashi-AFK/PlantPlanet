@@ -9,8 +9,8 @@ private:
 	int imageHandle_;		// ‰æ‘œƒnƒ“ƒhƒ‹
 	Direct3D::SHADER_TYPE shaderType_;
 
-	int16_t arrayPlaceX_;
-	int16_t arrayPlaceY_;
+	int arrayPlaceX_;
+	int arrayPlaceY_;
 	bool isSetShader_;
 
 public:
@@ -39,8 +39,8 @@ public:
 	/// <summary> ImGui•\Ž¦ </summary>
 	void DrawData() override;
 
-	void SetArrayPlace(int16_t x, int16_t y);
-	void GetArrayPlace(int16_t* x, int16_t* y) const;
+	void SetArrayPlace(int x, int y);
+	void GetArrayPlace(int* x, int* y) const;
 
 	string GetImageFilePath() const { return imageFilePath_; }
 

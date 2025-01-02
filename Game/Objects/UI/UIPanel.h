@@ -78,8 +78,8 @@ private:
 private:
 
 	std::list<UIButton*>  arrayButton_;
-	int16_t buttonIndexX_;
-	int16_t buttonIndexY_;
+	int buttonIndexX_;
+	int buttonIndexY_;
 	UIButton* selectingButton_;
 
 public:
@@ -94,8 +94,8 @@ public:
 		AMOUNT
 	};
 
-	bool SetButtonArrayIndex(int16_t x, int16_t y);
-	void GetButtonIndex(int16_t* x, int16_t* y);
+	bool SetButtonArrayIndex(int x, int y);
+	void GetButtonIndex(int* x, int* y);
 	UIButton* GetSelectingButton();
 	void SetCursorToSelectingButton();
 	void SelectorMove(SELECTOR_MOVE_TO way);
@@ -107,7 +107,8 @@ public:
 	void CheckSelectingButton();
 
 	// 選択するボタンのarrayを強制的に決定
-	void SetSelectingButton(int16_t x, int16_t y);
+	void SetSelectingButton(int x, int y);
+
 
 private:
 

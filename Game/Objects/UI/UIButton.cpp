@@ -84,8 +84,8 @@ void UIButton::Load(json& loadObj)
         SetImage(imageFilePath_);
     }
 
-    if (loadObj.contains("ArrayPlace_X")) arrayPlaceX_ = loadObj["ArrayPlace_X"].get<int16_t>();
-    if (loadObj.contains("ArrayPlace_Y")) arrayPlaceY_ = loadObj["ArrayPlace_Y"].get<int16_t>();
+    if (loadObj.contains("ArrayPlace_X")) arrayPlaceX_ = loadObj["ArrayPlace_X"].get<int>();
+    if (loadObj.contains("ArrayPlace_Y")) arrayPlaceY_ = loadObj["ArrayPlace_Y"].get<int>();
 }
 
 void UIButton::DrawData()
@@ -169,13 +169,13 @@ void UIButton::DrawData()
     }
 }
 
-void UIButton::SetArrayPlace(int16_t x, int16_t y)
+void UIButton::SetArrayPlace(int x, int y)
 {
     arrayPlaceX_ = x;
     arrayPlaceY_ = y;
 }
 
-void UIButton::GetArrayPlace(int16_t* x, int16_t* y) const
+void UIButton::GetArrayPlace(int* x, int* y) const
 {
     *x = arrayPlaceX_;
     *y = arrayPlaceY_;

@@ -36,6 +36,7 @@ private:
 	std::vector<UIObject*>	rankingUIList_;
 	std::vector<UIObject*>	optionUIList_;
 	bool isFirstChange_;
+	bool isFirstSelectButton_;
 public:
 	/// <summary> コンストラクタ </summary>
 	Scene_Menu(GameObject* _parent);

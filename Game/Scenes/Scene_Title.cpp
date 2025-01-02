@@ -51,22 +51,33 @@ void Scene_Title::Update()
 		}
 
 		for (auto button : uiPanel->GetUIObjects()) {
-			// 名前がstartButtonのボタンがあったらかつ、選択中のボタンがなにかあったら
-			if (((UIButton*)button)->GetObjectName() == "startButton" && uiPanel->GetSelectingButton() != nullptr) {
-				//selectingButton_がstartButtonで、かつAボタンが押されたら or ボタンがマウスによって押されたら
-				if (uiPanel->GetSelectingButton()->GetObjectName() == ((UIButton*)button)->GetObjectName() && Input::IsPadButtonDown(XINPUT_GAMEPAD_A) ||
-					((UIButton*)button)->OnClick()) {
-					// シーンマネージャーを取得してシーンを変更
-					SceneManager* sceneManager = (SceneManager*)FindObject("SceneManager");
+			UIButton* uiButton = static_cast<UIButton*>(button);
+
+			// ボタン名を取得
+			const std::string& buttonName = uiButton->GetObjectName();
+
+			// マウスでクリックされた場合の処理
+			if (uiButton->OnClick()) {
+				if (buttonName == "startButton") {
+					SceneManager* sceneManager = static_cast<SceneManager*>(FindObject("SceneManager"));
 					sceneManager->ChangeScene(SCENE_ID_MENU, TID_BLACKOUT);
 				}
-			}
-			else if (((UIButton*)button)->GetObjectName() == "EndButton" && uiPanel->GetSelectingButton() != nullptr) {
-				//selectingButton_がEndButtonで、かつAボタンが押されたら or ボタンがマウスによって押されたら
-				if (uiPanel->GetSelectingButton()->GetObjectName() == ((UIButton*)button)->GetObjectName() && Input::IsPadButtonDown(XINPUT_GAMEPAD_A) ||
-					((UIButton*)button)->OnClick()) {
+				else if (buttonName == "EndButton") {
 					PostQuitMessage(0);
+				}
+				continue; // 他の条件をチェックしない
+			}
 
+			// パッドでの選択状態とAボタンの処理
+			if (uiPanel->GetSelectingButton() != nullptr &&
+				uiPanel->GetSelectingButton()->GetObjectName() == buttonName &&
+				Input::IsPadButtonDown(XINPUT_GAMEPAD_A)) {
+				if (buttonName == "startButton") {
+					SceneManager* sceneManager = static_cast<SceneManager*>(FindObject("SceneManager"));
+					sceneManager->ChangeScene(SCENE_ID_MENU, TID_BLACKOUT);
+				}
+				else if (buttonName == "EndButton") {
+					PostQuitMessage(0);
 				}
 			}
 		}

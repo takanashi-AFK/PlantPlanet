@@ -158,7 +158,7 @@ void GameEditor::DrawUIPanelOutLiner()
 	{
 		auto ins = UIPanel::GetInstance();
 		ins->CheckSelectingButton();
-		int16_t x, y;
+		int x, y;
 		ins->GetButtonIndex(&x, &y);
 
 		ImGui::Text(std::format("<{},{}>",x,y ).c_str());

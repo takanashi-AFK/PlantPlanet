@@ -5,6 +5,7 @@
 #include "../../Engine/SceneManager.h"
 #include "../Plants/PlantCollection.h"
 #include "../../Engine/ImGui/ImGui.h"
+#include "../../Engine/DirectX/Input.h"
 using namespace Constants;
 
 
@@ -43,7 +44,7 @@ void Scene_Menu::Initialize()
 		else if (uiItem->GetObjectName() == "BackGround") { backGround = (UIImage*)uiItem; }
 	}
 
-
+	isFirstSelectButton_ = true;
 }
 
 void Scene_Menu::Update()
@@ -67,6 +68,52 @@ void Scene_Menu::Update()
 			}
 		}
 	}
+	int x, y;
+	panel->GetButtonIndex(&x, &y);
+
+	// 現在の選択中ボタン
+	UIButton* currentButton = panel->GetSelectingButton();
+
+	if (Input::IsPadButtonDown(XINPUT_GAMEPAD_LEFT_SHOULDER)) {
+		// 現在の選択中のボタンを取得
+
+		if (currentButton == nullptr) {
+			panel->SetSelectingButton(0,0);
+		}
+		else {
+			// 現在のタブを取得して左に移動
+				panel->SelectorMove(UIPanel::SELECTOR_MOVE_TO::LEFT);
+			
+		}
+	}
+
+	if (Input::IsPadButtonDown(XINPUT_GAMEPAD_RIGHT_SHOULDER)) {
+		// 現在の選択中のボタンを取得
+
+		if (currentButton == nullptr) {
+			panel->SetSelectingButton(0,0);
+		}
+		else {
+			// 現在のタブを取得して右に移動
+			panel->SelectorMove(UIPanel::SELECTOR_MOVE_TO::RIGHT);
+
+		}
+	}
+
+	// DPADで通常ボタンを操作
+	if (Input::IsPadButtonDown(XINPUT_GAMEPAD_DPAD_UP)) {
+		panel->SelectorMove(UIPanel::SELECTOR_MOVE_TO::UP);
+	}
+	else if (Input::IsPadButtonDown(XINPUT_GAMEPAD_DPAD_DOWN)) {
+		panel->SelectorMove(UIPanel::SELECTOR_MOVE_TO::BOTTOM);
+	}
+	else if (Input::IsPadButtonDown(XINPUT_GAMEPAD_DPAD_LEFT)) {
+		panel->SelectorMove(UIPanel::SELECTOR_MOVE_TO::LEFT);
+	}
+	else if (Input::IsPadButtonDown(XINPUT_GAMEPAD_DPAD_RIGHT)) {
+		panel->SelectorMove(UIPanel::SELECTOR_MOVE_TO::RIGHT);
+	}
+
 
 	// 各メニューの処理
 	switch (currentMenuType)
@@ -79,7 +126,7 @@ void Scene_Menu::Update()
 		break;
 	}
 
-
+	ImGui::Text("%d,%d", x, y);
 }
 
 void Scene_Menu::Draw()
