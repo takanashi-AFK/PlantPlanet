@@ -219,4 +219,6 @@ private:
 	void ResetSaladEffectLogo();
 
 	void DrawPopUp();
+
+	void AdjustCameraDistance();
 };

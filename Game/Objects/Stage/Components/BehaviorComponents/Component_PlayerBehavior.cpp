@@ -278,6 +278,7 @@ void Component_PlayerBehavior::Update()
 	lockRotateFrameLeft_ = NULL;
 	lockRotateFrame_ = NULL;
 
+	AdjustCameraDistance();
 }
 
 void Component_PlayerBehavior::Release()
@@ -334,6 +335,7 @@ void Component_PlayerBehavior::Idle()
 	// 状態優先度：歩行 > 射撃
 	// `InputMove`コンポーネントの移動フラグが立っていたら...歩行状態に遷移
 	if (move->IsMove()) SetState(PLAYER_STATE_WALK);
+	
 
 	// マウスの左ボタンが押されていたまたは、マウスの左ボタンが押されてたら、射撃状態に遷移
 	else if (Input::IsMouseButtonDown(0) || Input::IsPadTriggerDownR(0)) {
@@ -950,6 +952,32 @@ void Component_PlayerBehavior::DrawPopUp()
 	else FallPopUp();
 
 	--popUpInfo_.time;
+}
+
+void Component_PlayerBehavior::AdjustCameraDistance()
+{
+	TPSCamera* cam = (TPSCamera*)holder_->FindObject("TPSCamera");
+
+	float distance = 3;
+
+	Stage* pStage = (Stage*)(holder_->FindObject("Stage"));
+	if (pStage == nullptr) return;
+	std::vector<StageObject*> stageObj = pStage->GetStageObjects();
+	std::list<int> forRaycastModels = {};
+
+	for (auto obj : stageObj) {
+
+		// タイプがNONE以外だったらスキップ
+		if (obj->GetObjectType() != StageObject::TYPE_NONE)
+			continue;
+
+		int hGroundModel = obj->GetModelHandle();
+		if (hGroundModel < 0) continue;
+
+		forRaycastModels.push_back(obj->GetModelHandle());
+	}
+
+	cam->SetRayCastList(forRaycastModels);
 }
 
 int Component_PlayerBehavior::GetResearchPointByRarity(PlantData _plantData)
