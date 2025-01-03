@@ -133,7 +133,7 @@ void TPSCamera::CalcRotateAngle(XMFLOAT3 _mouseMove, XMFLOAT3 _padMove)
 	if (angle_.x > ROTATE_LOWER_LIMIT)angle_.x -= _mouseMove.y * sensitivity_;
 }
 
-void TPSCamera::CalcCameraPositionAndTarget(XMFLOAT3& _cameraPosition, XMFLOAT3& _camaraTarget)
+void TPSCamera::CalcCameraPositionAndTarget(XMFLOAT3& _cameraPosition, XMFLOAT3& _cameraTarget)
 {
     // 回転の中心を設定
     XMFLOAT3 center = pTarget_->GetPosition();
@@ -154,7 +154,7 @@ void TPSCamera::CalcCameraPositionAndTarget(XMFLOAT3& _cameraPosition, XMFLOAT3&
 
         // 原点からの位置を求めて、カメラの焦点を設定
         XMVECTOR origin_To_camTarget = XMLoadFloat3(&center) + center_To_camTarget;
-        XMStoreFloat3(&_camaraTarget, origin_To_camTarget);
+        XMStoreFloat3(&_cameraTarget, origin_To_camTarget);
 
         // center_To_camTargetの逆ベクトルを用意
         XMVECTOR center_To_camPosition = -center_To_camTarget;
@@ -170,7 +170,7 @@ void TPSCamera::CalcCameraPositionAndTarget(XMFLOAT3& _cameraPosition, XMFLOAT3&
     // ｘ軸の回転を行う
     {
         // 中心を移動
-        XMVECTOR newCenter = (XMLoadFloat3(&_cameraPosition) + XMLoadFloat3(&_camaraTarget)) * ROTATE_Y;
+        XMVECTOR newCenter = (XMLoadFloat3(&_cameraPosition) + XMLoadFloat3(&_cameraTarget)) * ROTATE_Y;
         XMFLOAT3 prevCenter = center;
         XMStoreFloat3(&center, newCenter);
 
@@ -183,10 +183,10 @@ void TPSCamera::CalcCameraPositionAndTarget(XMFLOAT3& _cameraPosition, XMFLOAT3&
         XMMATRIX rotateAxis = XMMatrixRotationAxis(axis, XMConvertToRadians(angle_.x));
 
         //　焦点を設定 
-        XMVECTOR newCenter_To_camTarget = XMLoadFloat3(&_camaraTarget) - XMLoadFloat3(&center);
+        XMVECTOR newCenter_To_camTarget = XMLoadFloat3(&_cameraTarget) - XMLoadFloat3(&center);
         newCenter_To_camTarget = XMVector3Transform(newCenter_To_camTarget, rotateAxis);
         XMVECTOR origin_To_camTarget = XMLoadFloat3(&center) + newCenter_To_camTarget;
-        XMStoreFloat3(&_camaraTarget, origin_To_camTarget);
+        XMStoreFloat3(&_cameraTarget, origin_To_camTarget);
 
         // 位置を設定
         XMVECTOR newCenter_To_camPosition = -newCenter_To_camTarget;
@@ -197,19 +197,24 @@ void TPSCamera::CalcCameraPositionAndTarget(XMFLOAT3& _cameraPosition, XMFLOAT3&
 
     float rayCastDir = targetDistance_;;
 
-    RayCastData rayCast = {};
-    {
-        auto tTOp = _cameraPosition- _camaraTarget  ;
-        auto tTOpvec = XMLoadFloat3(&tTOp);
-        XMStoreFloat3(&rayCast.dir, XMVector3Normalize(tTOpvec));
-        rayCast.start = _camaraTarget;
-    }
-
     for (auto itr : hModels_) {
-        Model::RayCast(itr, &rayCast);
 
+        RayCastData rayCast = {};
+        auto tTOp = _cameraTarget - _cameraPosition;
+        auto tTOpvec = XMLoadFloat3(&tTOp);
+        tTOpvec = XMVector3Normalize(tTOpvec);
+        XMStoreFloat3(&tTOp, -tTOpvec);
+        rayCast.start = _cameraPosition;
+        rayCast.dir = tTOp ;
+
+        Model::RayCast(itr, &rayCast);
         rayCastDir = rayCast.hit && rayCast.dist > .0f && rayCast.dist < rayCastDir ?
             rayCastDir = rayCast.dist : rayCastDir;
+
+        if (rayCast.hit)
+        {
+            ImGui::Text(std::format("{}",rayCast.dist).c_str());
+        }
     }
 
     center = pTarget_->GetPosition();
@@ -230,7 +235,7 @@ void TPSCamera::CalcCameraPositionAndTarget(XMFLOAT3& _cameraPosition, XMFLOAT3&
 
         // 原点からの位置を求めて、カメラの焦点を設定
         XMVECTOR origin_To_camTarget = XMLoadFloat3(&center) + center_To_camTarget;
-        XMStoreFloat3(&_camaraTarget, origin_To_camTarget);
+        XMStoreFloat3(&_cameraTarget, origin_To_camTarget);
 
         // center_To_camTargetの逆ベクトルを用意
         XMVECTOR center_To_camPosition = -center_To_camTarget;
@@ -246,7 +251,7 @@ void TPSCamera::CalcCameraPositionAndTarget(XMFLOAT3& _cameraPosition, XMFLOAT3&
     // ｘ軸の回転を行う
     {
         // 中心を移動
-        XMVECTOR newCenter = (XMLoadFloat3(&_cameraPosition) + XMLoadFloat3(&_camaraTarget)) * ROTATE_Y;
+        XMVECTOR newCenter = (XMLoadFloat3(&_cameraPosition) + XMLoadFloat3(&_cameraTarget)) * ROTATE_Y;
         XMFLOAT3 prevCenter = center;
         XMStoreFloat3(&center, newCenter);
 
@@ -259,10 +264,10 @@ void TPSCamera::CalcCameraPositionAndTarget(XMFLOAT3& _cameraPosition, XMFLOAT3&
         XMMATRIX rotateAxis = XMMatrixRotationAxis(axis, XMConvertToRadians(angle_.x));
 
         //　焦点を設定 
-        XMVECTOR newCenter_To_camTarget = XMLoadFloat3(&_camaraTarget) - XMLoadFloat3(&center);
+        XMVECTOR newCenter_To_camTarget = XMLoadFloat3(&_cameraTarget) - XMLoadFloat3(&center);
         newCenter_To_camTarget = XMVector3Transform(newCenter_To_camTarget, rotateAxis);
         XMVECTOR origin_To_camTarget = XMLoadFloat3(&center) + newCenter_To_camTarget;
-        XMStoreFloat3(&_camaraTarget, origin_To_camTarget);
+        XMStoreFloat3(&_cameraTarget, origin_To_camTarget);
 
         // 位置を設定
         XMVECTOR newCenter_To_camPosition = -newCenter_To_camTarget;
