@@ -147,6 +147,7 @@ bool UIPanel::SetButtonArrayIndex(int x, int y)
 		{
 			buttonIndexX_ = x;
 			buttonIndexY_ = y;
+			selectingButton_ = itr;
 			return true;
 		}
 	}
@@ -181,7 +182,7 @@ void UIPanel::SelectorMove(SELECTOR_MOVE_TO way)
 	auto asc = [](const UIButton* l,const UIButton* r)->bool
 		{
 			int x, y; l->GetArrayPlace(&x, &y);
-			auto left = x + y;
+			auto left = x + y; 
 
 			r->GetArrayPlace(&x, &y);
 			auto right = x + y;
@@ -247,21 +248,6 @@ void UIPanel::CheckSelectingButton()
 	}
 
 	selectingButton_ = nullptr;
-}
-
-void UIPanel::SetSelectingButton(int x, int y)
-{
-	for (auto& itr : arrayButton_)
-	{
-		int tempX;
-		int tempY;
-		itr->GetArrayPlace(&tempX, &tempY);
-		if (tempX == x && tempY == y)
-		{
-			selectingButton_ = itr;
-			return;
-		}
-	}
 }
 
 std::vector<UIButton*> UIPanel::GetSelectorMovable(SELECTOR_MOVE_TO way)

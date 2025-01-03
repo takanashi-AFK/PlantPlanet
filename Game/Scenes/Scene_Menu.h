@@ -26,6 +26,7 @@ private:
 	UIImage* descriptionImage;
 	std::vector<PlantData> countedPlantData_;
 	std::vector<UIButton*> plantButtonList;
+	std::unordered_map<std::string, PlantData> plantDataMap_;
 
 	std::vector<UIObject*> uiObject_;
 
@@ -37,6 +38,11 @@ private:
 	std::vector<UIObject*>	optionUIList_;
 	bool isFirstChange_;
 	bool isFirstSelectButton_;
+	bool isInputDPad_;
+	bool isPopUpMode_;
+	bool isPopUpModeFirst_;
+
+	int frameCount_;
 public:
 	/// <summary> コンストラクタ </summary>
 	Scene_Menu(GameObject* _parent);
@@ -59,5 +65,7 @@ private:
 	void Ranking();
 
 	void Option();
+
+	void PopUpMode();
 };
 

@@ -35,7 +35,7 @@ void Scene_Title::Update()
 		if (Input::IsPadButtonDown(XINPUT_GAMEPAD_DPAD_LEFT)) {
 			// Å‰‚Ì“ü—Í‚¾‚Á‚½‚ç
 			if (isFirstSelectButton_ == true) {
-				uiPanel->SetSelectingButton(0, 0);
+				uiPanel->SetButtonArrayIndex(0, 0);
 				isFirstSelectButton_ = false;
 			}
 			else
@@ -43,7 +43,7 @@ void Scene_Title::Update()
 		}
 		else if (Input::IsPadButtonDown(XINPUT_GAMEPAD_DPAD_RIGHT)) {
 			if (isFirstSelectButton_ == true) {
-				uiPanel->SetSelectingButton(0, 0);
+				uiPanel->SetButtonArrayIndex(0, 0);
 				isFirstSelectButton_ = false;
 			}
 			else

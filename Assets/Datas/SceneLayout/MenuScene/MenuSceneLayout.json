@@ -130,8 +130,8 @@
     "type_": 2
   },
   "INDEX-Plant0": {
-    "ArrayPlace_X": 1,
-    "ArrayPlace_Y": 1,
+    "ArrayPlace_X": 0,
+    "ArrayPlace_Y": 0,
     "imageFilePath_": "Models/tentativeFlowers/R1_flower_1.png",
     "isVisible_": true,
     "layerNumber_": 24,
@@ -143,7 +143,7 @@
   },
   "INDEX-Plant1": {
     "ArrayPlace_X": 1,
-    "ArrayPlace_Y": 1,
+    "ArrayPlace_Y": 0,
     "imageFilePath_": "Models/tentativeFlowers/R1_flower_1.png",
     "isVisible_": true,
     "layerNumber_": 25,
@@ -154,8 +154,8 @@
     "type_": 1
   },
   "INDEX-Plant2": {
-    "ArrayPlace_X": 1,
-    "ArrayPlace_Y": 1,
+    "ArrayPlace_X": 2,
+    "ArrayPlace_Y": 0,
     "imageFilePath_": "Models/tentativeFlowers/R1_flower_1.png",
     "isVisible_": true,
     "layerNumber_": 26,
@@ -166,8 +166,8 @@
     "type_": 1
   },
   "INDEX-Plant3": {
-    "ArrayPlace_X": 1,
-    "ArrayPlace_Y": 1,
+    "ArrayPlace_X": 3,
+    "ArrayPlace_Y": 0,
     "imageFilePath_": "Models/tentativeFlowers/R1_flower_1.png",
     "isVisible_": true,
     "layerNumber_": 27,
@@ -178,8 +178,8 @@
     "type_": 1
   },
   "INDEX-Plant4": {
-    "ArrayPlace_X": 1,
-    "ArrayPlace_Y": 1,
+    "ArrayPlace_X": 4,
+    "ArrayPlace_Y": 0,
     "imageFilePath_": "Models/tentativeFlowers/R1_flower_1.png",
     "isVisible_": true,
     "layerNumber_": 28,
@@ -190,8 +190,8 @@
     "type_": 1
   },
   "INDEX-Plant5": {
-    "ArrayPlace_X": 1,
-    "ArrayPlace_Y": 1,
+    "ArrayPlace_X": 0,
+    "ArrayPlace_Y": -1,
     "imageFilePath_": "Models/tentativeFlowers/R1_flower_1.png",
     "isVisible_": true,
     "layerNumber_": 29,
@@ -203,7 +203,7 @@
   },
   "INDEX-Plant6": {
     "ArrayPlace_X": 1,
-    "ArrayPlace_Y": 1,
+    "ArrayPlace_Y": -1,
     "imageFilePath_": "Models/tentativeFlowers/R1_flower_1.png",
     "isVisible_": true,
     "layerNumber_": 30,
@@ -214,8 +214,8 @@
     "type_": 1
   },
   "INDEX-Plant7": {
-    "ArrayPlace_X": 1,
-    "ArrayPlace_Y": 1,
+    "ArrayPlace_X": 2,
+    "ArrayPlace_Y": -1,
     "imageFilePath_": "Models/tentativeFlowers/R1_flower_1.png",
     "isVisible_": true,
     "layerNumber_": 31,
@@ -226,8 +226,8 @@
     "type_": 1
   },
   "INDEX-Plant8": {
-    "ArrayPlace_X": 1,
-    "ArrayPlace_Y": 1,
+    "ArrayPlace_X": 3,
+    "ArrayPlace_Y": -1,
     "imageFilePath_": "Models/tentativeFlowers/R1_flower_1.png",
     "isVisible_": true,
     "layerNumber_": 32,
@@ -238,8 +238,8 @@
     "type_": 1
   },
   "INDEX-Plant9": {
-    "ArrayPlace_X": 1,
-    "ArrayPlace_Y": 1,
+    "ArrayPlace_X": 4,
+    "ArrayPlace_Y": -1,
     "imageFilePath_": "Models/tentativeFlowers/R1_flower_1.png",
     "isVisible_": true,
     "layerNumber_": 33,
@@ -260,8 +260,8 @@
     "type_": 2
   },
   "PLAY-POPUP-MODE-ADV": {
-    "ArrayPlace_X": 1,
-    "ArrayPlace_Y": 1,
+    "ArrayPlace_X": 0,
+    "ArrayPlace_Y": 0,
     "imageFilePath_": "Images/resultScene/flower_blue.png",
     "isVisible_": true,
     "layerNumber_": 9,
@@ -272,8 +272,8 @@
     "type_": 1
   },
   "PLAY-POPUP-MODE-RETURNBUTTON": {
-    "ArrayPlace_X": 1,
-    "ArrayPlace_Y": 1,
+    "ArrayPlace_X": 3,
+    "ArrayPlace_Y": 0,
     "imageFilePath_": "Images/MenuScene/returnButton.png",
     "isVisible_": true,
     "layerNumber_": 8,
@@ -285,7 +285,7 @@
   },
   "PLAY-POPUP-MODE-SCA": {
     "ArrayPlace_X": 1,
-    "ArrayPlace_Y": 1,
+    "ArrayPlace_Y": 0,
     "imageFilePath_": "Images/resultScene/flower_red.png",
     "isVisible_": true,
     "layerNumber_": 10,
@@ -296,8 +296,8 @@
     "type_": 1
   },
   "PLAY-POPUP-MODE-TUT": {
-    "ArrayPlace_X": 1,
-    "ArrayPlace_Y": 1,
+    "ArrayPlace_X": 2,
+    "ArrayPlace_Y": 0,
     "imageFilePath_": "Images/resultScene/flower_yerrow.png",
     "isVisible_": true,
     "layerNumber_": 11,
@@ -309,7 +309,7 @@
   },
   "PLAY-PlayButton": {
     "ArrayPlace_X": 1,
-    "ArrayPlace_Y": 2,
+    "ArrayPlace_Y": 1,
     "imageFilePath_": "Images/MenuScene/PlayButton_Selected.png",
     "isVisible_": true,
     "layerNumber_": 6,
@@ -320,8 +320,8 @@
     "type_": 1
   },
   "TAB-IndexButton": {
-    "ArrayPlace_X": 1,
-    "ArrayPlace_Y": 0,
+    "ArrayPlace_X": 100,
+    "ArrayPlace_Y": 100,
     "imageFilePath_": "Images/MenuScene/IndexButton_UnSelected.png",
     "isVisible_": true,
     "layerNumber_": 97,
@@ -332,8 +332,8 @@
     "type_": 1
   },
   "TAB-OptionButton": {
-    "ArrayPlace_X": 3,
-    "ArrayPlace_Y": 0,
+    "ArrayPlace_X": 100,
+    "ArrayPlace_Y": 100,
     "imageFilePath_": "Images/MenuScene/OptionButton_UnSelected.png",
     "isVisible_": true,
     "layerNumber_": 98,
@@ -344,8 +344,8 @@
     "type_": 1
   },
   "TAB-PlayButton": {
-    "ArrayPlace_X": 0,
-    "ArrayPlace_Y": 0,
+    "ArrayPlace_X": 100,
+    "ArrayPlace_Y": 100,
     "imageFilePath_": "Images/MenuScene/PlayButton_UnSelected.png",
     "isVisible_": true,
     "layerNumber_": 96,
@@ -356,8 +356,8 @@
     "type_": 1
   },
   "TAB-RankingButton": {
-    "ArrayPlace_X": 2,
-    "ArrayPlace_Y": 0,
+    "ArrayPlace_X": 100,
+    "ArrayPlace_Y": 100,
     "imageFilePath_": "Images/MenuScene/RankingButton_UnSelected.png",
     "isVisible_": true,
     "layerNumber_": 99,

@@ -163,7 +163,7 @@ getter :*/
 	/// <summary> ƒŒƒCƒ„[”Ô†‚ğæ“¾ </summary>
 	int GetLayerNumber() const { return layerNumber_; }
 
-	int GetMaxLayerNumber();
+	bool IsVisible() { return isVisible_; };
 
 	Component_UIEasing* GetEasing();
 

@@ -106,9 +106,7 @@ public:
 
 	void CheckSelectingButton();
 
-	// 選択するボタンのarrayを強制的に決定
-	void SetSelectingButton(int x, int y);
-
+	std::list<UIButton*> GetArrayList() { return arrayButton_; };
 
 private:
 
