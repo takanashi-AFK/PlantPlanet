@@ -211,10 +211,7 @@ void TPSCamera::CalcCameraPositionAndTarget(XMFLOAT3& _cameraPosition, XMFLOAT3&
         rayCastDir = rayCast.hit && rayCast.dist > .0f && rayCast.dist < rayCastDir ?
             rayCastDir = rayCast.dist : rayCastDir;
 
-        if (rayCast.hit)
-        {
-            ImGui::Text(std::format("{}",rayCast.dist).c_str());
-        }
+        
     }
 
     center = pTarget_->GetPosition();
