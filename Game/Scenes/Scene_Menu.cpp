@@ -8,6 +8,7 @@
 #include "../../Engine/DirectX/Input.h"
 #include "../Otheres/RankingManager.h"
 #include "../Objects/UI/UIText.h"
+
 using namespace Constants;
 
 
@@ -32,6 +33,7 @@ void Scene_Menu::Initialize()
 	if (JsonReader::Load(MENU_SCENE_UI_LAYOUT_JSON, loadData)) 
 		panel->Load(loadData);
 
+	// UIObjectを取得
 	uiObject_ = panel->GetUIObjects();
 
 	// すべてのオブジェクトを各リストに打ち分ける
@@ -45,75 +47,19 @@ void Scene_Menu::Initialize()
 		else if (uiItem->GetObjectName().starts_with("OPTION")) { optionUIList_.push_back(uiItem); }
 		else if (uiItem->GetObjectName() == "BackGround") { backGround = (UIImage*)uiItem; }
 	}
-	// PopUp系かそれ以外かで分ける
-	for (auto playUI : playUIList_) {
-		if (playUI->GetObjectName() == "PLAY-PlayButton")
-			playButton = (UIButton*)playUI;
-		else if (playUI->GetObjectName() == "PLAY-POPUP-BACKGROUND")
-			playBackGround = (UIImage*)playUI;
 
-		else if (playUI->GetObjectName().starts_with("PLAY-POPUP"))
-			popUpUIList_.push_back(playUI);
-
-	}
 	isFirstSelectButton_ = true;
 }
 
 void Scene_Menu::Update()
 {
-	// タブボタンの処理
-	for (auto tabButton : tabButtonList) {
-		if (tabButton->OnClick()) {
-			const std::string& objectName = tabButton->GetObjectName();
 
-			if (objectName == "TAB-PlayButton" && currentMenuType != PLAY) {
-				SetMenuType(PLAY);
-			}
-			else if (objectName == "TAB-IndexButton" && currentMenuType != INDEX) {
-				SetMenuType(INDEX);
-			}
-			else if (objectName == "TAB-RankingButton" && currentMenuType != RANKING) {
-				SetMenuType(RANKING);
-			}
-			else if (objectName == "TAB-OptionButton" && currentMenuType != OPTION) {
-				SetMenuType(OPTION);
-			}
-		}
-	}
+	// タブボタンの操作
+	MouseTabMove();
+	GamePadTabMove();
 
-	
-	// LB,RBでタブを切り替える
-	if (Input::IsPadButtonDown(XINPUT_GAMEPAD_LEFT_SHOULDER)) {
-		// プレイ(一番左)の場合、左には移動しない
-		if (currentMenuType != PLAY) {
-			SetMenuType((MenuType)((currentMenuType - 1)));
-		}
-	}
-	if (Input::IsPadButtonDown(XINPUT_GAMEPAD_RIGHT_SHOULDER)) {
-		// オプション(一番右)の場合、右には移動しない
-		if (currentMenuType != OPTION) {
-			SetMenuType((MenuType)((currentMenuType + 1)));
-		}
-	}
-
-	// DPADで通常ボタンを操作
-	if (Input::IsPadButtonDown(XINPUT_GAMEPAD_DPAD_UP)) {
-		panel->SelectorMove(UIPanel::SELECTOR_MOVE_TO::UP);
-		isInputDPad_ = true;
-	}
-	else if (Input::IsPadButtonDown(XINPUT_GAMEPAD_DPAD_DOWN)) {
-		panel->SelectorMove(UIPanel::SELECTOR_MOVE_TO::BOTTOM);
-		isInputDPad_ = true;
-	}
-	else if (Input::IsPadButtonDown(XINPUT_GAMEPAD_DPAD_LEFT)) {
-		panel->SelectorMove(UIPanel::SELECTOR_MOVE_TO::LEFT);
-		isInputDPad_ = true;
-	}
-	else if (Input::IsPadButtonDown(XINPUT_GAMEPAD_DPAD_RIGHT)) {
-		panel->SelectorMove(UIPanel::SELECTOR_MOVE_TO::RIGHT);
-		isInputDPad_ = true;
-	}
-
+	// ボタンのDPADでの操作
+	DPadMove();
 
 	// 各メニューの処理
 	switch (currentMenuType)
@@ -122,16 +68,6 @@ void Scene_Menu::Update()
 	case INDEX:Index();break;
 	case RANKING:Ranking();break;
 	case OPTION:Option();break;
-	default:
-		break;
-	}
-
-	int x, y;
-	panel->GetButtonIndex(&x, &y);
-	ImGui::Text("x:%d y:%d", x, y);
-
-	if (panel->GetSelectingButton() != nullptr) {
-		ImGui::Text("SelectingButton:%s", panel->GetSelectingButton()->GetObjectName().c_str());
 	}
 }
 
@@ -147,6 +83,17 @@ void Scene_Menu::Play()
 {
 	// 初回のみ処理
 	if (isFirstChange_ == true) {
+
+		// PopUp系かそれ以外かで分ける
+		for (auto playUI : playUIList_) {
+			if (playUI->GetObjectName() == "PLAY-PlayButton")
+				playButton = (UIButton*)playUI;
+			else if (playUI->GetObjectName() == "PLAY-POPUP-BACKGROUND")
+				playBackGround = (UIImage*)playUI;
+			else if (playUI->GetObjectName().starts_with("PLAY-POPUP"))
+				popUpUIList_.push_back(playUI);
+		}
+
 		// 背景とプレイボタン以外のUIを非表示にする
 		for (auto item : panel->GetUIObjects()) {
 			if (std::find(tabButtonList.begin(), tabButtonList.end(), item) == tabButtonList.end() &&
@@ -160,15 +107,8 @@ void Scene_Menu::Play()
 			}
 		};
 
-	
-
 		// タブボタンの画像を変更
-		for (auto tab : tabButtonList) {
-			if (tab->GetObjectName() == "TAB-PlayButton")tab->SetImage("Images/MenuScene/PlayButton_Selected.png");
-			else if (tab->GetObjectName() == "TAB-IndexButton")tab->SetImage("Images/MenuScene/IndexButton_UnSelected.png");
-			else if (tab->GetObjectName() == "TAB-RankingButton")tab->SetImage("Images/MenuScene/RankingButton_UnSelected.png");
-			else if (tab->GetObjectName() == "TAB-OptionButton")tab->SetImage("Images/MenuScene/OptionButton_UnSelected.png");
-		}
+		UpdateTabButtonImages(PLAY);
 
 		panel->ResetArrayOfButton();
 
@@ -178,15 +118,14 @@ void Scene_Menu::Play()
 
 	}
 
-	// playButtooにフォーカスする
+	// playButtonにフォーカスする
 	if (isPopUpMode_ == false && isInputDPad_ == true) {
 		panel->SetButtonArrayIndex(1,1);
 		isInputDPad_ = false;
 	}
 
 	// プレイボタンが押されたらポップアップを表示
-	if (playButton->OnClick() || panel->GetSelectingButton() == playButton && Input::IsPadButtonDown(XINPUT_GAMEPAD_A)) {
-
+	if (ConfirmButton(playButton)) {
 		isPopUpMode_ = true;
 		isPopUpModeFirst_ = true;
 		frameCount_ = 0;
@@ -204,11 +143,13 @@ void Scene_Menu::Play()
 
 void Scene_Menu::Index()
 {
+	static string imageNameHead = "INDEX-Plant";
 	if (isFirstChange_ == true) {
-
+		// globalから今まで取得したことのある植物のデータを取得
 		for (const auto plant : g_playerPlantData) {
 			plantDataMap_[plant.name_] = plant;
 		}
+		// tab,index,background以外のUIを非表示にする
 		for (auto item : panel->GetUIObjects()) {
 			if (std::find(tabButtonList.begin(), tabButtonList.end(), item) == tabButtonList.end() &&
 				std::find(indexUIList_.begin(), indexUIList_.end(), item) == indexUIList_.end() &&
@@ -218,14 +159,15 @@ void Scene_Menu::Index()
 			else {
 				item->SetVisible(true);
 			}
-
 		}
 
+		// カウントした植物のサイズ(何種類知ってるか)を取得
 		int plantDataSize = countedPlantData_.size();
 
+		// 
 		for (auto item : panel->GetUIObjects()) {
 
-			if (item->GetObjectName().starts_with("INDEX-Plant")) {
+			if (item->GetObjectName().starts_with(imageNameHead)) {
 				plantButtonList.push_back((UIButton*)item);
 			}
 		}
@@ -238,20 +180,14 @@ void Scene_Menu::Index()
 
 			// 対応するPlantDataがあるか確認
 			for (auto [key, plantData] : plantDataMap_) {
-				if (button->GetObjectName() == "INDEX-Plant" + std::to_string(plantData.id_)) {
+				if (button->GetObjectName() == imageNameHead + std::to_string(plantData.id_)) {
 					button->SetImage(plantData.imageFilePath_);
 					break; // マッチしたらループ終了
 				}
 			}
 		}
 
-		for (auto tab : tabButtonList) {
-			if (tab->GetObjectName() == "TAB-PlayButton")tab->SetImage("Images/MenuScene/PlayButton_UnSelected.png");
-			else if (tab->GetObjectName() == "TAB-IndexButton")tab->SetImage("Images/MenuScene/IndexButton_Selected.png");
-			else if (tab->GetObjectName() == "TAB-RankingButton")tab->SetImage("Images/MenuScene/RankingButton_UnSelected.png");
-			else if (tab->GetObjectName() == "TAB-OptionButton")tab->SetImage("Images/MenuScene/OptionButton_UnSelected.png");
-		}
-
+		UpdateTabButtonImages(INDEX);
 		panel->ResetArrayOfButton();
 
 		for(auto plantButton : plantButtonList)
@@ -264,18 +200,17 @@ void Scene_Menu::Index()
 
 		panel->SetButtonArrayIndex(0, 0);
 	}
-	const string buttonObjectHeadName = "INDEX-Plant";
 
 	for (auto plantButton : plantButtonList) {
-		if (((UIButton*)plantButton)->OnClick() || panel->GetSelectingButton() == plantButton && Input::IsPadButtonDown(XINPUT_GAMEPAD_A)) {
+		if (ConfirmButton(plantButton)) {
 
 			// 対応するPlantDataがあるか確認
 			for (auto [key, plantData] : plantDataMap_) {
 				// その植物を持っていたら完璧な説明を表示
-				if (plantButton->GetObjectName() == buttonObjectHeadName + std::to_string(plantData.id_)) {
+				if (plantButton->GetObjectName() == imageNameHead + std::to_string(plantData.id_)) {
 					std::string buttonName = ((UIButton*)plantButton)->GetObjectName();
 
-					std::string idString = buttonName.substr(buttonObjectHeadName.size());
+					std::string idString = buttonName.substr(imageNameHead.size());
 
 					int id = std::stoi(idString);
 
@@ -321,53 +256,104 @@ void Scene_Menu::Index()
 
 void Scene_Menu::Ranking()
 {
-	//if (isFirstChange_ == true) {
+	if (isFirstChange_ == true) {
+		// タブボタンの画像を変更
+		UpdateTabButtonImages(RANKING);
 
-	//	// UIパネルを取得
-	//	UIPanel* panel = UIPanel::GetInstance();
+		// tab,ranking,background以外のUIを非表示にする
+		for (auto item : panel->GetUIObjects()) {
+			if (std::find(tabButtonList.begin(), tabButtonList.end(), item) == tabButtonList.end() &&
+				std::find(rankingUIList_.begin(), rankingUIList_.end(), item) == rankingUIList_.end() &&
+				item != backGround) {
+				item->SetVisible(false);
+			}
+			else {
+				item->SetVisible(true);
+			}
 
-	//	// ランキングデータを読み込む
-	//	RankingManager::GetInstance().Load(RANKING_DATA_JSON);
+		}
+		// ランキングデータを読み込む
+		RankingManager::GetInstance().Load(RANKING_DATA_JSON);
+		static int rankingLoopCount_ = 1;
+		// ランキングデータを表示
+		{
+		
+			// ランキングデータを表示
+			{
+				// ランキングデータを取得 ※5位まで
+				for (int i = 1; i <= 5; i++) {
 
-	//	// ランキングデータを表示
-	//	{
-	//		// ランキングデータを取得 ※5位まで
-	//		for (int i = 1; i <= 5; i++) {
+					// ユーザーネームを取得
+					{
+						// UIテキスト名を取得
+						std::string name = "RANKING-rank_userName" + std::to_string(i) ;
+						UIText* text = (UIText*)panel->GetUIObject(name);
 
-	//			// ユーザーネームを取得
-	//			{
-	//				// UIテキスト名を取得
-	//				std::string name = "rank" + std::to_string(i) + "_userName";
-	//				UIText* text = (UIText*)panel->GetUIObject(name);
+						// ユーザーネームを取得
+						string userName = RankingManager::GetInstance().GetUser(i - 1);
 
-	//				// ユーザーネームを取得
-	//				string userName = RankingManager::GetInstance().GetUser(i - 1);
+						// テキストにユーザーネームを設定
+						if (text != nullptr) text->SetText(userName);
+					}
 
-	//				// テキストにユーザーネームを設定
-	//				if (text != nullptr) text->SetText(userName);
-	//			}
+					// スコアを取得
+					{
+						// UIテキスト名を取得
+						std::string name ="RANKING-rank_scoreNum" + std::to_string(i) ;
+						UIText* text = (UIText*)panel->GetUIObject(name);
 
-	//			// スコアを取得
-	//			{
-	//				// UIテキスト名を取得
-	//				std::string name = "rank" + std::to_string(i) + "_scoreNum";
-	//				UIText* text = (UIText*)panel->GetUIObject(name);
+						// スコアを取得
+						string score = std::to_string(RankingManager::GetInstance().GetScore(i - 1));
 
-	//				// スコアを取得
-	//				string score = std::to_string(RankingManager::GetInstance().GetScore(i - 1));
+						// テキストにスコアを設定
+						if (text != nullptr) text->SetText(score);
+					}
+				}
+			}
 
-	//				// テキストにスコアを設定
-	//				if (text != nullptr) text->SetText(score);
-	//			}
-	//		}
-	//	}
-	//}
-
-
+		}
+		isFirstChange_ = false;
+	}
 }
 
 void Scene_Menu::Option()
 {
+	if (isFirstChange_ == true) {
+		// タブボタンの画像を変更
+		UpdateTabButtonImages(OPTION);
+
+		// 背景とプレイボタン以外のUIを非表示にする
+		for (auto item : panel->GetUIObjects()) {
+			if (std::find(tabButtonList.begin(), tabButtonList.end(), item) == tabButtonList.end() &&
+				item != backGround &&
+				item->GetObjectName().starts_with("OPTION") == false) {
+				item->SetVisible(false);
+			}
+			else {
+				item->SetVisible(true);
+				if(item->GetObjectName() == "OPTION-GameEndButton")
+					gameEndButton_ = (UIButton*)item;
+
+			}
+
+		}
+
+		panel->ResetArrayOfButton();
+	
+		if(gameEndButton_ != nullptr)
+		panel->PushButtonToArray(gameEndButton_);
+
+	}
+	// endにフォーカスする
+	if (isInputDPad_ == true) {
+		panel->SetButtonArrayIndex(1, 1);
+		isInputDPad_ = false;
+	}
+
+	if(ConfirmButton(gameEndButton_)){
+		PostQuitMessage(0);
+	}
+
 }
 
 void Scene_Menu::PopUpMode()
@@ -388,34 +374,134 @@ void Scene_Menu::PopUpMode()
 	}
 
 	for (auto popUpUI : popUpUIList_) {
-		if (popUpUI->GetObjectName().starts_with("PLAY-POPUP-MODE")) {
-			if (((UIButton*)popUpUI)->OnClick() ||
-				((UIButton*)popUpUI) == panel->GetSelectingButton() && Input::IsPadButtonDown(XINPUT_GAMEPAD_A)) {
+		if (ConfirmButton((UIButton*)popUpUI)) {
 
-				// 押されたボタンがreturnだったら
-				if (((UIButton*)popUpUI)->GetObjectName() == "PLAY-POPUP-MODE-RETURNBUTTON") {
-					for (auto popUpUI : popUpUIList_) {
+			// 押されたボタンがreturnだったら
+			if (((UIButton*)popUpUI)->GetObjectName() == "PLAY-POPUP-MODE-RETURNBUTTON") {
+				for (auto pop : popUpUIList_) {
+					// ボタン選択対象をリセット後、playButtonを挿入
+					panel->ResetArrayOfButton();
+					panel->PushButtonToArray(playButton);
+					// ポップアップUIを非表示にする
+					pop->SetVisible(false);
+				}
+				playBackGround->SetVisible(false);
+				isPopUpMode_ = false;
+			}
+			else if (((UIButton*)popUpUI)->GetObjectName() == "PLAY-POPUP-MODE-ADV") {
+				SceneManager* sceneManager = (SceneManager*)FindObject("SceneManager");
+				sceneManager->ChangeScene(SCENE_ID_PLAY, TID_BLACKOUT);
+				// ポップアップUIを非表示にする
+				for(auto pop : popUpUIList_)
+					pop->SetVisible(false);
+				playBackGround->SetVisible(false);
 
-						panel->ResetArrayOfButton();
-						panel->PushButtonToArray(playButton);
-						popUpUI->SetVisible(false);
-					}
-					playBackGround->SetVisible(false);
-					isPopUpMode_ = false;
-				}
-				else if (((UIButton*)popUpUI)->GetObjectName() == "PLAY-POPUP-MODE-ADV") {
-					SceneManager* sceneManager = (SceneManager*)FindObject("SceneManager");
-					sceneManager->ChangeScene(SCENE_ID_PLAY, TID_BLACKOUT);
-					isPopUpMode_ = false;
-				}
-				else if (((UIButton*)popUpUI)->GetObjectName() == "PLAY-POPUP-MODE-SCA") {
-					isPopUpMode_ = false;
-				}
-				else if (((UIButton*)popUpUI)->GetObjectName() == "PLAY-POPUP-MODE-TUT") {
-					isPopUpMode_ = false;
-				}
+				isPopUpMode_ = false;
+			}
+			else if (((UIButton*)popUpUI)->GetObjectName() == "PLAY-POPUP-MODE-SCA") {
+				// ポップアップUIを非表示にする
+				for (auto pop : popUpUIList_)
+					pop->SetVisible(false);		
+				playBackGround->SetVisible(false);
 
+				isPopUpMode_ = false;
+			}
+			else if (((UIButton*)popUpUI)->GetObjectName() == "PLAY-POPUP-MODE-TUT") {
+				// ポップアップUIを非表示にする
+				for (auto pop : popUpUIList_)
+					pop->SetVisible(false);
+				playBackGround->SetVisible(false);
+
+				isPopUpMode_ = false;
 			}
 		}
 	}
+}
+
+void Scene_Menu::DPadMove()
+{
+	// DPADで通常ボタンを操作
+	if (Input::IsPadButtonDown(XINPUT_GAMEPAD_DPAD_UP)) { // 上
+		panel->SelectorMove(UIPanel::SELECTOR_MOVE_TO::UP);
+		isInputDPad_ = true;
+	}
+	else if (Input::IsPadButtonDown(XINPUT_GAMEPAD_DPAD_DOWN)) { // 下
+		panel->SelectorMove(UIPanel::SELECTOR_MOVE_TO::BOTTOM);
+		isInputDPad_ = true;
+	}
+	else if (Input::IsPadButtonDown(XINPUT_GAMEPAD_DPAD_LEFT)) { // 左
+		panel->SelectorMove(UIPanel::SELECTOR_MOVE_TO::LEFT);
+		isInputDPad_ = true;
+	}
+	else if (Input::IsPadButtonDown(XINPUT_GAMEPAD_DPAD_RIGHT)) { // 右
+		panel->SelectorMove(UIPanel::SELECTOR_MOVE_TO::RIGHT);
+		isInputDPad_ = true;
+	}
+}
+
+void Scene_Menu::GamePadTabMove()
+{
+	// タブボタンの変更(コントローラ操作)
+	if (Input::IsPadButtonDown(XINPUT_GAMEPAD_LEFT_SHOULDER)) {
+		// プレイ(一番左)の場合、左には移動しない
+		if (currentMenuType != PLAY) {
+			SetMenuType((MenuType)((currentMenuType - 1)));
+		}
+	}
+	if (Input::IsPadButtonDown(XINPUT_GAMEPAD_RIGHT_SHOULDER)) {
+		// オプション(一番右)の場合、右には移動しない
+		if (currentMenuType != OPTION) {
+			SetMenuType((MenuType)((currentMenuType + 1)));
+		}
+	}
+}
+
+void Scene_Menu::MouseTabMove()
+{
+	// タブボタンの変更(マウスでの操作)
+	for (auto tabButton : tabButtonList) {
+		if (tabButton->OnClick()) {
+			const std::string& objectName = tabButton->GetObjectName();
+
+
+			if (objectName == "TAB-PlayButton" && currentMenuType != PLAY) {
+				SetMenuType(PLAY);
+			}
+			else if (objectName == "TAB-IndexButton" && currentMenuType != INDEX) {
+				SetMenuType(INDEX);
+			}
+			else if (objectName == "TAB-RankingButton" && currentMenuType != RANKING) {
+				SetMenuType(RANKING);
+			}
+			else if (objectName == "TAB-OptionButton" && currentMenuType != OPTION) {
+				SetMenuType(OPTION);
+			}
+		}
+	}
+
+}
+
+void Scene_Menu::UpdateTabButtonImages(MenuType _menuType)
+{
+
+	for (auto tab : tabButtonList)
+	{
+		std::string imagePath;
+		if (tab->GetObjectName() == "TAB-PlayButton")
+			imagePath = (_menuType == PLAY) ? "Images/MenuScene/PlayButton_Selected.png" : "Images/MenuScene/PlayButton_UnSelected.png";
+		else if (tab->GetObjectName() == "TAB-IndexButton")
+			imagePath = (_menuType == INDEX) ? "Images/MenuScene/IndexButton_Selected.png" : "Images/MenuScene/IndexButton_UnSelected.png";
+		else if (tab->GetObjectName() == "TAB-RankingButton")
+			imagePath = (_menuType == RANKING) ? "Images/MenuScene/RankingButton_Selected.png" : "Images/MenuScene/RankingButton_UnSelected.png";
+		else if (tab->GetObjectName() == "TAB-OptionButton")
+			imagePath = (_menuType == OPTION) ? "Images/MenuScene/OptionButton_Selected.png" : "Images/MenuScene/OptionButton_UnSelected.png";
+
+		tab->SetImage(imagePath);
+	}
+
+}
+
+bool Scene_Menu::ConfirmButton(UIButton* _button)
+{
+	return _button->OnClick() || panel->GetSelectingButton() == _button && Input::IsPadButtonDown(XINPUT_GAMEPAD_A);
 }

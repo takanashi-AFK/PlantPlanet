@@ -249,6 +249,18 @@
     "scale_": [ 0.07500000298023224, 0.07500000298023224, 1.0 ],
     "type_": 1
   },
+  "OPTION-GameEndButton": {
+    "ArrayPlace_X": 1,
+    "ArrayPlace_Y": 1,
+    "imageFilePath_": "Images/MenuScene/returnButton.png",
+    "isVisible_": true,
+    "layerNumber_": 34,
+    "objectName_": "OPTION-GameEndButton",
+    "position_": [ 0.699999988079071, -0.6000000238418579, 0.0 ],
+    "rotate_": [ 0.0, 0.0, 0.0 ],
+    "scale_": [ 0.5, 0.5, 1.0 ],
+    "type_": 1
+  },
   "PLAY-POPUP-BACKGROUND": {
     "imageFilePath_": "Images/MenuScene/PlayBackGround.png",
     "isVisible_": true,
@@ -318,6 +330,296 @@
     "rotate_": [ 0.0, 0.0, 0.0 ],
     "scale_": [ 1.0, 1.0, 1.0 ],
     "type_": 1
+  },
+  "RANKING-BackGround": {
+    "imageFilePath_": "Images/MenuScene/IndexBackGround.png",
+    "isVisible_": true,
+    "layerNumber_": 35,
+    "objectName_": "RANKING-BackGround",
+    "position_": [ 0.0, 0.0, 0.0 ],
+    "rotate_": [ 0.0, 0.0, 0.0 ],
+    "scale_": [ 1.0, 1.0, 1.0 ],
+    "type_": 2
+  },
+  "RANKING-NameAndScoreFrame1": {
+    "imageFilePath_": "Images/MenuScene/Ranking_FRAME_part.png",
+    "isVisible_": true,
+    "layerNumber_": 42,
+    "objectName_": "RANKING-NameAndScoreFrame1",
+    "position_": [ 0.10000000149011612, 0.5, 0.0 ],
+    "rotate_": [ 0.0, 0.0, 0.0 ],
+    "scale_": [ 0.800000011920929, 1.0, 1.0 ],
+    "type_": 2
+  },
+  "RANKING-NameAndScoreFrame2": {
+    "imageFilePath_": "Images/MenuScene/Ranking_FRAME_part.png",
+    "isVisible_": true,
+    "layerNumber_": 43,
+    "objectName_": "RANKING-NameAndScoreFrame2",
+    "position_": [ 0.10000000149011612, 0.25, 0.0 ],
+    "rotate_": [ 0.0, 0.0, 0.0 ],
+    "scale_": [ 0.800000011920929, 1.0, 1.0 ],
+    "type_": 2
+  },
+  "RANKING-NameAndScoreFrame3": {
+    "imageFilePath_": "Images/MenuScene/Ranking_FRAME_part.png",
+    "isVisible_": true,
+    "layerNumber_": 44,
+    "objectName_": "RANKING-NameAndScoreFrame3",
+    "position_": [ 0.10000000149011612, 0.0, 0.0 ],
+    "rotate_": [ 0.0, 0.0, 0.0 ],
+    "scale_": [ 0.800000011920929, 1.0, 1.0 ],
+    "type_": 2
+  },
+  "RANKING-NameAndScoreFrame4": {
+    "imageFilePath_": "Images/MenuScene/Ranking_FRAME_part.png",
+    "isVisible_": true,
+    "layerNumber_": 45,
+    "objectName_": "RANKING-NameAndScoreFrame4",
+    "position_": [ 0.10000000149011612, -0.25, 0.0 ],
+    "rotate_": [ 0.0, 0.0, 0.0 ],
+    "scale_": [ 0.800000011920929, 1.0, 1.0 ],
+    "type_": 2
+  },
+  "RANKING-NameAndScoreFrame5": {
+    "imageFilePath_": "Images/MenuScene/Ranking_FRAME_part.png",
+    "isVisible_": true,
+    "layerNumber_": 46,
+    "objectName_": "RANKING-NameAndScoreFrame5",
+    "position_": [ 0.10000000149011612, -0.5, 0.0 ],
+    "rotate_": [ 0.0, 0.0, 0.0 ],
+    "scale_": [ 0.800000011920929, 1.0, 1.0 ],
+    "type_": 2
+  },
+  "RANKING-NameAndScoreFrame6": {
+    "imageFilePath_": "Images/MenuScene/Ranking_FRAME_part.png",
+    "isVisible_": true,
+    "layerNumber_": 47,
+    "objectName_": "RANKING-NameAndScoreFrame6",
+    "position_": [ 0.10000000149011612, -0.800000011920929, 0.0 ],
+    "rotate_": [ 0.0, 0.0, 0.0 ],
+    "scale_": [ 0.800000011920929, 1.0, 1.0 ],
+    "type_": 2
+  },
+  "RANKING-RankFrame1": {
+    "imageFilePath_": "Images/MenuScene/Ranking_FRAME_prim.png",
+    "isVisible_": true,
+    "layerNumber_": 36,
+    "objectName_": "RANKING-RankFrame1",
+    "position_": [ -0.800000011920929, 0.5, 0.0 ],
+    "rotate_": [ 0.0, 0.0, 0.0 ],
+    "scale_": [ 0.30000001192092896, 0.30000001192092896, 1.0 ],
+    "type_": 2
+  },
+  "RANKING-RankFrame2": {
+    "imageFilePath_": "Images/MenuScene/Ranking_FRAME_prim.png",
+    "isVisible_": true,
+    "layerNumber_": 37,
+    "objectName_": "RANKING-RankFrame2",
+    "position_": [ -0.800000011920929, 0.25, 0.0 ],
+    "rotate_": [ 0.0, 0.0, 0.0 ],
+    "scale_": [ 0.30000001192092896, 0.30000001192092896, 1.0 ],
+    "type_": 2
+  },
+  "RANKING-RankFrame3": {
+    "imageFilePath_": "Images/MenuScene/Ranking_FRAME_prim.png",
+    "isVisible_": true,
+    "layerNumber_": 38,
+    "objectName_": "RANKING-RankFrame3",
+    "position_": [ -0.800000011920929, -0.0, 0.0 ],
+    "rotate_": [ 0.0, 0.0, 0.0 ],
+    "scale_": [ 0.30000001192092896, 0.30000001192092896, 1.0 ],
+    "type_": 2
+  },
+  "RANKING-RankFrame4": {
+    "imageFilePath_": "Images/MenuScene/Ranking_FRAME_prim.png",
+    "isVisible_": true,
+    "layerNumber_": 39,
+    "objectName_": "RANKING-RankFrame4",
+    "position_": [ -0.800000011920929, -0.25, 0.0 ],
+    "rotate_": [ 0.0, 0.0, 0.0 ],
+    "scale_": [ 0.30000001192092896, 0.30000001192092896, 1.0 ],
+    "type_": 2
+  },
+  "RANKING-RankFrame5": {
+    "imageFilePath_": "Images/MenuScene/Ranking_FRAME_prim.png",
+    "isVisible_": true,
+    "layerNumber_": 40,
+    "objectName_": "RANKING-RankFrame5",
+    "position_": [ -0.800000011920929, -0.5, 0.0 ],
+    "rotate_": [ 0.0, 0.0, 0.0 ],
+    "scale_": [ 0.30000001192092896, 0.30000001192092896, 1.0 ],
+    "type_": 2
+  },
+  "RANKING-RankFrame6": {
+    "imageFilePath_": "Images/MenuScene/Ranking_FRAME_prim.png",
+    "isVisible_": true,
+    "layerNumber_": 41,
+    "objectName_": "RANKING-RankFrame6",
+    "position_": [ -0.800000011920929, -0.800000011920929, 0.0 ],
+    "rotate_": [ 0.0, 0.0, 0.0 ],
+    "scale_": [ 0.30000001192092896, 0.30000001192092896, 1.0 ],
+    "type_": 2
+  },
+  "RANKING-rank_scoreNum1": {
+    "FontData": {
+      "charSize": [ 16, 32 ],
+      "filePath": "Fonts/char.png",
+      "rowLength": 16
+    },
+    "isVisible_": true,
+    "layerNumber_": 53,
+    "objectName_": "RANKING-rank_scoreNum1",
+    "position_": [ 0.25, -0.5, 0.0 ],
+    "rotate_": [ 0.0, 0.0, 0.0 ],
+    "scale_": [ 1.0, 1.0, 1.0 ],
+    "size": 2.0,
+    "text": "11111111111",
+    "type_": 3
+  },
+  "RANKING-rank_scoreNum2": {
+    "FontData": {
+      "charSize": [ 16, 32 ],
+      "filePath": "Fonts/char.png",
+      "rowLength": 16
+    },
+    "isVisible_": true,
+    "layerNumber_": 54,
+    "objectName_": "RANKING-rank_scoreNum2",
+    "position_": [ 0.25, -0.25, 0.0 ],
+    "rotate_": [ 0.0, 0.0, 0.0 ],
+    "scale_": [ 1.0, 1.0, 1.0 ],
+    "size": 2.0,
+    "text": "22222222222",
+    "type_": 3
+  },
+  "RANKING-rank_scoreNum3": {
+    "FontData": {
+      "charSize": [ 16, 32 ],
+      "filePath": "Fonts/char.png",
+      "rowLength": 16
+    },
+    "isVisible_": true,
+    "layerNumber_": 55,
+    "objectName_": "RANKING-rank_scoreNum3",
+    "position_": [ 0.25, 0.0, 0.0 ],
+    "rotate_": [ 0.0, 0.0, 0.0 ],
+    "scale_": [ 1.0, 1.0, 1.0 ],
+    "size": 2.0,
+    "text": "33333333333",
+    "type_": 3
+  },
+  "RANKING-rank_scoreNum4": {
+    "FontData": {
+      "charSize": [ 16, 32 ],
+      "filePath": "Fonts/char.png",
+      "rowLength": 16
+    },
+    "isVisible_": true,
+    "layerNumber_": 56,
+    "objectName_": "RANKING-rank_scoreNum4",
+    "position_": [ 0.25, 0.25, 0.0 ],
+    "rotate_": [ 0.0, 0.0, 0.0 ],
+    "scale_": [ 1.0, 1.0, 1.0 ],
+    "size": 2.0,
+    "text": "44444444444",
+    "type_": 3
+  },
+  "RANKING-rank_scoreNum5": {
+    "FontData": {
+      "charSize": [ 16, 32 ],
+      "filePath": "Fonts/char.png",
+      "rowLength": 16
+    },
+    "isVisible_": true,
+    "layerNumber_": 57,
+    "objectName_": "RANKING-rank_scoreNum5",
+    "position_": [ 0.25, 0.5, 0.0 ],
+    "rotate_": [ 0.0, 0.0, 0.0 ],
+    "scale_": [ 1.0, 1.0, 1.0 ],
+    "size": 2.0,
+    "text": "55555555555",
+    "type_": 3
+  },
+  "RANKING-rank_userName1": {
+    "FontData": {
+      "charSize": [ 16, 32 ],
+      "filePath": "Fonts/char.png",
+      "rowLength": 16
+    },
+    "isVisible_": true,
+    "layerNumber_": 48,
+    "objectName_": "RANKING-rank_userName1",
+    "position_": [ -0.550000011920929, -0.5, 0.0 ],
+    "rotate_": [ 0.0, 0.0, 0.0 ],
+    "scale_": [ 1.0, 1.0, 1.0 ],
+    "size": 2.0,
+    "text": "aaaaaaaaaaa",
+    "type_": 3
+  },
+  "RANKING-rank_userName2": {
+    "FontData": {
+      "charSize": [ 16, 32 ],
+      "filePath": "Fonts/char.png",
+      "rowLength": 16
+    },
+    "isVisible_": true,
+    "layerNumber_": 49,
+    "objectName_": "RANKING-rank_userName2",
+    "position_": [ -0.550000011920929, -0.25, 0.0 ],
+    "rotate_": [ 0.0, 0.0, 0.0 ],
+    "scale_": [ 1.0, 1.0, 1.0 ],
+    "size": 2.0,
+    "text": "aaaaaaaaaaa",
+    "type_": 3
+  },
+  "RANKING-rank_userName3": {
+    "FontData": {
+      "charSize": [ 16, 32 ],
+      "filePath": "Fonts/char.png",
+      "rowLength": 16
+    },
+    "isVisible_": true,
+    "layerNumber_": 50,
+    "objectName_": "RANKING-rank_userName3",
+    "position_": [ -0.550000011920929, 0.0, 0.0 ],
+    "rotate_": [ 0.0, 0.0, 0.0 ],
+    "scale_": [ 1.0, 1.0, 1.0 ],
+    "size": 2.0,
+    "text": "aaaaaaaaaaa",
+    "type_": 3
+  },
+  "RANKING-rank_userName4": {
+    "FontData": {
+      "charSize": [ 16, 32 ],
+      "filePath": "Fonts/char.png",
+      "rowLength": 16
+    },
+    "isVisible_": true,
+    "layerNumber_": 51,
+    "objectName_": "RANKING-rank_userName4",
+    "position_": [ -0.550000011920929, 0.25, 0.0 ],
+    "rotate_": [ 0.0, 0.0, 0.0 ],
+    "scale_": [ 1.0, 1.0, 1.0 ],
+    "size": 2.0,
+    "text": "aaaaaaaaaaa",
+    "type_": 3
+  },
+  "RANKING-rank_userName5": {
+    "FontData": {
+      "charSize": [ 16, 32 ],
+      "filePath": "Fonts/char.png",
+      "rowLength": 16
+    },
+    "isVisible_": true,
+    "layerNumber_": 52,
+    "objectName_": "RANKING-rank_userName5",
+    "position_": [ -0.550000011920929, 0.5, 0.0 ],
+    "rotate_": [ 0.0, 0.0, 0.0 ],
+    "scale_": [ 1.0, 1.0, 1.0 ],
+    "size": 2.0,
+    "text": "aaaaaaaaaaa",
+    "type_": 3
   },
   "TAB-IndexButton": {
     "ArrayPlace_X": 100,

@@ -21,9 +21,11 @@ private:
 	UIPanel* panel;
 	UIButton* playButton;
 	UIButton* playReturnButton;
+	UIButton* gameEndButton_;
 	UIImage* backGround;
 	UIImage* playBackGround;
 	UIImage* descriptionImage;
+
 	std::vector<PlantData> countedPlantData_;
 	std::vector<UIButton*> plantButtonList;
 	std::unordered_map<std::string, PlantData> plantDataMap_;
@@ -56,8 +58,9 @@ public:
 	void Release() override;
 
 private:
-	void SetMenuType(MenuType _type) { isFirstChange_ = true; currentMenuType = _type; }
+	void SetMenuType(MenuType _type) {isFirstChange_ = true; currentMenuType = _type; }
 
+	//　各メニューの処理
 	void Play();
 
 	void Index();
@@ -66,6 +69,25 @@ private:
 
 	void Option();
 
+//==========================================//
+	// ポップアップモード内の処理
 	void PopUpMode();
+
+	// DPADでの操作
+	void DPadMove();
+
+	// LB.RBでのタブ操作
+	void GamePadTabMove();
+
+	// タブボタンの変更(マウスでの操作)
+	void MouseTabMove();
+
+	// タブボタンの画像変更
+	void UpdateTabButtonImages(MenuType _menuType);
+
+	bool ConfirmButton(UIButton* _button);
+
+	bool IsButtonMouseOver(UIButton* _button);
+
 };
 
