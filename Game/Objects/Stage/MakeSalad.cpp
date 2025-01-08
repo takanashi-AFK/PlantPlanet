@@ -1,12 +1,10 @@
 #include "MakeSalad.h"
 #include<algorithm>
 #include"../Stage/Components/BehaviorComponents/Component_PlayerBehavior.h"
+#include "../../../Engine/ImGui/imgui.h"
+#include<format>
 
 MakeSalad::MakeSalad() :salad_{}, pArray_{ nullptr }, recipe_{}
-{
-}
-
-MakeSalad::~MakeSalad()
 {
 	auto breakableWall = [](Component_PlayerBehavior* player)->PlantData::FuncValue
 		{
@@ -22,6 +20,11 @@ MakeSalad::~MakeSalad()
 		};
 
 	specialMenuFuncs.push_back(breakableWall);
+}
+
+MakeSalad::~MakeSalad()
+{
+	
 }
 
 void MakeSalad::SetRecipeDatum(type p, int index)
@@ -67,6 +70,26 @@ Salad MakeSalad::GetSalad()
 
 void MakeSalad::DrawData()
 {
+	for (auto i = 0u; i < specialMenu_.size(); ++i) {
+		if (ImGui::TreeNode(std::format("Recipe:{}", i).c_str()))
+		{
+			auto& [recipe,func] = specialMenu_[i];
+
+			auto funcValue = static_cast<int>(func);
+			
+			ImGui::DragInt("Recipe 0", &recipe[0].id_);
+			ImGui::DragInt("Recipe 1", &recipe[1].id_);
+			ImGui::DragInt("Recipe 2", &recipe[2].id_);
+			ImGui::DragInt("Function", &funcValue);
+			
+			funcValue = std::clamp(funcValue, 0, static_cast<int>(specialMenuFuncs.size()) - 1);
+			func = static_cast<SPECIAL_FUNC>(funcValue);
+
+			if(ImGui::Button("Delete"))	Delete(i);
+			
+			ImGui::TreePop();
+		}
+	}
 }
 
 void MakeSalad::Save(json& _saveObj)

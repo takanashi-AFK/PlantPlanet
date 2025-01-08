@@ -49,6 +49,10 @@ namespace UIInventory {
 		for (auto ingredient : ingredientTable_) {
 			((UIButton*)ingredient)->SetImage("Models/tentativeFlowers/BlankFlowerImage.png");
 		}
+
+		json load;
+		JsonReader::Load("Datas/Test/SaladMenuTest.json", load);
+		maker_.Load(load);
 	}
 
 	void Update()
