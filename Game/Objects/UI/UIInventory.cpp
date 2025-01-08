@@ -9,6 +9,7 @@
 #include "../../../Engine/ImGui/imgui.h"
 #include "UIText.h"
 #include "../Stage/MakeSalad.h"
+#include "../../../Engine/DirectX/Input.h"
 namespace UIInventory {
 	UIPanel* itemPanel_;
 	std::vector<UIObject*> getPlantTable_;
@@ -22,7 +23,6 @@ namespace UIInventory {
 	StageObject* playerObjects_;
 	Stage* pStage_;
 	Component_PlayerBehavior* playerBehavior_;
-	UIPanel* panel_;
 
 	std::vector<std::string> selectedPlant_;
 	MakeSalad maker_;
@@ -30,6 +30,9 @@ namespace UIInventory {
 	bool showInventory_ = false;
 
 	bool isMadeSalad_ = false;
+
+	bool isFirstSelectButton_ = true;
+
 	void Initialize()
 	{
 		itemPanel_ = UIPanel::GetInstance();
@@ -50,14 +53,41 @@ namespace UIInventory {
 		for (auto ingredient : ingredientTable_) {
 			((UIButton*)ingredient)->SetImage("Models/tentativeFlowers/BlankFlowerImage.png");
 		}
-		panel_->ResetArrayOfButton();
+		itemPanel_->ResetArrayOfButton();
 	}
 
 	void Update()
 	{
-		
+		itemPanel_ = UIPanel::GetInstance();
+		int x, y;
+		itemPanel_->GetButtonIndex(&x, &y);
+
+		ImGui::Text("x:%d y:%d", x, y);
+
+
+
+		if (Input::IsPadButtonDown(XINPUT_GAMEPAD_DPAD_LEFT)) {
+			// 最初の入力だったら
+			if (isFirstSelectButton_ == true && itemPanel_->GetArrayList().size() != 0) {
+				itemPanel_->SetButtonArrayIndex(0, -1);
+				isFirstSelectButton_ = false;
+			}
+			else
+				itemPanel_->SelectorMove(UIPanel::SELECTOR_MOVE_TO::LEFT);
+		}
+		else if (Input::IsPadButtonDown(XINPUT_GAMEPAD_DPAD_RIGHT)) {
+			if (isFirstSelectButton_ == true && itemPanel_->GetArrayList().size() != 0) {
+				itemPanel_->SetButtonArrayIndex(0, -1);
+				isFirstSelectButton_ = false;
+			}
+			else
+				itemPanel_->SelectorMove(UIPanel::SELECTOR_MOVE_TO::RIGHT);
+		}
+
+
+
 		for (auto inv : getPlantTable_) {
-			if (((UIButton*)inv)->OnClick()) {
+			if (Confirm((UIButton*)inv)) {
 				if (((UIButton*)inv)->GetObjectName().starts_with("INV-GetPlant")) {
 
 					if (selectedPlant_.size() >= 3) continue;
@@ -80,13 +110,13 @@ namespace UIInventory {
 					}
 				}
 
-				UIInventory:: InventoryDataSet();
+				InventoryDataSet();
 			}
 		}
 
 		// レシピのボタンを押した場合 
 		for (auto ingre : ingredientTable_) {
-			if (((UIButton*)ingre)->OnClick()) {
+			if (Confirm((UIButton*)ingre)) {
 				if (((UIButton*)ingre)->GetObjectName().starts_with("INV-Ingredients")) {
 
 					// 選択した植物をdecPlant_に追加
@@ -107,14 +137,12 @@ namespace UIInventory {
 							break;
 						}
 					}
-
-
 				}
 					InventoryDataSet();
 			}
 		}
 
-		if (makeButton_->OnClick())
+		if (Confirm(makeButton_))
 		{
 			if (!Check()) return;
 
@@ -160,7 +188,7 @@ namespace UIInventory {
 	{
 		if (pStage_ == nullptr)return;
 
-		panel_->ResetArrayOfButton();
+		itemPanel_->ResetArrayOfButton();
 		// プレイヤー情報を取得
 		{
 			for (auto pb : pStage_->FindComponents(ComponentType::PlayerBehavior))playerBehavior_ = (Component_PlayerBehavior*)pb;
@@ -197,7 +225,7 @@ namespace UIInventory {
 						PlantData plantData = p.second;
 						((UIButton*)getPlantTable_[i])->SetImage(plantData.imageFilePath_);
 						((UIText*)invTextTable_[i])->SetText("x" + std::to_string(plantCount));
-						panel_->PushButtonToArray((UIButton*)getPlantTable_[i]);
+						itemPanel_->PushButtonToArray((UIButton*)getPlantTable_[i]);
 						break;
 					}
 				}
@@ -283,5 +311,11 @@ namespace UIInventory {
 	bool IsMadeSalad()
 	{
 		return isMadeSalad_;
+	}
+	bool Confirm(UIButton* _button)
+	{
+		itemPanel_ = UIPanel::GetInstance();
+
+		return _button->OnClick() || itemPanel_->GetSelectingButton() == _button && Input::IsPadButtonDown(XINPUT_GAMEPAD_A);
 	}
 }

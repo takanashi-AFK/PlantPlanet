@@ -3,7 +3,7 @@
 #include "UIPanel.h"
 #include "../Stage/Stage.h"
 
-
+class UIButton;
 namespace UIInventory
 {
 	void Initialize();
@@ -16,4 +16,5 @@ namespace UIInventory
 	void Make();
 	bool IsShowInventory();
 	bool IsMadeSalad();
+	bool Confirm(UIButton* _button);
 }

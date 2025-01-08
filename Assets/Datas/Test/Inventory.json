@@ -93,7 +93,7 @@
   },
   "INV-GetPlant1-1": {
     "ArrayPlace_X": 0,
-    "ArrayPlace_Y": 0,
+    "ArrayPlace_Y": -1,
     "imageFilePath_": "Images/TT.png",
     "isVisible_": false,
     "layerNumber_": 12,
@@ -105,7 +105,7 @@
   },
   "INV-GetPlant1-2": {
     "ArrayPlace_X": 1,
-    "ArrayPlace_Y": 0,
+    "ArrayPlace_Y": -1,
     "imageFilePath_": "Images/TT.png",
     "isVisible_": false,
     "layerNumber_": 13,
@@ -117,7 +117,7 @@
   },
   "INV-GetPlant1-3": {
     "ArrayPlace_X": 2,
-    "ArrayPlace_Y": 0,
+    "ArrayPlace_Y": -1,
     "imageFilePath_": "Images/TT.png",
     "isVisible_": false,
     "layerNumber_": 14,
@@ -129,7 +129,7 @@
   },
   "INV-GetPlant1-4": {
     "ArrayPlace_X": 3,
-    "ArrayPlace_Y": 0,
+    "ArrayPlace_Y": -1,
     "imageFilePath_": "Images/TT.png",
     "isVisible_": false,
     "layerNumber_": 15,
@@ -141,7 +141,7 @@
   },
   "INV-GetPlant1-5": {
     "ArrayPlace_X": 4,
-    "ArrayPlace_Y": 0,
+    "ArrayPlace_Y": -1,
     "imageFilePath_": "Images/TT.png",
     "isVisible_": false,
     "layerNumber_": 16,
@@ -153,7 +153,7 @@
   },
   "INV-GetPlant1-6": {
     "ArrayPlace_X": 5,
-    "ArrayPlace_Y": 0,
+    "ArrayPlace_Y": -1,
     "imageFilePath_": "Images/TT.png",
     "isVisible_": false,
     "layerNumber_": 17,
@@ -165,7 +165,7 @@
   },
   "INV-GetPlant1-7": {
     "ArrayPlace_X": 6,
-    "ArrayPlace_Y": 0,
+    "ArrayPlace_Y": -1,
     "imageFilePath_": "Images/TT.png",
     "isVisible_": false,
     "layerNumber_": 18,
@@ -177,7 +177,7 @@
   },
   "INV-GetPlant1-8": {
     "ArrayPlace_X": 7,
-    "ArrayPlace_Y": 0,
+    "ArrayPlace_Y": -1,
     "imageFilePath_": "Images/TT.png",
     "isVisible_": false,
     "layerNumber_": 19,
@@ -189,7 +189,7 @@
   },
   "INV-GetPlant2-1": {
     "ArrayPlace_X": 0,
-    "ArrayPlace_Y": -1,
+    "ArrayPlace_Y": -2,
     "imageFilePath_": "Images/TT.png",
     "isVisible_": false,
     "layerNumber_": 20,
@@ -201,7 +201,7 @@
   },
   "INV-GetPlant2-2": {
     "ArrayPlace_X": 1,
-    "ArrayPlace_Y": -1,
+    "ArrayPlace_Y": -2,
     "imageFilePath_": "Images/TT.png",
     "isVisible_": false,
     "layerNumber_": 21,
@@ -213,7 +213,7 @@
   },
   "INV-GetPlant2-3": {
     "ArrayPlace_X": 2,
-    "ArrayPlace_Y": -1,
+    "ArrayPlace_Y": -2,
     "imageFilePath_": "Images/TT.png",
     "isVisible_": false,
     "layerNumber_": 22,
@@ -225,7 +225,7 @@
   },
   "INV-GetPlant2-4": {
     "ArrayPlace_X": 3,
-    "ArrayPlace_Y": -1,
+    "ArrayPlace_Y": -2,
     "imageFilePath_": "Images/TT.png",
     "isVisible_": false,
     "layerNumber_": 23,
@@ -237,7 +237,7 @@
   },
   "INV-GetPlant2-5": {
     "ArrayPlace_X": 4,
-    "ArrayPlace_Y": -1,
+    "ArrayPlace_Y": -2,
     "imageFilePath_": "Images/TT.png",
     "isVisible_": false,
     "layerNumber_": 24,
@@ -249,7 +249,7 @@
   },
   "INV-GetPlant2-6": {
     "ArrayPlace_X": 5,
-    "ArrayPlace_Y": -1,
+    "ArrayPlace_Y": -2,
     "imageFilePath_": "Images/TT.png",
     "isVisible_": false,
     "layerNumber_": 25,
@@ -261,7 +261,7 @@
   },
   "INV-GetPlant2-7": {
     "ArrayPlace_X": 6,
-    "ArrayPlace_Y": -1,
+    "ArrayPlace_Y": -2,
     "imageFilePath_": "Images/TT.png",
     "isVisible_": false,
     "layerNumber_": 26,
@@ -273,7 +273,7 @@
   },
   "INV-GetPlant2-8": {
     "ArrayPlace_X": 7,
-    "ArrayPlace_Y": -1,
+    "ArrayPlace_Y": -2,
     "imageFilePath_": "Images/TT.png",
     "isVisible_": false,
     "layerNumber_": 27,
@@ -285,7 +285,7 @@
   },
   "INV-GetPlant3-1": {
     "ArrayPlace_X": 0,
-    "ArrayPlace_Y": -2,
+    "ArrayPlace_Y": -3,
     "imageFilePath_": "Images/TT.png",
     "isVisible_": false,
     "layerNumber_": 28,
@@ -297,7 +297,7 @@
   },
   "INV-GetPlant3-2": {
     "ArrayPlace_X": 1,
-    "ArrayPlace_Y": -2,
+    "ArrayPlace_Y": -3,
     "imageFilePath_": "Images/TT.png",
     "isVisible_": false,
     "layerNumber_": 29,
@@ -309,7 +309,7 @@
   },
   "INV-GetPlant3-3": {
     "ArrayPlace_X": 2,
-    "ArrayPlace_Y": -2,
+    "ArrayPlace_Y": -3,
     "imageFilePath_": "Images/TT.png",
     "isVisible_": false,
     "layerNumber_": 30,
@@ -321,7 +321,7 @@
   },
   "INV-GetPlant3-4": {
     "ArrayPlace_X": 3,
-    "ArrayPlace_Y": -2,
+    "ArrayPlace_Y": -3,
     "imageFilePath_": "Images/TT.png",
     "isVisible_": false,
     "layerNumber_": 31,
@@ -333,7 +333,7 @@
   },
   "INV-GetPlant3-5": {
     "ArrayPlace_X": 4,
-    "ArrayPlace_Y": -2,
+    "ArrayPlace_Y": -3,
     "imageFilePath_": "Images/TT.png",
     "isVisible_": false,
     "layerNumber_": 32,
@@ -345,7 +345,7 @@
   },
   "INV-GetPlant3-6": {
     "ArrayPlace_X": 5,
-    "ArrayPlace_Y": -2,
+    "ArrayPlace_Y": -3,
     "imageFilePath_": "Images/TT.png",
     "isVisible_": false,
     "layerNumber_": 33,
@@ -357,7 +357,7 @@
   },
   "INV-GetPlant3-7": {
     "ArrayPlace_X": 6,
-    "ArrayPlace_Y": -2,
+    "ArrayPlace_Y": -3,
     "imageFilePath_": "Images/TT.png",
     "isVisible_": false,
     "layerNumber_": 34,
@@ -369,7 +369,7 @@
   },
   "INV-GetPlant3-8": {
     "ArrayPlace_X": 7,
-    "ArrayPlace_Y": -2,
+    "ArrayPlace_Y": -3,
     "imageFilePath_": "Images/TT.png",
     "isVisible_": false,
     "layerNumber_": 35,
@@ -764,8 +764,8 @@
     "type_": 3
   },
   "INV-Ingredients0": {
-    "ArrayPlace_X": 1,
-    "ArrayPlace_Y": 1,
+    "ArrayPlace_X": 0,
+    "ArrayPlace_Y": 0,
     "imageFilePath_": "Images/TT.png",
     "isVisible_": false,
     "layerNumber_": 36,
@@ -777,7 +777,7 @@
   },
   "INV-Ingredients1": {
     "ArrayPlace_X": 1,
-    "ArrayPlace_Y": 1,
+    "ArrayPlace_Y": 0,
     "imageFilePath_": "Images/TT.png",
     "isVisible_": false,
     "layerNumber_": 37,
@@ -788,8 +788,8 @@
     "type_": 1
   },
   "INV-Ingredients2": {
-    "ArrayPlace_X": 1,
-    "ArrayPlace_Y": 1,
+    "ArrayPlace_X": 2,
+    "ArrayPlace_Y": 0,
     "imageFilePath_": "Images/TT.png",
     "isVisible_": false,
     "layerNumber_": 38,
@@ -810,8 +810,8 @@
     "type_": 2
   },
   "INV-MakeButton": {
-    "ArrayPlace_X": 1,
-    "ArrayPlace_Y": 1,
+    "ArrayPlace_X": 3,
+    "ArrayPlace_Y": 0,
     "imageFilePath_": "Images/playScene/space.png",
     "isVisible_": false,
     "layerNumber_": 10,
