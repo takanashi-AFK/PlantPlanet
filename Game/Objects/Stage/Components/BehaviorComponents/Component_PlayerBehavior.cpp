@@ -318,6 +318,10 @@ void Component_PlayerBehavior::EatSalad(Salad salad)
 
 	isEatSaladEnd_ = true;
 
+	SetTimeCollectPlant(defaultTime_CollectPlant);
+	static_cast<Component_MeleeAttack*>(GetChildComponent("MeleeAttack"))->SetPower(defaultPow_Melee);
+	static_cast<Component_ShootAttack*>(GetChildComponent("ShootAttack"))->SetPower(defaultPow_Range);
+	static_cast<Component_WASDInputMove*>(GetChildComponent("InputMove"))->SetSpeed(defaultSpeed_Walk);
 }
 
 void Component_PlayerBehavior::SetTimeCollectPlant(float time)

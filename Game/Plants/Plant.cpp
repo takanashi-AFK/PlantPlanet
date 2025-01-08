@@ -108,7 +108,7 @@ std::function<PlantData::FuncValue(Component_PlayerBehavior*)> PlantData::GetFun
 			ret.amount = 10;
 
 			auto* hp = static_cast<Component_HealthGauge*>(pb->GetChildComponent("PlayerHealthGauge"));
-			if (!hp);// return false;
+			if (!hp) return ret;
 
 			auto healedHP = (hp->GetMax() * 0.1f) + (hp->GetNow());
 			hp->SetNow(healedHP);
@@ -136,7 +136,7 @@ std::function<PlantData::FuncValue(Component_PlayerBehavior*)> PlantData::GetFun
 
 			else
 			{
-				rng->SetPower(pb->defaultPow_Melee);
+				rng->SetPower(pb->defaultPow_Range);
 				ret.isUsable = false;
 			}
 
@@ -169,7 +169,7 @@ std::function<PlantData::FuncValue(Component_PlayerBehavior*)> PlantData::GetFun
 			ret.amount = 25;
 
 			auto* hp = static_cast<Component_HealthGauge*>(pb->GetChildComponent("PlayerHealthGauge"));
-			if (!hp)	;
+			if (!hp)	return ret;
 
 			auto fixedHP = (hp->GetMax() * 1.25);
 			hp->SetMax(fixedHP);
