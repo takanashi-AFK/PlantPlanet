@@ -163,14 +163,14 @@ void Scene_Play::Update()
 			isShowInventoryFirstTime_ = true;
 
 
-			
-				// カーソル固定化の切り替え
-				fixedCursorPos = !fixedCursorPos;
 
-				// カーソルの表示状態を切り替える
-				cursorVisible = !fixedCursorPos;
-				UICursor::ToHide(!cursorVisible);
-			
+			// カーソル固定化の切り替え
+			fixedCursorPos = !fixedCursorPos;
+
+			// カーソルの表示状態を切り替える
+			cursorVisible = !fixedCursorPos;
+			UICursor::ToHide(!cursorVisible);
+
 
 		}
 	}

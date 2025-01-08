@@ -20,7 +20,7 @@ void Scene_Title::Initialize()
 {
 	// UIパネル & レイアウトの読み込み
 	json loadData;
-	if (JsonReader::Load("Datas/Test/Prottype_titleScene_Layout.json", loadData)) UIPanel::GetInstance()->Load(loadData);
+	if (JsonReader::Load("Datas/SceneLayout/title.json", loadData)) UIPanel::GetInstance()->Load(loadData);
 
 	UIPanel* uiPanel = UIPanel::GetInstance();
 	isFirstSelectButton_ = true;
@@ -82,10 +82,7 @@ void Scene_Title::Update()
 			}
 		}
 
-		// ボタンが押されたら
-		if (((UIButton*)UIPanel::GetInstance()->GetUIObject("EndButton"))->OnClick()) {
-			PostQuitMessage(0);
-		}
+
 	}
 
 }

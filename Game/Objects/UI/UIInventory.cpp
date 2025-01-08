@@ -22,6 +22,7 @@ namespace UIInventory {
 	StageObject* playerObjects_;
 	Stage* pStage_;
 	Component_PlayerBehavior* playerBehavior_;
+	UIPanel* panel_;
 
 	std::vector<std::string> selectedPlant_;
 	MakeSalad maker_;
@@ -49,6 +50,7 @@ namespace UIInventory {
 		for (auto ingredient : ingredientTable_) {
 			((UIButton*)ingredient)->SetImage("Models/tentativeFlowers/BlankFlowerImage.png");
 		}
+		panel_->ResetArrayOfButton();
 	}
 
 	void Update()
@@ -158,6 +160,7 @@ namespace UIInventory {
 	{
 		if (pStage_ == nullptr)return;
 
+		panel_->ResetArrayOfButton();
 		// ƒvƒŒƒCƒ„[î•ñ‚ðŽæ“¾
 		{
 			for (auto pb : pStage_->FindComponents(ComponentType::PlayerBehavior))playerBehavior_ = (Component_PlayerBehavior*)pb;
@@ -194,6 +197,7 @@ namespace UIInventory {
 						PlantData plantData = p.second;
 						((UIButton*)getPlantTable_[i])->SetImage(plantData.imageFilePath_);
 						((UIText*)invTextTable_[i])->SetText("x" + std::to_string(plantCount));
+						panel_->PushButtonToArray((UIButton*)getPlantTable_[i]);
 						break;
 					}
 				}
