@@ -4,6 +4,8 @@
 
 class Scene_Title:public GameObject
 {
+private:
+	bool isFirstSelectButton_;
 public:
 	/// <summary> コンストラクタ </summary>
 	Scene_Title(GameObject* parent);

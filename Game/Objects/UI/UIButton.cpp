@@ -37,6 +37,7 @@ void UIButton::Update()
         return;
     }
 
+	static UIPanel* panel = UIPanel::GetInstance();
     // マウスの座標を取得
     XMFLOAT2 mousePos = { Input::GetMousePosition().x,Input::GetMousePosition().y };
 
@@ -44,6 +45,12 @@ void UIButton::Update()
     ConvertToImageCoordinates(mousePos);
 
     shaderType_ = IsMouseOver(mousePos) ? Direct3D::SHADER_BUTTON_SELECT : Direct3D::SHADER_BUTTON_NOTSELECT;
+
+    if(panel->GetSelectingButton() != nullptr)
+	if (panel->GetSelectingButton() == this){
+			shaderType_ = Direct3D::SHADER_BUTTON_SELECT;
+	}
+	
 
     Image::SetAlpha(imageHandle_, 256);
 }
@@ -77,8 +84,8 @@ void UIButton::Load(json& loadObj)
         SetImage(imageFilePath_);
     }
 
-    if (loadObj.contains("ArrayPlace_X")) arrayPlaceX_ = loadObj["ArrayPlace_X"].get<int16_t>();
-    if (loadObj.contains("ArrayPlace_Y")) arrayPlaceY_ = loadObj["ArrayPlace_Y"].get<int16_t>();
+    if (loadObj.contains("ArrayPlace_X")) arrayPlaceX_ = loadObj["ArrayPlace_X"].get<int>();
+    if (loadObj.contains("ArrayPlace_Y")) arrayPlaceY_ = loadObj["ArrayPlace_Y"].get<int>();
 }
 
 void UIButton::DrawData()
@@ -162,13 +169,13 @@ void UIButton::DrawData()
     }
 }
 
-void UIButton::SetArrayPlace(int16_t x, int16_t y)
+void UIButton::SetArrayPlace(int x, int y)
 {
     arrayPlaceX_ = x;
     arrayPlaceY_ = y;
 }
 
-void UIButton::GetArrayPlace(int16_t* x, int16_t* y) const
+void UIButton::GetArrayPlace(int* x, int* y) const
 {
     *x = arrayPlaceX_;
     *y = arrayPlaceY_;
@@ -184,6 +191,16 @@ void UIButton::SetShader(Direct3D::SHADER_TYPE type)
 Direct3D::SHADER_TYPE UIButton::GetShader() const
 {
     return shaderType_;
+}
+
+bool UIButton::GetIsMouseOverThisButton()
+{
+    // マウスの座標を取得
+    XMFLOAT2 mousePos = { Input::GetMousePosition().x,Input::GetMousePosition().y };
+
+    // マウスの座標を画像の座標に変換
+    ConvertToImageCoordinates(mousePos);
+    return IsMouseOver(mousePos);
 }
 
 void UIButton::SetImage(string _imageFilePath)

@@ -15,7 +15,7 @@ private:
 	XMFLOAT2 itemInterval_;
 	int itemNum_;
 	int startLayer_;
-	string fileName_;
+	string filePath_;
 	int lineBreakCount_;
 	UIObject* previewImage_;
 	Transform previewTransform_;

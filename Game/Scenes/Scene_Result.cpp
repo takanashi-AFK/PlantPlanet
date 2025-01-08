@@ -41,7 +41,7 @@ void Scene_Result::Initialize()
 
 	// “¯‚¶A•¨‚Ì”‚ğƒJƒEƒ“ƒg
 	std::unordered_map<std::string, int> countedPlant;
-	for (const auto& plant : g_playerPlantData) {
+	for (const auto& plant : g_thisPlayGetPlantData) {
 		countedPlant[plant.name_]++;
 	}
 

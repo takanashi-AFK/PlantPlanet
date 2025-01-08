@@ -5,7 +5,7 @@
 UIPanel* UIPanel::instance_ = nullptr;
 
 UIPanel::UIPanel()
-	: UIObject()
+	: UIObject(), buttonIndexX_(0), buttonIndexY_(0), selectingButton_(nullptr)
 {
 }
 
@@ -134,12 +134,12 @@ void UIPanel::SetVisible(string _name, bool _visible)
 	}
 }
 //---------------------
-bool UIPanel::SetButtonArrayIndex(int16_t x, int16_t y)
+bool UIPanel::SetButtonArrayIndex(int x, int y)
 {
 	for (auto& itr : arrayButton_)
 	{
-		int16_t tempX;
-		int16_t tempY;
+		int tempX;
+		int tempY;
 
 		itr->GetArrayPlace(&tempX, &tempY);
 
@@ -147,6 +147,7 @@ bool UIPanel::SetButtonArrayIndex(int16_t x, int16_t y)
 		{
 			buttonIndexX_ = x;
 			buttonIndexY_ = y;
+			selectingButton_ = itr;
 			return true;
 		}
 	}
@@ -154,7 +155,7 @@ bool UIPanel::SetButtonArrayIndex(int16_t x, int16_t y)
 	return false;
 }
 
-void UIPanel::GetButtonIndex(int16_t* x, int16_t* y)
+void UIPanel::GetButtonIndex(int* x, int* y)
 {
 	*x = buttonIndexX_;
 	*y = buttonIndexY_;
@@ -180,8 +181,8 @@ void UIPanel::SelectorMove(SELECTOR_MOVE_TO way)
 
 	auto asc = [](const UIButton* l,const UIButton* r)->bool
 		{
-			int16_t x, y; l->GetArrayPlace(&x, &y);
-			auto left = x + y;
+			int x, y; l->GetArrayPlace(&x, &y);
+			auto left = x + y; 
 
 			r->GetArrayPlace(&x, &y);
 			auto right = x + y;
@@ -191,7 +192,7 @@ void UIPanel::SelectorMove(SELECTOR_MOVE_TO way)
 
 	auto des = [](const UIButton* l, const UIButton* r)->bool
 		{
-			int16_t x, y; l->GetArrayPlace(&x, &y);
+			int x, y; l->GetArrayPlace(&x, &y);
 			auto left = x + y;
 
 			r->GetArrayPlace(&x, &y);
@@ -234,8 +235,8 @@ void UIPanel::CheckSelectingButton()
 {
 	for (auto& itr : arrayButton_)
 	{
-		int16_t tempX;
-		int16_t tempY;
+		int tempX;
+		int tempY;
 
 		itr->GetArrayPlace(&tempX, &tempY);
 
@@ -255,8 +256,8 @@ std::vector<UIButton*> UIPanel::GetSelectorMovable(SELECTOR_MOVE_TO way)
 	
 	auto sameVert = [&](UIButton* btn)->void
 		{
-			int16_t tempX = NULL;
-			int16_t tempY = NULL;
+			int tempX = NULL;
+			int tempY = NULL;
 			btn->GetArrayPlace(&tempX, &tempY);
 
 			if (tempX != buttonIndexX_)	return;
@@ -275,8 +276,8 @@ std::vector<UIButton*> UIPanel::GetSelectorMovable(SELECTOR_MOVE_TO way)
 
 	auto sameHori = [&](UIButton* btn)->void
 		{
-			int16_t tempX = NULL;
-			int16_t tempY = NULL;
+			int tempX = NULL;
+			int tempY = NULL;
 			btn->GetArrayPlace(&tempX, &tempY);
 
 			if (tempY != buttonIndexY_)	return;

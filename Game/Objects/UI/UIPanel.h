@@ -78,8 +78,8 @@ private:
 private:
 
 	std::list<UIButton*>  arrayButton_;
-	int16_t buttonIndexX_;
-	int16_t buttonIndexY_;
+	int buttonIndexX_;
+	int buttonIndexY_;
 	UIButton* selectingButton_;
 
 public:
@@ -94,8 +94,8 @@ public:
 		AMOUNT
 	};
 
-	bool SetButtonArrayIndex(int16_t x, int16_t y);
-	void GetButtonIndex(int16_t* x, int16_t* y);
+	bool SetButtonArrayIndex(int x, int y);
+	void GetButtonIndex(int* x, int* y);
 	UIButton* GetSelectingButton();
 	void SetCursorToSelectingButton();
 	void SelectorMove(SELECTOR_MOVE_TO way);
@@ -106,6 +106,13 @@ public:
 
 	void CheckSelectingButton();
 
+	std::list<UIButton*> GetArrayList() { return arrayButton_; };
+
+
+	/// <summary>
+	/// 選択しているボタンを選択解除する
+	/// </summary>
+	void ResetSelectedButton() { selectingButton_ = nullptr; }
 private:
 
 	std::vector<UIButton*> GetSelectorMovable(SELECTOR_MOVE_TO way);

@@ -15,6 +15,7 @@
 #include "../Game/Scenes/Scene_End.h"
 #include "../Game/Scenes/Scene_Ranking.h"
 #include "../Game/Scenes/Scene_DifficultySelect.h"
+#include "../Game/Scenes/Scene_Menu.h"
 
 //コンストラクタ
 SceneManager::SceneManager(GameObject * parent)
@@ -69,6 +70,7 @@ void SceneManager::Update()
 		case SCENE_ID_RESULT:Instantiate<Scene_Result>(this); break;
 		case SCENE_ID_END: Instantiate<Scene_End>(this); break;
 		case SCENE_ID_RANKING: Instantiate<Scene_Ranking>(this); break;
+		case SCENE_ID_MENU: Instantiate<Scene_Menu>(this); break;
 		}
 		Audio::Initialize();
 		currentSceneID_ = nextSceneID_;
