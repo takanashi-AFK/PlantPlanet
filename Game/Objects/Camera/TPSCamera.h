@@ -13,6 +13,7 @@ private:
 	float targetHeight_;	// カメラの高さ
 	float targetDistance_;	// カメラの距離
 	XMVECTOR prevAxis_;		// 前回の軸
+	std::list<int> hModels_;
 
 public:
 	/// <summary> コンストラクタ </summary>
@@ -62,6 +63,7 @@ setter :*/
 	/// <summary> 回転角度の設定 </summary>
 	void SetAngle(XMFLOAT2 angle) { angle_ = angle; }
 
+	void SetRayCastList(std::list<int> list);
 /*
 getter :*/
 	/// <summary> カメラの感度の取得 </summary>
@@ -82,6 +84,7 @@ getter :*/
 	/// <summary> 回転角度の取得 </summary>
 	XMFLOAT2 GetAngle() const { return angle_; }
 
+	std::list<int> GetRayCastList();
 /*
 predicate :*/
 	/// <summary> カメラが有効かどうか </summary>
