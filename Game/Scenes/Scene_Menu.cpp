@@ -194,11 +194,26 @@ void Scene_Menu::Index()
 		panel->PushButtonToArray(plantButton);
 
 
+
 		descriptionImage->SetVisible(false);
 		isFirstChange_ = false;
 		isPopUpMode_ = false;
 
 		panel->SetButtonArrayIndex(0, 0);
+	}
+
+	/*if (Input::IsMouseButtonDown(0)) {
+		panel->ResetSelectedButton();
+	}*/
+
+	for (auto item : plantButtonList) {
+		if (((UIButton*)item)->GetIsMouseOverThisButton()) {
+			panel->ResetSelectedButton();
+			int x, y;
+			item->GetArrayPlace(&x,&y);
+			panel->SetButtonArrayIndex(x, y);
+
+		}
 	}
 
 	for (auto plantButton : plantButtonList) {
@@ -373,6 +388,15 @@ void Scene_Menu::PopUpMode()
 
 	}
 
+	for (auto item : popUpUIList_) {
+		if (((UIButton*)item)->GetIsMouseOverThisButton()) {
+			panel->ResetSelectedButton();
+			int x, y;
+			((UIButton*)item)->GetArrayPlace(&x, &y);
+			panel->SetButtonArrayIndex(x, y);
+
+		}
+	}
 	for (auto popUpUI : popUpUIList_) {
 		if (ConfirmButton((UIButton*)popUpUI)) {
 

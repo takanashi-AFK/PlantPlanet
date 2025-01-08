@@ -108,6 +108,11 @@ public:
 
 	std::list<UIButton*> GetArrayList() { return arrayButton_; };
 
+
+	/// <summary>
+	/// 選択しているボタンを選択解除する
+	/// </summary>
+	void ResetSelectedButton() { selectingButton_ = nullptr; }
 private:
 
 	std::vector<UIButton*> GetSelectorMovable(SELECTOR_MOVE_TO way);

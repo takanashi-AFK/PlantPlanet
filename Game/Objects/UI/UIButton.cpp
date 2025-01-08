@@ -193,6 +193,16 @@ Direct3D::SHADER_TYPE UIButton::GetShader() const
     return shaderType_;
 }
 
+bool UIButton::GetIsMouseOverThisButton()
+{
+    // マウスの座標を取得
+    XMFLOAT2 mousePos = { Input::GetMousePosition().x,Input::GetMousePosition().y };
+
+    // マウスの座標を画像の座標に変換
+    ConvertToImageCoordinates(mousePos);
+    return IsMouseOver(mousePos);
+}
+
 void UIButton::SetImage(string _imageFilePath)
 {
 	imageFilePath_ = _imageFilePath;

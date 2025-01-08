@@ -46,6 +46,8 @@ public:
 
 	void SetShader(Direct3D::SHADER_TYPE type);
 	Direct3D::SHADER_TYPE  GetShader()const;
+
+	bool GetIsMouseOverThisButton();
 /*
 setter :*/
 	/// <summary> 画像ファイルパスを設定 </summary>
