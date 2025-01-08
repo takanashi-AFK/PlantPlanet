@@ -51,7 +51,8 @@ namespace UIInventory {
 		}
 
 		json load;
-		JsonReader::Load("Datas/Test/SaladMenuTest.json", load);
+		//datasってなんだ？しかしこういう名前のディレクトリに誰かがしたので仕方ない
+		JsonReader::Load("Datas/Test/SaladMenu.json", load);
 		maker_.Load(load);
 	}
 
