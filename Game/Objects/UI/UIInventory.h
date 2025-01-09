@@ -16,4 +16,8 @@ namespace UIInventory
 	void Make();
 	bool IsShowInventory();
 	bool IsMadeSalad();
+
+	// A functions that make salad from history
+	void MakeFromHistory();
+
 }
