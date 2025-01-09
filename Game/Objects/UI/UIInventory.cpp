@@ -27,8 +27,11 @@ namespace UIInventory {
 	MakeSalad maker_;
 	UIButton* makeButton_;
 	bool showInventory_ = false;
-
 	bool isMadeSalad_ = false;
+
+	Salad prevSalad;
+	std::array<PlantData, MakeSalad::NEED_PLANT_NUM> prevRecipe_;
+
 	void Initialize()
 	{
 		itemPanel_ = UIPanel::GetInstance();
@@ -49,6 +52,19 @@ namespace UIInventory {
 		for (auto ingredient : ingredientTable_) {
 			((UIButton*)ingredient)->SetImage("Models/tentativeFlowers/BlankFlowerImage.png");
 		}
+
+		prevSalad.effect_0 = PlantData::GetFunction(-1);
+		prevSalad.effect_1 = PlantData::GetFunction(-1);
+		prevSalad.effect_2 = PlantData::GetFunction(-1);
+
+		prevRecipe_[0].id_ = -1;
+		prevRecipe_[1].id_ = -1;
+		prevRecipe_[2].id_ = -1;
+
+		json load;
+		//datasってなんだ？しかしこういう名前のディレクトリに誰かがしたので仕方ない
+		JsonReader::Load("Datas/Test/SaladMenu.json", load);
+		maker_.Load(load);
 	}
 
 	void Update()
@@ -207,7 +223,7 @@ namespace UIInventory {
 				// 取得できない場合は空の画像とテキストを表示
 				if (getPlantTable_[i]->GetObjectName().find("INV-InventoryBack") != 0) {
 					((UIButton*)getPlantTable_[i])->SetImage("Models/tentativeFlowers/BlankFlowerImage.png");
-					((UIText*)invTextTable_[i])->SetText(" ");
+					((UIText*)invTextTable_[i])->SetText("");
 				}
 
 			}
@@ -263,12 +279,17 @@ namespace UIInventory {
 		}
 
 		maker_.Make();
-
+		
 		auto salad = maker_.GetSalad();
 
 		if (!playerBehavior_)	return;
 
 		playerBehavior_->EatSalad(salad);
+
+		prevSalad = salad;
+		for (auto i = 0u; i < MakeSalad::NEED_PLANT_NUM; ++i) {
+			prevRecipe_[i] = maker_.GetRecipeDatum(i);
+		}
 	}
 
 	bool IsShowInventory()

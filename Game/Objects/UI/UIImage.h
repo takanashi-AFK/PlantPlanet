@@ -41,6 +41,9 @@ setter :*/
 	void SetEnable(bool _enable) { isDraw_ = _enable; }
 
 /*
+getter :*/
+	string GetImageFilePath() const { return imageFilePath_; }
+/*
 predicate :*/
 	/// <summary> •`‰æ‚·‚é‚©‚Ç‚¤‚©‚ðŽæ“¾ </summary>
 	bool IsEnable() const { return isDraw_; }
