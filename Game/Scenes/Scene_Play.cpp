@@ -154,7 +154,7 @@ void Scene_Play::Update()
 			//else playerBehavior->SetResearchPoint(playerBehavior->GetResearchPoint() + 1);
 		}
 
-		if (Input::IsKeyDown(DIK_Q)) {
+		if (Input::IsKeyDown(DIK_Q) || Input::IsPadButtonDown(XINPUT_GAMEPAD_B)) {
 			SetState(PlaySceneState::PlaySceneState_Inventory);
 			UIInventory::SetStage(pStage_);
 			UIInventory::InventoryDataSet();
@@ -163,14 +163,14 @@ void Scene_Play::Update()
 			isShowInventoryFirstTime_ = true;
 
 
-			
-				// カーソル固定化の切り替え
-				fixedCursorPos = !fixedCursorPos;
 
-				// カーソルの表示状態を切り替える
-				cursorVisible = !fixedCursorPos;
-				UICursor::ToHide(!cursorVisible);
-			
+			// カーソル固定化の切り替え
+			fixedCursorPos = !fixedCursorPos;
+
+			// カーソルの表示状態を切り替える
+			cursorVisible = !fixedCursorPos;
+			UICursor::ToHide(!cursorVisible);
+
 
 		}
 	}
@@ -180,7 +180,7 @@ void Scene_Play::Update()
 		}
 
 
-		if (Input::IsKeyDown(DIK_Q) || UIInventory::IsShowInventory() == false) {
+		if (Input::IsKeyDown(DIK_Q) || Input::IsPadButtonDown(XINPUT_GAMEPAD_B)||UIInventory::IsShowInventory() == false) {
 			SetState(PlaySceneState::PlaySceneState_Play);
 			UIInventory::ShowInventory(false);
 			EnterOtherObject(this);
