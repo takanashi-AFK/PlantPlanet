@@ -4,16 +4,20 @@
 #include "../../../Engine/ImGui/imgui.h"
 #include<format>
 
+static int plantIDforSpecialFunc = 0;
+
 MakeSalad::MakeSalad() :salad_{}, pArray_{ nullptr }, recipe_{}
 {
-	auto breakableWall = [](Component_PlayerBehavior* player)->PlantData::FuncValue
+	auto breakableWall = [&](Component_PlayerBehavior* player)->PlantData::FuncValue
 		{
 			PlantData::FuncValue ret;
 
 			ret.amount = -1;
 			ret.time = -1;
 			ret.isUsable = false;
-
+			ret.id = plantIDforSpecialFunc;
+			ret.filePath = "Images/SaladEffectLogo/NONE.png";
+			ret.specialText = "Breakable Wall!";
 			player->SetBreakableWall(true);
 
 			return ret;
@@ -157,6 +161,7 @@ void MakeSalad::Delete()
 
 bool MakeSalad::MakeSpecialMenu(std::tuple<Recipe, std::function<PlantData::FuncValue(Component_PlayerBehavior*)>> specialMenu)
 {
+	
 	auto&[menu, func] = specialMenu;
 	auto tempRecipe = recipe_;
 
@@ -173,9 +178,30 @@ bool MakeSalad::MakeSpecialMenu(std::tuple<Recipe, std::function<PlantData::Func
 		tempRecipe[1].id_ == menu[1].id_ &&
 		tempRecipe[2].id_ == menu[2].id_)
 	{
+		plantIDforSpecialFunc = menu[0].id_;
 		salad_.effect_0 = func;
-		salad_.effect_1 = PlantData::GetFunction(-1);
-		salad_.effect_2 = PlantData::GetFunction(-1);
+		salad_.effect_1 = [=](Component_PlayerBehavior* pb)mutable->PlantData::FuncValue
+			{
+				PlantData::FuncValue ret;
+				ret.isUsable = false;
+				ret.time = -1;
+				ret.id = tempRecipe[1].id_;
+				ret.filePath = "Models/tentativeFlowers/BlankFlowerImage.png";
+				ret.amount = -1;
+				ret.specialText = "1";
+				return ret;
+			};
+		salad_.effect_2 = [=](Component_PlayerBehavior* pb)mutable->PlantData::FuncValue
+			{
+				PlantData::FuncValue ret;
+				ret.isUsable = false;
+				ret.time = -1;
+				ret.id = tempRecipe[2].id_;
+				ret.filePath = "Models/tentativeFlowers/BlankFlowerImage.png";
+				ret.amount = -1;
+				ret.specialText = "1";
+				return ret;
+			};
 
 		return true;
 	}

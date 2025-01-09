@@ -133,22 +133,47 @@ void Component_PlayerBehavior::Initialize()
 	}
 
 	popUpInfo_.backGround_ = static_cast<UIImage*>(UIPanel::GetInstance()->FindObject("PopUp-Image-BackGround"));
-	popUpInfo_.images_[0] = static_cast<UIImage*>(UIPanel::GetInstance()->FindObject("PopUp-Image-Effect-Icon0"));
-	popUpInfo_.images_[1] = static_cast<UIImage*>(UIPanel::GetInstance()->FindObject("PopUp-Image-Effect-Icon1"));
-	popUpInfo_.images_[2] = static_cast<UIImage*>(UIPanel::GetInstance()->FindObject("PopUp-Image-Effect-Icon2"));
-
 	popUpInfo_.info_ = static_cast<UIText*>(UIPanel::GetInstance()->FindObject("PopUp-Text-Title"));
-	popUpInfo_.texts_[0] = static_cast<UIText*>(UIPanel::GetInstance()->FindObject("PopUp-Text-Effect0"));
-	popUpInfo_.texts_[1] = static_cast<UIText*>(UIPanel::GetInstance()->FindObject("PopUp-Text-Effect1"));
-	popUpInfo_.texts_[2] = static_cast<UIText*>(UIPanel::GetInstance()->FindObject("PopUp-Text-Effect2"));
 
-	saladEffectLogo_.images_[0]= static_cast<UIImage*>(UIPanel::GetInstance()->FindObject("INV-Effect-Logo0"));
-	saladEffectLogo_.images_[1] = static_cast<UIImage*>(UIPanel::GetInstance()->FindObject("INV-Effect-Logo1"));
-	saladEffectLogo_.images_[2] = static_cast<UIImage*>(UIPanel::GetInstance()->FindObject("INV-Effect-Logo2"));
+	//以下の四つは大きい型のためループ分割
+	for (auto i = 0u; i < NEED_PLANT_NUM; ++i) {
+		
+		popUpInfo_.images_[i] = static_cast<UIImage*>(UIPanel::GetInstance()
+			->FindObject(std::format("PopUp-Image-Effect-Icon{}",i)));
+		popUpInfo_.texts_[i] = static_cast<UIText*>(UIPanel::GetInstance()
+			->FindObject(std::format("PopUp-Text-Effect{}",i)));
 
-	saladEffectLogo_.texts_[0] = static_cast<UIText*>(UIPanel::GetInstance()->FindObject("INV-Effect-Text0"));
-	saladEffectLogo_.texts_[1] = static_cast<UIText*>(UIPanel::GetInstance()->FindObject("INV-Effect-Text1"));
-	saladEffectLogo_.texts_[2] = static_cast<UIText*>(UIPanel::GetInstance()->FindObject("INV-Effect-Text2"));
+		popUpInfo_.images_[i]->SetImage("Models/tentativeFlowers/BlankFlowerImage.png");
+		popUpInfo_.texts_[i]->SetText("");
+	}
+
+	for (auto i = 0u; i < NEED_PLANT_NUM; ++i){
+		
+		saladEffectLogo_.images_[i] = static_cast<UIImage*>(UIPanel::GetInstance()
+			->FindObject(std::format("INV-Effect-Logo{}",i)));
+		saladEffectLogo_.texts_[i] = static_cast<UIText*>(UIPanel::GetInstance()
+			->FindObject(std::format("INV-Effect-Text{}",i)));
+	}
+
+	for (auto i = 0u; i < NEED_PLANT_NUM; ++i) {
+
+		historySaladEffect_.images_[i] = static_cast<UIImage*>(UIPanel::GetInstance()
+			->FindObject(std::format("INV-History-Logo{}", i)));
+		historySaladEffect_.texts_[i] = static_cast<UIText*>(UIPanel::GetInstance()
+			->FindObject(std::format("INV-History-Text{}", i)));
+
+		historySaladEffect_.images_[i]->SetImage("Models/tentativeFlowers/BlankFlowerImage.png");
+		historySaladEffect_.texts_[i]->SetText("");
+	}
+	
+	for (auto i = 0u; i < NEED_PLANT_NUM; ++i) {
+
+		historySaladPlant_[i] = static_cast<UIImage*>(UIPanel::GetInstance()
+			->FindObject(std::format("INV-History-Plant{}", i)));
+		historySaladPlant_[i]->SetImage("Models/tentativeFlowers/BlankFlowerImage.png");
+		plantFilePath_[i] = "Models/tentativeFlowers/BlankFlowerImage.png";
+
+	}
 
 	auto* move = static_cast<Component_WASDInputMove*>(GetChildComponent("InputMove"));
 	move->SetSpeed(this->defaultSpeed_Walk);
@@ -857,15 +882,30 @@ void Component_PlayerBehavior::ApplyEffects()
 
 		if (isRenewalPopUp_)
 		{
+			historySaladPlant_[index]->SetImage(plantFilePath_[index]);
+			historySaladEffect_.images_[index]->SetImage(popUpInfo_.images_[index]->GetImageFilePath());
+			historySaladEffect_.texts_[index]->SetText(popUpInfo_.texts_[index]->GetText());
 
 			popUpInfo_.images_[index]->SetImage(data.filePath);
 
+			constexpr int TOP = 0;
+			constexpr int MIDDLE = 1;
+			constexpr int BOTTOM = 2;
+			
 			string info = data.time != -1 ?
 				std::format("{}% ,{}sec", data.amount, data.time) :
 				std::format("{}%", data.amount);
+			info = (data.specialText == "") ?
+				info :
+				index == TOP ? data.specialText : 
+				index == MIDDLE ? "Special!" : "";
+
 			popUpInfo_.texts_[index]->SetText(info);
 
 			popUpInfo_.time = (3 + 0.5 * 2) * FPS;
+
+			//後ろでもっておく植物画像の更新
+			plantFilePath_[index] = PlantCollection::GetPlants().at(data.id).imageFilePath_;
 
 			++index;
 		}
@@ -874,7 +914,7 @@ void Component_PlayerBehavior::ApplyEffects()
 		{
 			saladEffectLogo_.images_[index]->SetImage(data.filePath);
 			string info = data.time != -1 ?
-				std::format("{}% ,{}sec", data.amount, data.time) :
+				std::format("{}%,{}sec", data.amount, data.time) :
 				std::format("{}%", data.amount);
 			saladEffectLogo_.texts_[index]->SetText(info);
 

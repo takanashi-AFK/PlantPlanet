@@ -99,6 +99,8 @@ private:
 	SaladEffectLogo historySaladEffect_;
 	UIImage* historySaladPlant_[NEED_PLANT_NUM];
 
+	string plantFilePath_[NEED_PLANT_NUM];
+
 public:
 	/// <summary> コンストラクタ </summary>
 	Component_PlayerBehavior(string _name, StageObject* _holder, Component* _parent);
