@@ -93,9 +93,24 @@ namespace UIInventory {
 				itemPanel_->SetButtonArrayIndex(0, -1);
 				isFirstSelectButton_ = false;
 			}
-			else if (y == 0) {
+			else if (y == -1) {
+
 				// inventoryButtonListのなかの、selectablearrayに入ってる且つ一番IDが若いものを選択
-				itemPanel_->SetButtonArrayIndex(0, -1);
+
+				int arrayX = INT_MAX;
+				for (auto inv : ingredientTable_) {
+					for (auto selectable : itemPanel_->GetArrayList()) {
+						if (inv == selectable) {
+							int x, y;
+							((UIButton*)inv)->GetArrayPlace(&x, &y);
+							if (x <= arrayX)
+								arrayX = x;
+						}
+					}
+				}
+
+
+				itemPanel_->SetButtonArrayIndex(arrayX, 0);
 			}
 			else
 				itemPanel_->SelectorMove(UIPanel::SELECTOR_MOVE_TO::UP);
@@ -105,9 +120,23 @@ namespace UIInventory {
 				itemPanel_->SetButtonArrayIndex(3, 0);
 				isFirstSelectButton_ = false;
 			}
-			else if (y == -1) {
+			else if (y == 0) {
+				// inventoryButtonListのなかの、selectablearrayに入ってる且つ一番IDが若いものを選択
 
-				itemPanel_->SetButtonArrayIndex(3, 0);
+				int arrayX = INT_MAX;
+				for (auto inv : getPlantTable_) {
+					for (auto selectable : itemPanel_->GetArrayList()) {
+						if (inv == selectable) {
+							int x, y;
+							((UIButton*)inv)->GetArrayPlace(&x, &y);
+							if (x <= arrayX)
+								arrayX = x;
+						}
+					}
+				}
+
+
+				itemPanel_->SetButtonArrayIndex(arrayX, -1);
 			}
 			else
 				itemPanel_->SelectorMove(UIPanel::SELECTOR_MOVE_TO::BOTTOM);
