@@ -54,6 +54,7 @@ namespace UIInventory {
 			((UIButton*)ingredient)->SetImage("Models/tentativeFlowers/BlankFlowerImage.png");
 		}
 		itemPanel_->ResetArrayOfButton();
+
 	}
 
 	void Update()
@@ -63,6 +64,9 @@ namespace UIInventory {
 		itemPanel_->GetButtonIndex(&x, &y);
 
 		ImGui::Text("x:%d y:%d", x, y);
+		for (auto a : itemPanel_->GetArrayList()) {
+			ImGui::Text(a->GetObjectName().c_str());
+		}
 
 
 
@@ -75,13 +79,42 @@ namespace UIInventory {
 			else
 				itemPanel_->SelectorMove(UIPanel::SELECTOR_MOVE_TO::LEFT);
 		}
-		else if (Input::IsPadButtonDown(XINPUT_GAMEPAD_DPAD_RIGHT)) {
+		if (Input::IsPadButtonDown(XINPUT_GAMEPAD_DPAD_RIGHT)) {
 			if (isFirstSelectButton_ == true && itemPanel_->GetArrayList().size() != 0) {
 				itemPanel_->SetButtonArrayIndex(0, -1);
 				isFirstSelectButton_ = false;
 			}
 			else
 				itemPanel_->SelectorMove(UIPanel::SELECTOR_MOVE_TO::RIGHT);
+		}
+
+		if (Input::IsPadButtonDown(XINPUT_GAMEPAD_DPAD_UP)) {
+			if (isFirstSelectButton_ == true && itemPanel_->GetArrayList().size() != 0) {
+				itemPanel_->SetButtonArrayIndex(0, -1);
+				isFirstSelectButton_ = false;
+			}
+			else if (y == 0) {
+				// inventoryButtonListÇÃÇ»Ç©ÇÃÅAselectablearrayÇ…ì¸Ç¡ÇƒÇÈäéÇ¬àÍî‘IDÇ™é·Ç¢Ç‡ÇÃÇëIë
+				itemPanel_->SetButtonArrayIndex(0, -1);
+			}
+			else
+				itemPanel_->SelectorMove(UIPanel::SELECTOR_MOVE_TO::UP);
+		}
+		if (Input::IsPadButtonDown(XINPUT_GAMEPAD_DPAD_DOWN)) {
+			if (isFirstSelectButton_ == true && itemPanel_->GetArrayList().size() != 0) {
+				itemPanel_->SetButtonArrayIndex(3, 0);
+				isFirstSelectButton_ = false;
+			}
+			else if (y == -1) {
+
+				itemPanel_->SetButtonArrayIndex(3, 0);
+			}
+			else
+				itemPanel_->SelectorMove(UIPanel::SELECTOR_MOVE_TO::BOTTOM);
+		}
+		if (Input::IsPadButtonDown(XINPUT_GAMEPAD_B)) {
+			ShowInventory(false);
+			isFirstSelectButton_ = true;
 		}
 
 
@@ -96,6 +129,7 @@ namespace UIInventory {
 					for (auto& a : allPlantData) {
 						if (a.second.imageFilePath_ == ((UIButton*)inv)->GetImageFilePath()) {
 							selectedPlant_.push_back(a.second.name_);
+
 							break;
 						}
 					}
@@ -105,6 +139,7 @@ namespace UIInventory {
 					for (auto& ingredient : ingredientTable_) {
 						if (((UIButton*)ingredient)->GetImageFilePath() == "Models/tentativeFlowers/BlankFlowerImage.png") {
 							((UIButton*)ingredient)->SetImage(((UIButton*)inv)->GetImageFilePath());
+							itemPanel_->PushButtonToArray((UIButton*)ingredient);
 							break;
 						}
 					}
@@ -119,7 +154,6 @@ namespace UIInventory {
 			if (Confirm((UIButton*)ingre)) {
 				if (((UIButton*)ingre)->GetObjectName().starts_with("INV-Ingredients")) {
 
-					// ëIëÇµÇΩêAï®ÇdecPlant_Ç…í«â¡
 					for (auto& a : allPlantData) {
 						if (a.second.imageFilePath_ == ((UIButton*)ingre)->GetImageFilePath()) {
 							// `selectedPlant_`Ç©ÇÁç≈èâÇ…å©Ç¬Ç©Ç¡ÇΩ1Ç¬ÇæÇØÇçÌèú
@@ -134,6 +168,8 @@ namespace UIInventory {
 						if (((UIButton*)inventory)->GetImageFilePath() == "Models/tentativeFlowers/BlankFlowerImage.png") {
 							((UIButton*)inventory)->SetImage(((UIButton*)ingre)->GetImageFilePath());
 							((UIButton*)ingre)->SetImage("Models/tentativeFlowers/BlankFlowerImage.png");
+
+							itemPanel_->RemoveButtonFromArray((UIButton*)ingre);
 							break;
 						}
 					}
@@ -189,6 +225,9 @@ namespace UIInventory {
 		if (pStage_ == nullptr)return;
 
 		itemPanel_->ResetArrayOfButton();
+
+		itemPanel_->PushButtonToArray(makeButton_);
+
 		// ÉvÉåÉCÉÑÅ[èÓïÒÇéÊìæ
 		{
 			for (auto pb : pStage_->FindComponents(ComponentType::PlayerBehavior))playerBehavior_ = (Component_PlayerBehavior*)pb;
@@ -218,7 +257,7 @@ namespace UIInventory {
 				std::advance(it, i); // iî‘ñ⁄ÇÃóvëfÇ…à⁄ìÆ
 
 				const std::string& plantName = it->first; // êAï®ÇÃñºëO
-				int plantCount = it->second;             // êAï®ÇÃêî
+				int plantCount = it->second;			  // êAï®ÇÃêî
 
 				for (const auto& p : allPlantData) {
 					if (plantName == p.second.name_) {
@@ -229,10 +268,10 @@ namespace UIInventory {
 						break;
 					}
 				}
-				if (plantCount == 0) {
+				if (plantCount <= 0) {
 					((UIButton*)getPlantTable_[i])->SetImage("Models/tentativeFlowers/BlankFlowerImage.png");
 					((UIText*)invTextTable_[i])->SetText("");
-
+					itemPanel_->RemoveButtonFromArray((UIButton*)getPlantTable_[i]);
 				}
 			}
 			else {
@@ -240,11 +279,17 @@ namespace UIInventory {
 				if (getPlantTable_[i]->GetObjectName().find("INV-InventoryBack") != 0) {
 					((UIButton*)getPlantTable_[i])->SetImage("Models/tentativeFlowers/BlankFlowerImage.png");
 					((UIText*)invTextTable_[i])->SetText(" ");
-				}
+					itemPanel_->RemoveButtonFromArray((UIButton*)getPlantTable_[i]);
 
+				}
 			}
 		}
 
+		for (auto ing : ingredientTable_) {
+			if (((UIButton*)ing)->GetImageFilePath() != "Models/tentativeFlowers/BlankFlowerImage.png") {
+				itemPanel_->PushButtonToArray((UIButton*)ing);
+			}
+		}
 	}
 	void SetStage(Stage* pStage)
 	{
