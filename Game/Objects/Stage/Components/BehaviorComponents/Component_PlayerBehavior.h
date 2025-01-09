@@ -75,23 +75,29 @@ private:
 	float stamina_decrease_shoot_;
 
 	float timeCollectPlant;
+
+	static constexpr int NEED_PLANT_NUM = 3;
+
 	struct PopUpInfo
 	{
 		int time;
 		
 		UIText*  info_;
-		UIText*	 texts_[3];
+		UIText*	 texts_[NEED_PLANT_NUM];
 
 		UIImage* backGround_;
-		UIImage* images_[3];
+		UIImage* images_[NEED_PLANT_NUM];
 
 	}popUpInfo_;
 
 	struct SaladEffectLogo
 	{
-		UIText* texts_[3];
-		UIImage* images_[3];
+		UIText* texts_[NEED_PLANT_NUM];
+		UIImage* images_[NEED_PLANT_NUM];
 	}saladEffectLogo_;
+
+	SaladEffectLogo historySaladEffect_;
+	UIImage* historySaladPlant_[NEED_PLANT_NUM];
 
 public:
 	/// <summary> コンストラクタ </summary>

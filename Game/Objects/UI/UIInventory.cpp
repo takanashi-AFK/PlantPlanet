@@ -223,7 +223,7 @@ namespace UIInventory {
 				// 取得できない場合は空の画像とテキストを表示
 				if (getPlantTable_[i]->GetObjectName().find("INV-InventoryBack") != 0) {
 					((UIButton*)getPlantTable_[i])->SetImage("Models/tentativeFlowers/BlankFlowerImage.png");
-					((UIText*)invTextTable_[i])->SetText(" ");
+					((UIText*)invTextTable_[i])->SetText("");
 				}
 
 			}
