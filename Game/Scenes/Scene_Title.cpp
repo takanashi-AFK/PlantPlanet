@@ -9,6 +9,8 @@
 #include "../../Engine/DirectX/Input.h"
 #include "../../Engine/ImGui/imgui.h"
 #include "../Objects/UI/UIInputString.h"
+#include<filesystem>
+
 using namespace Constants;
 
 Scene_Title::Scene_Title(GameObject* parent)
@@ -31,7 +33,7 @@ void Scene_Title::Update()
 	// シーン切替処理
 	{
 		UIPanel* uiPanel = UIPanel::GetInstance();
-
+		
 		if (Input::IsPadButtonDown(XINPUT_GAMEPAD_DPAD_LEFT)) {
 			// 最初の入力だったら
 			if (isFirstSelectButton_ == true) {
@@ -59,6 +61,7 @@ void Scene_Title::Update()
 			// マウスでクリックされた場合の処理
 			if (uiButton->OnClick()) {
 				if (buttonName == "startButton") {
+					ApplyName();
 					SceneManager* sceneManager = static_cast<SceneManager*>(FindObject("SceneManager"));
 					sceneManager->ChangeScene(SCENE_ID_MENU, TID_BLACKOUT);
 				}
@@ -73,6 +76,9 @@ void Scene_Title::Update()
 				uiPanel->GetSelectingButton()->GetObjectName() == buttonName &&
 				Input::IsPadButtonDown(XINPUT_GAMEPAD_A)) {
 				if (buttonName == "startButton") {
+					ApplyName();
+					//makefile then unexists save data. if exists save data then output message
+
 					SceneManager* sceneManager = static_cast<SceneManager*>(FindObject("SceneManager"));
 					sceneManager->ChangeScene(SCENE_ID_MENU, TID_BLACKOUT);
 				}
@@ -93,4 +99,15 @@ void Scene_Title::Draw()
 
 void Scene_Title::Release()
 {
+}
+
+void Scene_Title::ApplyName()
+{
+	auto uistr = static_cast<UIInputString*>(UIPanel::GetInstance()->GetUIObject("userNameInput"));
+	userName_ = uistr->GetInputString();
+}
+
+bool Scene_Title::IsExistSaveData()
+{
+	return std::filesystem::is_regular_file(userName_ + ".json");
 }

@@ -6,6 +6,8 @@ class Scene_Title:public GameObject
 {
 private:
 	bool isFirstSelectButton_;
+	std::string userName_;
+
 public:
 	/// <summary> コンストラクタ </summary>
 	Scene_Title(GameObject* parent);
@@ -21,5 +23,9 @@ public:
 
 	/// <summary> 解放 </summary>
 	void Release() override;
+
+	void ApplyName();
+
+	bool IsExistSaveData();
 };
 
