@@ -4,7 +4,7 @@
 #include "StageObject.h"
 
 // effekseer: インクルード
-#include "../../../EffekseeLib/EffekseerVFX.h"/*★★★*/
+#include "../../../EffekseeLib/EffekseerVFX.h"
 #include "../../../Engine/Global.h"
 
 /// <summary>

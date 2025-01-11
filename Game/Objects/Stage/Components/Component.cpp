@@ -35,6 +35,8 @@
 #include "BehaviorComponents/Component_RangeEnemyBehavior.h"
 #include "BehaviorComponents/Component_MeleeEnemyBehavior.h"
 #include "DetectorComponents/Component_RectangleDetector.h"
+#include "BreakableWallComponents/Component_BreakableWall.h"
+
 Component::Component(StageObject* _holder, string _name,ComponentType _type)
     :holder_(_holder), name_(_name),type_(_type),childComponents_(),parent_(nullptr),isActive_(false),killMe_(false)
 {
@@ -259,6 +261,7 @@ Component* CreateComponent(string _name, ComponentType _type, StageObject* _hold
 		case MeleeEnemyBehavior: comp = new Component_MeleeEnemyBehavior(_name, _holder, _parent); break;
 		case WeakRangeEnemy : comp = new Component_RangeEnemyBehavior(_name, _holder, _parent); break;
 		case RectangleDetector: comp = new Component_RectangleDetector(_name, _holder, _parent); break;
+		case BreakableWall: comp = new Component_BreakableWall(_name, _holder, _parent); break;
 		default: /* その他コンポーネントを追加する時は上記のように追加 */ break;
 	}
 	return comp;
@@ -303,6 +306,7 @@ string ComponentTypeToString(ComponentType _type)
 	case WeakRangeEnemy: return "Weak RangeEnemy";
 	case MeleeEnemyBehavior: return "MeleeEnemyBehaviorComponent";
 	case RectangleDetector: return "RectangleDetectorComponent";
+	case BreakableWall: return "BreakableWallComponent";
 		// その他コンポーネントを追加する時は上記のように追加
 
 	default: return "None";

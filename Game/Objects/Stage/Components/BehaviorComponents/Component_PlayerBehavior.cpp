@@ -35,6 +35,7 @@
 #include "../GaugeComponents/Component_StaminaGauge.h"
 #include "../../Salad.h"
 #include "../../MakeSalad.h"
+#include "../BreakableWallComponents/Component_BreakableWall.h"
 
 using namespace Constants;
 
@@ -722,7 +723,7 @@ void Component_PlayerBehavior::Interact()
 
 	UIImage* interactTimeCircleFrame = (UIImage*)UIPanel::GetInstance()->FindObject("interactTimeCircleFrame");
 
-	StageObject* nearestPlant = nullptr;
+	StageObject* nearestObject = nullptr;
 
 	//ImGui::Text("InteractTimer: %f", intractTimer->GetNowTime());
 
@@ -740,10 +741,13 @@ void Component_PlayerBehavior::Interact()
 		if (interactTimer->IsOnTime(timeCollectPlant)) {
 
 
-			// 最も近い植物オブジェクトを取得
+			// 最も近いオブジェクトを取得
 			PlantData plantData;
-			nearestPlant = GetNearestPlant(plantData);
-			if (nearestPlant != nullptr) {
+			nearestObject = GetNearestWall();
+			if(nearestObject == nullptr) // 壁が近くになかったら
+			nearestObject = GetNearestPlant(plantData);
+
+			if (nearestObject != nullptr && nearestObject->GetObjectType() == StageObject::TYPE_PLANT) {
 				// 所持植物リストに追加
 				myPlants_.push_back(plantData);
 
@@ -754,11 +758,17 @@ void Component_PlayerBehavior::Interact()
 
 
 				// 植物オブジェクトを削除
-				pStage->DeleteStageObject(nearestPlant);
-				nearestPlant->KillMe();
+				pStage->DeleteStageObject(nearestObject);
+				nearestObject->KillMe();
 
 				interactTimeCircle->SetVisible(false);
 				interactTimeCircleFrame->SetVisible(false);
+			}
+			else if (nearestObject != nullptr && nearestObject->GetObjectType() == StageObject::TYPE_WALL) {
+				// 壁オブジェクトを削除
+				Stage* pStage = ((Stage*)holder_->FindObject("Stage"));
+				pStage->DeleteStageObject(nearestObject);
+				nearestObject->KillMe();
 			}
 
 			// インタラクト状態を終了
@@ -884,6 +894,8 @@ void Component_PlayerBehavior::ApplyEffects()
 void Component_PlayerBehavior::ResetSaladEffectLogo()
 {
 	for (auto i = 0u; i < MakeSalad::NEED_PLANT_NUM; ++i) {
+
+		if (!saladEffectLogo_.images_[i] || !saladEffectLogo_.texts_[i])continue;
 		saladEffectLogo_.images_[i]->SetImage("Models/tentativeFlowers/BlankFlowerImage.png");
 		saladEffectLogo_.texts_[i]->SetText("");
 	}
@@ -1010,7 +1022,7 @@ bool Component_PlayerBehavior::IsDead()
 bool Component_PlayerBehavior::IsInteractable()
 {
 	PlantData plantData;
-	return (GetNearestPlant(plantData) != nullptr);
+	return (GetNearestPlant(plantData) != nullptr || GetNearestWall() != nullptr);
 }
 
 XMVECTOR Component_PlayerBehavior::CalcShootDirection()
@@ -1123,4 +1135,39 @@ StageObject* Component_PlayerBehavior::GetNearestPlant(PlantData& _plantData)
 
 	// 一番近い植物オブジェクトを返す
 	return nearPlant;
+}
+
+StageObject* Component_PlayerBehavior::GetNearestWall()
+{
+	StageObject* nearWall = nullptr;
+	vector<StageObject*> wallObjects;
+
+	// ステージ情報の取得
+	Stage* pStage = (Stage*)(holder_->FindObject("Stage"));
+	if (pStage == nullptr)return nullptr;
+
+	// ステージオブジェクトの取得
+	for (StageObject* object : pStage->GetStageObjects()) {
+
+		// 壁オブジェクトだったらリストに追加
+		if (object->GetObjectType() == StageObject::TYPE_WALL)
+			wallObjects.push_back(object);
+	}
+
+	// コンポーネント保有者と一番近い壁オブジェクトを取得
+	float minDist = FLT_MAX;
+			Component_BreakableWall* wallComponent= nullptr;
+	for (StageObject* wallObj : wallObjects) {
+
+		if (wallObj->GetObjectType() == StageObject::TYPE_WALL) {
+			for (auto wall : wallObj->FindComponent(BreakableWall)) {
+				wallComponent = (Component_BreakableWall*)wall;
+			}
+
+			if (wallComponent->IsPlayerContains()) nearWall = wallObj;
+		}
+
+	}
+	// 一番近い壁オブジェクトを返す
+	return nearWall;
 }

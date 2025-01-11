@@ -188,6 +188,10 @@ private:
 
 	/// <summary> 付近の植物を取得 </summary>
 	StageObject* GetNearestPlant(PlantData& _plantData);
+
+	/// <summary> 付近の壁を取得 </summary>
+	StageObject* GetNearestWall();
+	
 	/*
 	state :*/
 	/// <summary> 待機状態時の処理 </summary>
