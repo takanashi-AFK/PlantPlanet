@@ -156,7 +156,7 @@ void Component_PlayerBehavior::Initialize()
 
 void Component_PlayerBehavior::Update()
 {
-	ResetSaladEffectLogo();
+	// ResetSaladEffectLogo();
 	ApplyEffects();
 	DrawPopUp();
 

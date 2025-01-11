@@ -140,6 +140,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Game\Objects\Stage\Components\DetectorComponents\Component_RectangleDetector.cpp" />
     <ClCompile Include="Game\Objects\Stage\Components\BehaviorComponents\Component_RangeEnemyBehavior.cpp" />
     <ClCompile Include="Game\Objects\Stage\Components\BehaviorComponents\Component_MeleeEnemyBehavior.cpp" />
     <ClCompile Include="Game\Objects\Stage\Components\MotionComponent\Component_Accessory.cpp" />
@@ -243,6 +244,7 @@
     <ClCompile Include="Game\Scenes\Scene_Menu.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Game\Objects\Stage\Components\DetectorComponents\Component_RectangleDetector.h" />
     <ClInclude Include="Game\Objects\Stage\Components\BehaviorComponents\Component_RangeEnemyBehavior.h" />
     <ClInclude Include="Game\Objects\Stage\Components\BehaviorComponents\Component_MeleeEnemyBehavior.h" />
     <ClInclude Include="Game\Objects\Stage\Components\MotionComponent\Component_Accessory.h" />
