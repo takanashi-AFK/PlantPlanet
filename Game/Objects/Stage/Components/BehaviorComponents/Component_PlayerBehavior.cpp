@@ -143,6 +143,8 @@ void Component_PlayerBehavior::Initialize()
 		popUpInfo_.texts_[i] = static_cast<UIText*>(UIPanel::GetInstance()
 			->FindObject(std::format("PopUp-Text-Effect{}",i)));
 
+		if (!popUpInfo_.images_[i] || !popUpInfo_.texts_[i]) continue;
+
 		popUpInfo_.images_[i]->SetImage("Models/tentativeFlowers/BlankFlowerImage.png");
 		popUpInfo_.texts_[i]->SetText("");
 	}
@@ -162,6 +164,8 @@ void Component_PlayerBehavior::Initialize()
 		historySaladEffect_.texts_[i] = static_cast<UIText*>(UIPanel::GetInstance()
 			->FindObject(std::format("INV-History-Text{}", i)));
 
+		if (!historySaladEffect_.images_[i] || !historySaladEffect_.texts_[i]) continue;
+
 		historySaladEffect_.images_[i]->SetImage("Models/tentativeFlowers/BlankFlowerImage.png");
 		historySaladEffect_.texts_[i]->SetText("");
 	}
@@ -170,8 +174,9 @@ void Component_PlayerBehavior::Initialize()
 
 		historySaladPlant_[i] = static_cast<UIImage*>(UIPanel::GetInstance()
 			->FindObject(std::format("INV-History-Plant{}", i)));
-		historySaladPlant_[i]->SetImage("Models/tentativeFlowers/BlankFlowerImage.png");
 		plantFilePath_[i] = "Models/tentativeFlowers/BlankFlowerImage.png";
+		if (!historySaladPlant_[i]) continue;
+		historySaladPlant_[i]->SetImage("Models/tentativeFlowers/BlankFlowerImage.png");
 
 	}
 
@@ -247,24 +252,14 @@ void Component_PlayerBehavior::Update()
 	if (GetChildComponent("InputMove") != nullptr)move->Execute();
 
 	UIProgressCircle* interactTimeCircle = (UIProgressCircle*)UIPanel::GetInstance()->FindObject("interactTimeCircle");
-	bool isVisible{};
-	if (IsInteractable()) {
-		UIImage* interactTimeCircleFrame = (UIImage*)UIPanel::GetInstance()->FindObject("interactTimeCircleFrame");
-		UIProgressCircle* interactTimeCircle = (UIProgressCircle*)UIPanel::GetInstance()->FindObject("interactTimeCircle");
-		interactTimeCircleFrame->SetVisible(true);
-		interactTimeCircle->SetVisible(true);
-	}
-	else {
-		UIImage* interactTimeCircleFrame = (UIImage*)UIPanel::GetInstance()->FindObject("interactTimeCircleFrame");
-		UIProgressCircle* interactTimeCircle = (UIProgressCircle*)UIPanel::GetInstance()->FindObject("interactTimeCircle");
-		interactTimeCircleFrame->SetVisible(false);
-		interactTimeCircle->SetVisible(false);
-	}
+	UIImage* interactTimeCircleFrame = (UIImage*)UIPanel::GetInstance()->FindObject("interactTimeCircleFrame");
 
-	if (interactTimeCircle)
+	bool isVisible = IsInteractable();
+
+	if (interactTimeCircle && interactTimeCircleFrame)
 	{
 		interactTimeCircle->SetVisible(isVisible);
-		interactTimeCircle->SetVisible(isVisible);
+		interactTimeCircleFrame->SetVisible(isVisible);
 	}
 
 	// ＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝
@@ -882,10 +877,6 @@ void Component_PlayerBehavior::ApplyEffects()
 
 		if (isRenewalPopUp_)
 		{
-			historySaladPlant_[index]->SetImage(plantFilePath_[index]);
-			historySaladEffect_.images_[index]->SetImage(popUpInfo_.images_[index]->GetImageFilePath());
-			historySaladEffect_.texts_[index]->SetText(popUpInfo_.texts_[index]->GetText());
-
 			popUpInfo_.images_[index]->SetImage(data.filePath);
 
 			constexpr int TOP = 0;
@@ -906,6 +897,10 @@ void Component_PlayerBehavior::ApplyEffects()
 
 			//後ろでもっておく植物画像の更新
 			plantFilePath_[index] = PlantCollection::GetPlants().at(data.id).imageFilePath_;
+
+			historySaladPlant_[index]->SetImage(plantFilePath_[index]);
+			historySaladEffect_.images_[index]->SetImage(popUpInfo_.images_[index]->GetImageFilePath());
+			historySaladEffect_.texts_[index]->SetText(popUpInfo_.texts_[index]->GetText());
 
 			++index;
 		}
@@ -928,6 +923,8 @@ void Component_PlayerBehavior::ApplyEffects()
 void Component_PlayerBehavior::ResetSaladEffectLogo()
 {
 	for (auto i = 0u; i < MakeSalad::NEED_PLANT_NUM; ++i) {
+
+		if (!saladEffectLogo_.images_[i] || !saladEffectLogo_.texts_[i])continue;
 		saladEffectLogo_.images_[i]->SetImage("Models/tentativeFlowers/BlankFlowerImage.png");
 		saladEffectLogo_.texts_[i]->SetText("");
 	}
@@ -935,6 +932,8 @@ void Component_PlayerBehavior::ResetSaladEffectLogo()
 
 void Component_PlayerBehavior::DrawPopUp()
 {
+	if (!popUpInfo_.backGround_ || !popUpInfo_.info_)return;
+
 	bool flag = false;
 	if (popUpInfo_.time <= 0)
 	{
