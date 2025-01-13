@@ -298,7 +298,6 @@ namespace UIInventory {
 
 		playerBehavior_->EatSalad(salad);
 
-		
 	}
 
 	bool IsShowInventory()
@@ -313,63 +312,35 @@ namespace UIInventory {
 
 	void MakeFromHistory()
 	{
-		for (auto ingre : ingredientTable_) {
-			if (((UIButton*)ingre)->GetObjectName().starts_with("INV-Ingredients")) {
 
-				// ‘I‘ð‚µ‚½A•¨‚ðdecPlant_‚É’Ç‰Á
-				for (auto& [num,plant] : allPlantData) {
-					if (plant.imageFilePath_ == ((UIButton*)ingre)->GetImageFilePath()  ) 
-					{
-						// `selectedPlant_`‚©‚çÅ‰‚ÉŒ©‚Â‚©‚Á‚½1‚Â‚¾‚¯‚ðíœ
-						auto it = std::find(selectedPlant_.begin(), selectedPlant_.end(), plant.name_);
-						if (it != selectedPlant_.end()) {
-							selectedPlant_.erase(it);
-						}
-						break;
-					}
-				}
-				for (auto& inventory : getPlantTable_) {
-					if (((UIButton*)inventory)->GetImageFilePath() == "Models/tentativeFlowers/BlankFlowerImage.png") 
-					{
-						((UIButton*)inventory)->SetImage(((UIButton*)ingre)->GetImageFilePath());
-						((UIButton*)ingre)->SetImage("Models/tentativeFlowers/BlankFlowerImage.png");
-						break;
-					}
-				}
-		
-				InventoryDataSet();
-			}
+		if (selectedPlant_.size() > 0)	return;
+
+	
+		for (auto i = 0; i < MakeSalad::NEED_PLANT_NUM; ++i)
+		{
+			if (prevRecipe_[i].id_ == -1)	return;
 		}
+	
+		for (auto& itr : prevRecipe_) {
 
-		for (auto i = 0u; i < MakeSalad::NEED_PLANT_NUM; ++i) {
+			for (auto& [id,plant] : allPlantData) {
+				volatile auto a = id;
+				if (countedPlant[plant.name_] > 0) {
+					--countedPlant[plant.name_];
+					selectedPlant_.push_back(plant.name_);
 
-			if (prevRecipe_[i].id_ != -1);
-		//	selectedPlant_.push_back(prevRecipe_[i].name_);
-
-		}
-
-		for (auto inv : getPlantTable_) {
-				if (((UIButton*)inv)->GetObjectName().starts_with("INV-GetPlant")) {
-
-					if (selectedPlant_.size() >= 3) continue;
-
-					// ‘I‘ð‚µ‚½A•¨‚ðselectedPlant_‚É’Ç‰Á
-					for (auto& [num ,plant] : allPlantData) {
-						if (plant.imageFilePath_ == ((UIButton*)inv)->GetImageFilePath() && num>0) {
-							selectedPlant_.push_back(plant.name_);
+					for (auto& ingredient : ingredientTable_) {
+						if (((UIButton*)ingredient)->GetImageFilePath() == "Models/tentativeFlowers/BlankFlowerImage.png")
+						{
+							((UIButton*)ingredient)->SetImage(plant.imageFilePath_);
 							break;
 						}
 					}
 				}
-				for (auto& ingredient : ingredientTable_) {
-					if (((UIButton*)ingredient)->GetImageFilePath() == "Models/tentativeFlowers/BlankFlowerImage.png")
-					{
-						((UIButton*)ingredient)->SetImage(((UIButton*)inv)->GetImageFilePath());
-						break;
-					}
-				}
 
-				UIInventory::InventoryDataSet();
 			}
 		}
+		InventoryDataSet();
+
+	}
 }
