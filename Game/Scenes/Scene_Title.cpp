@@ -69,9 +69,9 @@ void Scene_Title::Update()
 			}
 
 			// パッドでの選択状態とAボタンの処理
-			if (uiPanel->GetSelectingButton() != nullptr &&
-				uiPanel->GetSelectingButton()->GetObjectName() == buttonName &&
-				Input::IsPadButtonDown(XINPUT_GAMEPAD_A)) {
+			if (uiPanel->GetSelectingButton() != nullptr )
+				if(uiPanel->GetSelectingButton()->GetObjectName() == buttonName &&
+					Input::IsPadButtonDown(XINPUT_GAMEPAD_A)) {
 				if (buttonName == "startButton") {
 					SceneManager* sceneManager = static_cast<SceneManager*>(FindObject("SceneManager"));
 					sceneManager->ChangeScene(SCENE_ID_MENU, TID_BLACKOUT);

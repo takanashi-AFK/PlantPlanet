@@ -514,13 +514,13 @@ void Scene_Menu::UpdateTabButtonImages(MenuType _menuType)
 	{
 		std::string imagePath;
 		if (tab->GetObjectName() == "TAB-PlayButton")
-			imagePath = (_menuType == PLAY) ? "Images/MenuScene/PlayButton_Selected.png" : "Images/MenuScene/PlayButton_UnSelected.png";
+			imagePath = (_menuType == PLAY) ? "Images/MenuScene/common/05_playTabSelected.png" : "Images/MenuScene/common/01_playTab.png";
 		else if (tab->GetObjectName() == "TAB-IndexButton")
-			imagePath = (_menuType == INDEX) ? "Images/MenuScene/IndexButton_Selected.png" : "Images/MenuScene/IndexButton_UnSelected.png";
+			imagePath = (_menuType == INDEX) ? "Images/MenuScene/common/06_libraryTabSelected.png" : "Images/MenuScene/common/02_libraryTab.png";
 		else if (tab->GetObjectName() == "TAB-RankingButton")
-			imagePath = (_menuType == RANKING) ? "Images/MenuScene/RankingButton_Selected.png" : "Images/MenuScene/RankingButton_UnSelected.png";
+			imagePath = (_menuType == RANKING) ? "Images/MenuScene/common/07_rankingTabSelected.png" : "Images/MenuScene/common/03_rankingTab.png";
 		else if (tab->GetObjectName() == "TAB-OptionButton")
-			imagePath = (_menuType == OPTION) ? "Images/MenuScene/OptionButton_Selected.png" : "Images/MenuScene/OptionButton_UnSelected.png";
+			imagePath = (_menuType == OPTION) ? "Images/MenuScene/common/08_optionTabSelected.png" : "Images/MenuScene/common/04_optionTab.png";
 
 		tab->SetImage(imagePath);
 	}

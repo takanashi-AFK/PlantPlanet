@@ -154,6 +154,12 @@ void GameEditor::DrawUIPanelOutLiner()
 	ImGui::SameLine();
 
 	if (ImGui::Button("Delete"))editUIPanel_->DeleteAllUIObject();
+	ImGui::SameLine();
+
+	if (ImGui::Button("Hide")) for (auto obj : editUIPanel_->GetUIObjects())obj->SetVisible(false);
+	ImGui::SameLine();
+
+	if (ImGui::Button("Show")) for (auto obj : editUIPanel_->GetUIObjects())obj->SetVisible(true);
 
 	{
 		auto ins = UIPanel::GetInstance();
