@@ -323,24 +323,21 @@ namespace UIInventory {
 	
 		for (auto& itr : prevRecipe_) {
 
-			for (auto& [id,plant] : allPlantData) {
-				volatile auto a = id;
-				if (countedPlant[plant.name_] > 0) {
-					--countedPlant[plant.name_];
-					selectedPlant_.push_back(plant.name_);
-
-					for (auto& ingredient : ingredientTable_) {
-						if (((UIButton*)ingredient)->GetImageFilePath() == "Models/tentativeFlowers/BlankFlowerImage.png")
-						{
-							((UIButton*)ingredient)->SetImage(plant.imageFilePath_);
-							break;
-						}
+			if (countedPlant[itr.name_] > 0)
+			{
+				--countedPlant[itr.name_];
+				selectedPlant_.push_back(itr.name_);
+				for (auto& ingredient : ingredientTable_) {
+					if (((UIButton*)ingredient)->GetImageFilePath() == "Models/tentativeFlowers/BlankFlowerImage.png")
+					{
+						((UIButton*)ingredient)->SetImage(itr.imageFilePath_);
+						break;
 					}
 				}
-
 			}
 		}
 		InventoryDataSet();
+
 
 	}
 }
