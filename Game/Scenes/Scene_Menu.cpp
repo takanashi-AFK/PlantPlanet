@@ -143,7 +143,7 @@ void Scene_Menu::Play()
 
 void Scene_Menu::Index()
 {
-	static string imageNameHead = "INDEX-Plant";
+	static string imageNameHead = "INDEX-FrameButton";
 	if (isFirstChange_ == true) {
 		// globalから今まで取得したことのある植物のデータを取得
 		for (const auto plant : g_playerPlantData) {
@@ -168,19 +168,21 @@ void Scene_Menu::Index()
 		for (auto item : panel->GetUIObjects()) {
 
 			if (item->GetObjectName().starts_with(imageNameHead)) {
-				plantButtonList.push_back((UIButton*)item);
+				plantFrameButtonList.push_back((UIButton*)item);
+			}
+			else if (item->GetObjectName().starts_with("INDEX-Plant")) {
+				plantImageList.push_back((UIImage*)item);
 			}
 		}
 
-		for (auto button : plantButtonList) {
-
-			// ここには本来、ゲットしていない花のシルエットが表示される
-			button->SetImage("Images/MenuScene/02_libraryContents/03_unknown.png");
-			button->SetVisible(true); // 条件を満たした場合のみ表示
+		for (auto button : plantFrameButtonList) {
+			
+			button->SetVisible(true);
 			// 対応するPlantDataがあるか確認
 			for (auto [key, plantData] : plantDataMap_) {
-				if (button->GetObjectName() == imageNameHead + std::to_string(plantData.id_)) {
-					button->SetImage(plantData.imageFilePath_);
+				for(auto plantImage : plantImageList)
+				if (plantImage->GetObjectName() == "INDEX-Plant" + std::to_string(plantData.id_)) {
+					plantImage->SetImage(plantData.imageFilePath_);
 					break; // マッチしたらループ終了
 				}
 			}
@@ -189,7 +191,7 @@ void Scene_Menu::Index()
 		UpdateTabButtonImages(INDEX);
 		panel->ResetArrayOfButton();
 
-		for(auto plantButton : plantButtonList)
+		for(auto plantButton : plantFrameButtonList)
 		panel->PushButtonToArray(plantButton);
 
 
@@ -205,7 +207,7 @@ void Scene_Menu::Index()
 		panel->ResetSelectedButton();
 	}*/
 
-	for (auto item : plantButtonList) {
+	for (auto item : plantFrameButtonList) {
 		if (((UIButton*)item)->GetIsMouseOverThisButton()) {
 			panel->ResetSelectedButton();
 			int x, y;
@@ -215,7 +217,7 @@ void Scene_Menu::Index()
 		}
 	}
 
-	for (auto plantButton : plantButtonList) {
+	for (auto plantButton : plantFrameButtonList) {
 		if (ConfirmButton(plantButton)) {
 
 			// 対応するPlantDataがあるか確認

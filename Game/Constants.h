@@ -18,7 +18,7 @@ namespace Constants {
 	const string RESULT_SCENE_UI_LAYOUT_JSON = "Datas/UILayouts/resultScene_layout.json";
 	const string END_SCENE_UI_LAYOUT_JSON = "Datas/UILayouts/endScene_layout.json";
 	const string RANKING_SCENE_UI_LAYOUT_JSON = "Datas/UILayouts/rankingScene_layout.json";
-	const string MENU_SCENE_UI_LAYOUT_JSON = "Datas/SceneLayout/MenuScene/MenuSceneLayout.json";
+	const string MENU_SCENE_UI_LAYOUT_JSON = "Datas/SceneLayout/MenuScene/MenuSceneLayout2.json";
 
 	// ステージレイアウト
 	const string STAGE_EASY_JSON = "Datas/StageLayouts/stage_easy.json";
