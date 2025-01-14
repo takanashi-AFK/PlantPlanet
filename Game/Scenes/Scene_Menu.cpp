@@ -175,9 +175,8 @@ void Scene_Menu::Index()
 		for (auto button : plantButtonList) {
 
 			// ここには本来、ゲットしていない花のシルエットが表示される
-			button->SetImage("Models/tentativeFlowers/R1_flower_1.png");
+			button->SetImage("Images/MenuScene/02_libraryContents/03_unknown.png");
 			button->SetVisible(true); // 条件を満たした場合のみ表示
-
 			// 対応するPlantDataがあるか確認
 			for (auto [key, plantData] : plantDataMap_) {
 				if (button->GetObjectName() == imageNameHead + std::to_string(plantData.id_)) {
