@@ -315,6 +315,10 @@
     <ClCompile Include="Game\Objects\UI\UICursor.cpp" />
     <ClCompile Include="Game\Objects\UI\UIItemTable.cpp" />
     <ClCompile Include="Game\Objects\Stage\MakeSalad.cpp" />
+    <ClCompile Include="Game\Plants\Plant.cpp" />
+    <ClCompile Include="Game\Objects\UI\UIInventory.cpp" />
+    <ClCompile Include="Game\Scenes\Scene_Menu.cpp" />
+    <ClCompile Include="Game\Otheres\UserManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Collider\BoxCollider.h">
@@ -557,6 +561,10 @@
     <ClInclude Include="Game\Objects\UI\UICursor.h" />
     <ClInclude Include="Game\Objects\UI\UIItemTable.h" />
     <ClInclude Include="Game\Objects\Stage\MakeSalad.h" />
+    <ClInclude Include="Game\Objects\UI\UIInventory.h" />
+    <ClInclude Include="Game\Objects\Stage\Salad.h" />
+    <ClInclude Include="Game\Scenes\Scene_Menu.h" />
+    <ClInclude Include="Game\Otheres\UserManager.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Assets\Shader\Simple2D.hlsl">

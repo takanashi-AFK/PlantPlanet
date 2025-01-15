@@ -241,6 +241,7 @@
     <ClCompile Include="Game\Objects\UI\UIInventory.cpp" />
     <ClCompile Include="Game\Objects\Stage\MakeSalad.cpp" />
     <ClCompile Include="Game\Scenes\Scene_Menu.cpp" />
+    <ClCompile Include="Game\Otheres\UserManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game\Objects\Stage\Components\BehaviorComponents\Component_RangeEnemyBehavior.h" />
@@ -348,6 +349,7 @@
     <ClInclude Include="Game\Objects\Stage\MakeSalad.h" />
     <ClInclude Include="Game\Objects\Stage\Salad.h" />
     <ClInclude Include="Game\Scenes\Scene_Menu.h" />
+    <ClInclude Include="Game\Otheres\UserManager.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Assets\Shader\BillBoard.hlsl">
