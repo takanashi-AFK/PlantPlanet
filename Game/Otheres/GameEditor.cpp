@@ -252,7 +252,7 @@ void GameEditor::DrawPlantDatails()
 		ImGui::Checkbox("isSpawn", &PlantCollection::GetPlants()[selectEditPlantIndex_].isSpawn_);
 		ImGui::Text("modelFilePath:%s",PlantCollection::GetPlants()[selectEditPlantIndex_].modelFilePath_.c_str());
 		ImGui::Text("imageFilePath:%s",PlantCollection::GetPlants()[selectEditPlantIndex_].imageFilePath_.c_str());
-		ImGui::Text("descriptionImageFilePath:%s",PlantCollection::GetPlants()[selectEditPlantIndex_].descriptionImageFilePath_.c_str());
+		ImGui::Text("descriptionImageFilePath_Complete:%s",PlantCollection::GetPlants()[selectEditPlantIndex_].descriptionImageFilePath_Complete_.c_str());
 	}
 	else ImGui::Text("No object selected");
 }
@@ -658,6 +658,7 @@ void GameEditor::DrawPlantOutLiner()
 					true,
 					"defaultPlant.fbx",
 					"dafaultPlant.png",
+					"defaultPlantDescription.png",
 					"defaultPlantDescription.png"
 					});
 			}
@@ -836,10 +837,17 @@ void GameEditor::DrawAddPlantWindow()
 	ImGui::SameLine();
 	if (ImGui::Button(":set Image")) imageFilePath = GetPNGFilePath();
 
-	static string descriptionImageFilePath = "defaultPlant.png";
-	ImGui::InputText(":setting descriptionImageFilePath", &descriptionImageFilePath[0], descriptionImageFilePath.size());
+	static string compDescriptionImageFilePath = "defaultPlant.png";
+	ImGui::InputText(":setting descriptionImageFilePath", &compDescriptionImageFilePath[0], compDescriptionImageFilePath.size());
 	ImGui::SameLine();
-	if (ImGui::Button(":set DescriptionImage")) descriptionImageFilePath = GetPNGFilePath();
+	if (ImGui::Button(":set DescriptionImage")) compDescriptionImageFilePath = GetPNGFilePath();
+
+	static string incompleteDescriptionImageFilePath = "defaultPlant.png";
+	ImGui::InputText(":setting incompleteDescriptionImageFilePath", &incompleteDescriptionImageFilePath[0], incompleteDescriptionImageFilePath.size());
+	ImGui::SameLine();
+	if (ImGui::Button(":set IncompleteDescriptionImage")) incompleteDescriptionImageFilePath = GetPNGFilePath();
+
+
 
 	ImGui::Separator();
 
@@ -853,7 +861,8 @@ void GameEditor::DrawAddPlantWindow()
 			isSpawn,
 			modelFilePath,
 			imageFilePath,
-			descriptionImageFilePath
+			compDescriptionImageFilePath,
+			incompleteDescriptionImageFilePath
 			});
 	}
 	else if (!isValid) {

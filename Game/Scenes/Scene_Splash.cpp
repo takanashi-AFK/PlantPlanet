@@ -5,6 +5,7 @@
 #include "../../Engine/SceneManager.h"
 #include "../Objects/UI/UIPanel.h"
 #include "../Constants.h"
+#include "../Plants/PlantCollection.h"
 
 using namespace Constants;
 
@@ -23,6 +24,10 @@ void Scene_Splash::Initialize()
 	// UIパネル & レイアウトの読み込み
 	json loadData;
 	if (JsonReader::Load("Datas/Test/Prottype_SplashScene_Layout.json", loadData))UIPanel::GetInstance()->Load(loadData);
+	// 植物データの読み込み
+	JsonReader::Load("Datas/PlantData/TentativeFlowers.json", loadData);
+	PlantCollection::Load(loadData);
+
 }
 
 void Scene_Splash::Update()
