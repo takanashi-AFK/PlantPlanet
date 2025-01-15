@@ -14,6 +14,21 @@
 
 using namespace Constants;
 
+namespace {
+	// UI名定数
+	const string BUTTON_NAME_START = "startButton";
+	const string BUTTON_NAME_CONTINUE = "continueButton";
+	const string BUTTON_NAME_END = "EndButton";
+	const string BUTTON_NAME_OK = "okButton";
+	const string BUTTON_NAME_NO = "noButton";
+	const string IMAGE_POPUP = "pop-upWindowBackground";
+
+	const string IMAGE_TEXT0 = "text0";
+	const string IMAGE_TEXT1 = "text1";
+	const string IMAGE_TEXT2 = "text2";
+	const string IMAGE_TEXT4 = "text4";
+}
+
 Scene_Title::Scene_Title(GameObject* parent)
 	: GameObject(parent, "Scene_Title"), isFirstSelectButton_(true)
 {
@@ -138,18 +153,6 @@ void Scene_Title::ProcessButtonAction(UIPanel* _uiPanel,string _buttonName, stri
 	// 3: 既に登録されているユーザー名でゲームを開始する
 	// 4: 既存データが存在しない
 
-	// UI名定数
-	const string BUTTON_NAME_START = "startButton";
-	const string BUTTON_NAME_CONTINUE = "continueButton";
-	const string BUTTON_NAME_END = "EndButton";
-	const string BUTTON_NAME_OK = "okButton";
-	const string BUTTON_NAME_NO = "noButton";
-	const string IMAGE_POPUP = "pop-upWindowBackground";
-
-	const string IMAGE_TEXT0 = "text0";
-	const string IMAGE_TEXT1 = "text1";
-	const string IMAGE_TEXT2 = "text2";
-
 	// ユーザーマネージャーのインスタンスを取得
 	UserManager& um = UserManager::GetInstance();
 
@@ -160,11 +163,7 @@ void Scene_Title::ProcessButtonAction(UIPanel* _uiPanel,string _buttonName, stri
 		if (_inputUserName.empty()) {
 
 			// ユーザー名が入力されていない旨を表示
-			_uiPanel->GetUIObject(IMAGE_TEXT0)->SetVisible(true);
-			_uiPanel->GetUIObject(IMAGE_POPUP)->SetVisible(true);
-			_uiPanel->GetUIObject(BUTTON_NAME_OK)->SetVisible(true);
-			_uiPanel->GetUIObject(BUTTON_NAME_NO)->SetVisible(true);
-
+			SetUIVisible(_uiPanel, { IMAGE_TEXT0, IMAGE_POPUP, BUTTON_NAME_OK }, true);
 			status_ = 0;
 		}
 
@@ -175,10 +174,7 @@ void Scene_Title::ProcessButtonAction(UIPanel* _uiPanel,string _buttonName, stri
 			if (um.isUserRegistered(_inputUserName) == true) {
 
 				// ユーザー名が既に登録されている旨を表示
-				_uiPanel->GetUIObject(IMAGE_TEXT1)->SetVisible(true);
-				_uiPanel->GetUIObject(IMAGE_POPUP)->SetVisible(true);
-				_uiPanel->GetUIObject(BUTTON_NAME_OK)->SetVisible(true);
-				_uiPanel->GetUIObject(BUTTON_NAME_NO)->SetVisible(true);
+				SetUIVisible(_uiPanel, { IMAGE_TEXT1, IMAGE_POPUP, BUTTON_NAME_OK }, true);
 				status_ = 1;
 			}
 
@@ -186,10 +182,7 @@ void Scene_Title::ProcessButtonAction(UIPanel* _uiPanel,string _buttonName, stri
 			else {
 
 				// 新規データを作成する旨を表示
-				_uiPanel->GetUIObject(IMAGE_TEXT2)->SetVisible(true);
-				_uiPanel->GetUIObject(IMAGE_POPUP)->SetVisible(true);
-				_uiPanel->GetUIObject(BUTTON_NAME_OK)->SetVisible(true);
-				_uiPanel->GetUIObject(BUTTON_NAME_NO)->SetVisible(true);
+				SetUIVisible(_uiPanel, { IMAGE_TEXT2, IMAGE_POPUP, BUTTON_NAME_OK, BUTTON_NAME_NO }, true);
 				status_ = 2;
 			}
 		}
@@ -201,7 +194,7 @@ void Scene_Title::ProcessButtonAction(UIPanel* _uiPanel,string _buttonName, stri
 		if (_inputUserName.empty()) {
 
 			// ユーザー名が入力されていない旨を表示
-
+			SetUIVisible(_uiPanel, { IMAGE_TEXT0, IMAGE_POPUP, BUTTON_NAME_OK }, true);
 			status_ = 0;
 		}
 
@@ -219,7 +212,7 @@ void Scene_Title::ProcessButtonAction(UIPanel* _uiPanel,string _buttonName, stri
 			else {
 
 				// 既存データが存在しない旨を表示
-				
+				SetUIVisible(_uiPanel, { IMAGE_TEXT4, IMAGE_POPUP, BUTTON_NAME_OK }, true);
 				status_ = 4;
 			}
 		}
@@ -229,24 +222,27 @@ void Scene_Title::ProcessButtonAction(UIPanel* _uiPanel,string _buttonName, stri
 		
 		switch (status_) 
 		{
-			case 0: /*ポップアップを閉じる*/ break;
-			case 1: /*ポップアップを閉じる*/ break;
-			case 2: /*新規データを作成 & シーンを遷移*/	
-				SceneManager* sceneManager = static_cast<SceneManager*>(FindObject("SceneManager"));
-				sceneManager->ChangeScene(SCENE_ID_MENU, TID_BLACKOUT);
-				break;
+		case 0: ClosePopup(_uiPanel); break;
+		case 1: ClosePopup(_uiPanel); break;
+		case 2: {
+			um.RegisterUser(_inputUserName);
+			um.LoginUser(_inputUserName);
+			SceneManager* sceneManager = static_cast<SceneManager*>(FindObject("SceneManager"));
+			sceneManager->ChangeScene(SCENE_ID_MENU, TID_BLACKOUT);
+		}break;
+		case 3: {
+			um.LoginUser(_inputUserName);
+			SceneManager* sceneManager = static_cast<SceneManager*>(FindObject("SceneManager"));
+			sceneManager->ChangeScene(SCENE_ID_MENU, TID_BLACKOUT);
+		}break;
+		case 4: ClosePopup(_uiPanel); break;
 		}
 	}
 
 	else if (_buttonName == BUTTON_NAME_NO) {
 
 		// ポップアップを閉じる
-		_uiPanel->GetUIObject(IMAGE_TEXT0)->SetVisible(false);
-		_uiPanel->GetUIObject(IMAGE_TEXT2)->SetVisible(false);
-		_uiPanel->GetUIObject(IMAGE_TEXT1)->SetVisible(false);
-		_uiPanel->GetUIObject(IMAGE_POPUP)->SetVisible(false);
-		_uiPanel->GetUIObject(BUTTON_NAME_OK)->SetVisible(false);
-		_uiPanel->GetUIObject(BUTTON_NAME_NO)->SetVisible(false);
+		ClosePopup(_uiPanel);
 	}
 
 	else if (_buttonName == BUTTON_NAME_END) {
@@ -254,4 +250,23 @@ void Scene_Title::ProcessButtonAction(UIPanel* _uiPanel,string _buttonName, stri
 		// ゲームを終了する
 		PostQuitMessage(0);
 	}
+}
+
+void Scene_Title::SetUIVisible(UIPanel* _uiPanel, vector<string> _uiObjectNames, bool _visible)
+{
+	for (auto& uiObjectName : _uiObjectNames) {
+		_uiPanel->GetUIObject(uiObjectName)->SetVisible(_visible);
+	}
+}
+
+void Scene_Title::ClosePopup(UIPanel* _uiPanel)
+{
+	SetUIVisible(_uiPanel, { 
+		IMAGE_TEXT0, 
+		IMAGE_TEXT1, 
+		IMAGE_TEXT2, 
+		IMAGE_POPUP, 
+		BUTTON_NAME_OK, 
+		BUTTON_NAME_NO }, false
+	);
 }

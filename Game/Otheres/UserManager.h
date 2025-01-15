@@ -4,7 +4,7 @@
 #include <unordered_map>
 using namespace std;
 
-
+// ユーザー情報 構造体
 struct UserInfo {
     string          userName;       // ユーザー名
     vector<bool>    libraryStatus;  // 図鑑の完成状況
@@ -75,7 +75,7 @@ predicate :*/
 
 private:
     // コンストラクタはプライベート
-    UserManager() {}
+	UserManager() :loggedInUser_(nullptr), registeredUsers_(unordered_map<string, UserInfo*>()) {}
 
     // コピーコンストラクタ・代入演算子を削除
     UserManager(const UserManager&) = delete;
