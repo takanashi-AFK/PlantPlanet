@@ -9,9 +9,16 @@ private:
 	int imageHandle_;		// 画像ハンドル
 	Direct3D::SHADER_TYPE shaderType_;
 
+	string defaultImageFilePath_; // デフォルト画像ファイルパス
+	int defaultImageHandle_;		// デフォルト画像ハンドル
+
+	string selectImageFilePath_; // 選択画像ファイルパス
+	int selectImageHandle_;		// 選択画像ハンドル
+
 	int arrayPlaceX_;
 	int arrayPlaceY_;
 	bool isSetShader_;
+	bool isChangeImage_;
 
 public:
 	/// <summary> コンストラクタ </summary>
@@ -53,6 +60,8 @@ setter :*/
 	/// <summary> 画像ファイルパスを設定 </summary>
 	void SetImage(string _imageFilePath);
 
+	void SetSelectImage(string _imageFilePath);
+	void SetDefaultImage(string _imageFilePath);
 /*
 predicate :*/
 	/// <summary> ボタンがクリックされたか </summary>

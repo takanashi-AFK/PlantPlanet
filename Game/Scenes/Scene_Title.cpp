@@ -50,11 +50,13 @@ void Scene_Title::Update()
 			uiPanel->SelectorMove(UIPanel::SELECTOR_MOVE_TO::RIGHT);
 		}
 
-		for (auto button : uiPanel->GetUIObjects()) {
+		for (auto button : uiPanel->GetUIObject(UI_BUTTON)) {
 			UIButton* uiButton = static_cast<UIButton*>(button);
-
+			 string buttonName;
 			// ボタン名を取得
-			const std::string& buttonName = uiButton->GetObjectName();
+			if (uiButton != nullptr) {
+				 buttonName = uiButton->GetObjectName();
+			}
 
 			// マウスでクリックされた場合の処理
 			if (uiButton->OnClick()) {
