@@ -146,6 +146,10 @@ void Scene_Title::ProcessButtonAction(UIPanel* _uiPanel,string _buttonName, stri
 	const string BUTTON_NAME_NO = "noButton";
 	const string IMAGE_POPUP = "pop-upWindowBackground";
 
+	const string IMAGE_TEXT0 = "text0";
+	const string IMAGE_TEXT1 = "text1";
+	const string IMAGE_TEXT2 = "text2";
+
 	// ユーザーマネージャーのインスタンスを取得
 	UserManager& um = UserManager::GetInstance();
 
@@ -156,6 +160,7 @@ void Scene_Title::ProcessButtonAction(UIPanel* _uiPanel,string _buttonName, stri
 		if (_inputUserName.empty()) {
 
 			// ユーザー名が入力されていない旨を表示
+			_uiPanel->GetUIObject(IMAGE_TEXT0)->SetVisible(true);
 			_uiPanel->GetUIObject(IMAGE_POPUP)->SetVisible(true);
 			_uiPanel->GetUIObject(BUTTON_NAME_OK)->SetVisible(true);
 			_uiPanel->GetUIObject(BUTTON_NAME_NO)->SetVisible(true);
@@ -170,6 +175,10 @@ void Scene_Title::ProcessButtonAction(UIPanel* _uiPanel,string _buttonName, stri
 			if (um.isUserRegistered(_inputUserName) == true) {
 
 				// ユーザー名が既に登録されている旨を表示
+				_uiPanel->GetUIObject(IMAGE_TEXT1)->SetVisible(true);
+				_uiPanel->GetUIObject(IMAGE_POPUP)->SetVisible(true);
+				_uiPanel->GetUIObject(BUTTON_NAME_OK)->SetVisible(true);
+				_uiPanel->GetUIObject(BUTTON_NAME_NO)->SetVisible(true);
 				status_ = 1;
 			}
 
@@ -177,6 +186,10 @@ void Scene_Title::ProcessButtonAction(UIPanel* _uiPanel,string _buttonName, stri
 			else {
 
 				// 新規データを作成する旨を表示
+				_uiPanel->GetUIObject(IMAGE_TEXT2)->SetVisible(true);
+				_uiPanel->GetUIObject(IMAGE_POPUP)->SetVisible(true);
+				_uiPanel->GetUIObject(BUTTON_NAME_OK)->SetVisible(true);
+				_uiPanel->GetUIObject(BUTTON_NAME_NO)->SetVisible(true);
 				status_ = 2;
 			}
 		}
@@ -228,6 +241,12 @@ void Scene_Title::ProcessButtonAction(UIPanel* _uiPanel,string _buttonName, stri
 	else if (_buttonName == BUTTON_NAME_NO) {
 
 		// ポップアップを閉じる
+		_uiPanel->GetUIObject(IMAGE_TEXT0)->SetVisible(false);
+		_uiPanel->GetUIObject(IMAGE_TEXT2)->SetVisible(false);
+		_uiPanel->GetUIObject(IMAGE_TEXT1)->SetVisible(false);
+		_uiPanel->GetUIObject(IMAGE_POPUP)->SetVisible(false);
+		_uiPanel->GetUIObject(BUTTON_NAME_OK)->SetVisible(false);
+		_uiPanel->GetUIObject(BUTTON_NAME_NO)->SetVisible(false);
 	}
 
 	else if (_buttonName == BUTTON_NAME_END) {
