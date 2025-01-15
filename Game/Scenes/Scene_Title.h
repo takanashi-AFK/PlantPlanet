@@ -32,6 +32,6 @@ private:
 	void HandleUIInput(UIPanel* _uiPanel, bool& _isFirstSelectButton);
 
 	/// <summary> ボタンアクション処理 </summary>
-	void ProcessButtonAction(string _buttonName, string _userName);
+	void ProcessButtonAction(UIPanel* _uiPanel,string _buttonName, string _userName);
 };
 

@@ -121,15 +121,15 @@ void Scene_Title::HandleUIInput(UIPanel* _uiPanel, bool& _isFirstSelectButton)
 		// ボタンが押下された場合...
 		UIButton* uiButton = static_cast<UIButton*>(uiObject);
 		if (uiButton->OnClick()) 
-			ProcessButtonAction(uiButton->GetObjectName(), uiInputString->GetInputString());
+			ProcessButtonAction(_uiPanel,uiButton->GetObjectName(), uiInputString->GetInputString());
 
 		// パッドのAボタンが押下された場合...
 		if(Input::IsPadButtonDown(XINPUT_GAMEPAD_A)) 
-			ProcessButtonAction(_uiPanel->GetSelectingButton()->GetObjectName(), uiInputString->GetInputString());
+			ProcessButtonAction(_uiPanel,_uiPanel->GetSelectingButton()->GetObjectName(), uiInputString->GetInputString());
 	}
 }
 
-void Scene_Title::ProcessButtonAction(string _buttonName, string _inputUserName)
+void Scene_Title::ProcessButtonAction(UIPanel* _uiPanel,string _buttonName, string _inputUserName)
 {
 	// `_status`の定義
 	// 0: ユーザー名が入力されていない
@@ -138,13 +138,13 @@ void Scene_Title::ProcessButtonAction(string _buttonName, string _inputUserName)
 	// 3: 既に登録されているユーザー名でゲームを開始する
 	// 4: 既存データが存在しない
 
-	// ボタン名定数
+	// UI名定数
 	const string BUTTON_NAME_START = "startButton";
 	const string BUTTON_NAME_CONTINUE = "continueButton";
 	const string BUTTON_NAME_END = "EndButton";
-
 	const string BUTTON_NAME_OK = "okButton";
 	const string BUTTON_NAME_NO = "noButton";
+	const string IMAGE_POPUP = "pop-upWindowBackground";
 
 	// ユーザーマネージャーのインスタンスを取得
 	UserManager& um = UserManager::GetInstance();
@@ -156,6 +156,10 @@ void Scene_Title::ProcessButtonAction(string _buttonName, string _inputUserName)
 		if (_inputUserName.empty()) {
 
 			// ユーザー名が入力されていない旨を表示
+			_uiPanel->GetUIObject(IMAGE_POPUP)->SetVisible(true);
+			_uiPanel->GetUIObject(BUTTON_NAME_OK)->SetVisible(true);
+			_uiPanel->GetUIObject(BUTTON_NAME_NO)->SetVisible(true);
+
 			status_ = 0;
 		}
 
