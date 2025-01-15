@@ -1,5 +1,7 @@
 #include "UserManager.h"
 
+#include "../../Engine/Json/JsonReader.h"
+
 UserManager& UserManager::GetInstance()
 {
 	static UserManager instance;
@@ -40,6 +42,44 @@ void UserManager::LogoutUser()
 {
 	// ログイン中のユーザーを解除
 	loggedInUser_ = nullptr;
+}
+
+bool UserManager::SaveUser(const string& _filePath)
+{
+	// jsonオブジェクトを作成
+	json saveData;
+
+	// ユーザー情報をjsonに格納
+	for (const auto& user : registeredUsers_)
+		saveData.push_back({ {"userName", user.second->userName}, {"bestScore", user.second->bestScore}, {"playTotalTime", user.second->playTotalTime}, {"libraryStatus", user.second->libraryStatus} });
+
+	// 保存
+	return JsonReader::Save(_filePath, saveData);
+}
+
+bool UserManager::LoadUser(const string& _filePath)
+{
+	// jsonオブジェクトを作成
+	json loadData;
+
+	// ファイル読込
+	if (!JsonReader::Load(_filePath, loadData)) return false;
+
+	// ユーザー情報をクリア
+	registeredUsers_.clear();
+
+	// jsonの中身を取得
+	for (auto& obj : loadData)
+	{
+		// ユーザーを登録
+		registeredUsers_[obj["userName"]] = new UserInfo(obj["userName"]);
+		registeredUsers_[obj["userName"]]->bestScore = obj["bestScore"];
+		registeredUsers_[obj["userName"]]->playTotalTime = obj["playTotalTime"];
+
+		for(auto& b : obj["libraryStatus"])
+			registeredUsers_[obj["userName"]]->libraryStatus.push_back(b);
+	}
+	return false;
 }
 
 void UserManager::UpdateLibraryStatus(const string& _userName, int _index)

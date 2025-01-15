@@ -60,6 +60,8 @@ void Scene_Title::Update()
 		if (ImGui::Button("-")) um.DeleteUser(uiInputString->GetInputString());
 		if (ImGui::Button("login")) um.LoginUser(uiInputString->GetInputString()); ImGui::SameLine();
 		if (ImGui::Button("logout")) um.LogoutUser();
+		if (ImGui::Button("save")) um.SaveUser("Datas/userData.json"); ImGui::SameLine();
+		if (ImGui::Button("load")) um.LoadUser("Datas/userData.json");
 
 	} ImGui::End();
 }

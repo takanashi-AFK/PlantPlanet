@@ -37,13 +37,11 @@ public:
     /// <summary> ユーザーをログアウト </summary>
     void LogoutUser();
 
-
-    // ※後日実装
-    /*/// <summary> ユーザーを保存 </summary>
+    /// <summary> ユーザーを保存 </summary>
     bool SaveUser(const string& _filePath);
 
     /// <summary> ユーザーを読込 </summary>
-    bool LoadUser(const string& _filePath);*/
+    bool LoadUser(const string& _filePath);
 
 /*
 update :*/
