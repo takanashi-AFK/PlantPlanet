@@ -2,6 +2,8 @@
 #include <vector>
 #include <string>
 #include <unordered_map>
+#include "../Plants/PlantCollection.h"
+
 using namespace std;
 
 // ユーザー情報 構造体
@@ -11,8 +13,8 @@ struct UserInfo {
     int             playTotalTime;  // プレイ時間(アドベンチャーモードのみ)
     int             bestScore;	    // ベストスコア(スコアアタックモードのみ)
 
-    UserInfo() : userName(""), libraryStatus(10, false), playTotalTime(0), bestScore(0) {}
-    UserInfo(const string& _userName) : userName(_userName), libraryStatus(10, false), playTotalTime(0), bestScore(0) {}
+    UserInfo() : userName(""), libraryStatus(PlantCollection::GetPlants().size(), false), playTotalTime(0), bestScore(0) {}
+    UserInfo(const string& _userName) : userName(_userName), libraryStatus(PlantCollection::GetPlants().size(), false), playTotalTime(0), bestScore(0) {}
 };
 
 class UserManager
@@ -64,6 +66,15 @@ getter :*/
 
     /// <summary> 全てのユーザーを取得 </summary>
     unordered_map<string,UserInfo*> GetAllUsers() const{ return registeredUsers_;}
+
+    /// <summary> ユーザー数を取得 </summary>
+    int GetUserCount() const { return registeredUsers_.size(); }
+
+    /// <summary> 図鑑の完成率を取得 </summary>
+    int GetLibraryCompletenessRate(const string& _userName);
+
+    /// <summary> プレイ時間を取得(フレーム) </summary>
+    int GetPlayTotalTime(const string& _userName);
 
 /*
 predicate :*/

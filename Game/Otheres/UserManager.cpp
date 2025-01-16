@@ -1,6 +1,9 @@
 #include "UserManager.h"
 
 #include "../../Engine/Json/JsonReader.h"
+#include <algorithm> // std::count
+
+using std::count;
 
 UserManager& UserManager::GetInstance()
 {
@@ -98,6 +101,21 @@ void UserManager::UpdateBestScore(const string& _userName, int _score)
 {
 	// ベストスコアを更新
 	registeredUsers_[_userName]->bestScore = _score;
+}
+
+int UserManager::GetLibraryCompletenessRate(const string& _userName)
+{
+	// 図鑑の完成率を取得
+	int rate = static_cast<double>(
+		std::count(registeredUsers_[_userName]->libraryStatus.begin(), registeredUsers_[_userName]->libraryStatus.end(), true))
+		/ PlantCollection::GetPlants().size() * 100.0;
+	return rate;
+}
+
+int UserManager::GetPlayTotalTime(const string& _userName)
+{
+	// プレイ時間を取得
+	return registeredUsers_[_userName]->playTotalTime;
 }
 
 bool UserManager::isUserRegistered(const string& _userName)

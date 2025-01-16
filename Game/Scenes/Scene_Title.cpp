@@ -11,6 +11,7 @@
 #include "../Objects/UI/UIInputString.h"
 
 #include "../Otheres/UserManager.h"
+#include "../Objects/UI/UIText.h"
 
 using namespace Constants;
 
@@ -19,6 +20,7 @@ namespace {
 	const string BUTTON_NAME_START = "startButton";
 	const string BUTTON_NAME_CONTINUE = "continueButton";
 	const string BUTTON_NAME_END = "EndButton";
+
 	const string BUTTON_NAME_OK = "okButton";
 	const string BUTTON_NAME_NO = "noButton";
 	const string IMAGE_POPUP = "pop-upWindowBackground";
@@ -26,22 +28,37 @@ namespace {
 	const string IMAGE_TEXT0 = "text0";
 	const string IMAGE_TEXT1 = "text1";
 	const string IMAGE_TEXT2 = "text2";
+	const string IMAGE_TEXT3 = "text3";
 	const string IMAGE_TEXT4 = "text4";
+
+	const string TEXT_USER_NAME = "text-userName";
+	const string TEXT_LIBRARY_STATUS = "text-libraryStatus";
+	const string TEXT_PLAY_TOTAL_TIME = "text-playTotalTime";
 }
 
 Scene_Title::Scene_Title(GameObject* parent)
-	: GameObject(parent, "Scene_Title"), isFirstSelectButton_(true)
+	: GameObject(parent, "Scene_Title"), isFirstSelectButton_(true), status_(0)
 {
 }
 
 void Scene_Title::Initialize()
 {
-	// UIパネル & レイアウトの読み込み
+	// UIパネル & レイアウトの読込
 	json loadData;
 	if (JsonReader::Load("Datas/SceneLayout/title.json", loadData)) UIPanel::GetInstance()->Load(loadData);
 
-	UIPanel* uiPanel = UIPanel::GetInstance();
-	isFirstSelectButton_ = true;
+	UIPanel* uiPanel = UIPanel::GetInstance(); {
+		// ボタン配列の初期化
+		uiPanel->ResetArrayOfButton();
+
+		// 特定のボタンを配列に追加
+		uiPanel->PushButtonToArray((UIButton*)uiPanel->GetUIObject(BUTTON_NAME_START));
+		uiPanel->PushButtonToArray((UIButton*)uiPanel->GetUIObject(BUTTON_NAME_CONTINUE));
+	}
+
+	// 植物情報を読込
+	json plantData;
+	if (JsonReader::Load("Datas/PlantData/TentativeFlowers.json", plantData))PlantCollection::Load(plantData);
 }
 
 void Scene_Title::Update()
@@ -159,11 +176,18 @@ void Scene_Title::ProcessButtonAction(UIPanel* _uiPanel,string _buttonName, stri
 	// ボタン名によって処理を分岐
 	if (_buttonName == BUTTON_NAME_START) {
 
+		// ボタン配列を修正
+		_uiPanel->ResetArrayOfButton();
+
 		// ユーザー名が入力されていない場合...
 		if (_inputUserName.empty()) {
 
 			// ユーザー名が入力されていない旨を表示
 			SetUIVisible(_uiPanel, { IMAGE_TEXT0, IMAGE_POPUP, BUTTON_NAME_OK }, true);
+
+			// OKボタンを配列に追加
+			_uiPanel->PushButtonToArray((UIButton*)_uiPanel->GetUIObject(BUTTON_NAME_OK));
+
 			status_ = 0;
 		}
 
@@ -175,6 +199,10 @@ void Scene_Title::ProcessButtonAction(UIPanel* _uiPanel,string _buttonName, stri
 
 				// ユーザー名が既に登録されている旨を表示
 				SetUIVisible(_uiPanel, { IMAGE_TEXT1, IMAGE_POPUP, BUTTON_NAME_OK }, true);
+
+				// OKボタンを配列に追加
+				_uiPanel->PushButtonToArray((UIButton*)_uiPanel->GetUIObject(BUTTON_NAME_OK));
+
 				status_ = 1;
 			}
 
@@ -183,6 +211,11 @@ void Scene_Title::ProcessButtonAction(UIPanel* _uiPanel,string _buttonName, stri
 
 				// 新規データを作成する旨を表示
 				SetUIVisible(_uiPanel, { IMAGE_TEXT2, IMAGE_POPUP, BUTTON_NAME_OK, BUTTON_NAME_NO }, true);
+
+				// OKボタン,NOボタンを配列に追加
+				_uiPanel->PushButtonToArray((UIButton*)_uiPanel->GetUIObject(BUTTON_NAME_OK));
+				_uiPanel->PushButtonToArray((UIButton*)_uiPanel->GetUIObject(BUTTON_NAME_NO));
+
 				status_ = 2;
 			}
 		}
@@ -190,11 +223,18 @@ void Scene_Title::ProcessButtonAction(UIPanel* _uiPanel,string _buttonName, stri
 
 	else if (_buttonName == BUTTON_NAME_CONTINUE) {
 
+		// ボタン配列を修正
+		_uiPanel->ResetArrayOfButton();
+
 		// ユーザー名が入力されていない場合...
 		if (_inputUserName.empty()) {
 
 			// ユーザー名が入力されていない旨を表示
 			SetUIVisible(_uiPanel, { IMAGE_TEXT0, IMAGE_POPUP, BUTTON_NAME_OK }, true);
+
+			// OKボタンを配列に追加
+			_uiPanel->PushButtonToArray((UIButton*)_uiPanel->GetUIObject(BUTTON_NAME_OK));
+
 			status_ = 0;
 		}
 
@@ -205,6 +245,39 @@ void Scene_Title::ProcessButtonAction(UIPanel* _uiPanel,string _buttonName, stri
 			if (um.isUserRegistered(_inputUserName) == true) {
 
 				// 既に登録されているユーザー名でゲームを開始する旨を表示
+				SetUIVisible(_uiPanel, { IMAGE_TEXT3, TEXT_USER_NAME, TEXT_LIBRARY_STATUS, TEXT_PLAY_TOTAL_TIME, IMAGE_POPUP, BUTTON_NAME_OK,BUTTON_NAME_NO }, true);
+
+				// ユーザー情報を適応
+				{
+					// ユーザー名を適応
+					((UIText*)_uiPanel->GetUIObject(TEXT_USER_NAME))->SetText(_inputUserName);
+
+					// 図鑑の完成率を適応
+					string completenessRateStr = std::to_string(um.GetLibraryCompletenessRate(_inputUserName)) + "%";
+					((UIText*)_uiPanel->GetUIObject(TEXT_LIBRARY_STATUS))->SetText(completenessRateStr);
+
+					// プレイ時間を適応
+					string playTotalTimeStr; {
+						int totalSec = um.GetPlayTotalTime(_inputUserName) / FPS;
+
+						int hour = totalSec / 3600;
+						int min = (totalSec % 3600) / 60;
+						int sec = totalSec % 60;
+
+						std::ostringstream oss;
+						oss << std::setw(2) << std::setfill('0') << hour << ":"
+							<< std::setw(2) << std::setfill('0') << min << ":"
+							<< std::setw(2) << std::setfill('0') << sec;
+
+						playTotalTimeStr = oss.str();
+					}
+					((UIText*)_uiPanel->GetUIObject(TEXT_PLAY_TOTAL_TIME))->SetText(playTotalTimeStr);
+				}
+
+				// OKボタン,NOボタンを配列に追加
+				_uiPanel->PushButtonToArray((UIButton*)_uiPanel->GetUIObject(BUTTON_NAME_OK));
+				_uiPanel->PushButtonToArray((UIButton*)_uiPanel->GetUIObject(BUTTON_NAME_NO));
+
 				status_ = 3;
 			}
 
@@ -213,6 +286,10 @@ void Scene_Title::ProcessButtonAction(UIPanel* _uiPanel,string _buttonName, stri
 
 				// 既存データが存在しない旨を表示
 				SetUIVisible(_uiPanel, { IMAGE_TEXT4, IMAGE_POPUP, BUTTON_NAME_OK }, true);
+
+				// OKボタンを配列に追加
+				_uiPanel->PushButtonToArray((UIButton*)_uiPanel->GetUIObject(BUTTON_NAME_OK));
+
 				status_ = 4;
 			}
 		}
@@ -220,26 +297,36 @@ void Scene_Title::ProcessButtonAction(UIPanel* _uiPanel,string _buttonName, stri
 
 	else if (_buttonName == BUTTON_NAME_OK) {
 		
+		// ボタン配列を修正
+		{
+			_uiPanel->ResetArrayOfButton();
+
+			// はじめからボタン,つづきからボタンを配列に追加
+			_uiPanel->PushButtonToArray((UIButton*)_uiPanel->GetUIObject(BUTTON_NAME_START));
+			_uiPanel->PushButtonToArray((UIButton*)_uiPanel->GetUIObject(BUTTON_NAME_CONTINUE));
+		}
+
 		switch (status_) 
 		{
-		case 0: ClosePopup(_uiPanel); break;
-		case 1: ClosePopup(_uiPanel); break;
-		case 2: {
-			um.RegisterUser(_inputUserName);
-			um.LoginUser(_inputUserName);
-			SceneManager* sceneManager = static_cast<SceneManager*>(FindObject("SceneManager"));
-			sceneManager->ChangeScene(SCENE_ID_MENU, TID_BLACKOUT);
-		}break;
-		case 3: {
-			um.LoginUser(_inputUserName);
-			SceneManager* sceneManager = static_cast<SceneManager*>(FindObject("SceneManager"));
-			sceneManager->ChangeScene(SCENE_ID_MENU, TID_BLACKOUT);
-		}break;
-		case 4: ClosePopup(_uiPanel); break;
+		case 0: ClosePopup(_uiPanel);					break;
+		case 1: ClosePopup(_uiPanel);					break;
+		case 2: GameStart(&um,_inputUserName,true);		break;
+		case 3: GameStart(&um, _inputUserName, false);	break;
+		case 4: ClosePopup(_uiPanel);					break;
 		}
 	}
 
 	else if (_buttonName == BUTTON_NAME_NO) {
+
+		// ボタン配列を修正
+		{
+			_uiPanel->ResetArrayOfButton();
+
+			// はじめからボタン,つづきからボタンを配列に追加
+			_uiPanel->PushButtonToArray((UIButton*)_uiPanel->GetUIObject(BUTTON_NAME_START));
+			_uiPanel->PushButtonToArray((UIButton*)_uiPanel->GetUIObject(BUTTON_NAME_CONTINUE));
+		}
+
 
 		// ポップアップを閉じる
 		ClosePopup(_uiPanel);
@@ -252,8 +339,22 @@ void Scene_Title::ProcessButtonAction(UIPanel* _uiPanel,string _buttonName, stri
 	}
 }
 
+void Scene_Title::GameStart(UserManager* _userManager, string _userName, bool _isNewUser)
+{
+	// 新規ユーザーの場合はユーザーを登録
+	if(_isNewUser)_userManager->RegisterUser(_userName);
+
+	// ユーザーをログイン
+	_userManager->LoginUser(_userName);
+
+	// シーンを切り替える
+	SceneManager* sceneManager = static_cast<SceneManager*>(FindObject("SceneManager"));
+	sceneManager->ChangeScene(SCENE_ID_MENU, TID_BLACKOUT);
+}
+
 void Scene_Title::SetUIVisible(UIPanel* _uiPanel, vector<string> _uiObjectNames, bool _visible)
 {
+	// 指定されたUIオブジェクトを表示/非表示にする
 	for (auto& uiObjectName : _uiObjectNames) {
 		_uiPanel->GetUIObject(uiObjectName)->SetVisible(_visible);
 	}
@@ -261,12 +362,17 @@ void Scene_Title::SetUIVisible(UIPanel* _uiPanel, vector<string> _uiObjectNames,
 
 void Scene_Title::ClosePopup(UIPanel* _uiPanel)
 {
-	SetUIVisible(_uiPanel, { 
-		IMAGE_TEXT0, 
-		IMAGE_TEXT1, 
-		IMAGE_TEXT2, 
-		IMAGE_POPUP, 
-		BUTTON_NAME_OK, 
-		BUTTON_NAME_NO }, false
-	);
+	SetUIVisible(_uiPanel, {
+		BUTTON_NAME_OK,
+		BUTTON_NAME_NO, 
+		IMAGE_POPUP,
+		IMAGE_TEXT0,
+		IMAGE_TEXT1,
+		IMAGE_TEXT2,
+		IMAGE_TEXT3,
+		IMAGE_TEXT4,
+		TEXT_USER_NAME,
+		TEXT_LIBRARY_STATUS,
+		TEXT_PLAY_TOTAL_TIME
+	}, false);
 }

@@ -8,6 +8,7 @@
 using std::string;
 using std::vector;
 class UIPanel;
+class UserManager;
 
 class Scene_Title:public GameObject
 {
@@ -38,6 +39,8 @@ private:
 	/// <summary> ボタンアクション処理 </summary>
 	void ProcessButtonAction(UIPanel* _uiPanel,string _buttonName, string _userName);
 
+	/// <summary> ゲーム開始処理 </summary>
+	void GameStart(UserManager* _userManager,string _userName,bool _isNewUser);
 /*
 uiControl: */
 	/// <summary> UIオブジェクトの表示/非表示を設定 </summary>

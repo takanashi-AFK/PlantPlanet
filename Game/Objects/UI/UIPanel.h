@@ -94,6 +94,7 @@ public:
 		AMOUNT
 	};
 
+	bool SetButtonArrayIndex(UIButton* b);
 	bool SetButtonArrayIndex(int x, int y);
 	void GetButtonIndex(int* x, int* y);
 	UIButton* GetSelectingButton();
