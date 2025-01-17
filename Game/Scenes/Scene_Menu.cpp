@@ -48,6 +48,7 @@ void Scene_Menu::Initialize()
 		else if (uiItem->GetObjectName() == "BackGround") { backGround = (UIImage*)uiItem; }
 	}
 
+	panel->ResetSelectedButton();
 	isFirstSelectButton_ = true;
 }
 

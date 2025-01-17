@@ -81,7 +81,7 @@ private:
 	int buttonIndexX_;
 	int buttonIndexY_;
 	UIButton* selectingButton_;
-
+	
 public:
 
 	enum class SELECTOR_MOVE_TO

@@ -70,8 +70,10 @@ void Scene_Title::Update()
 				continue; // 他の条件をチェックしない
 			}
 
+			UIButton* buttons = uiPanel->GetSelectingButton();
+				
 			// パッドでの選択状態とAボタンの処理
-			if (uiPanel->GetSelectingButton() != nullptr )
+			if (buttons != nullptr )
 				if(uiPanel->GetSelectingButton()->GetObjectName() == buttonName &&
 					Input::IsPadButtonDown(XINPUT_GAMEPAD_A)) {
 				if (buttonName == "startButton") {
