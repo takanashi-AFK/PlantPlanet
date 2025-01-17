@@ -6,7 +6,7 @@
 #include "../../../Engine/ResourceManager/Model.h"
 
 SkySphere::SkySphere(GameObject* _parent)
-	:StageObject("SkySphere", "Models/SkySphere/SkySphere.fbx", _parent), timeZone_{ TIME_ZONE::NIGHT}
+	:StageObject("SkySphere", "Models/SkySphere/SkySphere.fbx", _parent), timeZone_{ TIME_ZONE::MORNING}
 {
 }
 
