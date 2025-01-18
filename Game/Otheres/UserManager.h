@@ -58,8 +58,11 @@ update :*/
 
 /*
 getter :*/
-    /// <summary> 特定のユーザーを取得 </summary>
+    /// <summary> 特定のユーザーを取得(ユーザー名) </summary>
     UserInfo* GetUser(const string& _userName) { return registeredUsers_[_userName];}
+
+    /// <summary> 特定のユーザーを取得(ランキング順位) </summary>
+    UserInfo* GetUser(int _rank);
 
     /// <summary> ログイン中のユーザーを取得 </summary>
     UserInfo* GetLoggedInUser(){ return loggedInUser_;}
@@ -75,7 +78,6 @@ getter :*/
 
     /// <summary> プレイ時間を取得(フレーム) </summary>
     int GetPlayTotalTime(const string& _userName);
-
 /*
 predicate :*/
     /// <summary> ユーザーが登録されているかどうかを判定 </summary>

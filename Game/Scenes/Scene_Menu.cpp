@@ -306,48 +306,70 @@ void Scene_Menu::Ranking()
 			else {
 				item->SetVisible(true);
 			}
-
 		}
-		// ランキングデータを読み込む
-		RankingManager::GetInstance().Load(RANKING_DATA_JSON);
-		static int rankingLoopCount_ = 1;
-		// ランキングデータを表示
-		{
-		
-			// ランキングデータを表示
+
+		// ユーザーマネージャーのインスタンスを取得
+		UserManager& um = UserManager::GetInstance();
+
+		// １位から５位までのユーザーデータを取得 & 表示
+		for (int i = 1; i <= 5; i++) {
+
+			// ユーザー情報を取得
+			UserInfo* user = um.GetUser(i);
+
+			// ユーザー情報が存在しない場合は処理をスキップ
+			if (user == nullptr) break;
+
+			// ユーザーネームを取得
 			{
-				// ランキングデータを取得 ※5位まで
-				for (int i = 1; i <= 5; i++) {
+				// UIテキストを取得
+				std::string name = "RANKING-rank_userName" + std::to_string(i);
+				UIText* text = (UIText*)panel->GetUIObject(name);
 
-					// ユーザーネームを取得
-					{
-						// UIテキスト名を取得
-						std::string name = "RANKING-rank_userName" + std::to_string(i) ;
-						UIText* text = (UIText*)panel->GetUIObject(name);
-
-						// ユーザーネームを取得
-						string userName = RankingManager::GetInstance().GetUser(i - 1);
-
-						// テキストにユーザーネームを設定
-						if (text != nullptr) text->SetText(userName);
-					}
-
-					// スコアを取得
-					{
-						// UIテキスト名を取得
-						std::string name ="RANKING-rank_scoreNum" + std::to_string(i) ;
-						UIText* text = (UIText*)panel->GetUIObject(name);
-
-						// スコアを取得
-						string score = std::to_string(RankingManager::GetInstance().GetScore(i - 1));
-
-						// テキストにスコアを設定
-						if (text != nullptr) text->SetText(score);
-					}
-				}
+				// テキストにユーザーネームを設定
+				if (text != nullptr) text->SetText(user->userName);
 			}
 
+			// スコアを取得
+			{
+				// UIテキスト名を取得
+				std::string name = "RANKING-rank_scoreNum" + std::to_string(i);
+				UIText* text = (UIText*)panel->GetUIObject(name);
+
+				// テキストにスコアを設定
+				if (text != nullptr) text->SetText(std::to_string(user->bestScore));
+			}
 		}
+
+		// ログイン中のユーザーのベストデータを取得 & 表示
+		{
+			// ユーザー情報を取得
+			UserInfo* user = um.GetLoggedInUser();
+
+			// ユーザー情報が存在しない場合は処理をスキップ
+			if (user == nullptr) return;
+
+			// ユーザーネームを取得
+			{
+				// UIテキストを取得
+				std::string name = "RANKING-rank_userNameYou";
+				UIText* text = (UIText*)panel->GetUIObject(name);
+
+				// テキストにユーザーネームを設定
+				if (text != nullptr) text->SetText(user->userName);
+			}
+
+			// スコアを取得
+			{
+				// UIテキスト名を取得
+				std::string name = "RANKING-rank_scoreNumYou";
+				UIText* text = (UIText*)panel->GetUIObject(name);
+
+				// テキストにスコアを設定
+				if (text != nullptr) text->SetText(std::to_string(user->bestScore));
+			}
+		}
+
 		isFirstChange_ = false;
 	}
 }

@@ -17,23 +17,23 @@ using namespace Constants;
 
 namespace {
 	// UI名定数
-	const string BUTTON_NAME_START = "startButton";
-	const string BUTTON_NAME_CONTINUE = "continueButton";
-	const string BUTTON_NAME_END = "EndButton";
+	const string BUTTON_NAME_START		= "startButton";
+	const string BUTTON_NAME_CONTINUE	= "continueButton";
+	const string BUTTON_NAME_END		= "EndButton";
 
-	const string BUTTON_NAME_OK = "okButton";
-	const string BUTTON_NAME_NO = "noButton";
-	const string IMAGE_POPUP = "pop-upWindowBackground";
+	const string BUTTON_NAME_OK			= "okButton";
+	const string BUTTON_NAME_NO			= "noButton";
+	const string IMAGE_POPUP			= "pop-upWindowBackground";
 
-	const string IMAGE_TEXT0 = "text0";
-	const string IMAGE_TEXT1 = "text1";
-	const string IMAGE_TEXT2 = "text2";
-	const string IMAGE_TEXT3 = "text3";
-	const string IMAGE_TEXT4 = "text4";
+	const string IMAGE_TEXT0			= "text0";
+	const string IMAGE_TEXT1			= "text1";
+	const string IMAGE_TEXT2			= "text2";
+	const string IMAGE_TEXT3			= "text3";
+	const string IMAGE_TEXT4			= "text4";
 
-	const string TEXT_USER_NAME = "text-userName";
-	const string TEXT_LIBRARY_STATUS = "text-libraryStatus";
-	const string TEXT_PLAY_TOTAL_TIME = "text-playTotalTime";
+	const string TEXT_USER_NAME			= "text-userName";
+	const string TEXT_LIBRARY_STATUS	= "text-libraryStatus";
+	const string TEXT_PLAY_TOTAL_TIME	= "text-playTotalTime";
 }
 
 Scene_Title::Scene_Title(GameObject* parent)
@@ -94,9 +94,6 @@ void Scene_Title::Update()
 		if (ImGui::Button("logout")) um.LogoutUser();
 		if (ImGui::Button("save")) um.SaveUser("Datas/userData.json"); ImGui::SameLine();
 		if (ImGui::Button("load")) um.LoadUser("Datas/userData.json");
-
-		ImGui::Separator();
-		if (um.isUserLoggedIn())ImGui::Text("%d",um.GetLoggedInUser()->libraryStatus.size());
 	} ImGui::End();
 }
 
@@ -308,6 +305,7 @@ void Scene_Title::ProcessButtonAction(UIPanel* _uiPanel,string _buttonName, stri
 			_uiPanel->PushButtonToArray((UIButton*)_uiPanel->GetUIObject(BUTTON_NAME_CONTINUE));
 		}
 
+		// 状態によって処理を分岐
 		switch (status_) 
 		{
 		case 0: ClosePopup(_uiPanel);					break;
@@ -328,7 +326,6 @@ void Scene_Title::ProcessButtonAction(UIPanel* _uiPanel,string _buttonName, stri
 			_uiPanel->PushButtonToArray((UIButton*)_uiPanel->GetUIObject(BUTTON_NAME_START));
 			_uiPanel->PushButtonToArray((UIButton*)_uiPanel->GetUIObject(BUTTON_NAME_CONTINUE));
 		}
-
 
 		// ポップアップを閉じる
 		ClosePopup(_uiPanel);

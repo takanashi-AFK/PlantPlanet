@@ -4,6 +4,7 @@
 #include <algorithm> // std::count
 
 using std::count;
+using std::sort;
 
 UserManager& UserManager::GetInstance()
 {
@@ -99,6 +100,26 @@ void UserManager::UpdateBestScore(const string& _userName, int _score)
 {
 	// ベストスコアを更新
 	registeredUsers_[_userName]->bestScore = _score;
+}
+
+UserInfo* UserManager::GetUser(int _rank)
+{
+	// ユーザーが存在しない場合は nullptr を返す
+	if (registeredUsers_.empty()) return nullptr;
+	
+	// _rank が無効な場合は nullptr を返す
+	if (_rank <= 0 || _rank > static_cast<int>(registeredUsers_.size())) return nullptr;
+	
+	// ユーザーをスコア降順にソート
+	vector<UserInfo*> sortedUsers;
+	for (auto& user : registeredUsers_) sortedUsers.push_back(user.second);
+	sort(sortedUsers.begin(), sortedUsers.end(), [](const UserInfo* a, const UserInfo* b) {return a->bestScore > b->bestScore;});
+
+	// 引数 `_rank` が 1 の場合に先頭のユーザーを取得するよう調整
+	int rank = _rank - 1;
+
+	// ランキング順位のユーザーを取得
+	return sortedUsers[rank];
 }
 
 int UserManager::GetLibraryCompletenessRate(const string& _userName)
