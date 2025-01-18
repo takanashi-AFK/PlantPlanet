@@ -8,6 +8,7 @@
 #include "../../Engine/DirectX/Input.h"
 #include "../Otheres/RankingManager.h"
 #include "../Objects/UI/UIText.h"
+#include "../Otheres/UserManager.h"
 
 using namespace Constants;
 
@@ -144,11 +145,29 @@ void Scene_Menu::Play()
 void Scene_Menu::Index()
 {
 	static string imageNameHead = "INDEX-FrameButton";
+	isFirstChange_ = true;
 	if (isFirstChange_ == true) {
+		
+		// 検証にあたり、コメントアウト
 		// globalから今まで取得したことのある植物のデータを取得
-		for (const auto plant : g_playerPlantData) {
+		/*for (const auto plant : g_playerPlantData) {
 			plantDataMap_[plant.name_] = plant;
+		}*/
+
+		// 検証用※　`plantDataMap_`に現在ログイン中のユーザーの植物データを格納
+		{
+			// ユーザーマネージャーのインスタンスを取得
+			UserManager& um = UserManager::GetInstance();
+
+			// ログイン中のユーザーの植物データを取得
+			for (int i = 0; i < PlantCollection::GetPlants().size(); i++) {
+				if (um.GetLoggedInUser()->libraryStatus[i] == true) {
+					PlantData plantData = PlantCollection::GetPlants()[i];
+					plantDataMap_[plantData.name_] = plantData;
+				}
+			} 
 		}
+
 		// tab,index,background以外のUIを非表示にする
 		for (auto item : panel->GetUIObjects()) {
 			if (std::find(tabButtonList.begin(), tabButtonList.end(), item) == tabButtonList.end() &&
@@ -160,6 +179,7 @@ void Scene_Menu::Index()
 				item->SetVisible(true);
 			}
 		}
+
 
 		// カウントした植物のサイズ(何種類知ってるか)を取得
 		int plantDataSize = countedPlantData_.size();

@@ -78,9 +78,7 @@ bool UserManager::LoadUser(const string& _filePath)
 		registeredUsers_[obj["userName"]] = new UserInfo(obj["userName"]);
 		registeredUsers_[obj["userName"]]->bestScore = obj["bestScore"];
 		registeredUsers_[obj["userName"]]->playTotalTime = obj["playTotalTime"];
-
-		for(auto& b : obj["libraryStatus"])
-			registeredUsers_[obj["userName"]]->libraryStatus.push_back(b);
+		std::copy(obj["libraryStatus"].begin(), obj["libraryStatus"].end(),registeredUsers_[obj["userName"]]->libraryStatus.begin());
 	}
 	return false;
 }

@@ -95,6 +95,8 @@ void Scene_Title::Update()
 		if (ImGui::Button("save")) um.SaveUser("Datas/userData.json"); ImGui::SameLine();
 		if (ImGui::Button("load")) um.LoadUser("Datas/userData.json");
 
+		ImGui::Separator();
+		if (um.isUserLoggedIn())ImGui::Text("%d",um.GetLoggedInUser()->libraryStatus.size());
 	} ImGui::End();
 }
 
