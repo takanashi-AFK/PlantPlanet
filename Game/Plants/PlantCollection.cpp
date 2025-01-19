@@ -39,7 +39,8 @@ void PlantCollection::Save(json& _saveObj)
 		{"areaId_",plant.second.areaId_},
 		{"isSpawn_",plant.second.isSpawn_},
 		{"modelFilePath_",plant.second.modelFilePath_},
-		{"imageFilePath_",plant.second.imageFilePath_}
+		{"imageFilePath_",plant.second.imageFilePath_},
+		{"descriptionImageFilePath_",plant.second.descriptionImageFilePath_}
 	};
 }
 
@@ -61,7 +62,8 @@ void PlantCollection::Load(json& _loadObj)
 			it.value()["areaId_"],
 			it.value()["isSpawn_"],
 			it.value()["modelFilePath_"],
-			it.value()["imageFilePath_"]
+			it.value()["imageFilePath_"],
+			it.value()["descriptionImageFilePath_"]
 			}
 		);
 		index++;

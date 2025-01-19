@@ -1,1 +1,76 @@
-{"EndButton":{"imageFilePath_":"Images/titleScene/End.png","isVisible_":true,"layerNumber_":6,"objectName_":"EndButton","position_":[0.8500000238418579,-0.699999988079071,0.0],"rotate_":[0.0,0.0,0.0],"scale_":[0.10000000149011612,0.10000000149011612,1.0],"type_":1},"continuedButton":{"imageFilePath_":"Images/titleScene/Prottype_continuedButton.png","isVisible_":true,"layerNumber_":3,"objectName_":"continuedButton","position_":[0.25,-0.5,0.0],"rotate_":[0.0,0.0,0.0],"scale_":[0.5,0.5,1.0],"type_":2},"continuedButton_lock":{"imageFilePath_":"Images/titleScene/lock_nankinjou_kusari.png","isVisible_":true,"layerNumber_":5,"objectName_":"continuedButton_lock","position_":[0.25,-0.5,0.0],"rotate_":[0.0,0.0,0.0],"scale_":[0.30000001192092896,0.30000001192092896,1.0],"type_":2},"startButton":{"imageFilePath_":"Images/titleScene/Prottype_startButton.png","isVisible_":true,"layerNumber_":4,"objectName_":"startButton","position_":[-0.25,-0.5,0.0],"rotate_":[0.0,0.0,0.0],"scale_":[0.5,0.5,1.0],"type_":1},"title_BackGorund":{"imageFilePath_":"Images/titleScene/Prottype_TitleScene_Background.png","isVisible_":true,"layerNumber_":1,"objectName_":"title_BackGorund","position_":[0.0,0.0,0.0],"rotate_":[0.0,0.0,0.0],"scale_":[1.0,1.0,1.0],"type_":2},"title_logoImage":{"Easing_Goal":1.0,"Easing_Pile":1.0,"Easing_Ratio":0.0020000000949949026,"Easing_Start":0.0,"Easing_Type":1,"Second_position_":[0.0,0.30000001192092896,0.0],"Second_rotate":[0.0,0.0,0.0],"Second_scale":[1.0,1.0,1.0],"imageFilePath_":"Images/titleScene/Prottype_TitleScene_LogoImage.png","isVisible_":true,"layerNumber_":2,"objectName_":"title_logoImage","position_":[0.0,2.0,0.0],"rotate_":[0.0,0.0,0.0],"scale_":[0.0,0.0,1.0],"type_":2}}
+{
+  "EndButton": {
+    "ArrayPlace_X": 2,
+    "ArrayPlace_Y": 0,
+    "imageFilePath_": "Images/titleScene/End.png",
+    "isVisible_": true,
+    "layerNumber_": 6,
+    "objectName_": "EndButton",
+    "position_": [ 0.8500000238418579, -0.699999988079071, 0.0 ],
+    "rotate_": [ 0.0, 0.0, 0.0 ],
+    "scale_": [ 0.10000000149011612, 0.10000000149011612, 1.0 ],
+    "type_": 1
+  },
+  "continuedButton": {
+    "ArrayPlace_X": 1,
+    "ArrayPlace_Y": 0,
+    "imageFilePath_": "Images/titleScene/Prottype_continuedButton.png",
+    "isVisible_": true,
+    "layerNumber_": 3,
+    "objectName_": "continuedButton",
+    "position_": [ 0.25, -0.5, 0.0 ],
+    "rotate_": [ 0.0, 0.0, 0.0 ],
+    "scale_": [ 0.5, 0.5, 1.0 ],
+    "type_": 1
+  },
+  "continuedButton_lock": {
+    "imageFilePath_": "Images/titleScene/lock_nankinjou_kusari.png",
+    "isVisible_": true,
+    "layerNumber_": 5,
+    "objectName_": "continuedButton_lock",
+    "position_": [ 0.25, -0.5, 0.0 ],
+    "rotate_": [ 0.0, 0.0, 0.0 ],
+    "scale_": [ 0.30000001192092896, 0.30000001192092896, 1.0 ],
+    "type_": 2
+  },
+  "startButton": {
+    "ArrayPlace_X": 0,
+    "ArrayPlace_Y": 0,
+    "imageFilePath_": "Images/titleScene/Prottype_startButton.png",
+    "isVisible_": true,
+    "layerNumber_": 4,
+    "objectName_": "startButton",
+    "position_": [ -0.25, -0.5, 0.0 ],
+    "rotate_": [ 0.0, 0.0, 0.0 ],
+    "scale_": [ 0.5, 0.5, 1.0 ],
+    "type_": 1
+  },
+  "title_BackGorund": {
+    "imageFilePath_": "Images/titleScene/Prottype_TitleScene_Background.png",
+    "isVisible_": true,
+    "layerNumber_": 1,
+    "objectName_": "title_BackGorund",
+    "position_": [ 0.0, 0.0, 0.0 ],
+    "rotate_": [ 0.0, 0.0, 0.0 ],
+    "scale_": [ 1.0, 1.0, 1.0 ],
+    "type_": 2
+  },
+  "title_logoImage": {
+    "Easing_Goal": 1.0,
+    "Easing_Pile": 1.0,
+    "Easing_Ratio": 0.0020000000949949026,
+    "Easing_Start": 0.0,
+    "Easing_Type": 1,
+    "Second_position_": [ 0.0, 0.30000001192092896, 0.0 ],
+    "Second_rotate": [ 0.0, 0.0, 0.0 ],
+    "Second_scale": [ 1.0, 1.0, 1.0 ],
+    "imageFilePath_": "Images/titleScene/Prottype_TitleScene_LogoImage.png",
+    "isVisible_": true,
+    "layerNumber_": 2,
+    "objectName_": "title_logoImage",
+    "position_": [ 0.0, 2.0, 0.0 ],
+    "rotate_": [ 0.0, 0.0, 0.0 ],
+    "scale_": [ 0.0, 0.0, 1.0 ],
+    "type_": 2
+  }
+}

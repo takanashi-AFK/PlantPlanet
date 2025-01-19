@@ -65,7 +65,7 @@ namespace Light
 extern string g_selectedStage;	// 選択されたステージ
 extern int g_selectedGameMode;	// 選択されたゲームモード
 extern std::vector<PlantData> g_playerPlantData;	// 植物データ
-
+extern std::vector<PlantData> g_thisPlayGetPlantData;
 
 // エフェクトデータ
 // fix: 本来はここに置くべきではない

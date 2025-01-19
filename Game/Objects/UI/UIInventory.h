@@ -3,7 +3,7 @@
 #include "UIPanel.h"
 #include "../Stage/Stage.h"
 
-
+class UIButton;
 namespace UIInventory
 {
 	void Initialize();
@@ -20,4 +20,5 @@ namespace UIInventory
 	// A functions that make salad from history
 	void MakeFromHistory();
 
+	bool Confirm(UIButton* _button);
 }

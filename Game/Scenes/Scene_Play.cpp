@@ -120,8 +120,21 @@ void Scene_Play::Update()
 
 			if (isSceneChange == true) {
 
-				// プレイヤーが取得した植物情報を取得
-				g_playerPlantData = playerBehavior->GetMyPlants();
+				for (auto getPlantData : playerBehavior->GetMyPlants()) {
+					bool exists = false;
+					for (const auto& plantData : g_playerPlantData) {
+						if (plantData.name_ == getPlantData.name_) {
+							exists = true;
+							break;
+						}
+					}
+					if (!exists) {
+						g_playerPlantData.push_back(getPlantData);
+					}
+				}
+
+				g_thisPlayGetPlantData.clear();
+				g_thisPlayGetPlantData = playerBehavior->GetMyPlants();
 				UIInventory::Release();
 
 				SceneManager* sceneManager = (SceneManager*)FindObject("SceneManager");
@@ -141,7 +154,7 @@ void Scene_Play::Update()
 			//else playerBehavior->SetResearchPoint(playerBehavior->GetResearchPoint() + 1);
 		}
 
-		if (Input::IsKeyDown(DIK_Q)) {
+		if (Input::IsKeyDown(DIK_Q) || Input::IsPadButtonDown(XINPUT_GAMEPAD_B)) {
 			SetState(PlaySceneState::PlaySceneState_Inventory);
 			UIInventory::SetStage(pStage_);
 			UIInventory::InventoryDataSet();
@@ -150,14 +163,14 @@ void Scene_Play::Update()
 			isShowInventoryFirstTime_ = true;
 
 
-			
-				// カーソル固定化の切り替え
-				fixedCursorPos = !fixedCursorPos;
 
-				// カーソルの表示状態を切り替える
-				cursorVisible = !fixedCursorPos;
-				UICursor::ToHide(!cursorVisible);
-			
+			// カーソル固定化の切り替え
+			fixedCursorPos = !fixedCursorPos;
+
+			// カーソルの表示状態を切り替える
+			cursorVisible = !fixedCursorPos;
+			UICursor::ToHide(!cursorVisible);
+
 
 		}
 	}
@@ -167,7 +180,7 @@ void Scene_Play::Update()
 		}
 
 
-		if (Input::IsKeyDown(DIK_Q) || UIInventory::IsShowInventory() == false) {
+		if (Input::IsKeyDown(DIK_Q) || Input::IsPadButtonDown(XINPUT_GAMEPAD_B)||UIInventory::IsShowInventory() == false) {
 			SetState(PlaySceneState::PlaySceneState_Play);
 			UIInventory::ShowInventory(false);
 			EnterOtherObject(this);

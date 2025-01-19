@@ -135,6 +135,7 @@ setter :*/
 
 	/// <summary> ‰Â‹‰»‚ğİ’è </summary>
 	void SetVisible(bool _visible) {
+		if (this == nullptr) return;
 		isVisible_ = _visible; 
 	}
 
@@ -162,7 +163,7 @@ getter :*/
 	/// <summary> ƒŒƒCƒ„[”Ô†‚ğæ“¾ </summary>
 	int GetLayerNumber() const { return layerNumber_; }
 
-	int GetMaxLayerNumber();
+	bool IsVisible() { return isVisible_; };
 
 	Component_UIEasing* GetEasing();
 

@@ -1,0 +1,67 @@
+{
+  "background": {
+    "imageFilePath_": "Images/titleScene/image_background.png",
+    "isVisible_": true,
+    "layerNumber_": 1,
+    "objectName_": "background",
+    "position_": [ 0.0, 0.0, 0.0 ],
+    "rotate_": [ 0.0, 0.0, 0.0 ],
+    "scale_": [ 1.0, 1.0, 1.0 ],
+    "type_": 2
+  },
+  "continueButton": {
+    "ArrayPlace_X": 1,
+    "ArrayPlace_Y": 0,
+    "imageFilePath_": "Images/titleScene/image_continuedButton.png",
+    "isVisible_": true,
+    "layerNumber_": 4,
+    "objectName_": "continueButton",
+    "position_": [ 0.4000000059604645, -0.6499999761581421, 0.0 ],
+    "rotate_": [ 0.0, 0.0, 0.0 ],
+    "scale_": [ 1.0, 1.0, 1.0 ],
+    "type_": 1
+  },
+  "inputForm": {
+    "imageFilePath_": "Images/titleScene/image_inputForm.png",
+    "isVisible_": true,
+    "layerNumber_": 3,
+    "objectName_": "inputForm",
+    "position_": [ 0.0, -0.25, 0.0 ],
+    "rotate_": [ 0.0, 0.0, 0.0 ],
+    "scale_": [ 1.0, 1.0, 1.0 ],
+    "type_": 2
+  },
+  "startButton": {
+    "ArrayPlace_X": 0,
+    "ArrayPlace_Y": 0,
+    "imageFilePath_": "Images/titleScene/image_startButton.png",
+    "isVisible_": true,
+    "layerNumber_": 5,
+    "objectName_": "startButton",
+    "position_": [ -0.4000000059604645, -0.6499999761581421, 0.0 ],
+    "rotate_": [ 0.0, 0.0, 0.0 ],
+    "scale_": [ 1.0, 1.0, 1.0 ],
+    "type_": 1
+  },
+  "titleLogo": {
+    "imageFilePath_": "Images/titleScene/image_titleLogo.png",
+    "isVisible_": true,
+    "layerNumber_": 2,
+    "objectName_": "titleLogo",
+    "position_": [ 0.0, 0.25, 0.0 ],
+    "rotate_": [ 0.0, 0.0, 0.0 ],
+    "scale_": [ 1.0, 1.0, 1.0 ],
+    "type_": 2
+  },
+  "userNameInput": {
+    "isVisible_": true,
+    "layerNumber_": 6,
+    "objectName_": "userNameInput",
+    "position_": [ -0.699999988079071, 0.23999999463558197, 0.0 ],
+    "rotate_": [ 0.0, 0.0, 0.0 ],
+    "scale_": [ 1.0, 1.0, 1.0 ],
+    "size": 2.5999999046325684,
+    "text": "",
+    "type_": 7
+  }
+}
