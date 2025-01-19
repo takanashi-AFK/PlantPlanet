@@ -77,19 +77,12 @@ namespace UIInventory {
 
 	void Update()
 	{
-
-		for (auto inv : getPlantTable_) {
-			if (((UIButton*)inv)->OnClick()) {
-				if (((UIButton*)inv)->GetObjectName().starts_with("INV-GetPlant")) {
 		itemPanel_ = UIPanel::GetInstance();
 		int x, y;
 		itemPanel_->GetButtonIndex(&x, &y);
-		for (auto a : itemPanel_->GetArrayList()) {
-			ImGui::Text(a->GetObjectName().c_str());
-		}
 
 
-		/*入力処理*/
+	
 		{
 			if (Input::IsPadButtonDown(XINPUT_GAMEPAD_DPAD_LEFT)) {
 				// 最初の入力かつ、選択できるボタンがある場合
@@ -177,6 +170,7 @@ namespace UIInventory {
 			}
 
 		}
+
 
 
 		// インベントリのボタンが押された場合
@@ -393,6 +387,7 @@ namespace UIInventory {
 		}
 
 	}
+
 	bool Check()
 	{
 		if (selectedPlant_.size() < 3) return false;
@@ -442,12 +437,12 @@ namespace UIInventory {
 
 		if (selectedPlant_.size() > 0)	return;
 
-	
+
 		for (auto i = 0; i < MakeSalad::NEED_PLANT_NUM; ++i)
 		{
 			if (prevRecipe_[i].id_ == -1)	return;
 		}
-	
+
 		for (auto& itr : prevRecipe_) {
 
 			if (countedPlant[itr.name_] > 0)
@@ -464,6 +459,7 @@ namespace UIInventory {
 			}
 		}
 		InventoryDataSet();
+	}
 
 	bool Confirm(UIButton* _button)
 	{
