@@ -24,6 +24,7 @@ struct PlantData {
 		int id;    //plant id
 		int time;  //left time of effect
 		int amount;//amount of effect
+		string specialText;//use this when special func
 	};
 
 	FuncValue Effect(Component_PlayerBehavior* pb);
