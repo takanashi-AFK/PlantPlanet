@@ -155,6 +155,18 @@ void Scene_Title::HandleUIInput(UIPanel* _uiPanel, bool& _isFirstSelectButton)
 		ProcessButtonAction
 		(_uiPanel, selectingButton->GetObjectName(), uiInputString->GetInputString());
 	}
+
+	selectingButton = _uiPanel->GetSelectingButton();
+
+	if (selectingButton)
+	{
+		selectingButton->SetShader(Direct3D::SHADER_BUTTON_SELECT);
+		if (Input::IsPadButtonDown(XINPUT_GAMEPAD_A))
+		{
+			ProcessButtonAction
+			(_uiPanel, selectingButton->GetObjectName(), uiInputString->GetInputString());
+		}
+	}
 }
 
 void Scene_Title::ProcessButtonAction(UIPanel* _uiPanel,string _buttonName, string _inputUserName)
@@ -169,20 +181,23 @@ void Scene_Title::ProcessButtonAction(UIPanel* _uiPanel,string _buttonName, stri
 	// ユーザーマネージャーのインスタンスを取得
 	UserManager& um = UserManager::GetInstance();
 
+	//ゲームパッドのボタンで失敗したときの配列場所
+	int failerButtonX = 0;
+	int failerButtonY = 1;
+
+	//通常時の場所
+	int defaultButtonX = 0;
+	int defaultButtonY = 0;
 	// ボタン名によって処理を分岐
 	if (_buttonName == BUTTON_NAME_START) {
-
-		// ボタン配列を修正
-		_uiPanel->ResetArrayOfButton();
 
 		// ユーザー名が入力されていない場合...
 		if (_inputUserName.empty()) {
 
 			// ユーザー名が入力されていない旨を表示
 			SetUIVisible(_uiPanel, { IMAGE_TEXT0, IMAGE_POPUP, BUTTON_NAME_OK }, true);
-
-			// OKボタンを配列に追加
 			_uiPanel->PushButtonToArray((UIButton*)_uiPanel->GetUIObject(BUTTON_NAME_OK));
+			_uiPanel->SetButtonArrayIndex(failerButtonX, failerButtonY);
 
 			status_ = 0;
 		}
@@ -195,9 +210,8 @@ void Scene_Title::ProcessButtonAction(UIPanel* _uiPanel,string _buttonName, stri
 
 				// ユーザー名が既に登録されている旨を表示
 				SetUIVisible(_uiPanel, { IMAGE_TEXT1, IMAGE_POPUP, BUTTON_NAME_OK }, true);
-
-				// OKボタンを配列に追加
 				_uiPanel->PushButtonToArray((UIButton*)_uiPanel->GetUIObject(BUTTON_NAME_OK));
+				_uiPanel->SetButtonArrayIndex(failerButtonX, failerButtonY);
 
 				status_ = 1;
 			}
@@ -207,10 +221,9 @@ void Scene_Title::ProcessButtonAction(UIPanel* _uiPanel,string _buttonName, stri
 
 				// 新規データを作成する旨を表示
 				SetUIVisible(_uiPanel, { IMAGE_TEXT2, IMAGE_POPUP, BUTTON_NAME_OK, BUTTON_NAME_NO }, true);
-
-				// OKボタン,NOボタンを配列に追加
 				_uiPanel->PushButtonToArray((UIButton*)_uiPanel->GetUIObject(BUTTON_NAME_OK));
 				_uiPanel->PushButtonToArray((UIButton*)_uiPanel->GetUIObject(BUTTON_NAME_NO));
+				_uiPanel->SetButtonArrayIndex(failerButtonX, failerButtonY);
 
 				status_ = 2;
 			}
@@ -219,17 +232,13 @@ void Scene_Title::ProcessButtonAction(UIPanel* _uiPanel,string _buttonName, stri
 
 	else if (_buttonName == BUTTON_NAME_CONTINUE) {
 
-		// ボタン配列を修正
-		_uiPanel->ResetArrayOfButton();
-
 		// ユーザー名が入力されていない場合...
 		if (_inputUserName.empty()) {
 
 			// ユーザー名が入力されていない旨を表示
 			SetUIVisible(_uiPanel, { IMAGE_TEXT0, IMAGE_POPUP, BUTTON_NAME_OK }, true);
-
-			// OKボタンを配列に追加
 			_uiPanel->PushButtonToArray((UIButton*)_uiPanel->GetUIObject(BUTTON_NAME_OK));
+			_uiPanel->SetButtonArrayIndex(failerButtonX, failerButtonY);
 
 			status_ = 0;
 		}
@@ -242,7 +251,9 @@ void Scene_Title::ProcessButtonAction(UIPanel* _uiPanel,string _buttonName, stri
 
 				// 既に登録されているユーザー名でゲームを開始する旨を表示
 				SetUIVisible(_uiPanel, { IMAGE_TEXT3, TEXT_USER_NAME, TEXT_LIBRARY_STATUS, TEXT_PLAY_TOTAL_TIME, IMAGE_POPUP, BUTTON_NAME_OK,BUTTON_NAME_NO }, true);
-
+				_uiPanel->PushButtonToArray((UIButton*)_uiPanel->GetUIObject(BUTTON_NAME_OK));
+				_uiPanel->PushButtonToArray((UIButton*)_uiPanel->GetUIObject(BUTTON_NAME_NO));
+				_uiPanel->SetButtonArrayIndex(failerButtonX, failerButtonY);
 				// ユーザー情報を適応
 				{
 					// ユーザー名を適応
@@ -271,8 +282,6 @@ void Scene_Title::ProcessButtonAction(UIPanel* _uiPanel,string _buttonName, stri
 				}
 
 				// OKボタン,NOボタンを配列に追加
-				_uiPanel->PushButtonToArray((UIButton*)_uiPanel->GetUIObject(BUTTON_NAME_OK));
-				_uiPanel->PushButtonToArray((UIButton*)_uiPanel->GetUIObject(BUTTON_NAME_NO));
 
 				status_ = 3;
 			}
@@ -282,26 +291,20 @@ void Scene_Title::ProcessButtonAction(UIPanel* _uiPanel,string _buttonName, stri
 
 				// 既存データが存在しない旨を表示
 				SetUIVisible(_uiPanel, { IMAGE_TEXT4, IMAGE_POPUP, BUTTON_NAME_OK }, true);
-
-				// OKボタンを配列に追加
 				_uiPanel->PushButtonToArray((UIButton*)_uiPanel->GetUIObject(BUTTON_NAME_OK));
+				_uiPanel->SetButtonArrayIndex(failerButtonX, failerButtonY);
+				// OKボタンを配列に追加
 
 				status_ = 4;
 			}
 		}
 	}
 
+
+
 	else if (_buttonName == BUTTON_NAME_OK) {
 		
-		// ボタン配列を修正
-		{
-			_uiPanel->ResetArrayOfButton();
-
-			// はじめからボタン,つづきからボタンを配列に追加
-			_uiPanel->PushButtonToArray((UIButton*)_uiPanel->GetUIObject(BUTTON_NAME_START));
-			_uiPanel->PushButtonToArray((UIButton*)_uiPanel->GetUIObject(BUTTON_NAME_CONTINUE));
-		}
-
+		_uiPanel->SetButtonArrayIndex(defaultButtonX, defaultButtonY);
 		// 状態によって処理を分岐
 		switch (status_) 
 		{
@@ -311,20 +314,17 @@ void Scene_Title::ProcessButtonAction(UIPanel* _uiPanel,string _buttonName, stri
 		case 3: GameStart(&um, _inputUserName, false);	break;
 		case 4: ClosePopup(_uiPanel);					break;
 		}
+
+		_uiPanel->RemoveButtonFromArray((UIButton*)_uiPanel->GetUIObject(BUTTON_NAME_OK));
+		_uiPanel->RemoveButtonFromArray((UIButton*)_uiPanel->GetUIObject(BUTTON_NAME_NO));
 	}
 
 	else if (_buttonName == BUTTON_NAME_NO) {
 
-		// ボタン配列を修正
-		{
-			_uiPanel->ResetArrayOfButton();
+		_uiPanel->SetButtonArrayIndex(defaultButtonX, defaultButtonY);
 
-			// はじめからボタン,つづきからボタンを配列に追加
-			_uiPanel->PushButtonToArray((UIButton*)_uiPanel->GetUIObject(BUTTON_NAME_START));
-			_uiPanel->PushButtonToArray((UIButton*)_uiPanel->GetUIObject(BUTTON_NAME_CONTINUE));
-		}
-
-		// ポップアップを閉じる
+		_uiPanel->RemoveButtonFromArray((UIButton*)_uiPanel->GetUIObject(BUTTON_NAME_OK));
+		_uiPanel->RemoveButtonFromArray((UIButton*)_uiPanel->GetUIObject(BUTTON_NAME_NO));
 		ClosePopup(_uiPanel);
 	}
 

@@ -201,6 +201,8 @@ void UIPanel::SelectorMove(SELECTOR_MOVE_TO way)
 			r->GetArrayPlace(&x, &y);
 			auto right = x + y;
 
+			if (left == right)return l->GetLayerNumber() < r->GetLayerNumber();
+
 			return left < right;
 		};
 
@@ -211,6 +213,8 @@ void UIPanel::SelectorMove(SELECTOR_MOVE_TO way)
 
 			r->GetArrayPlace(&x, &y);
 			auto right = x + y;
+
+			if (left == right)return l->GetLayerNumber() > r->GetLayerNumber();
 
 			return left > right;
 		};
