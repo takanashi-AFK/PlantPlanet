@@ -9,86 +9,92 @@
 #include "../../Engine/DirectX/Input.h"
 #include "../../Engine/ImGui/imgui.h"
 #include "../Objects/UI/UIInputString.h"
+
+#include "../Otheres/UserManager.h"
+#include "../Objects/UI/UIText.h"
+
 using namespace Constants;
 
+namespace {
+	// UI名定数
+	const string BUTTON_NAME_START		= "startButton";
+	const string BUTTON_NAME_CONTINUE	= "continueButton";
+	const string BUTTON_NAME_END		= "EndButton";
+
+	const string BUTTON_NAME_OK			= "okButton";
+	const string BUTTON_NAME_NO			= "noButton";
+	const string IMAGE_POPUP			= "pop-upWindowBackground";
+
+	const string IMAGE_TEXT0			= "text0";
+	const string IMAGE_TEXT1			= "text1";
+	const string IMAGE_TEXT2			= "text2";
+	const string IMAGE_TEXT3			= "text3";
+	const string IMAGE_TEXT4			= "text4";
+
+	const string TEXT_USER_NAME			= "text-userName";
+	const string TEXT_LIBRARY_STATUS	= "text-libraryStatus";
+	const string TEXT_PLAY_TOTAL_TIME	= "text-playTotalTime";
+}
+
 Scene_Title::Scene_Title(GameObject* parent)
-	: GameObject(parent, "Scene_Title"), isFirstSelectButton_(true)
+	: GameObject(parent, "Scene_Title"), isFirstSelectButton_(true), status_(0)
 {
 }
 
 void Scene_Title::Initialize()
 {
-	// UIパネル & レイアウトの読み込み
+	// UIパネル & レイアウトの読込
 	json loadData;
 	if (JsonReader::Load("Datas/SceneLayout/title.json", loadData)) UIPanel::GetInstance()->Load(loadData);
 
-	UIPanel* uiPanel = UIPanel::GetInstance();
-	isFirstSelectButton_ = true;
+	UIPanel* uiPanel = UIPanel::GetInstance(); {
+		// ボタン配列の初期化
+		uiPanel->ResetArrayOfButton();
+
+		// 特定のボタンを配列に追加
+		uiPanel->PushButtonToArray((UIButton*)uiPanel->GetUIObject(BUTTON_NAME_START));
+		uiPanel->PushButtonToArray((UIButton*)uiPanel->GetUIObject(BUTTON_NAME_CONTINUE));
+	}
+
+	// 植物情報を読込
+	json plantData;
+	if (JsonReader::Load("Datas/PlantData/TentativeFlowers.json", plantData))PlantCollection::Load(plantData);
 }
 
 void Scene_Title::Update()
 {
-	// シーン切替処理
-	{
-		UIPanel* uiPanel = UIPanel::GetInstance();
+	// UIパネルの取得
+	UIPanel* uiPanel = UIPanel::GetInstance();
 
-		if (Input::IsPadButtonDown(XINPUT_GAMEPAD_DPAD_LEFT)) {
-			// 最初の入力だったら
-			if (isFirstSelectButton_ == true) {
-				uiPanel->SetButtonArrayIndex(0, 0);
-				isFirstSelectButton_ = false;
-			}
-			else
-			uiPanel->SelectorMove(UIPanel::SELECTOR_MOVE_TO::LEFT);
-		}
-		else if (Input::IsPadButtonDown(XINPUT_GAMEPAD_DPAD_RIGHT)) {
-			if (isFirstSelectButton_ == true) {
-				uiPanel->SetButtonArrayIndex(0, 0);
-				isFirstSelectButton_ = false;
-			}
-			else
-			uiPanel->SelectorMove(UIPanel::SELECTOR_MOVE_TO::RIGHT);
+	// UI入力処理
+	HandleUIInput(uiPanel, isFirstSelectButton_);
+
+	// ユーザー名入力フォームから文字列を取得
+	UIInputString* uiInputString = (UIInputString*)uiPanel->GetUIObject(UIType::UI_INPUTSTRING)[0];
+	if (uiInputString == nullptr) return;
+
+	// debug code
+	ImGui::Begin("userData"); {
+		UserManager& um = UserManager::GetInstance();
+
+		for (auto& userData : um.GetAllUsers()) {
+			ImGui::Text(userData.first.c_str());
+			ImGui::SameLine();
+			ImGui::Text(std::to_string(userData.second->bestScore).c_str());
 		}
 
-		for (auto button : uiPanel->GetUIObject(UI_BUTTON)) {
-			UIButton* uiButton = static_cast<UIButton*>(button);
-			 string buttonName;
-			// ボタン名を取得
-			if (uiButton != nullptr) {
-				 buttonName = uiButton->GetObjectName();
-			}
+		ImGui::Separator();
+		ImGui::Text("Logged in user:");
+		ImGui::Text(um.isUserLoggedIn() ? um.GetLoggedInUser()->userName.c_str() : "none");
 
-			// マウスでクリックされた場合の処理
-			if (uiButton->OnClick()) {
-				if (buttonName == "startButton") {
-					SceneManager* sceneManager = static_cast<SceneManager*>(FindObject("SceneManager"));
-					sceneManager->ChangeScene(SCENE_ID_MENU, TID_BLACKOUT);
-				}
-				else if (buttonName == "EndButton") {
-					PostQuitMessage(0);
-				}
-				continue; // 他の条件をチェックしない
-			}
-
-			UIButton* buttons = uiPanel->GetSelectingButton();
-				
-			// パッドでの選択状態とAボタンの処理
-			if (buttons != nullptr )
-				if(uiPanel->GetSelectingButton()->GetObjectName() == buttonName &&
-					Input::IsPadButtonDown(XINPUT_GAMEPAD_A)) {
-				if (buttonName == "startButton") {
-					SceneManager* sceneManager = static_cast<SceneManager*>(FindObject("SceneManager"));
-					sceneManager->ChangeScene(SCENE_ID_MENU, TID_BLACKOUT);
-				}
-				else if (buttonName == "EndButton") {
-					PostQuitMessage(0);
-				}
-			}
-		}
-
-
-	}
-
+		ImGui::Separator();
+		if (ImGui::Button("+")) um.RegisterUser(uiInputString->GetInputString()); ImGui::SameLine();
+		if (ImGui::Button("-")) um.DeleteUser(uiInputString->GetInputString());
+		if (ImGui::Button("login")) um.LoginUser(uiInputString->GetInputString()); ImGui::SameLine();
+		if (ImGui::Button("logout")) um.LogoutUser();
+		if (ImGui::Button("save")) um.SaveUser("Datas/userData.json"); ImGui::SameLine();
+		if (ImGui::Button("load")) um.LoadUser("Datas/userData.json");
+	} ImGui::End();
 }
 
 void Scene_Title::Draw()
@@ -97,4 +103,272 @@ void Scene_Title::Draw()
 
 void Scene_Title::Release()
 {
+}
+
+void Scene_Title::HandleUIInput(UIPanel* _uiPanel, bool& _isFirstSelectButton)
+{
+	// ユーザー名入力フォームから文字列を取得
+	UIInputString* uiInputString = (UIInputString*)_uiPanel->GetUIObject(UIType::UI_INPUTSTRING)[0];
+	if (uiInputString == nullptr) return;
+
+	// コントローラー入力により押下するボタンを選択
+	{
+		if (Input::IsPadButtonDown(XINPUT_GAMEPAD_DPAD_LEFT)) {
+
+			// シーン内最初の入力の場合...
+			if (_isFirstSelectButton == true) {
+
+				// ボタンの選択位置を初期化
+				_uiPanel->SetButtonArrayIndex(0, 0);
+
+				// シーン内最初の入力フラグをOFF
+				_isFirstSelectButton = false;
+			}
+
+			// ボタンの選択位置を左に移動
+			else _uiPanel->SelectorMove(UIPanel::SELECTOR_MOVE_TO::LEFT);
+			
+		}
+		else if (Input::IsPadButtonDown(XINPUT_GAMEPAD_DPAD_RIGHT)) {
+
+			// シーン内最初の入力の場合...
+			if (_isFirstSelectButton == true) {
+
+				// ボタンの選択位置を初期化
+				_uiPanel->SetButtonArrayIndex(0, 0);
+
+				// シーン内最初の入力フラグをOFF
+				_isFirstSelectButton = false;
+			}
+
+			// ボタンの選択位置を右に移動
+			else _uiPanel->SelectorMove(UIPanel::SELECTOR_MOVE_TO::RIGHT);
+		}
+	}
+
+	// ボタンが押下されたかを判定し、ボタンのアクションを実行
+
+	UIButton* selectingButton = UIButton::GetTopSelectingUI(_uiPanel->GetUIObject(UIType::UI_BUTTON));
+
+	if (selectingButton &&selectingButton->OnClick())
+	{
+		ProcessButtonAction
+		(_uiPanel, selectingButton->GetObjectName(), uiInputString->GetInputString());
+	}
+
+	selectingButton = _uiPanel->GetSelectingButton();
+
+	if (selectingButton)
+	{
+		selectingButton->SetShader(Direct3D::SHADER_BUTTON_SELECT);
+		if (Input::IsPadButtonDown(XINPUT_GAMEPAD_A))
+		{
+			ProcessButtonAction
+			(_uiPanel, selectingButton->GetObjectName(), uiInputString->GetInputString());
+		}
+	}
+}
+
+void Scene_Title::ProcessButtonAction(UIPanel* _uiPanel,string _buttonName, string _inputUserName)
+{
+	// `_status`の定義
+	// 0: ユーザー名が入力されていない
+	// 1: ユーザー名が既に登録されている
+	// 2: 新規データを作成する
+	// 3: 既に登録されているユーザー名でゲームを開始する
+	// 4: 既存データが存在しない
+
+	// ユーザーマネージャーのインスタンスを取得
+	UserManager& um = UserManager::GetInstance();
+
+	//ゲームパッドのボタンで失敗したときの配列場所
+	int failerButtonX = 0;
+	int failerButtonY = 1;
+
+	//通常時の場所
+	int defaultButtonX = 0;
+	int defaultButtonY = 0;
+	// ボタン名によって処理を分岐
+	if (_buttonName == BUTTON_NAME_START) {
+
+		// ユーザー名が入力されていない場合...
+		if (_inputUserName.empty()) {
+
+			// ユーザー名が入力されていない旨を表示
+			SetUIVisible(_uiPanel, { IMAGE_TEXT0, IMAGE_POPUP, BUTTON_NAME_OK }, true);
+			_uiPanel->PushButtonToArray((UIButton*)_uiPanel->GetUIObject(BUTTON_NAME_OK));
+			_uiPanel->SetButtonArrayIndex(failerButtonX, failerButtonY);
+
+			status_ = 0;
+		}
+
+		// ユーザー名が入力されている場合...
+		else {
+
+			// 既存ユーザー名として登録されている場合...
+			if (um.isUserRegistered(_inputUserName) == true) {
+
+				// ユーザー名が既に登録されている旨を表示
+				SetUIVisible(_uiPanel, { IMAGE_TEXT1, IMAGE_POPUP, BUTTON_NAME_OK }, true);
+				_uiPanel->PushButtonToArray((UIButton*)_uiPanel->GetUIObject(BUTTON_NAME_OK));
+				_uiPanel->SetButtonArrayIndex(failerButtonX, failerButtonY);
+
+				status_ = 1;
+			}
+
+			// 既存ユーザー名として登録されていない場合...
+			else {
+
+				// 新規データを作成する旨を表示
+				SetUIVisible(_uiPanel, { IMAGE_TEXT2, IMAGE_POPUP, BUTTON_NAME_OK, BUTTON_NAME_NO }, true);
+				_uiPanel->PushButtonToArray((UIButton*)_uiPanel->GetUIObject(BUTTON_NAME_OK));
+				_uiPanel->PushButtonToArray((UIButton*)_uiPanel->GetUIObject(BUTTON_NAME_NO));
+				_uiPanel->SetButtonArrayIndex(failerButtonX, failerButtonY);
+
+				status_ = 2;
+			}
+		}
+	}
+
+	else if (_buttonName == BUTTON_NAME_CONTINUE) {
+
+		// ユーザー名が入力されていない場合...
+		if (_inputUserName.empty()) {
+
+			// ユーザー名が入力されていない旨を表示
+			SetUIVisible(_uiPanel, { IMAGE_TEXT0, IMAGE_POPUP, BUTTON_NAME_OK }, true);
+			_uiPanel->PushButtonToArray((UIButton*)_uiPanel->GetUIObject(BUTTON_NAME_OK));
+			_uiPanel->SetButtonArrayIndex(failerButtonX, failerButtonY);
+
+			status_ = 0;
+		}
+
+		// ユーザー名が入力されている場合...
+		else {
+
+			// 既存ユーザー名として登録されている場合...
+			if (um.isUserRegistered(_inputUserName) == true) {
+
+				// 既に登録されているユーザー名でゲームを開始する旨を表示
+				SetUIVisible(_uiPanel, { IMAGE_TEXT3, TEXT_USER_NAME, TEXT_LIBRARY_STATUS, TEXT_PLAY_TOTAL_TIME, IMAGE_POPUP, BUTTON_NAME_OK,BUTTON_NAME_NO }, true);
+				_uiPanel->PushButtonToArray((UIButton*)_uiPanel->GetUIObject(BUTTON_NAME_OK));
+				_uiPanel->PushButtonToArray((UIButton*)_uiPanel->GetUIObject(BUTTON_NAME_NO));
+				_uiPanel->SetButtonArrayIndex(failerButtonX, failerButtonY);
+				// ユーザー情報を適応
+				{
+					// ユーザー名を適応
+					((UIText*)_uiPanel->GetUIObject(TEXT_USER_NAME))->SetText(_inputUserName);
+
+					// 図鑑の完成率を適応
+					string completenessRateStr = std::to_string(um.GetLibraryCompletenessRate(_inputUserName)) + "%";
+					((UIText*)_uiPanel->GetUIObject(TEXT_LIBRARY_STATUS))->SetText(completenessRateStr);
+
+					// プレイ時間を適応
+					string playTotalTimeStr; {
+						int totalSec = um.GetPlayTotalTime(_inputUserName) / FPS;
+
+						int hour = totalSec / 3600;
+						int min = (totalSec % 3600) / 60;
+						int sec = totalSec % 60;
+
+						std::ostringstream oss;
+						oss << std::setw(2) << std::setfill('0') << hour << ":"
+							<< std::setw(2) << std::setfill('0') << min << ":"
+							<< std::setw(2) << std::setfill('0') << sec;
+
+						playTotalTimeStr = oss.str();
+					}
+					((UIText*)_uiPanel->GetUIObject(TEXT_PLAY_TOTAL_TIME))->SetText(playTotalTimeStr);
+				}
+
+				// OKボタン,NOボタンを配列に追加
+
+				status_ = 3;
+			}
+
+			// 既存ユーザー名として登録されていない場合...
+			else {
+
+				// 既存データが存在しない旨を表示
+				SetUIVisible(_uiPanel, { IMAGE_TEXT4, IMAGE_POPUP, BUTTON_NAME_OK }, true);
+				_uiPanel->PushButtonToArray((UIButton*)_uiPanel->GetUIObject(BUTTON_NAME_OK));
+				_uiPanel->SetButtonArrayIndex(failerButtonX, failerButtonY);
+				// OKボタンを配列に追加
+
+				status_ = 4;
+			}
+		}
+	}
+
+
+
+	else if (_buttonName == BUTTON_NAME_OK) {
+		
+		_uiPanel->SetButtonArrayIndex(defaultButtonX, defaultButtonY);
+		// 状態によって処理を分岐
+		switch (status_) 
+		{
+		case 0: ClosePopup(_uiPanel);					break;
+		case 1: ClosePopup(_uiPanel);					break;
+		case 2: GameStart(&um,_inputUserName,true);		break;
+		case 3: GameStart(&um, _inputUserName, false);	break;
+		case 4: ClosePopup(_uiPanel);					break;
+		}
+
+		_uiPanel->RemoveButtonFromArray((UIButton*)_uiPanel->GetUIObject(BUTTON_NAME_OK));
+		_uiPanel->RemoveButtonFromArray((UIButton*)_uiPanel->GetUIObject(BUTTON_NAME_NO));
+	}
+
+	else if (_buttonName == BUTTON_NAME_NO) {
+
+		_uiPanel->SetButtonArrayIndex(defaultButtonX, defaultButtonY);
+
+		_uiPanel->RemoveButtonFromArray((UIButton*)_uiPanel->GetUIObject(BUTTON_NAME_OK));
+		_uiPanel->RemoveButtonFromArray((UIButton*)_uiPanel->GetUIObject(BUTTON_NAME_NO));
+		ClosePopup(_uiPanel);
+	}
+
+	else if (_buttonName == BUTTON_NAME_END) {
+
+		// ゲームを終了する
+		PostQuitMessage(0);
+	}
+}
+
+void Scene_Title::GameStart(UserManager* _userManager, string _userName, bool _isNewUser)
+{
+	// 新規ユーザーの場合はユーザーを登録
+	if(_isNewUser)_userManager->RegisterUser(_userName);
+
+	// ユーザーをログイン
+	_userManager->LoginUser(_userName);
+
+	// シーンを切り替える
+	SceneManager* sceneManager = static_cast<SceneManager*>(FindObject("SceneManager"));
+	sceneManager->ChangeScene(SCENE_ID_MENU, TID_BLACKOUT);
+}
+
+void Scene_Title::SetUIVisible(UIPanel* _uiPanel, vector<string> _uiObjectNames, bool _visible)
+{
+	// 指定されたUIオブジェクトを表示/非表示にする
+	for (auto& uiObjectName : _uiObjectNames) {
+		_uiPanel->GetUIObject(uiObjectName)->SetVisible(_visible);
+	}
+}
+
+void Scene_Title::ClosePopup(UIPanel* _uiPanel)
+{
+	SetUIVisible(_uiPanel, {
+		BUTTON_NAME_OK,
+		BUTTON_NAME_NO, 
+		IMAGE_POPUP,
+		IMAGE_TEXT0,
+		IMAGE_TEXT1,
+		IMAGE_TEXT2,
+		IMAGE_TEXT3,
+		IMAGE_TEXT4,
+		TEXT_USER_NAME,
+		TEXT_LIBRARY_STATUS,
+		TEXT_PLAY_TOTAL_TIME
+	}, false);
 }

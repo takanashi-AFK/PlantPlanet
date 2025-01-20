@@ -339,8 +339,6 @@ void Scene_Play::DrawDebugDataEditWindow()
 {
 	if (!isDebugDataEditWindowOpen_) return;
 
-
-
 	Component_PlayerBehavior* playerBehavior = nullptr;
 	for (auto pb : pStage_->FindComponents(ComponentType::PlayerBehavior))
 		playerBehavior = (Component_PlayerBehavior*)pb;

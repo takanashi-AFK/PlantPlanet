@@ -87,8 +87,5 @@ private:
 	void UpdateTabButtonImages(MenuType _menuType);
 
 	bool ConfirmButton(UIButton* _button);
-
-	bool IsButtonMouseOver(UIButton* _button);
-
 };
 

@@ -1,11 +1,21 @@
 #pragma once
 
-#include"../../Engine/GameObject/GameObject.h"
+#include "../../Engine/GameObject/GameObject.h"
+
+#include <string>
+#include <vector>
+
+using std::string;
+using std::vector;
+class UIPanel;
+class UserManager;
 
 class Scene_Title:public GameObject
 {
 private:
-	bool isFirstSelectButton_;
+	bool	isFirstSelectButton_;	// 最初にボタンを選択しているどうかを保持する変数
+	int		status_;				// 現在の状態を保持する変数
+
 public:
 	/// <summary> コンストラクタ </summary>
 	Scene_Title(GameObject* parent);
@@ -21,5 +31,22 @@ public:
 
 	/// <summary> 解放 </summary>
 	void Release() override;
-};
 
+private:
+	/// <summary> UI入力処理 </summary>
+	void HandleUIInput(UIPanel* _uiPanel, bool& _isFirstSelectButton);
+
+	/// <summary> ボタンアクション処理 </summary>
+	void ProcessButtonAction(UIPanel* _uiPanel,string _buttonName, string _userName);
+
+	/// <summary> ゲーム開始処理 </summary>
+	void GameStart(UserManager* _userManager,string _userName,bool _isNewUser);
+/*
+uiControl: */
+	/// <summary> UIオブジェクトの表示/非表示を設定 </summary>
+	void SetUIVisible(UIPanel* _uiPanel, vector<string> _uiObjectNames, bool _visible);
+
+	/// <summary> ポップアップを閉じる </summary>
+	void ClosePopup(UIPanel* _uiPanel);
+
+};
