@@ -146,38 +146,28 @@ void Scene_Title::HandleUIInput(UIPanel* _uiPanel, bool& _isFirstSelectButton)
 		}
 	}
 
-	// ボタンが押下されたかを判定し、ボタンのアクションを実行
-
+	// 現在、選択中 かつ レイヤーが一番上のボタンを取得
 	UIButton* selectingButton = UIButton::GetTopSelectingUI(_uiPanel->GetUIObject(UIType::UI_BUTTON));
 
-	if (selectingButton &&selectingButton->OnClick())
-	{
-		ProcessButtonAction
-		(_uiPanel, selectingButton->GetObjectName(), uiInputString->GetInputString());
-	}
-
+	// UIボタンが押下された場合...
+	if (selectingButton != nullptr && selectingButton->OnClick())
+		ProcessButtonAction(_uiPanel, selectingButton->GetObjectName(), uiInputString->GetInputString());
+	
+	// パッドのAボタンが押下された場合... ( レイヤーに関係なく )
 	selectingButton = _uiPanel->GetSelectingButton();
-
-	if (selectingButton)
-	{
-		selectingButton->SetShader(Direct3D::SHADER_BUTTON_SELECT);
-		if (Input::IsPadButtonDown(XINPUT_GAMEPAD_A))
-		{
-			ProcessButtonAction
-			(_uiPanel, selectingButton->GetObjectName(), uiInputString->GetInputString());
-		}
-	}
+	if (selectingButton == nullptr) return;
+	
+	// ボタンのシェーダーを変更
+	selectingButton->SetShader(Direct3D::SHADER_BUTTON_SELECT);
+	
+	// パッドのAボタンが押下された場合...
+	if (Input::IsPadButtonDown(XINPUT_GAMEPAD_A))
+		ProcessButtonAction(_uiPanel, selectingButton->GetObjectName(), uiInputString->GetInputString());
+	
 }
 
 void Scene_Title::ProcessButtonAction(UIPanel* _uiPanel,string _buttonName, string _inputUserName)
 {
-	// `_status`の定義
-	// 0: ユーザー名が入力されていない
-	// 1: ユーザー名が既に登録されている
-	// 2: 新規データを作成する
-	// 3: 既に登録されているユーザー名でゲームを開始する
-	// 4: 既存データが存在しない
-
 	// ユーザーマネージャーのインスタンスを取得
 	UserManager& um = UserManager::GetInstance();
 
@@ -188,6 +178,14 @@ void Scene_Title::ProcessButtonAction(UIPanel* _uiPanel,string _buttonName, stri
 	//通常時の場所
 	int defaultButtonX = 0;
 	int defaultButtonY = 0;
+
+	// `_status`の定義
+	// 0: ユーザー名が入力されていない
+	// 1: ユーザー名が既に登録されている
+	// 2: 新規データを作成する
+	// 3: 既に登録されているユーザー名でゲームを開始する
+	// 4: 既存データが存在しない
+
 	// ボタン名によって処理を分岐
 	if (_buttonName == BUTTON_NAME_START) {
 
@@ -254,6 +252,7 @@ void Scene_Title::ProcessButtonAction(UIPanel* _uiPanel,string _buttonName, stri
 				_uiPanel->PushButtonToArray((UIButton*)_uiPanel->GetUIObject(BUTTON_NAME_OK));
 				_uiPanel->PushButtonToArray((UIButton*)_uiPanel->GetUIObject(BUTTON_NAME_NO));
 				_uiPanel->SetButtonArrayIndex(failerButtonX, failerButtonY);
+
 				// ユーザー情報を適応
 				{
 					// ユーザー名を適応
@@ -293,18 +292,16 @@ void Scene_Title::ProcessButtonAction(UIPanel* _uiPanel,string _buttonName, stri
 				SetUIVisible(_uiPanel, { IMAGE_TEXT4, IMAGE_POPUP, BUTTON_NAME_OK }, true);
 				_uiPanel->PushButtonToArray((UIButton*)_uiPanel->GetUIObject(BUTTON_NAME_OK));
 				_uiPanel->SetButtonArrayIndex(failerButtonX, failerButtonY);
-				// OKボタンを配列に追加
-
+				
 				status_ = 4;
 			}
 		}
 	}
 
-
-
 	else if (_buttonName == BUTTON_NAME_OK) {
 		
 		_uiPanel->SetButtonArrayIndex(defaultButtonX, defaultButtonY);
+
 		// 状態によって処理を分岐
 		switch (status_) 
 		{
@@ -322,7 +319,6 @@ void Scene_Title::ProcessButtonAction(UIPanel* _uiPanel,string _buttonName, stri
 	else if (_buttonName == BUTTON_NAME_NO) {
 
 		_uiPanel->SetButtonArrayIndex(defaultButtonX, defaultButtonY);
-
 		_uiPanel->RemoveButtonFromArray((UIButton*)_uiPanel->GetUIObject(BUTTON_NAME_OK));
 		_uiPanel->RemoveButtonFromArray((UIButton*)_uiPanel->GetUIObject(BUTTON_NAME_NO));
 		ClosePopup(_uiPanel);

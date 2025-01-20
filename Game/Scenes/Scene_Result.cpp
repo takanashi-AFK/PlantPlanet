@@ -15,6 +15,7 @@
 #include "../Plants/PlantCollection.h"
 #include "../Objects/UI/UIImage.h"
 #include "../Objects/UI/UICursor.h"
+#include "../Otheres/UserManager.h"
 
 
 using namespace Constants;
@@ -44,7 +45,6 @@ void Scene_Result::Initialize()
 	for (const auto& plant : g_thisPlayGetPlantData) {
 		countedPlant[plant.name_]++;
 	}
-
 
 	for (int i = 0; i <= 9; i++) {
 		// ƒJƒEƒ“ƒg‚µ‚½A•¨‚Ì”‚ðŽæ“¾
@@ -80,6 +80,7 @@ void Scene_Result::Initialize()
 	}
 
 
+	UserManager& um = UserManager::GetInstance();
 }
 
 void Scene_Result::Update()

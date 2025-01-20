@@ -35,6 +35,7 @@
 #include "../GaugeComponents/Component_StaminaGauge.h"
 #include "../../Salad.h"
 #include "../../MakeSalad.h"
+#include "../../../../Otheres/UserManager.h"
 
 using namespace Constants;
 
@@ -768,6 +769,11 @@ void Component_PlayerBehavior::Interact()
 			PlantData plantData;
 			nearestPlant = GetNearestPlant(plantData);
 			if (nearestPlant != nullptr) {
+
+				// ライブラリの更新
+				UserManager& um = UserManager::GetInstance();
+				um.UpdateLibraryStatus(um.GetLoggedInUser()->userName, plantData.id_);
+
 				// 所持植物リストに追加
 				myPlants_.push_back(plantData);
 
