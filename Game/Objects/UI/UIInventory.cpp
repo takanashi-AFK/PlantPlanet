@@ -81,8 +81,7 @@ namespace UIInventory {
 		int x, y;
 		itemPanel_->GetButtonIndex(&x, &y);
 
-
-	
+		/*入力処理*/
 		{
 			if (Input::IsPadButtonDown(XINPUT_GAMEPAD_DPAD_LEFT)) {
 				// 最初の入力かつ、選択できるボタンがある場合

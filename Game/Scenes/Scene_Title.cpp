@@ -50,11 +50,13 @@ void Scene_Title::Update()
 			uiPanel->SelectorMove(UIPanel::SELECTOR_MOVE_TO::RIGHT);
 		}
 
-		for (auto button : uiPanel->GetUIObjects()) {
+		for (auto button : uiPanel->GetUIObject(UI_BUTTON)) {
 			UIButton* uiButton = static_cast<UIButton*>(button);
-
+			 string buttonName;
 			// ボタン名を取得
-			const std::string& buttonName = uiButton->GetObjectName();
+			if (uiButton != nullptr) {
+				 buttonName = uiButton->GetObjectName();
+			}
 
 			// マウスでクリックされた場合の処理
 			if (uiButton->OnClick()) {
@@ -68,10 +70,12 @@ void Scene_Title::Update()
 				continue; // 他の条件をチェックしない
 			}
 
+			UIButton* buttons = uiPanel->GetSelectingButton();
+				
 			// パッドでの選択状態とAボタンの処理
-			if (uiPanel->GetSelectingButton() != nullptr &&
-				uiPanel->GetSelectingButton()->GetObjectName() == buttonName &&
-				Input::IsPadButtonDown(XINPUT_GAMEPAD_A)) {
+			if (buttons != nullptr )
+				if(uiPanel->GetSelectingButton()->GetObjectName() == buttonName &&
+					Input::IsPadButtonDown(XINPUT_GAMEPAD_A)) {
 				if (buttonName == "startButton") {
 					SceneManager* sceneManager = static_cast<SceneManager*>(FindObject("SceneManager"));
 					sceneManager->ChangeScene(SCENE_ID_MENU, TID_BLACKOUT);

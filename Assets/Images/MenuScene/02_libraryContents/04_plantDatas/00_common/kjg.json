@@ -1,0 +1,13 @@
+[
+  {
+    "areaId_": 1,
+    "descriptionImageFilePath_Complete_": "Images/MenuScene/02_libraryContents/04_plantDatas/00_common/commonDesc_comp.png",
+    "descriptionImageFilePath_InComplete_": "Images/MenuScene/02_libraryContents/04_plantDatas/00_common/commonDesc_incomp.png",
+    "id_": 0,
+    "imageFilePath_": "Models/tentativeFlowers/R1_flower_1.png",
+    "isSpawn_": true,
+    "modelFilePath_": "Models/tentativeFlowers/R1_flower_1.fbx",
+    "name_": "R1No1",
+    "rarity_": 1
+  }
+]

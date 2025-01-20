@@ -48,6 +48,7 @@ void Scene_Menu::Initialize()
 		else if (uiItem->GetObjectName() == "BackGround") { backGround = (UIImage*)uiItem; }
 	}
 
+	panel->ResetSelectedButton();
 	isFirstSelectButton_ = true;
 }
 
@@ -143,7 +144,7 @@ void Scene_Menu::Play()
 
 void Scene_Menu::Index()
 {
-	static string imageNameHead = "INDEX-Plant";
+	static string imageNameHead = "INDEX-FrameButton";
 	if (isFirstChange_ == true) {
 		// globalから今まで取得したことのある植物のデータを取得
 		for (const auto plant : g_playerPlantData) {
@@ -168,20 +169,21 @@ void Scene_Menu::Index()
 		for (auto item : panel->GetUIObjects()) {
 
 			if (item->GetObjectName().starts_with(imageNameHead)) {
-				plantButtonList.push_back((UIButton*)item);
+				plantFrameButtonList.push_back((UIButton*)item);
+			}
+			else if (item->GetObjectName().starts_with("INDEX-Plant")) {
+				plantImageList.push_back((UIImage*)item);
 			}
 		}
 
-		for (auto button : plantButtonList) {
-
-			// ここには本来、ゲットしていない花のシルエットが表示される
-			button->SetImage("Models/tentativeFlowers/R1_flower_1.png");
-			button->SetVisible(true); // 条件を満たした場合のみ表示
-
+		for (auto button : plantFrameButtonList) {
+			
+			button->SetVisible(true);
 			// 対応するPlantDataがあるか確認
 			for (auto [key, plantData] : plantDataMap_) {
-				if (button->GetObjectName() == imageNameHead + std::to_string(plantData.id_)) {
-					button->SetImage(plantData.imageFilePath_);
+				for(auto plantImage : plantImageList)
+				if (plantImage->GetObjectName() == "INDEX-Plant" + std::to_string(plantData.id_)) {
+					plantImage->SetImage(plantData.imageFilePath_);
 					break; // マッチしたらループ終了
 				}
 			}
@@ -190,7 +192,7 @@ void Scene_Menu::Index()
 		UpdateTabButtonImages(INDEX);
 		panel->ResetArrayOfButton();
 
-		for(auto plantButton : plantButtonList)
+		for(auto plantButton : plantFrameButtonList)
 		panel->PushButtonToArray(plantButton);
 
 
@@ -206,7 +208,7 @@ void Scene_Menu::Index()
 		panel->ResetSelectedButton();
 	}*/
 
-	for (auto item : plantButtonList) {
+	for (auto item : plantFrameButtonList) {
 		if (((UIButton*)item)->GetIsMouseOverThisButton()) {
 			panel->ResetSelectedButton();
 			int x, y;
@@ -216,38 +218,80 @@ void Scene_Menu::Index()
 		}
 	}
 
-	for (auto plantButton : plantButtonList) {
+	for (auto plantButton : plantFrameButtonList) {
 		if (ConfirmButton(plantButton)) {
+			bool havePlantFlag = false;
+			std::string buttonName = ((UIButton*)plantButton)->GetObjectName();
 
-			// 対応するPlantDataがあるか確認
-			for (auto [key, plantData] : plantDataMap_) {
-				// その植物を持っていたら完璧な説明を表示
-				if (plantButton->GetObjectName() == imageNameHead + std::to_string(plantData.id_)) {
-					std::string buttonName = ((UIButton*)plantButton)->GetObjectName();
+			std::string idString = buttonName.substr(imageNameHead.size());
 
-					std::string idString = buttonName.substr(imageNameHead.size());
+			int id = std::stoi(idString);
 
-					int id = std::stoi(idString);
+			if (g_playerPlantData.empty())
+				havePlantFlag = false;
+				
+				for(auto havePlant : g_playerPlantData){
+					if (havePlant.id_ != id) {
+						havePlantFlag = false;
+					}
+					else {
+						havePlantFlag = true;
+					}
+				}
 
-					for (auto plant : g_playerPlantData) {
-						if (plant.id_ == id) {
-							std::string imagePath = plant.descriptionImageFilePath_;
-							imagePath.erase(0, imagePath.find_first_not_of(' ')); // 先頭のスペースを削除
-							imagePath.erase(imagePath.find_last_not_of(' ') + 1); // 末尾のスペースを削除
-
-							descriptionImage->SetImage(imagePath.c_str());
+				for (auto plants : PlantCollection::GetPlants()) {
+					if (plants.second.id_ == id) {
+						if (havePlantFlag == true) {
+							descriptionImage->SetImage(plants.second.descriptionImageFilePath_Complete_);
 							descriptionImage->SetVisible(true);
-							break;
+						}
+							
+						else if (havePlantFlag == false) {
+							descriptionImage->SetImage(plants.second.descriptionImageFilePath_InComplete_);
+							descriptionImage->SetVisible(true);
 						}
 					}
-					break;
 				}
-				else { // その植物を持っていなかったら不完全な説明を表示
-					
+				
+			//
 
-				}
-			}
-			
+			//if (plant.second.id_ == id) {
+
+			//	std::string imagePath = plant.second.descriptionImageFilePath_InComplete_;
+			//	imagePath.erase(0, imagePath.find_first_not_of(' ')); // 先頭のスペースを削除
+			//	imagePath.erase(imagePath.find_last_not_of(' ') + 1); // 末尾のスペースを削除
+
+			//	descriptionImage->SetImage(imagePath.c_str());
+			//	descriptionImage->SetVisible(true);
+			//	break;
+
+			//}
+			//// 対応するPlantDataがあるか確認
+			//for (auto [key, plantData] : plantDataMap_) {
+			//	// その植物を持っていたら完璧な説明を表示
+			//	if (plantButton->GetObjectName() == imageNameHead + std::to_string(plantData.id_)) {
+			//		havePlantID = plantData.id_;
+
+			//		std::string buttonName = ((UIButton*)plantButton)->GetObjectName();
+
+			//		std::string idString = buttonName.substr(imageNameHead.size());
+
+			//		int id = std::stoi(idString);
+
+			//		for (auto plant : g_playerPlantData) {
+			//			if (plant.id_ == id) {
+			//				std::string imagePath = plant.descriptionImageFilePath_Complete_;
+			//				imagePath.erase(0, imagePath.find_first_not_of(' ')); // 先頭のスペースを削除
+			//				imagePath.erase(imagePath.find_last_not_of(' ') + 1); // 末尾のスペースを削除
+
+			//				descriptionImage->SetImage(imagePath.c_str());
+			//				descriptionImage->SetVisible(true);
+			//				break;
+			//			}
+			//		}
+			//		break;
+			//	}
+			//}
 		}
 	}
 
@@ -514,13 +558,13 @@ void Scene_Menu::UpdateTabButtonImages(MenuType _menuType)
 	{
 		std::string imagePath;
 		if (tab->GetObjectName() == "TAB-PlayButton")
-			imagePath = (_menuType == PLAY) ? "Images/MenuScene/PlayButton_Selected.png" : "Images/MenuScene/PlayButton_UnSelected.png";
+			imagePath = (_menuType == PLAY) ? "Images/MenuScene/common/05_playTabSelected.png" : "Images/MenuScene/common/01_playTab.png";
 		else if (tab->GetObjectName() == "TAB-IndexButton")
-			imagePath = (_menuType == INDEX) ? "Images/MenuScene/IndexButton_Selected.png" : "Images/MenuScene/IndexButton_UnSelected.png";
+			imagePath = (_menuType == INDEX) ? "Images/MenuScene/common/06_libraryTabSelected.png" : "Images/MenuScene/common/02_libraryTab.png";
 		else if (tab->GetObjectName() == "TAB-RankingButton")
-			imagePath = (_menuType == RANKING) ? "Images/MenuScene/RankingButton_Selected.png" : "Images/MenuScene/RankingButton_UnSelected.png";
+			imagePath = (_menuType == RANKING) ? "Images/MenuScene/common/07_rankingTabSelected.png" : "Images/MenuScene/common/03_rankingTab.png";
 		else if (tab->GetObjectName() == "TAB-OptionButton")
-			imagePath = (_menuType == OPTION) ? "Images/MenuScene/OptionButton_Selected.png" : "Images/MenuScene/OptionButton_UnSelected.png";
+			imagePath = (_menuType == OPTION) ? "Images/MenuScene/common/08_optionTabSelected.png" : "Images/MenuScene/common/04_optionTab.png";
 
 		tab->SetImage(imagePath);
 	}
