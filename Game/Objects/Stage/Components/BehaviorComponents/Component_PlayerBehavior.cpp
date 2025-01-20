@@ -884,7 +884,7 @@ void Component_PlayerBehavior::ApplyEffects()
 			constexpr int BOTTOM = 2;
 			
 			string info = data.time != -1 ?
-				std::format("{}% ,{}sec", data.amount, data.time) :
+				std::format("{}%,{}sec", data.amount, data.time) :
 				std::format("{}%", data.amount);
 			info = (data.specialText == "") ?
 				info :
