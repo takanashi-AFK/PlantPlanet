@@ -39,19 +39,27 @@ public:
 	/// <summary> ImGui表示 </summary>
 	void DrawData() override;
 
-	void SetArrayPlace(int x, int y);
-	void GetArrayPlace(int* x, int* y) const;
 
-	string GetImageFilePath() const { return imageFilePath_; }
-
-	void SetShader(Direct3D::SHADER_TYPE type);
-	Direct3D::SHADER_TYPE  GetShader()const;
-
-	bool GetIsMouseOverThisButton();
 /*
 setter :*/
 	/// <summary> 画像ファイルパスを設定 </summary>
 	void SetImage(string _imageFilePath);
+	void SetShader(Direct3D::SHADER_TYPE type);
+	void SetArrayPlace(int x, int y);
+
+/*
+getter */
+
+	//この配列の中にあるボタンで一番上かつ選択されているボタンを取得
+	static UIButton* GetTopSelectingUI(vector<UIObject*> list);
+
+	void GetArrayPlace(int* x, int* y) const;
+
+	string GetImageFilePath() const { return imageFilePath_; }
+
+	Direct3D::SHADER_TYPE  GetShader()const;
+
+	bool GetIsMouseOverThisButton();
 
 /*
 predicate :*/
@@ -60,9 +68,6 @@ predicate :*/
 
 	/// <summary> マウスがボタンの上にあるか </summary>
 	bool IsMouseOver(XMFLOAT2 _position);
-
-	static constexpr int ALPHA_MAX = 256;
-	static constexpr int ALPHA_MIDDLE = 192;
 
 private:
 	/// <summary> 画像座標を画面座標に変換 </summary>

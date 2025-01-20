@@ -59,6 +59,7 @@ getter :*/
 	/// <summary> オブジェクトリストの取得 </summary>
 	vector<UIObject*> GetUIObjects() { return childList_; };
 
+
 /*
 setter :*/
 	/// <summary> オブジェクトの可視化を設定 </summary>

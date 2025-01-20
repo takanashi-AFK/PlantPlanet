@@ -175,6 +175,28 @@ void UIButton::SetArrayPlace(int x, int y)
     arrayPlaceY_ = y;
 }
 
+UIButton* UIButton::GetTopSelectingUI(vector<UIObject*> list)
+{
+    UIObject* topButton = nullptr;
+    int depth = -1;
+
+    for (auto& button : list) {
+
+        XMFLOAT2 mousePos = { Input::GetMousePosition().x,Input::GetMousePosition().y };
+        static_cast<UIButton*>(button)->ConvertToImageCoordinates(mousePos);
+
+		static_cast<UIButton*>(button)->IsMouseOver(mousePos) && depth < button->GetLayerNumber() && button->IsVisible() ?
+            topButton = button, depth = button->GetLayerNumber() : NULL;
+
+        static_cast<UIButton*>(button)->SetShader(Direct3D::SHADER_TYPE::SHADER_BUTTON_NOTSELECT);
+    }
+
+	if (topButton)
+        static_cast<UIButton*>(topButton)->SetShader(Direct3D::SHADER_TYPE::SHADER_BUTTON_SELECT);
+
+	return static_cast<UIButton*>(topButton);
+}
+
 void UIButton::GetArrayPlace(int* x, int* y) const
 {
     *x = arrayPlaceX_;

@@ -147,16 +147,13 @@ void Scene_Title::HandleUIInput(UIPanel* _uiPanel, bool& _isFirstSelectButton)
 	}
 
 	// ボタンが押下されたかを判定し、ボタンのアクションを実行
-	for (auto uiObject : _uiPanel->GetUIObject(UIType::UI_BUTTON)) {
 
-		// ボタンが押下された場合...
-		UIButton* uiButton = static_cast<UIButton*>(uiObject);
-		if (uiButton->OnClick()) 
-			ProcessButtonAction(_uiPanel,uiButton->GetObjectName(), uiInputString->GetInputString());
+	UIButton* selectingButton = UIButton::GetTopSelectingUI(_uiPanel->GetUIObject(UIType::UI_BUTTON));
 
-		// パッドのAボタンが押下された場合...
-		if(Input::IsPadButtonDown(XINPUT_GAMEPAD_A)) 
-			ProcessButtonAction(_uiPanel,_uiPanel->GetSelectingButton()->GetObjectName(), uiInputString->GetInputString());
+	if (selectingButton &&selectingButton->OnClick())
+	{
+		ProcessButtonAction
+		(_uiPanel, selectingButton->GetObjectName(), uiInputString->GetInputString());
 	}
 }
 
