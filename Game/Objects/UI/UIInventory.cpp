@@ -65,12 +65,6 @@ namespace UIInventory {
 		int x, y;
 		itemPanel_->GetButtonIndex(&x, &y);
 
-		ImGui::Text("x:%d y:%d", x, y);
-		for (auto a : itemPanel_->GetArrayList()) {
-			ImGui::Text(a->GetObjectName().c_str());
-		}
-
-
 		/*“ü—Íˆ—*/
 		{
 			if (Input::IsPadButtonDown(XINPUT_GAMEPAD_DPAD_LEFT)) {
