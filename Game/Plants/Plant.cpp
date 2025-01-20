@@ -21,7 +21,7 @@ std::function<PlantData::FuncValue(Component_PlayerBehavior*)> PlantData::GetFun
 
 	switch (id)
 	{
-	case 0: return [&,time = SecToFrame(20.f)](Component_PlayerBehavior* pb) mutable ->PlantData::FuncValue
+	case 0: return [&,time = SecToFrame(20.f),id](Component_PlayerBehavior* pb) mutable ->PlantData::FuncValue
 		{
 			ret.isUsable = false;
 			ret.time = time / FPS;
@@ -55,7 +55,7 @@ std::function<PlantData::FuncValue(Component_PlayerBehavior*)> PlantData::GetFun
 			return ret;
 		};
 
-	case 1: return[&](Component_PlayerBehavior* pb) mutable ->PlantData::FuncValue
+	case 1: return[&,id](Component_PlayerBehavior* pb) mutable ->PlantData::FuncValue
 		{
 			ret.isUsable = false;
 			ret.time = -1;
@@ -71,7 +71,7 @@ std::function<PlantData::FuncValue(Component_PlayerBehavior*)> PlantData::GetFun
 			return ret;
 		};
 
-	case 2: return[&,time = SecToFrame(30)](Component_PlayerBehavior* pb) mutable ->PlantData::FuncValue
+	case 2: return[&,time = SecToFrame(30),id](Component_PlayerBehavior* pb) mutable ->PlantData::FuncValue
 		{
 			ret.isUsable = false;
 			ret.time = time / FPS;
@@ -99,7 +99,7 @@ std::function<PlantData::FuncValue(Component_PlayerBehavior*)> PlantData::GetFun
 			return ret;
 		};
 
-	case 3: return[&](Component_PlayerBehavior* pb) mutable ->PlantData::FuncValue
+	case 3: return[&,id](Component_PlayerBehavior* pb) mutable ->PlantData::FuncValue
 		{
 			ret.isUsable = false;
 			ret.time = -1;
@@ -108,7 +108,7 @@ std::function<PlantData::FuncValue(Component_PlayerBehavior*)> PlantData::GetFun
 			ret.amount = 10;
 
 			auto* hp = static_cast<Component_HealthGauge*>(pb->GetChildComponent("PlayerHealthGauge"));
-			if (!hp);// return false;
+			if (!hp) return ret;
 
 			auto healedHP = (hp->GetMax() * 0.1f) + (hp->GetNow());
 			hp->SetNow(healedHP);
@@ -116,7 +116,7 @@ std::function<PlantData::FuncValue(Component_PlayerBehavior*)> PlantData::GetFun
 			return ret;
 		};
 
-	case 4: return[&,time = SecToFrame(30)](Component_PlayerBehavior* pb) mutable ->PlantData::FuncValue
+	case 4: return[&,time = SecToFrame(30),id](Component_PlayerBehavior* pb) mutable ->PlantData::FuncValue
 		{
 			ret.isUsable = false;
 			ret.time = time / FPS;
@@ -136,14 +136,14 @@ std::function<PlantData::FuncValue(Component_PlayerBehavior*)> PlantData::GetFun
 
 			else
 			{
-				rng->SetPower(pb->defaultPow_Melee);
+				rng->SetPower(pb->defaultPow_Range);
 				ret.isUsable = false;
 			}
 
 			return ret;
 		};
 
-	case 5: return[&](Component_PlayerBehavior* pb) mutable ->PlantData::FuncValue
+	case 5: return[&,id](Component_PlayerBehavior* pb) mutable ->PlantData::FuncValue
 		{
 			ret.isUsable = false;
 			ret.time = -1;
@@ -160,7 +160,7 @@ std::function<PlantData::FuncValue(Component_PlayerBehavior*)> PlantData::GetFun
 			return ret;
 		};
 
-	case 6: return[&](Component_PlayerBehavior* pb) mutable ->PlantData::FuncValue
+	case 6: return[&,id](Component_PlayerBehavior* pb) mutable ->PlantData::FuncValue
 		{
 			ret.isUsable = false;
 			ret.time = -1;
@@ -169,7 +169,7 @@ std::function<PlantData::FuncValue(Component_PlayerBehavior*)> PlantData::GetFun
 			ret.amount = 25;
 
 			auto* hp = static_cast<Component_HealthGauge*>(pb->GetChildComponent("PlayerHealthGauge"));
-			if (!hp)	;
+			if (!hp)	return ret;
 
 			auto fixedHP = (hp->GetMax() * 1.25);
 			hp->SetMax(fixedHP);
@@ -205,7 +205,7 @@ std::function<PlantData::FuncValue(Component_PlayerBehavior*)> PlantData::GetFun
 			return ret;
 		};
 
-	case 8: return[&](Component_PlayerBehavior* pb) mutable ->PlantData::FuncValue
+	case 8: return[&,id](Component_PlayerBehavior* pb) mutable ->PlantData::FuncValue
 		{
 			ret.isUsable = false;
 			ret.time = -1;
@@ -223,7 +223,7 @@ std::function<PlantData::FuncValue(Component_PlayerBehavior*)> PlantData::GetFun
 			return ret;
 		};
 
-	case 9: return[&,time = SecToFrame(20)](Component_PlayerBehavior* pb) mutable ->PlantData::FuncValue
+	case 9: return[&,time = SecToFrame(20),id](Component_PlayerBehavior* pb) mutable ->PlantData::FuncValue
 		{
 			ret.isUsable = false;
 			ret.time = time / FPS;
@@ -253,7 +253,7 @@ std::function<PlantData::FuncValue(Component_PlayerBehavior*)> PlantData::GetFun
 		};
 
 
-	default:return[&](Component_PlayerBehavior* pb)->PlantData::FuncValue 
+	default:return[&,id](Component_PlayerBehavior* pb)->PlantData::FuncValue 
 		{
 			ret.isUsable = false;
 			ret.time =-1;

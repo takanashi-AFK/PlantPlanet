@@ -1,6 +1,6 @@
 #include "Scene_Title.h"
 
-// ƒCƒ“ƒNƒ‹[ƒh
+// ã‚¤ãƒ³ã‚¯ãƒ«ãƒ¼ãƒ‰
 #include"../../Engine/SceneManager.h"
 #include "../Objects/UI/UIPanel.h"
 #include "../Objects/UI/UIButton.h"
@@ -16,7 +16,7 @@
 using namespace Constants;
 
 namespace {
-	// UI–¼’è”
+	// UIåå®šæ•°
 	const string BUTTON_NAME_START		= "startButton";
 	const string BUTTON_NAME_CONTINUE	= "continueButton";
 	const string BUTTON_NAME_END		= "EndButton";
@@ -43,33 +43,33 @@ Scene_Title::Scene_Title(GameObject* parent)
 
 void Scene_Title::Initialize()
 {
-	// UIƒpƒlƒ‹ & ƒŒƒCƒAƒEƒg‚Ì“Ç
+	// UIãƒ‘ãƒãƒ« & ãƒ¬ã‚¤ã‚¢ã‚¦ãƒˆã®èª­è¾¼
 	json loadData;
 	if (JsonReader::Load("Datas/SceneLayout/title.json", loadData)) UIPanel::GetInstance()->Load(loadData);
 
 	UIPanel* uiPanel = UIPanel::GetInstance(); {
-		// ƒ{ƒ^ƒ“”z—ñ‚Ì‰Šú‰»
+		// ãƒœã‚¿ãƒ³é…åˆ—ã®åˆæœŸåŒ–
 		uiPanel->ResetArrayOfButton();
 
-		// “Á’è‚Ìƒ{ƒ^ƒ“‚ğ”z—ñ‚É’Ç‰Á
+		// ç‰¹å®šã®ãƒœã‚¿ãƒ³ã‚’é…åˆ—ã«è¿½åŠ 
 		uiPanel->PushButtonToArray((UIButton*)uiPanel->GetUIObject(BUTTON_NAME_START));
 		uiPanel->PushButtonToArray((UIButton*)uiPanel->GetUIObject(BUTTON_NAME_CONTINUE));
 	}
 
-	// A•¨î•ñ‚ğ“Ç
+	// æ¤ç‰©æƒ…å ±ã‚’èª­è¾¼
 	json plantData;
 	if (JsonReader::Load("Datas/PlantData/TentativeFlowers.json", plantData))PlantCollection::Load(plantData);
 }
 
 void Scene_Title::Update()
 {
-	// UIƒpƒlƒ‹‚Ìæ“¾
+	// UIãƒ‘ãƒãƒ«ã®å–å¾—
 	UIPanel* uiPanel = UIPanel::GetInstance();
 
-	// UI“ü—Íˆ—
+	// UIå…¥åŠ›å‡¦ç†
 	HandleUIInput(uiPanel, isFirstSelectButton_);
 
-	// ƒ†[ƒU[–¼“ü—ÍƒtƒH[ƒ€‚©‚ç•¶š—ñ‚ğæ“¾
+	// ãƒ¦ãƒ¼ã‚¶ãƒ¼åå…¥åŠ›ãƒ•ã‚©ãƒ¼ãƒ ã‹ã‚‰æ–‡å­—åˆ—ã‚’å–å¾—
 	UIInputString* uiInputString = (UIInputString*)uiPanel->GetUIObject(UIType::UI_INPUTSTRING)[0];
 	if (uiInputString == nullptr) return;
 
@@ -107,54 +107,54 @@ void Scene_Title::Release()
 
 void Scene_Title::HandleUIInput(UIPanel* _uiPanel, bool& _isFirstSelectButton)
 {
-	// ƒ†[ƒU[–¼“ü—ÍƒtƒH[ƒ€‚©‚ç•¶š—ñ‚ğæ“¾
+	// ãƒ¦ãƒ¼ã‚¶ãƒ¼åå…¥åŠ›ãƒ•ã‚©ãƒ¼ãƒ ã‹ã‚‰æ–‡å­—åˆ—ã‚’å–å¾—
 	UIInputString* uiInputString = (UIInputString*)_uiPanel->GetUIObject(UIType::UI_INPUTSTRING)[0];
 	if (uiInputString == nullptr) return;
 
-	// ƒRƒ“ƒgƒ[ƒ‰[“ü—Í‚É‚æ‚è‰Ÿ‰º‚·‚éƒ{ƒ^ƒ“‚ğ‘I‘ğ
+	// ã‚³ãƒ³ãƒˆãƒ­ãƒ¼ãƒ©ãƒ¼å…¥åŠ›ã«ã‚ˆã‚ŠæŠ¼ä¸‹ã™ã‚‹ãƒœã‚¿ãƒ³ã‚’é¸æŠ
 	{
 		if (Input::IsPadButtonDown(XINPUT_GAMEPAD_DPAD_LEFT)) {
 
-			// ƒV[ƒ““àÅ‰‚Ì“ü—Í‚Ìê‡...
+			// ã‚·ãƒ¼ãƒ³å†…æœ€åˆã®å…¥åŠ›ã®å ´åˆ...
 			if (_isFirstSelectButton == true) {
 
-				// ƒ{ƒ^ƒ“‚Ì‘I‘ğˆÊ’u‚ğ‰Šú‰»
+				// ãƒœã‚¿ãƒ³ã®é¸æŠä½ç½®ã‚’åˆæœŸåŒ–
 				_uiPanel->SetButtonArrayIndex(0, 0);
 
-				// ƒV[ƒ““àÅ‰‚Ì“ü—Íƒtƒ‰ƒO‚ğOFF
+				// ã‚·ãƒ¼ãƒ³å†…æœ€åˆã®å…¥åŠ›ãƒ•ãƒ©ã‚°ã‚’OFF
 				_isFirstSelectButton = false;
 			}
 
-			// ƒ{ƒ^ƒ“‚Ì‘I‘ğˆÊ’u‚ğ¶‚ÉˆÚ“®
+			// ãƒœã‚¿ãƒ³ã®é¸æŠä½ç½®ã‚’å·¦ã«ç§»å‹•
 			else _uiPanel->SelectorMove(UIPanel::SELECTOR_MOVE_TO::LEFT);
 			
 		}
 		else if (Input::IsPadButtonDown(XINPUT_GAMEPAD_DPAD_RIGHT)) {
 
-			// ƒV[ƒ““àÅ‰‚Ì“ü—Í‚Ìê‡...
+			// ã‚·ãƒ¼ãƒ³å†…æœ€åˆã®å…¥åŠ›ã®å ´åˆ...
 			if (_isFirstSelectButton == true) {
 
-				// ƒ{ƒ^ƒ“‚Ì‘I‘ğˆÊ’u‚ğ‰Šú‰»
+				// ãƒœã‚¿ãƒ³ã®é¸æŠä½ç½®ã‚’åˆæœŸåŒ–
 				_uiPanel->SetButtonArrayIndex(0, 0);
 
-				// ƒV[ƒ““àÅ‰‚Ì“ü—Íƒtƒ‰ƒO‚ğOFF
+				// ã‚·ãƒ¼ãƒ³å†…æœ€åˆã®å…¥åŠ›ãƒ•ãƒ©ã‚°ã‚’OFF
 				_isFirstSelectButton = false;
 			}
 
-			// ƒ{ƒ^ƒ“‚Ì‘I‘ğˆÊ’u‚ğ‰E‚ÉˆÚ“®
+			// ãƒœã‚¿ãƒ³ã®é¸æŠä½ç½®ã‚’å³ã«ç§»å‹•
 			else _uiPanel->SelectorMove(UIPanel::SELECTOR_MOVE_TO::RIGHT);
 		}
 	}
 
-	// ƒ{ƒ^ƒ“‚ª‰Ÿ‰º‚³‚ê‚½‚©‚ğ”»’è‚µAƒ{ƒ^ƒ“‚ÌƒAƒNƒVƒ‡ƒ“‚ğÀs
+	// ãƒœã‚¿ãƒ³ãŒæŠ¼ä¸‹ã•ã‚ŒãŸã‹ã‚’åˆ¤å®šã—ã€ãƒœã‚¿ãƒ³ã®ã‚¢ã‚¯ã‚·ãƒ§ãƒ³ã‚’å®Ÿè¡Œ
 	for (auto uiObject : _uiPanel->GetUIObject(UIType::UI_BUTTON)) {
 
-		// ƒ{ƒ^ƒ“‚ª‰Ÿ‰º‚³‚ê‚½ê‡...
+		// ãƒœã‚¿ãƒ³ãŒæŠ¼ä¸‹ã•ã‚ŒãŸå ´åˆ...
 		UIButton* uiButton = static_cast<UIButton*>(uiObject);
 		if (uiButton->OnClick()) 
 			ProcessButtonAction(_uiPanel,uiButton->GetObjectName(), uiInputString->GetInputString());
 
-		// ƒpƒbƒh‚ÌAƒ{ƒ^ƒ“‚ª‰Ÿ‰º‚³‚ê‚½ê‡...
+		// ãƒ‘ãƒƒãƒ‰ã®Aãƒœã‚¿ãƒ³ãŒæŠ¼ä¸‹ã•ã‚ŒãŸå ´åˆ...
 		if(Input::IsPadButtonDown(XINPUT_GAMEPAD_A)) 
 			ProcessButtonAction(_uiPanel,_uiPanel->GetSelectingButton()->GetObjectName(), uiInputString->GetInputString());
 	}
@@ -162,56 +162,56 @@ void Scene_Title::HandleUIInput(UIPanel* _uiPanel, bool& _isFirstSelectButton)
 
 void Scene_Title::ProcessButtonAction(UIPanel* _uiPanel,string _buttonName, string _inputUserName)
 {
-	// `_status`‚Ì’è‹`
-	// 0: ƒ†[ƒU[–¼‚ª“ü—Í‚³‚ê‚Ä‚¢‚È‚¢
-	// 1: ƒ†[ƒU[–¼‚ªŠù‚É“o˜^‚³‚ê‚Ä‚¢‚é
-	// 2: V‹Kƒf[ƒ^‚ğì¬‚·‚é
-	// 3: Šù‚É“o˜^‚³‚ê‚Ä‚¢‚éƒ†[ƒU[–¼‚ÅƒQ[ƒ€‚ğŠJn‚·‚é
-	// 4: Šù‘¶ƒf[ƒ^‚ª‘¶İ‚µ‚È‚¢
+	// `_status`ã®å®šç¾©
+	// 0: ãƒ¦ãƒ¼ã‚¶ãƒ¼åãŒå…¥åŠ›ã•ã‚Œã¦ã„ãªã„
+	// 1: ãƒ¦ãƒ¼ã‚¶ãƒ¼åãŒæ—¢ã«ç™»éŒ²ã•ã‚Œã¦ã„ã‚‹
+	// 2: æ–°è¦ãƒ‡ãƒ¼ã‚¿ã‚’ä½œæˆã™ã‚‹
+	// 3: æ—¢ã«ç™»éŒ²ã•ã‚Œã¦ã„ã‚‹ãƒ¦ãƒ¼ã‚¶ãƒ¼åã§ã‚²ãƒ¼ãƒ ã‚’é–‹å§‹ã™ã‚‹
+	// 4: æ—¢å­˜ãƒ‡ãƒ¼ã‚¿ãŒå­˜åœ¨ã—ãªã„
 
-	// ƒ†[ƒU[ƒ}ƒl[ƒWƒƒ[‚ÌƒCƒ“ƒXƒ^ƒ“ƒX‚ğæ“¾
+	// ãƒ¦ãƒ¼ã‚¶ãƒ¼ãƒãƒãƒ¼ã‚¸ãƒ£ãƒ¼ã®ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ã‚’å–å¾—
 	UserManager& um = UserManager::GetInstance();
 
-	// ƒ{ƒ^ƒ“–¼‚É‚æ‚Á‚Äˆ—‚ğ•ªŠò
+	// ãƒœã‚¿ãƒ³åã«ã‚ˆã£ã¦å‡¦ç†ã‚’åˆ†å²
 	if (_buttonName == BUTTON_NAME_START) {
 
-		// ƒ{ƒ^ƒ“”z—ñ‚ğC³
+		// ãƒœã‚¿ãƒ³é…åˆ—ã‚’ä¿®æ­£
 		_uiPanel->ResetArrayOfButton();
 
-		// ƒ†[ƒU[–¼‚ª“ü—Í‚³‚ê‚Ä‚¢‚È‚¢ê‡...
+		// ãƒ¦ãƒ¼ã‚¶ãƒ¼åãŒå…¥åŠ›ã•ã‚Œã¦ã„ãªã„å ´åˆ...
 		if (_inputUserName.empty()) {
 
-			// ƒ†[ƒU[–¼‚ª“ü—Í‚³‚ê‚Ä‚¢‚È‚¢|‚ğ•\¦
+			// ãƒ¦ãƒ¼ã‚¶ãƒ¼åãŒå…¥åŠ›ã•ã‚Œã¦ã„ãªã„æ—¨ã‚’è¡¨ç¤º
 			SetUIVisible(_uiPanel, { IMAGE_TEXT0, IMAGE_POPUP, BUTTON_NAME_OK }, true);
 
-			// OKƒ{ƒ^ƒ“‚ğ”z—ñ‚É’Ç‰Á
+			// OKãƒœã‚¿ãƒ³ã‚’é…åˆ—ã«è¿½åŠ 
 			_uiPanel->PushButtonToArray((UIButton*)_uiPanel->GetUIObject(BUTTON_NAME_OK));
 
 			status_ = 0;
 		}
 
-		// ƒ†[ƒU[–¼‚ª“ü—Í‚³‚ê‚Ä‚¢‚éê‡...
+		// ãƒ¦ãƒ¼ã‚¶ãƒ¼åãŒå…¥åŠ›ã•ã‚Œã¦ã„ã‚‹å ´åˆ...
 		else {
 
-			// Šù‘¶ƒ†[ƒU[–¼‚Æ‚µ‚Ä“o˜^‚³‚ê‚Ä‚¢‚éê‡...
+			// æ—¢å­˜ãƒ¦ãƒ¼ã‚¶ãƒ¼åã¨ã—ã¦ç™»éŒ²ã•ã‚Œã¦ã„ã‚‹å ´åˆ...
 			if (um.isUserRegistered(_inputUserName) == true) {
 
-				// ƒ†[ƒU[–¼‚ªŠù‚É“o˜^‚³‚ê‚Ä‚¢‚é|‚ğ•\¦
+				// ãƒ¦ãƒ¼ã‚¶ãƒ¼åãŒæ—¢ã«ç™»éŒ²ã•ã‚Œã¦ã„ã‚‹æ—¨ã‚’è¡¨ç¤º
 				SetUIVisible(_uiPanel, { IMAGE_TEXT1, IMAGE_POPUP, BUTTON_NAME_OK }, true);
 
-				// OKƒ{ƒ^ƒ“‚ğ”z—ñ‚É’Ç‰Á
+				// OKãƒœã‚¿ãƒ³ã‚’é…åˆ—ã«è¿½åŠ 
 				_uiPanel->PushButtonToArray((UIButton*)_uiPanel->GetUIObject(BUTTON_NAME_OK));
 
 				status_ = 1;
 			}
 
-			// Šù‘¶ƒ†[ƒU[–¼‚Æ‚µ‚Ä“o˜^‚³‚ê‚Ä‚¢‚È‚¢ê‡...
+			// æ—¢å­˜ãƒ¦ãƒ¼ã‚¶ãƒ¼åã¨ã—ã¦ç™»éŒ²ã•ã‚Œã¦ã„ãªã„å ´åˆ...
 			else {
 
-				// V‹Kƒf[ƒ^‚ğì¬‚·‚é|‚ğ•\¦
+				// æ–°è¦ãƒ‡ãƒ¼ã‚¿ã‚’ä½œæˆã™ã‚‹æ—¨ã‚’è¡¨ç¤º
 				SetUIVisible(_uiPanel, { IMAGE_TEXT2, IMAGE_POPUP, BUTTON_NAME_OK, BUTTON_NAME_NO }, true);
 
-				// OKƒ{ƒ^ƒ“,NOƒ{ƒ^ƒ“‚ğ”z—ñ‚É’Ç‰Á
+				// OKãƒœã‚¿ãƒ³,NOãƒœã‚¿ãƒ³ã‚’é…åˆ—ã«è¿½åŠ 
 				_uiPanel->PushButtonToArray((UIButton*)_uiPanel->GetUIObject(BUTTON_NAME_OK));
 				_uiPanel->PushButtonToArray((UIButton*)_uiPanel->GetUIObject(BUTTON_NAME_NO));
 
@@ -222,40 +222,40 @@ void Scene_Title::ProcessButtonAction(UIPanel* _uiPanel,string _buttonName, stri
 
 	else if (_buttonName == BUTTON_NAME_CONTINUE) {
 
-		// ƒ{ƒ^ƒ“”z—ñ‚ğC³
+		// ãƒœã‚¿ãƒ³é…åˆ—ã‚’ä¿®æ­£
 		_uiPanel->ResetArrayOfButton();
 
-		// ƒ†[ƒU[–¼‚ª“ü—Í‚³‚ê‚Ä‚¢‚È‚¢ê‡...
+		// ãƒ¦ãƒ¼ã‚¶ãƒ¼åãŒå…¥åŠ›ã•ã‚Œã¦ã„ãªã„å ´åˆ...
 		if (_inputUserName.empty()) {
 
-			// ƒ†[ƒU[–¼‚ª“ü—Í‚³‚ê‚Ä‚¢‚È‚¢|‚ğ•\¦
+			// ãƒ¦ãƒ¼ã‚¶ãƒ¼åãŒå…¥åŠ›ã•ã‚Œã¦ã„ãªã„æ—¨ã‚’è¡¨ç¤º
 			SetUIVisible(_uiPanel, { IMAGE_TEXT0, IMAGE_POPUP, BUTTON_NAME_OK }, true);
 
-			// OKƒ{ƒ^ƒ“‚ğ”z—ñ‚É’Ç‰Á
+			// OKãƒœã‚¿ãƒ³ã‚’é…åˆ—ã«è¿½åŠ 
 			_uiPanel->PushButtonToArray((UIButton*)_uiPanel->GetUIObject(BUTTON_NAME_OK));
 
 			status_ = 0;
 		}
 
-		// ƒ†[ƒU[–¼‚ª“ü—Í‚³‚ê‚Ä‚¢‚éê‡...
+		// ãƒ¦ãƒ¼ã‚¶ãƒ¼åãŒå…¥åŠ›ã•ã‚Œã¦ã„ã‚‹å ´åˆ...
 		else {
 
-			// Šù‘¶ƒ†[ƒU[–¼‚Æ‚µ‚Ä“o˜^‚³‚ê‚Ä‚¢‚éê‡...
+			// æ—¢å­˜ãƒ¦ãƒ¼ã‚¶ãƒ¼åã¨ã—ã¦ç™»éŒ²ã•ã‚Œã¦ã„ã‚‹å ´åˆ...
 			if (um.isUserRegistered(_inputUserName) == true) {
 
-				// Šù‚É“o˜^‚³‚ê‚Ä‚¢‚éƒ†[ƒU[–¼‚ÅƒQ[ƒ€‚ğŠJn‚·‚é|‚ğ•\¦
+				// æ—¢ã«ç™»éŒ²ã•ã‚Œã¦ã„ã‚‹ãƒ¦ãƒ¼ã‚¶ãƒ¼åã§ã‚²ãƒ¼ãƒ ã‚’é–‹å§‹ã™ã‚‹æ—¨ã‚’è¡¨ç¤º
 				SetUIVisible(_uiPanel, { IMAGE_TEXT3, TEXT_USER_NAME, TEXT_LIBRARY_STATUS, TEXT_PLAY_TOTAL_TIME, IMAGE_POPUP, BUTTON_NAME_OK,BUTTON_NAME_NO }, true);
 
-				// ƒ†[ƒU[î•ñ‚ğ“K‰
+				// ãƒ¦ãƒ¼ã‚¶ãƒ¼æƒ…å ±ã‚’é©å¿œ
 				{
-					// ƒ†[ƒU[–¼‚ğ“K‰
+					// ãƒ¦ãƒ¼ã‚¶ãƒ¼åã‚’é©å¿œ
 					((UIText*)_uiPanel->GetUIObject(TEXT_USER_NAME))->SetText(_inputUserName);
 
-					// }ŠÓ‚ÌŠ®¬—¦‚ğ“K‰
+					// å›³é‘‘ã®å®Œæˆç‡ã‚’é©å¿œ
 					string completenessRateStr = std::to_string(um.GetLibraryCompletenessRate(_inputUserName)) + "%";
 					((UIText*)_uiPanel->GetUIObject(TEXT_LIBRARY_STATUS))->SetText(completenessRateStr);
 
-					// ƒvƒŒƒCŠÔ‚ğ“K‰
+					// ãƒ—ãƒ¬ã‚¤æ™‚é–“ã‚’é©å¿œ
 					string playTotalTimeStr; {
 						int totalSec = um.GetPlayTotalTime(_inputUserName) / FPS;
 
@@ -273,20 +273,20 @@ void Scene_Title::ProcessButtonAction(UIPanel* _uiPanel,string _buttonName, stri
 					((UIText*)_uiPanel->GetUIObject(TEXT_PLAY_TOTAL_TIME))->SetText(playTotalTimeStr);
 				}
 
-				// OKƒ{ƒ^ƒ“,NOƒ{ƒ^ƒ“‚ğ”z—ñ‚É’Ç‰Á
+				// OKãƒœã‚¿ãƒ³,NOãƒœã‚¿ãƒ³ã‚’é…åˆ—ã«è¿½åŠ 
 				_uiPanel->PushButtonToArray((UIButton*)_uiPanel->GetUIObject(BUTTON_NAME_OK));
 				_uiPanel->PushButtonToArray((UIButton*)_uiPanel->GetUIObject(BUTTON_NAME_NO));
 
 				status_ = 3;
 			}
 
-			// Šù‘¶ƒ†[ƒU[–¼‚Æ‚µ‚Ä“o˜^‚³‚ê‚Ä‚¢‚È‚¢ê‡...
+			// æ—¢å­˜ãƒ¦ãƒ¼ã‚¶ãƒ¼åã¨ã—ã¦ç™»éŒ²ã•ã‚Œã¦ã„ãªã„å ´åˆ...
 			else {
 
-				// Šù‘¶ƒf[ƒ^‚ª‘¶İ‚µ‚È‚¢|‚ğ•\¦
+				// æ—¢å­˜ãƒ‡ãƒ¼ã‚¿ãŒå­˜åœ¨ã—ãªã„æ—¨ã‚’è¡¨ç¤º
 				SetUIVisible(_uiPanel, { IMAGE_TEXT4, IMAGE_POPUP, BUTTON_NAME_OK }, true);
 
-				// OKƒ{ƒ^ƒ“‚ğ”z—ñ‚É’Ç‰Á
+				// OKãƒœã‚¿ãƒ³ã‚’é…åˆ—ã«è¿½åŠ 
 				_uiPanel->PushButtonToArray((UIButton*)_uiPanel->GetUIObject(BUTTON_NAME_OK));
 
 				status_ = 4;
@@ -296,16 +296,16 @@ void Scene_Title::ProcessButtonAction(UIPanel* _uiPanel,string _buttonName, stri
 
 	else if (_buttonName == BUTTON_NAME_OK) {
 		
-		// ƒ{ƒ^ƒ“”z—ñ‚ğC³
+		// ãƒœã‚¿ãƒ³é…åˆ—ã‚’ä¿®æ­£
 		{
 			_uiPanel->ResetArrayOfButton();
 
-			// ‚Í‚¶‚ß‚©‚çƒ{ƒ^ƒ“,‚Â‚Ã‚«‚©‚çƒ{ƒ^ƒ“‚ğ”z—ñ‚É’Ç‰Á
+			// ã¯ã˜ã‚ã‹ã‚‰ãƒœã‚¿ãƒ³,ã¤ã¥ãã‹ã‚‰ãƒœã‚¿ãƒ³ã‚’é…åˆ—ã«è¿½åŠ 
 			_uiPanel->PushButtonToArray((UIButton*)_uiPanel->GetUIObject(BUTTON_NAME_START));
 			_uiPanel->PushButtonToArray((UIButton*)_uiPanel->GetUIObject(BUTTON_NAME_CONTINUE));
 		}
 
-		// ó‘Ô‚É‚æ‚Á‚Äˆ—‚ğ•ªŠò
+		// çŠ¶æ…‹ã«ã‚ˆã£ã¦å‡¦ç†ã‚’åˆ†å²
 		switch (status_) 
 		{
 		case 0: ClosePopup(_uiPanel);					break;
@@ -318,42 +318,42 @@ void Scene_Title::ProcessButtonAction(UIPanel* _uiPanel,string _buttonName, stri
 
 	else if (_buttonName == BUTTON_NAME_NO) {
 
-		// ƒ{ƒ^ƒ“”z—ñ‚ğC³
+		// ãƒœã‚¿ãƒ³é…åˆ—ã‚’ä¿®æ­£
 		{
 			_uiPanel->ResetArrayOfButton();
 
-			// ‚Í‚¶‚ß‚©‚çƒ{ƒ^ƒ“,‚Â‚Ã‚«‚©‚çƒ{ƒ^ƒ“‚ğ”z—ñ‚É’Ç‰Á
+			// ã¯ã˜ã‚ã‹ã‚‰ãƒœã‚¿ãƒ³,ã¤ã¥ãã‹ã‚‰ãƒœã‚¿ãƒ³ã‚’é…åˆ—ã«è¿½åŠ 
 			_uiPanel->PushButtonToArray((UIButton*)_uiPanel->GetUIObject(BUTTON_NAME_START));
 			_uiPanel->PushButtonToArray((UIButton*)_uiPanel->GetUIObject(BUTTON_NAME_CONTINUE));
 		}
 
-		// ƒ|ƒbƒvƒAƒbƒv‚ğ•Â‚¶‚é
+		// ãƒãƒƒãƒ—ã‚¢ãƒƒãƒ—ã‚’é–‰ã˜ã‚‹
 		ClosePopup(_uiPanel);
 	}
 
 	else if (_buttonName == BUTTON_NAME_END) {
 
-		// ƒQ[ƒ€‚ğI—¹‚·‚é
+		// ã‚²ãƒ¼ãƒ ã‚’çµ‚äº†ã™ã‚‹
 		PostQuitMessage(0);
 	}
 }
 
 void Scene_Title::GameStart(UserManager* _userManager, string _userName, bool _isNewUser)
 {
-	// V‹Kƒ†[ƒU[‚Ìê‡‚Íƒ†[ƒU[‚ğ“o˜^
+	// æ–°è¦ãƒ¦ãƒ¼ã‚¶ãƒ¼ã®å ´åˆã¯ãƒ¦ãƒ¼ã‚¶ãƒ¼ã‚’ç™»éŒ²
 	if(_isNewUser)_userManager->RegisterUser(_userName);
 
-	// ƒ†[ƒU[‚ğƒƒOƒCƒ“
+	// ãƒ¦ãƒ¼ã‚¶ãƒ¼ã‚’ãƒ­ã‚°ã‚¤ãƒ³
 	_userManager->LoginUser(_userName);
 
-	// ƒV[ƒ“‚ğØ‚è‘Ö‚¦‚é
+	// ã‚·ãƒ¼ãƒ³ã‚’åˆ‡ã‚Šæ›¿ãˆã‚‹
 	SceneManager* sceneManager = static_cast<SceneManager*>(FindObject("SceneManager"));
 	sceneManager->ChangeScene(SCENE_ID_MENU, TID_BLACKOUT);
 }
 
 void Scene_Title::SetUIVisible(UIPanel* _uiPanel, vector<string> _uiObjectNames, bool _visible)
 {
-	// w’è‚³‚ê‚½UIƒIƒuƒWƒFƒNƒg‚ğ•\¦/”ñ•\¦‚É‚·‚é
+	// æŒ‡å®šã•ã‚ŒãŸUIã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’è¡¨ç¤º/éè¡¨ç¤ºã«ã™ã‚‹
 	for (auto& uiObjectName : _uiObjectNames) {
 		_uiPanel->GetUIObject(uiObjectName)->SetVisible(_visible);
 	}
