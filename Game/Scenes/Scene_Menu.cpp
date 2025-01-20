@@ -41,9 +41,9 @@ void Scene_Menu::Initialize()
 	for (auto uiItem : uiObject_) {
 		uiItem->SetVisible(true);
 		if ((uiItem)->GetObjectName().starts_with("TAB")) { tabButtonList.push_back(((UIButton*)uiItem));  }
-		else if (uiItem->GetObjectName() == "INDEX-DescriptionImage") { descriptionImage = (UIImage*)uiItem; }
+		else if (uiItem->GetObjectName() == "LIB-DescriptionImage") { descriptionImage = (UIImage*)uiItem; }
 		else if (uiItem->GetObjectName().starts_with("PLAY")) { playUIList_.push_back(uiItem);  }
-		else if (uiItem->GetObjectName().starts_with("INDEX")) { indexUIList_.push_back(uiItem);  }
+		else if (uiItem->GetObjectName().starts_with("LIB")) { libraryUIList_.push_back(uiItem);  }
 		else if (uiItem->GetObjectName().starts_with("RANKING")) { rankingUIList_.push_back(uiItem);  }
 		else if (uiItem->GetObjectName().starts_with("OPTION")) { optionUIList_.push_back(uiItem); }
 		else if (uiItem->GetObjectName() == "BackGround") { backGround = (UIImage*)uiItem; }
@@ -67,7 +67,7 @@ void Scene_Menu::Update()
 	switch (currentMenuType)
 	{
 	case PLAY:Play();break;
-	case INDEX:Index();break;
+	case LIBRARY:Library();break;
 	case RANKING:Ranking();break;
 	case OPTION:Option();break;
 	}
@@ -143,9 +143,9 @@ void Scene_Menu::Play()
 
 }
 
-void Scene_Menu::Index()
+void Scene_Menu::Library()
 {
-	static string imageNameHead = "INDEX-FrameButton";
+	static string imageNameHead = "LIB-FrameButton";
 	if (isFirstChange_ == true) {
 		
 		// 検証にあたり、コメントアウト
@@ -171,7 +171,7 @@ void Scene_Menu::Index()
 		// tab,index,background以外のUIを非表示にする
 		for (auto item : panel->GetUIObjects()) {
 			if (std::find(tabButtonList.begin(), tabButtonList.end(), item) == tabButtonList.end() &&
-				std::find(indexUIList_.begin(), indexUIList_.end(), item) == indexUIList_.end() &&
+				std::find(libraryUIList_.begin(), libraryUIList_.end(), item) == libraryUIList_.end() &&
 				item != backGround) {
 				item->SetVisible(false);
 			}
@@ -190,7 +190,7 @@ void Scene_Menu::Index()
 			if (item->GetObjectName().starts_with(imageNameHead)) {
 				plantFrameButtonList.push_back((UIButton*)item);
 			}
-			else if (item->GetObjectName().starts_with("INDEX-Plant")) {
+			else if (item->GetObjectName().starts_with("LIB-Plant")) {
 				plantImageList.push_back((UIImage*)item);
 			}
 		}
@@ -201,14 +201,14 @@ void Scene_Menu::Index()
 			// 対応するPlantDataがあるか確認
 			for (auto [key, plantData] : plantDataMap_) {
 				for(auto plantImage : plantImageList)
-				if (plantImage->GetObjectName() == "INDEX-Plant" + std::to_string(plantData.id_)) {
+				if (plantImage->GetObjectName() == "LIB-Plant" + std::to_string(plantData.id_)) {
 					plantImage->SetImage(plantData.imageFilePath_);
 					break; // マッチしたらループ終了
 				}
 			}
 		}
 
-		UpdateTabButtonImages(INDEX);
+		UpdateTabButtonImages(LIBRARY);
 		panel->ResetArrayOfButton();
 
 		for(auto plantButton : plantFrameButtonList)
@@ -578,8 +578,8 @@ void Scene_Menu::MouseTabMove()
 			if (objectName == "TAB-PlayButton" && currentMenuType != PLAY) {
 				SetMenuType(PLAY);
 			}
-			else if (objectName == "TAB-IndexButton" && currentMenuType != INDEX) {
-				SetMenuType(INDEX);
+			else if (objectName == "TAB-LibraryButton" && currentMenuType != LIBRARY) {
+				SetMenuType(LIBRARY);
 			}
 			else if (objectName == "TAB-RankingButton" && currentMenuType != RANKING) {
 				SetMenuType(RANKING);
@@ -600,8 +600,8 @@ void Scene_Menu::UpdateTabButtonImages(MenuType _menuType)
 		std::string imagePath;
 		if (tab->GetObjectName() == "TAB-PlayButton")
 			imagePath = (_menuType == PLAY) ? "Images/MenuScene/common/05_playTabSelected.png" : "Images/MenuScene/common/01_playTab.png";
-		else if (tab->GetObjectName() == "TAB-IndexButton")
-			imagePath = (_menuType == INDEX) ? "Images/MenuScene/common/06_libraryTabSelected.png" : "Images/MenuScene/common/02_libraryTab.png";
+		else if (tab->GetObjectName() == "TAB-LibraryButton")
+			imagePath = (_menuType == LIBRARY) ? "Images/MenuScene/common/06_libraryTabSelected.png" : "Images/MenuScene/common/02_libraryTab.png";
 		else if (tab->GetObjectName() == "TAB-RankingButton")
 			imagePath = (_menuType == RANKING) ? "Images/MenuScene/common/07_rankingTabSelected.png" : "Images/MenuScene/common/03_rankingTab.png";
 		else if (tab->GetObjectName() == "TAB-OptionButton")

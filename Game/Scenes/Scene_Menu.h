@@ -13,7 +13,7 @@ private:
 	enum MenuType
 	{
 		PLAY = 0,
-		INDEX,
+		LIBRARY,
 		RANKING,
 		OPTION,
 		MAX,
@@ -36,7 +36,7 @@ private:
 	std::vector<UIButton*>	tabButtonList;
 	std::vector<UIObject*>  playUIList_;
 	std::vector<UIObject*>  popUpUIList_;
-	std::vector<UIObject*>	indexUIList_;
+	std::vector<UIObject*>	libraryUIList_;
 	std::vector<UIObject*>	rankingUIList_;
 	std::vector<UIObject*>	optionUIList_;
 	bool isFirstChange_;
@@ -64,7 +64,7 @@ private:
 	//　各メニューの処理
 	void Play();
 
-	void Index();
+	void Library();
 
 	void Ranking();
 
