@@ -71,7 +71,6 @@ getter */
 /*
 setter :*/
 	/// <summary> 画像ファイルパスを設定 </summary>
-	void SetImage(string _imageFilePath);
 
 	void SetSelectImage(string _imageFilePath);
 	void SetDefaultImage(string _imageFilePath);
