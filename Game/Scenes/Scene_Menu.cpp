@@ -145,7 +145,6 @@ void Scene_Menu::Play()
 void Scene_Menu::Index()
 {
 	static string imageNameHead = "INDEX-FrameButton";
-	isFirstChange_ = true;
 	if (isFirstChange_ == true) {
 		
 		// 検証にあたり、コメントアウト
@@ -166,6 +165,7 @@ void Scene_Menu::Index()
 					plantDataMap_[plantData.name_] = plantData;
 				}
 			} 
+			isFirstChange_ = false;
 		}
 
 		// tab,index,background以外のUIを非表示にする
