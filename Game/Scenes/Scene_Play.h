@@ -1,34 +1,29 @@
 #pragma once
 
-// インクルード
+// インクルードディレクティブ
 #include"../../Engine/GameObject/GameObject.h"
 
+// usingディレクティブ
+using std::string;
 
 // 前方宣言
 class Stage;
 class CountDown;
 class TPSCamera;
+class Component_PlayerBehavior;
+class Component_BossBehavior;
 
+/// <summary> ゲームプレイシーンクラス </summary>
 class Scene_Play:public GameObject
 {
 private:
-	Stage* pStage_;			// ステージ
-	CountDown* countDown_;	// カウントダウン
-	TPSCamera* tpsCamera_;	// TPSカメラ
+	Stage* pStage_;					// ステージ
+	TPSCamera* tpsCamera_;			// TPSカメラ
 
-	bool isGameStart_;		// ゲーム開始フラグ
-	bool fixedCursorPos;	// カーソル固定化
-	bool cursorVisible;		// カーソル表示
-	bool isBossSpawn_;
-	bool isDebugDataEditWindowOpen_;
-	bool isShowInventoryFirstTime_;
-
-	enum PlaySceneState {
-		PlaySceneState_None = 0,
-		PlaySceneState_Play,
-		PlaySceneState_Inventory,
-		PlaySceneState_Max
-	}currentState_;
+	bool fixedCursorPos_;			// カーソル固定化
+	bool cursorVisible_;				// カーソル表示
+	bool isShowInventoryFirstTime_;	// インベントリUIを初めて表示したかのフラグ
+	bool isOpenInventoryUI_;		// インベントリUIを開いているかのフラグ
 
 public:
 	/// <summary> コンストラクタ </summary>
@@ -47,27 +42,47 @@ public:
 	void Release() override;
 
 private:
-	/// <summary> UIパネルの初期化 </summary>
-	void InitUIPanel();
+	/// <summary> インベントリUIを非表示 </summary>
+	void CloseInventoryUI();
 
-	/// <summary> ステージの初期化 </summary>
-	void InitStage();
-
-	/// <summary> カメラの初期化 </summary>
-	void InitCamera();
+	/// <summary> インベントリUIを表示 </summary>
+	void OpenInventoryUI();
 
 	/// <summary> カーソルの状態を設定 </summary>
 	void SetCursorMode();
 
-	/// <summary> プレイ情報の表示設定 </summary>
-	void SetPlayInfo();
+/*
+initialize:*/
+	/// <summary> アドベンチャーモードの初期化 </summary>
+	void InitAdventureMode();
+	
+	/// <summary> スコアアタックモードの初期化 </summary>
+	void InitScoreAttackMode();
 
-	/// <summary> ボス敵の生成 </summary>
-	void SpawnBossEnemy();
+	/// <summary> UIパネルの初期化 </summary>
+	void InitUIPanel(const string& _fileName);
 
+	/// <summary> ステージの初期化 </summary>
+	void InitStage(const string& _fileName);
+
+	/// <summary> カメラの初期化 </summary>
+	void InitCamera();
+/*
+update :*/
+	/// <summary> スコアアタックモードの更新 </summary>
+	void UpdateScoreAttackMode(Component_PlayerBehavior* _playerBehavior,Component_BossBehavior* _bossBehavior);
+
+	/// <summary> アドベンチャーモードの更新 </summary>
+	void UpdateAdventureMode(Component_PlayerBehavior* _playerBehavior, Component_BossBehavior* _bossBehavior);
+
+	/// <summary> インベントリを表示するUIの更新 </summary>
+	void UpdateInventoryUI();
+
+	/// <summary> プレイヤーの状態を表示するUIの更新 </summary>
+	void UpdateNormalUI(Component_PlayerBehavior* _playerBehavior, Component_BossBehavior* _bossBehavior);
+/*
+debug :*/
+	/// <summary> デバッグデータ編集ウィンドウの描画 ※削除予定 </summary>
 	void DrawDebugDataEditWindow();
-
-	void SetState(PlaySceneState state) { currentState_ = state; };
-
 };
 

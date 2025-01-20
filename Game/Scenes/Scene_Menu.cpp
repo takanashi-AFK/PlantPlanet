@@ -71,6 +71,7 @@ void Scene_Menu::Update()
 	case RANKING:Ranking();break;
 	case OPTION:Option();break;
 	}
+
 }
 
 void Scene_Menu::Draw()
@@ -500,8 +501,14 @@ void Scene_Menu::PopUpMode()
 				isPopUpMode_ = false;
 			}
 			else if (((UIButton*)popUpUI)->GetObjectName() == "PLAY-POPUP-MODE-ADV") {
+
+				// モードをADVに変更
+				g_gameMode = GameMode::MODE_ADVANTURE;
+
+				// シーンを切り替える
 				SceneManager* sceneManager = (SceneManager*)FindObject("SceneManager");
 				sceneManager->ChangeScene(SCENE_ID_PLAY, TID_BLACKOUT);
+
 				// ポップアップUIを非表示にする
 				for(auto pop : popUpUIList_)
 					pop->SetVisible(false);
@@ -510,6 +517,14 @@ void Scene_Menu::PopUpMode()
 				isPopUpMode_ = false;
 			}
 			else if (((UIButton*)popUpUI)->GetObjectName() == "PLAY-POPUP-MODE-SCA") {
+
+				// モードをSCAに変更
+				g_gameMode = GameMode::MODE_SCOREATTACK;
+
+				// シーンを切り替える
+				SceneManager* sceneManager = (SceneManager*)FindObject("SceneManager");
+				sceneManager->ChangeScene(SCENE_ID_PLAY, TID_BLACKOUT);
+
 				// ポップアップUIを非表示にする
 				for (auto pop : popUpUIList_)
 					pop->SetVisible(false);		
@@ -518,6 +533,10 @@ void Scene_Menu::PopUpMode()
 				isPopUpMode_ = false;
 			}
 			else if (((UIButton*)popUpUI)->GetObjectName() == "PLAY-POPUP-MODE-TUT") {
+
+				// モードをTUTに変更
+				g_gameMode = GameMode::MODE_TUTORIAL;
+
 				// ポップアップUIを非表示にする
 				for (auto pop : popUpUIList_)
 					pop->SetVisible(false);
