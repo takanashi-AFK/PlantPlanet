@@ -146,7 +146,6 @@ void Scene_Menu::Play()
 void Scene_Menu::Index()
 {
 	static string imageNameHead = "INDEX-FrameButton";
-	isFirstChange_ = true;
 	if (isFirstChange_ == true) {
 		
 		// 検証にあたり、コメントアウト
