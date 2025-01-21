@@ -18,7 +18,7 @@ void ReturnGate::Initialize()
 
 	AddComponent(CreateComponent("CircleRange", ComponentType::CircleRangeDetector, this));
 	AddComponent(CreateComponent("ReturnGate", ComponentType::Returngate, this));
-
+	
 	modelHandle_ = Model::Load("Models/DebugCollision/BoxCollider.fbx");
 
 	auto* detector  = static_cast<Component_CircleRangeDetector*>(FindComponent("CircleRange"));
@@ -28,6 +28,7 @@ void ReturnGate::Initialize()
 	detector->SetTarget(static_cast<Stage*>(GetParent())->GetStageObject("Player"));
 
 	SetIsColliding(false);
+	Enter();
 }
 
 void ReturnGate::Update()
@@ -43,6 +44,8 @@ void ReturnGate::Draw()
 	SetShader(Direct3D::SHADER_RAREFLOWER);
 	Model::SetTransform(modelHandle_,transform_);
 	Model::Draw(modelHandle_);
+
+	myComponents_;
 }
 
 void ReturnGate::Release()
