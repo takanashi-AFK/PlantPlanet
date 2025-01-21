@@ -140,6 +140,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Game\Objects\Stage\Components\TeleporterComponent\Component_ReturnGate.cpp" />
     <ClCompile Include="Game\Objects\Stage\Components\BehaviorComponents\Component_RangeEnemyBehavior.cpp" />
     <ClCompile Include="Game\Objects\Stage\Components\BehaviorComponents\Component_MeleeEnemyBehavior.cpp" />
     <ClCompile Include="Game\Objects\Stage\Components\MotionComponent\Component_Accessory.cpp" />
@@ -242,8 +243,10 @@
     <ClCompile Include="Game\Objects\Stage\MakeSalad.cpp" />
     <ClCompile Include="Game\Scenes\Scene_Menu.cpp" />
     <ClCompile Include="Game\Otheres\UserManager.cpp" />
+    <ClCompile Include="Game\Objects\Stage\ReturnGate.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Game\Objects\Stage\Components\TeleporterComponent\Component_ReturnGate.h" />
     <ClInclude Include="Game\Objects\Stage\Components\BehaviorComponents\Component_RangeEnemyBehavior.h" />
     <ClInclude Include="Game\Objects\Stage\Components\BehaviorComponents\Component_MeleeEnemyBehavior.h" />
     <ClInclude Include="Game\Objects\Stage\Components\MotionComponent\Component_Accessory.h" />
@@ -350,6 +353,7 @@
     <ClInclude Include="Game\Objects\Stage\Salad.h" />
     <ClInclude Include="Game\Scenes\Scene_Menu.h" />
     <ClInclude Include="Game\Otheres\UserManager.h" />
+    <ClInclude Include="Game\Objects\Stage\ReturnGate.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Assets\Shader\BillBoard.hlsl">

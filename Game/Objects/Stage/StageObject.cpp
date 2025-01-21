@@ -255,7 +255,8 @@ void StageObject::Initialize()
 void StageObject::Update()
 {
 	// 保有するコンポーネントの更新処理
-	for (auto comp : myComponents_)comp->ChildUpdate();
+	for (auto& comp : myComponents_) comp->ChildUpdate();
+
 	OnGround(fallSpeed_);
 	CollisionWall();
 

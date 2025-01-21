@@ -34,6 +34,7 @@
 #include "MotionComponent/Component_Accessory.h"
 #include "BehaviorComponents/Component_RangeEnemyBehavior.h"
 #include "BehaviorComponents/Component_MeleeEnemyBehavior.h"
+#include "TeleporterComponent/Component_ReturnGate.h"
 
 Component::Component(StageObject* _holder, string _name,ComponentType _type)
     :holder_(_holder), name_(_name),type_(_type),childComponents_(),parent_(nullptr),isActive_(false),killMe_(false)
@@ -256,8 +257,10 @@ Component* CreateComponent(string _name, ComponentType _type, StageObject* _hold
 		case Plant: comp = new Component_Plant(_name, _holder, _parent); break;
 		case StaminaGauge: comp = new Component_StaminaGauge(_name, _holder, _parent); break;
 		case Accessory: comp = new Component_Accessory(_name, _holder, _parent); break;
+		case WeakRangeEnemy: comp = new Component_RangeEnemyBehavior(_name, _holder, _parent); break;
 		case MeleeEnemyBehavior: comp = new Component_MeleeEnemyBehavior(_name, _holder, _parent); break;
-    case WeakRangeEnemy : comp = new Component_RangeEnemyBehavior(_name, _holder, _parent); break;
+		case Returngate: comp = new Component_ReturnGate(_name, _holder, _parent); break;
+
 
 		default: /* その他コンポーネントを追加する時は上記のように追加 */ break;
 	}
@@ -302,6 +305,7 @@ string ComponentTypeToString(ComponentType _type)
 	case Accessory: return "AccessoryComponent";
 	case WeakRangeEnemy: return "Weak RangeEnemy";
 	case MeleeEnemyBehavior: return "MeleeEnemyBehaviorComponent";
+	case Returngate: return "ReturnGateComponent";
 		// その他コンポーネントを追加する時は上記のように追加
 
 	default: return "None";

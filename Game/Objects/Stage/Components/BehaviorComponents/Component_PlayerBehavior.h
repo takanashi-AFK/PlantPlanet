@@ -70,6 +70,8 @@ private:
 	bool isEatSaladEnd_  : 1;
 	bool isBreakableWall_: 1;
 
+	bool isFirstOverMAXReserchPoint : 1;
+
 	float stamina_decrease_dodge_;
 	float stamina_decrease_melee_;
 	float stamina_decrease_shoot_;
@@ -125,6 +127,8 @@ public:
 
 	void EatSalad(Salad salad);
 
+	//リサーチポイントの増加とゲートの開放を管理
+	void AddReserchPoint(int point);
 	/*
 	setter :*/
 	/// <param name="_state"> プレイヤーの状態 </param>

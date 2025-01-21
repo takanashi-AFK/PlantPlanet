@@ -21,7 +21,7 @@
 #include "../../../UI/UIImage.h"
 #include "../../../UI/Components/Component_UIEasing.h"
 #include "../../../UI/UIInventory.h"
-
+#include "../../ReturnGate.h"
 
 // child components include
 #include "../AttackComponents/Component_MeleeAttack.h"
@@ -35,6 +35,7 @@
 #include "../GaugeComponents/Component_StaminaGauge.h"
 #include "../../Salad.h"
 #include "../../MakeSalad.h"
+#include "../../Bullet.h"
 
 using namespace Constants;
 
@@ -99,7 +100,8 @@ Component_PlayerBehavior::Component_PlayerBehavior(string _name, StageObject* _h
 	stamina_decrease_shoot_(10),
 	timeCollectPlant(defaultTime_CollectPlant),
 	saladEffects_{},
-	isEatSaladEnd_(false)
+	isEatSaladEnd_(false),
+	isFirstOverMAXReserchPoint(true)
 {
 }
 
@@ -342,6 +344,18 @@ void Component_PlayerBehavior::EatSalad(Salad salad)
 	static_cast<Component_MeleeAttack*>(GetChildComponent("MeleeAttack"))->SetPower(defaultPow_Melee);
 	static_cast<Component_ShootAttack*>(GetChildComponent("ShootAttack"))->SetPower(defaultPow_Range);
 	static_cast<Component_WASDInputMove*>(GetChildComponent("InputMove"))->SetSpeed(defaultSpeed_Walk);
+}
+
+void Component_PlayerBehavior::AddReserchPoint(int point)
+{
+	researchPoint_ += point;
+	constexpr int MAX_RESERCH_POINT = 1;
+
+	if (researchPoint_ >= MAX_RESERCH_POINT && isFirstOverMAXReserchPoint)
+	{
+		CreateReturnGate(holder_->GetParent());
+		isFirstOverMAXReserchPoint = false;
+	}
 }
 
 void Component_PlayerBehavior::SetTimeCollectPlant(float time)
@@ -772,7 +786,7 @@ void Component_PlayerBehavior::Interact()
 				myPlants_.push_back(plantData);
 
 				// 調査ポイントを加算
-				researchPoint_ += GetResearchPointByRarity(plantData);
+				AddReserchPoint(GetResearchPointByRarity(plantData));
 
 				Stage* pStage = ((Stage*)holder_->FindObject("Stage"));
 
