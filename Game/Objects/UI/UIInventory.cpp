@@ -78,97 +78,28 @@ namespace UIInventory {
 
 	void Update()
 	{
-		itemPanel_ = UIPanel::GetInstance();
-		int x, y;
-		itemPanel_->GetButtonIndex(&x, &y);
-
-		
+	
+		// コントローラ入力処理
 		{
+			// Dpad左
 			if (Input::IsPadButtonDown(XINPUT_GAMEPAD_DPAD_LEFT)) {
-				// 最初の入力かつ、選択できるボタンがある場合
-				if (isFirstSelectButton_ == true && itemPanel_->GetArrayList().size() != 0) {
-					// inventoryの一番左のボタンを選択
-					itemPanel_->SetButtonArrayIndex(0, -1);
-					isFirstSelectButton_ = false;
-				}
-				else
-					// 選択中のボタンを左に移動
-					itemPanel_->SelectorMove(UIPanel::SELECTOR_MOVE_TO::LEFT);
+				InventorySelectorMove(UIPanel::SELECTOR_MOVE_TO::LEFT);
 			}
+			// Dpad右
 			if (Input::IsPadButtonDown(XINPUT_GAMEPAD_DPAD_RIGHT)) {
-				if (isFirstSelectButton_ == true && itemPanel_->GetArrayList().size() != 0) {
-					// inventoryの一番左のボタンを選択
-
-					itemPanel_->SetButtonArrayIndex(0, -1);
-					isFirstSelectButton_ = false;
-				}
-				else
-					itemPanel_->SelectorMove(UIPanel::SELECTOR_MOVE_TO::RIGHT);
+				InventorySelectorMove(UIPanel::SELECTOR_MOVE_TO::RIGHT);
 			}
-
+			// Dpad上
 			if (Input::IsPadButtonDown(XINPUT_GAMEPAD_DPAD_UP)) {
-				if (isFirstSelectButton_ == true && itemPanel_->GetArrayList().size() != 0) {
-					// inventoryの一番左のボタンを選択
-					itemPanel_->SetButtonArrayIndex(0, -1);
-					isFirstSelectButton_ = false;
-				}
-				else if (y == -1) { // インベントリの一番上のボタンを選択している場合
-
-					// inventoryButtonListのなかの、selectablearrayに入ってる且つ一番IDが若いものを選択
-					// 最小のX座標
-					int lowestX = INT_MAX;
-					for (auto ingredient : ingredientTable_) {
-						for (auto selectable : itemPanel_->GetArrayList()) {
-							// invが選択できる場合
-							if (ingredient == selectable) {
-								// invの座標を取得
-								int x, y;
-								((UIButton*)ingredient)->GetArrayPlace(&x, &y);
-								// arrayのx座標が最小のものを選択
-								if (x <= lowestX)
-									lowestX = x;
-							}
-						}
-					}
-
-					// 一番arrayのXが若いボタンを選択
-					itemPanel_->SetButtonArrayIndex(lowestX, 0);
-				}
-				else
-					itemPanel_->SelectorMove(UIPanel::SELECTOR_MOVE_TO::UP);
+				InventorySelectorMove(UIPanel::SELECTOR_MOVE_TO::UP);
 			}
+			// Dpad下
 			if (Input::IsPadButtonDown(XINPUT_GAMEPAD_DPAD_DOWN)) {
-				if (isFirstSelectButton_ == true && itemPanel_->GetArrayList().size() != 0) {
-					itemPanel_->SetButtonArrayIndex(3, 0);
-					isFirstSelectButton_ = false;
-				}
-				else if (y == 0) {
-					// getPlantTable_のなかの、selectablearrayに入ってる且つ一番IDが若いものを選択
-
-					int arrayX = INT_MAX;
-					for (auto inv : getPlantTable_) {
-						for (auto selectable : itemPanel_->GetArrayList()) {
-							if (inv == selectable) {
-								int x, y;
-								((UIButton*)inv)->GetArrayPlace(&x, &y);
-								if (x <= arrayX)
-									arrayX = x;
-							}
-						}
-					}
-
-					// 一番arrayのXが若いボタンを選択
-					itemPanel_->SetButtonArrayIndex(arrayX, -1);
-				}
-				else
-					itemPanel_->SelectorMove(UIPanel::SELECTOR_MOVE_TO::BOTTOM);
-			}
-			// インベントリを表示する
-			if (Input::IsPadButtonDown(XINPUT_GAMEPAD_B)) {
-				ShowInventory(false);
-				isFirstSelectButton_ = true;
+				InventorySelectorMove(UIPanel::SELECTOR_MOVE_TO::BOTTOM);
 			}
 
+			// 検証用
+			if (Input::IsPadButtonDown(XINPUT_GAMEPAD_B))isFirstSelectButton_ = true;
 		}
 
 
@@ -346,7 +277,7 @@ namespace UIInventory {
 				if (getPlantTable_[i]->GetObjectName().find("INV-InventoryBack") != 0) {
 					((UIButton*)getPlantTable_[i])->SetImage("Models/tentativeFlowers/BlankFlowerImage.png");
 
-					((UIText*)invTextTable_[i])->SetText(" ");
+					((UIText*)invTextTable_[i])->SetText("");
 					itemPanel_->RemoveButtonFromArray((UIButton*)getPlantTable_[i]);
 				}
 			}
@@ -466,5 +397,72 @@ namespace UIInventory {
 		itemPanel_ = UIPanel::GetInstance();
 
 		return _button->OnClick() || itemPanel_->GetSelectingButton() == _button && Input::IsPadButtonDown(XINPUT_GAMEPAD_A);
+	}
+
+	int GetLowestButtonArrayX(std::vector<UIObject*> _targetVector)
+	{
+		// 最小のX座標
+		int lowestX = INT_MAX;
+		for (auto ingredient : _targetVector) {
+			for (auto selectable : itemPanel_->GetArrayList()) {
+				// invが選択できる場合
+				if (ingredient == selectable) {
+					// invの座標を取得
+					int x, y;
+					((UIButton*)ingredient)->GetArrayPlace(&x, &y);
+					// arrayのx座標が最小のものを選択
+					if (x <= lowestX)
+						lowestX = x;
+				}
+			}
+		}
+
+		if(lowestX != INT_MAX) return lowestX;
+	}
+
+	bool IsFirstSelectableButton()
+	{
+		return isFirstSelectButton_ == true && itemPanel_->GetArrayList().size() != 0;
+	}
+
+	void InventorySelectorMove(UIPanel::SELECTOR_MOVE_TO way)
+	{
+		itemPanel_ = UIPanel::GetInstance();
+		int x = 0, y = 0;
+		itemPanel_->GetButtonIndex(&x, &y);
+
+		if (IsFirstSelectableButton()) {
+			// inventoryの一番左のボタンを選択
+			itemPanel_->SetButtonArrayIndex(0, -1);
+			isFirstSelectButton_ = false;
+		}
+
+		switch (way){
+
+		case UIPanel::SELECTOR_MOVE_TO::UP:
+
+			// yが-1の場合はingredientの一番左のボタンを選択
+			if (y == -1)itemPanel_->SetButtonArrayIndex(GetLowestButtonArrayX(ingredientTable_), 0);
+			else itemPanel_->SelectorMove(UIPanel::SELECTOR_MOVE_TO::UP);
+				break;
+
+		case UIPanel::SELECTOR_MOVE_TO::BOTTOM:
+
+			// yが0の場合はinventoryの一番左のボタンを選択
+			if (y == 0) itemPanel_->SetButtonArrayIndex(GetLowestButtonArrayX(getPlantTable_), -1);
+			else itemPanel_->SelectorMove(UIPanel::SELECTOR_MOVE_TO::BOTTOM);
+				break;
+
+		case UIPanel::SELECTOR_MOVE_TO::LEFT:
+
+			itemPanel_->SelectorMove(UIPanel::SELECTOR_MOVE_TO::LEFT);
+			break;
+
+		case UIPanel::SELECTOR_MOVE_TO::RIGHT:
+
+			itemPanel_->SelectorMove(UIPanel::SELECTOR_MOVE_TO::RIGHT);
+			break;
+
+		}
 	}
 }
