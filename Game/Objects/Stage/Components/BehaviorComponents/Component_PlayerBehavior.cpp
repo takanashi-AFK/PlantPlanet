@@ -21,7 +21,6 @@
 #include "../../../UI/UIImage.h"
 #include "../../../UI/Components/Component_UIEasing.h"
 #include "../../../UI/UIInventory.h"
-#include "../../ReturnGate.h"
 
 // child components include
 #include "../AttackComponents/Component_MeleeAttack.h"
@@ -349,7 +348,7 @@ void Component_PlayerBehavior::EatSalad(Salad salad)
 void Component_PlayerBehavior::AddReserchPoint(int point)
 {
 	researchPoint_ += point;
-	constexpr int MAX_RESERCH_POINT = 100;
+	constexpr int MAX_RESERCH_POINT = 1;
 
 	//100を超えていたかつ初めての時、帰還ゲートを生成する
 	if (researchPoint_ >= MAX_RESERCH_POINT && isFirstOverMAXReserchPoint)
@@ -782,7 +781,16 @@ void Component_PlayerBehavior::Interact()
 			// 最も近い植物オブジェクトを取得
 			PlantData plantData;
 			nearestPlant = GetNearestPlant(plantData);
-			if (nearestPlant != nullptr) {
+
+			ReturnGate* returnGate = {};
+			
+
+			if (IsAbleToReturn(returnGate))
+			{
+				returnGate->Intaract();
+			}
+
+			else if (nearestPlant != nullptr) {
 				// 所持植物リストに追加
 				myPlants_.push_back(plantData);
 
@@ -1181,4 +1189,19 @@ StageObject* Component_PlayerBehavior::GetNearestPlant(PlantData& _plantData)
 
 	// 一番近い植物オブジェクトを返す
 	return nearPlant;
+}
+
+bool Component_PlayerBehavior::IsAbleToReturn(ReturnGate* &rg)
+{
+	Component_CircleRangeDetector* detector = (Component_CircleRangeDetector*)(GetChildComponent("IsInteractableDetector"));
+	if (!detector)return false;
+
+	// 全植物オブジェクトを取得
+	rg = static_cast<ReturnGate*>(holder_->FindObject("ReturnGate"));
+	if (!rg)return false;
+	
+	detector->SetRadius(1.2f);
+	detector->SetTarget(rg);
+
+	return detector->IsContains();
 }

@@ -16,27 +16,15 @@ void ReturnGate::Initialize()
 {
 	transform_.position_ = { 0,0,0 };
 
-	AddComponent(CreateComponent("CircleRange", ComponentType::CircleRangeDetector, this));
 	AddComponent(CreateComponent("ReturnGate", ComponentType::Returngate, this));
 	
 	modelHandle_ = Model::Load("Models/DebugCollision/BoxCollider.fbx");
 
-	auto* detector  = static_cast<Component_CircleRangeDetector*>(FindComponent("CircleRange"));
-
-	detector->SetRadius(1.f);
-	
-	detector->SetTarget(static_cast<Stage*>(GetParent())->GetStageObject("00_player"));
-
 	SetIsColliding(false);
-	Enter();
 }
 
 void ReturnGate::Update()
 {
-	//Žè“®‚Å‚â‚ç‚È‚¢‚Æcomponent‚Ìupdate‚ªŽÀs‚³‚ê‚È‚¢
-	for (auto& comp : myComponents_) {
-		comp->Update();
-	}
 }
 
 void ReturnGate::Draw()
@@ -48,6 +36,14 @@ void ReturnGate::Draw()
 
 void ReturnGate::Release()
 {
+}
+
+void ReturnGate::Intaract()
+{
+	//Žè“®‚Å‚â‚ç‚È‚¢‚Æcomponent‚Ìupdate‚ªŽÀs‚³‚ê‚È‚¢
+	for (auto& comp : myComponents_) {
+		comp->Update();
+	}
 }
 
 class ReturnGate* CreateReturnGate(GameObject* parent, string name)

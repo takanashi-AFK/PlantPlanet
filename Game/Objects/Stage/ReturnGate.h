@@ -14,7 +14,7 @@ public:
 	void Update() override;
 	void Draw() override;
 	void Release() override;
-	
+	void Intaract();
 };
 
 ReturnGate* CreateReturnGate(GameObject* parent , string name = "ReturnGate");

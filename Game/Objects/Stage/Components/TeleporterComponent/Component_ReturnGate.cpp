@@ -19,8 +19,6 @@ void Component_ReturnGate::Initialize()
 
 void Component_ReturnGate::Update()
 {
-	if (!static_cast<Component_CircleRangeDetector*>(holder_->FindComponent("CircleRange"))->IsContains()) return;
-
 	(this->*nowFunc_)();
 }
 
