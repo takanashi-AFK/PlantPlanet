@@ -503,7 +503,7 @@ void Scene_Menu::PopUpMode()
 			else if (((UIButton*)popUpUI)->GetObjectName() == "PLAY-POPUP-MODE-ADV") {
 
 				// モードをADVに変更
-				g_gameMode = GameMode::MODE_ADVANTURE;
+				g_gameMode = GameMode::MODE_ADVENTURE;
 
 				// シーンを切り替える
 				SceneManager* sceneManager = (SceneManager*)FindObject("SceneManager");

@@ -66,7 +66,7 @@ extern string g_selectedStage;	// 選択されたステージ
 extern int g_selectedGameMode;	// 選択されたゲームモード
 extern std::vector<PlantData> g_playerPlantData;	// 植物データ
 extern std::vector<PlantData> g_thisPlayGetPlantData;	// 今回取得した植物データ
-extern enum GameMode { MODE_ADVANTURE, MODE_SCOREATTACK, MODE_TUTORIAL } g_gameMode;	// ゲームモード
+extern enum GameMode { MODE_ADVENTURE, MODE_SCOREATTACK, MODE_TUTORIAL } g_gameMode;	// ゲームモード
 
 // エフェクトデータ
 // fix: 本来はここに置くべきではない

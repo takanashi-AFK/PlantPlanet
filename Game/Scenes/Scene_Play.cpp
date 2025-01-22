@@ -51,7 +51,7 @@ void Scene_Play::Initialize()
 	// ゲームモードによる初期化処理
 	switch (g_gameMode) 
 	{
-	case MODE_ADVANTURE:	InitAdventureMode();	break;
+	case MODE_ADVENTURE:	InitAdventureMode();	break;
 	case MODE_SCOREATTACK:	InitScoreAttackMode();	break;
 	}
 }
@@ -62,22 +62,24 @@ void Scene_Play::Update()
 	SetCursorMode();
 
 	// カメラのアクティブ化
-	tpsCamera_->SetActive(true);
+	if(tpsCamera_ != nullptr)tpsCamera_->SetActive(true);
 
 	// プレイヤー情報を取得
 	Component_PlayerBehavior* playerBehavior = nullptr; {
+		if (pStage_ != nullptr)
 		for (auto pb : pStage_->FindComponents(ComponentType::PlayerBehavior))playerBehavior = (Component_PlayerBehavior*)pb;
 	}
 
 	// ボス情報を取得
 	Component_BossBehavior* bossBehavior = nullptr; {
+		if (pStage_ != nullptr)
 		for (auto bb : pStage_->FindComponents(ComponentType::BossBehavior))bossBehavior = (Component_BossBehavior*)bb;
 	}
 
 	// ゲームモードによる更新処理
 	switch (g_gameMode)
 	{
-	case MODE_ADVANTURE:	UpdateAdventureMode(playerBehavior, bossBehavior);	break;
+	case MODE_ADVENTURE:	UpdateAdventureMode(playerBehavior, bossBehavior);	break;
 	case MODE_SCOREATTACK:	UpdateScoreAttackMode(playerBehavior, bossBehavior);break;
 	}
 
