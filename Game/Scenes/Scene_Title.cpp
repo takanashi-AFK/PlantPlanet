@@ -160,6 +160,7 @@ void Scene_Title::HandleUIInput(UIPanel* _uiPanel, bool& _isFirstSelectButton)
 
 	if (selectingButton)
 	{
+		selectingButton->SetShader(Direct3D::SHADER_BUTTON_SELECT);
 		if (Input::IsPadButtonDown(XINPUT_GAMEPAD_A))
 		{
 			ProcessButtonAction
