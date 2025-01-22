@@ -25,7 +25,7 @@ void ReturnGate::Initialize()
 
 	detector->SetRadius(1.f);
 	
-	detector->SetTarget(static_cast<Stage*>(GetParent())->GetStageObject("Player"));
+	detector->SetTarget(static_cast<Stage*>(GetParent())->GetStageObject("00_player"));
 
 	SetIsColliding(false);
 	Enter();
@@ -33,10 +33,10 @@ void ReturnGate::Initialize()
 
 void ReturnGate::Update()
 {
-	auto i = 0u;
-	i = 5;
-	if (i > 5)
-		return;
+	//Žè“®‚Å‚â‚ç‚È‚¢‚Æcomponent‚Ìupdate‚ªŽÀs‚³‚ê‚È‚¢
+	for (auto& comp : myComponents_) {
+		comp->Update();
+	}
 }
 
 void ReturnGate::Draw()
@@ -44,8 +44,6 @@ void ReturnGate::Draw()
 	SetShader(Direct3D::SHADER_RAREFLOWER);
 	Model::SetTransform(modelHandle_,transform_);
 	Model::Draw(modelHandle_);
-
-	myComponents_;
 }
 
 void ReturnGate::Release()

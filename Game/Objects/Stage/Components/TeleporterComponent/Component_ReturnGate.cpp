@@ -21,7 +21,7 @@ void Component_ReturnGate::Update()
 {
 	if (!static_cast<Component_CircleRangeDetector*>(holder_->FindComponent("CircleRange"))->IsContains()) return;
 
-	//(this->*nowFunc_)();
+	(this->*nowFunc_)();
 }
 
 void Component_ReturnGate::Release()
@@ -37,5 +37,6 @@ void Component_ReturnGate::SceneChange()
 	SceneManager* sm = static_cast<SceneManager*>(holder_->FindObject("SceneManager"));
 	sm->ChangeScene(SCENE_ID_RESULT, TID_BLACKOUT, 1.0f);
 
+	//連続してシーンチェンジ命令を出さないように関数を変える
 	nowFunc_ = &Component_ReturnGate::EmptyWork;
 }

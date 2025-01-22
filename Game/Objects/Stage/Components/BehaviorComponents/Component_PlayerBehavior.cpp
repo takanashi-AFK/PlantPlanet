@@ -349,8 +349,9 @@ void Component_PlayerBehavior::EatSalad(Salad salad)
 void Component_PlayerBehavior::AddReserchPoint(int point)
 {
 	researchPoint_ += point;
-	constexpr int MAX_RESERCH_POINT = 1;
+	constexpr int MAX_RESERCH_POINT = 100;
 
+	//100を超えていたかつ初めての時、帰還ゲートを生成する
 	if (researchPoint_ >= MAX_RESERCH_POINT && isFirstOverMAXReserchPoint)
 	{
 		CreateReturnGate(holder_->GetParent());
