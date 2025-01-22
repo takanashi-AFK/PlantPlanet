@@ -160,7 +160,6 @@ void Scene_Title::HandleUIInput(UIPanel* _uiPanel, bool& _isFirstSelectButton)
 
 	if (selectingButton)
 	{
-		selectingButton->SetShader(Direct3D::SHADER_BUTTON_SELECT);
 		if (Input::IsPadButtonDown(XINPUT_GAMEPAD_A))
 		{
 			ProcessButtonAction
@@ -267,9 +266,9 @@ void Scene_Title::ProcessButtonAction(UIPanel* _uiPanel,string _buttonName, stri
 					string playTotalTimeStr; {
 						int totalSec = um.GetPlayTotalTime(_inputUserName) ;
 
-						int hour = totalSec / 3600;
-						int min = (totalSec % 3600) / 60;
-						int sec = totalSec % 60;
+						int hour = totalSec / 3600; totalSec %= 3600;
+						int min = (totalSec) / 60; totalSec %= 60;
+						int sec = totalSec;
 
 						std::ostringstream oss;
 						oss << std::setw(2) << std::setfill('0') << hour << ":"

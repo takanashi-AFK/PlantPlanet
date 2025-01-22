@@ -93,7 +93,7 @@ void UserManager::UpdateLibraryStatus(const string& _userName, int _index)
 void UserManager::UpdatePlayTotalTime(const string& _userName, int _time)
 {
 	// プレイ時間を更新
-	registeredUsers_[_userName]->playTotalTime += _time;
+	registeredUsers_[_userName]->playTotalTime = _time;
 }
 
 void UserManager::UpdateBestScore(const string& _userName, int _score)
