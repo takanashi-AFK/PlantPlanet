@@ -24,7 +24,8 @@ private:
 	bool cursorVisible_;				// カーソル表示
 	bool isShowInventoryFirstTime_;	// インベントリUIを初めて表示したかのフラグ
 	bool isOpenInventoryUI_;		// インベントリUIを開いているかのフラグ
-
+	bool isGameStart_;
+	CountDown* countDown_;			// カウントダウン
 public:
 	/// <summary> コンストラクタ </summary>
 	Scene_Play(GameObject* parent);

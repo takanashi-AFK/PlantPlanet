@@ -25,11 +25,11 @@
 namespace {
 	// UIレイアウトのjsonファイルパス
 	const string ADVENTURE_MODE_UI_LAYOUT_JSON = "Datas/Test/Inventory.json";
-	const string SCOREATTACK_MODE_UI_LAYOUT_JSON = "Datas/SceneLayout/scoreAttackMode.json";
+	const string SCOREATTACK_MODE_UI_LAYOUT_JSON = "Datas/SceneLayout/PlayScene/scoreAttackMode.json";
 
 	// ステージのjsonファイルパス
 	const string ADVENTURE_MODE_STAGE_JSON = "Datas/Test/TentativeGameData20241210.json";
-	const string SCOREATTACK_MODE_STAGE_JSON = "Datas/StageData/ScoreAttackMode.json";
+	const string SCOREATTACK_MODE_STAGE_JSON = "Datas/StageLayouts/stage_normal.json";
 }
 
 using namespace Constants;
@@ -310,7 +310,7 @@ void Scene_Play::UpdateInventoryUI()
 void Scene_Play::UpdateNormalUI(Component_PlayerBehavior* _playerBehavior, Component_BossBehavior* _bossBehavior)
 {
 	// プレイヤーの情報が取得できた場合...
-	if (_playerBehavior == nullptr) {
+	if (_playerBehavior != nullptr) {
 
 		// カメラのターゲットをプレイヤーに設定
 		tpsCamera_->SetTarget(_playerBehavior->GetHolder());
@@ -368,8 +368,72 @@ void Scene_Play::OpenInventoryUI()
 
 void Scene_Play::InitScoreAttackMode()
 {
+	// UIパネルの初期化
+	InitUIPanel(SCOREATTACK_MODE_UI_LAYOUT_JSON);
+
+	// ステージの初期化
+	InitStage(SCOREATTACK_MODE_STAGE_JSON);
+
+	// カメラの初期化
+	InitCamera();
+
+	// カウントダウンの生成
+	countDown_ = Instantiate<CountDown>(this);
+	countDown_->Start();
+
+	// カーソルの非表示化
+	ShowCursor(false);
 }
 
 void Scene_Play::UpdateScoreAttackMode(Component_PlayerBehavior* _playerBehavior, Component_BossBehavior* _bossBehavior)
 {
+	// タイマーの取得
+	UITimer* uiTimer = (UITimer*)UIPanel::GetInstance()->FindObject(PLAY_SCENE_TIMER_NAME);
+
+	// カーソル固定化処理
+	SetCursorMode();
+
+	// ゲーム開始処理
+	if (countDown_->IsFinished() && isGameStart_ == false) {
+
+		// カメラのアクティブ化
+		tpsCamera_->SetActive(true);
+
+		// ゲーム開始フラグを立てる
+		isGameStart_ = true;
+
+		// タイマーの開始
+		if (uiTimer != nullptr) uiTimer->StartTimer();
+	}
+
+	// シーン切替処理
+	{
+		// シーン切替フラグを用意
+		bool isSceneChange = false;
+
+		// プレイヤーが死んだ場合、切替フラグを立てる
+		for (auto playerBehavior : pStage_->FindComponents(ComponentType::PlayerBehavior))if (((Component_PlayerBehavior*)playerBehavior)->IsDead()) { ScoreManager::isClear = false; isSceneChange = true; }
+
+		// ボスが死んだ場合、切替フラグを立てる
+		for (auto bossBehavior : pStage_->FindComponents(ComponentType::BossBehavior)) if (((Component_BossBehavior*)bossBehavior)->IsDead()) { ScoreManager::isClear = true; isSceneChange = true; }
+
+		// タイマーが終了した場合、切替フラグを立てる
+		if (uiTimer != nullptr)
+			if (uiTimer->IsEnd()) 
+			{ ScoreManager::isClear = false; isSceneChange = true; }
+
+		// シーン切替フラグが立っている場合
+		if (isSceneChange == true) {
+
+			// タイマーの最終値を取得
+			ScoreManager::time = uiTimer->GetSeconds();
+
+			// シーンを切り替える
+			SceneManager* sceneManager = (SceneManager*)FindObject("SceneManager");
+			sceneManager->ChangeScene(SCENE_ID_RESULT, TID_BLACKOUT);
+		}
+	}
+
+	// プレイヤーをカメラのターゲットに設定
+	for (auto playerBehavior : pStage_->FindComponents(ComponentType::PlayerBehavior))tpsCamera_->SetTarget(playerBehavior->GetHolder());
 }

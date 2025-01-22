@@ -29,12 +29,111 @@ Scene_Result::Scene_Result(GameObject* parent_)
 
 void Scene_Result::Initialize()
 {
+	switch (g_gameMode) {
+		case MODE_ADVENTURE:
+			InitializeAdventureResult();
+			break;
+
+		case MODE_SCOREATTACK:
+			InitializeScoreAttackResult();
+			break;
+	}
+
+
+	// カーソルの表示状態を切り替える
+	UICursor::ToHide(false);
+
+
+	UserManager& um = UserManager::GetInstance();
+}
+
+void Scene_Result::Update()
+{
+	switch (g_gameMode) {
+		case MODE_ADVENTURE:
+			UpdateAdventureResult();
+			break;
+
+		case MODE_SCOREATTACK:
+			UpdateScoreAttackResult();
+			break;
+	}
+
+	// ボタンが押されたら
+	if (((UIButton*)UIPanel::GetInstance()->GetUIObject("returnButton"))->OnClick() || Input::IsPadButtonDown(XINPUT_GAMEPAD_A)) {
+		SceneManager* sceneManager = (SceneManager*)FindObject("SceneManager");
+		sceneManager->ChangeScene(SCENE_ID_END, TID_BLACKOUT);
+	}
+}
+
+void Scene_Result::Draw()
+{
+}
+
+void Scene_Result::Release()
+{
+}
+
+int Scene_Result::CalculateScore(bool isCleared, int remainingTime, int remainingHP)
+{
+	if (!isCleared) {
+		return 0; // クリアしていない場合のスコア
+	}
+	int clearBonus = 1000;					// クリアボーナス (1000ポイント)
+	int timeBonus = remainingTime * 100;	// 時間のボーナス（1秒あたり100ポイント）
+	int hpBonus = remainingHP * 500;		// HPのボーナス（HP1あたり500ポイント）
+
+	return clearBonus + timeBonus + hpBonus;
+}
+
+void Scene_Result::InitializeScoreAttackResult()
+{
+
+	// jsonファイル読込用オブジェクトを用意
+	json loadData;
+
+	// スカイスフィアの生成
+	SkySphere* skySphere = Instantiate<SkySphere>(this);
+
+	// UIパネルを取得
+	UIPanel* uiPanel = UIPanel::GetInstance();
+
+	// UIパネル情報を読み込む
+	if (JsonReader::Load(RESULT_SCENE_UI_LAYOUT_JSON, loadData)) uiPanel->Load(loadData);
+
+	// UIパネルの情報を取得・設定
+	{
+		// テキストにプレイヤーのHPの値を設定
+		UIText* hpNumText = (UIText*)uiPanel->GetUIObject(RESULT_SCENE_HP_TEXT_NAME);
+		hpNumText->SetText(&ScoreManager::playerHp);
+
+		// テキストにタイムの値を設定
+		UIText* timeNumText = (UIText*)uiPanel->GetUIObject(RESULT_SCENE_TIME_TEXT_NAME);
+		timeNumText->SetText(&ScoreManager::time);
+
+		// スコアの計算
+		scoreNum_ = CalculateScore(ScoreManager::isClear, ScoreManager::time, ScoreManager::playerHp);
+
+		// テキストにスコアの値を設定
+		UIText* scoreNumText = (UIText*)uiPanel->GetUIObject(RESULT_SCENE_SCORE_TEXT_NAME);
+		scoreNumText->SetText(&scoreNum_);
+	}
+
+	
+
+	// ステージを作成 & 読み込み
+	Stage* pStage = Instantiate<Stage>(this);
+	if (JsonReader::Load(STAGE_BACKGROUND_JSON, loadData))pStage->Load(loadData);
+}
+
+void Scene_Result::InitializeAdventureResult()
+{
 	// jsonファイル読込用オブジェクトを用意
 	json loadData;
 
 	// UIパネルを取得
 	UIPanel* uiPanel = UIPanel::GetInstance();
-	
+
 	// UIパネル情報を読み込む
 	if (JsonReader::Load("Datas/Test/resultTent.json", loadData)) uiPanel->Load(loadData);
 
@@ -78,39 +177,12 @@ void Scene_Result::Initialize()
 			((UIText*)text)->SetText("");
 		}
 	}
-
-
-	UserManager& um = UserManager::GetInstance();
 }
 
-void Scene_Result::Update()
-{
-	// シーン遷移ボタンの処理
-	{
-		// ボタンが押されたら
-		if (((UIButton*)UIPanel::GetInstance()->GetUIObject("returnButton"))->OnClick() || Input::IsPadButtonDown(XINPUT_GAMEPAD_A)) {
-			SceneManager* sceneManager = (SceneManager*)FindObject("SceneManager");
-			sceneManager->ChangeScene(SCENE_ID_END, TID_BLACKOUT);
-		}
-	}
-}
-
-void Scene_Result::Draw()
+void Scene_Result::UpdateScoreAttackResult()
 {
 }
 
-void Scene_Result::Release()
+void Scene_Result::UpdateAdventureResult()
 {
-}
-
-int Scene_Result::CalculateScore(bool isCleared, int remainingTime, int remainingHP)
-{
-	if (!isCleared) {
-		return 0; // クリアしていない場合のスコア
-	}
-	int clearBonus = 1000;					// クリアボーナス (1000ポイント)
-	int timeBonus = remainingTime * 100;	// 時間のボーナス（1秒あたり100ポイント）
-	int hpBonus = remainingHP * 500;		// HPのボーナス（HP1あたり500ポイント）
-
-	return clearBonus + timeBonus + hpBonus;
 }

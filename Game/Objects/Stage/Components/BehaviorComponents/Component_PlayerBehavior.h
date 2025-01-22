@@ -70,6 +70,12 @@ private:
 	bool isEatSaladEnd_  : 1;
 	bool isBreakableWall_: 1;
 
+	bool canShoot_		 : 1;
+	bool canDodge_		 : 1;
+	bool canMelee_		 : 1;
+	bool canInteract_	 : 1;
+	
+
 	float stamina_decrease_dodge_;
 	float stamina_decrease_melee_;
 	float stamina_decrease_shoot_;

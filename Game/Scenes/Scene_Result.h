@@ -25,6 +25,11 @@ public:
 private:
 	/// <summary> スコアの計算 </summary>
 	int CalculateScore(bool isCleared, int remainingTime, int remainingHP);
+
+	void InitializeScoreAttackResult();
+	void InitializeAdventureResult();
+	void UpdateScoreAttackResult();
+	void UpdateAdventureResult();
 };
 
 	

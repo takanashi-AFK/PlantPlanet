@@ -183,6 +183,24 @@ void Component_PlayerBehavior::Initialize()
 
 	auto* move = static_cast<Component_WASDInputMove*>(GetChildComponent("InputMove"));
 	move->SetSpeed(this->defaultSpeed_Walk);
+
+	{
+		// プレイヤーのHPゲージコンポーネントを取得
+		Component_HealthGauge* hg = (Component_HealthGauge*)(GetChildComponent("PlayerHealthGauge"));
+		// UIProgressBarを取得
+		UIProgressBar* hpBar = (UIProgressBar*)UIPanel::GetInstance()->FindObject(PLAY_SCENE_PLAYER_HP_GAUGE_NAME);
+		// HPバーの値を設定
+		if (hpBar != nullptr && hg != nullptr)hpBar->SetProgress(hg->now_, hg->max_);
+
+		// プレイヤーのスタミナゲージコンポーネントを取得
+		Component_StaminaGauge* sg = (Component_StaminaGauge*)(GetChildComponent("StaminaGauge"));
+		// UIProgressBarを取得
+		UIProgressBar* staminaBar = (UIProgressBar*)UIPanel::GetInstance()->FindObject("staminaGauge");
+		// スタミナバーの値を設定
+		if (staminaBar != nullptr && sg != nullptr)staminaBar->SetProgress(sg->now_, sg->max_);
+	}
+
+
 }
 
 void Component_PlayerBehavior::Update()
@@ -191,9 +209,9 @@ void Component_PlayerBehavior::Update()
 	ApplyEffects();
 	DrawPopUp();
 
-	// ＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝
-	// カウント制御されている場合の処理
-	// ＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝
+	// ＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝ //
+	// カウント制御されている場合の処理 //
+	// ＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝ //
 	CountDown* countDown = (CountDown*)(holder_->FindObject("CountDown"));
 	if (countDown != nullptr && isGameStart_ == false) {
 
@@ -206,7 +224,6 @@ void Component_PlayerBehavior::Update()
 
 			//移動を可能にする
 			move->Execute();
-	
 
 			// ゲームスタートフラグを立てる
 			isGameStart_ = true;
@@ -230,7 +247,8 @@ void Component_PlayerBehavior::Update()
 		ScoreManager::playerHp = (int)hg->now_;
 
 		// HPバーの値を設定
-		if (hpBar != nullptr && hg != nullptr)hpBar->SetProgress(hg->now_, hg->max_);
+		if (hpBar != nullptr && hg != nullptr)
+			hpBar->SetProgress(hg->now_, hg->max_);
 
 		// HPが0以下になったら... DEAD状態に遷移
 		if (hg != nullptr)if (hg->IsDead() == true)SetState(PLAYER_STATE_DEAD);
@@ -281,8 +299,7 @@ void Component_PlayerBehavior::Update()
 	case PLAYER_STATE_DEAD:					Dead();         break;  // 現在の状態がDEADの場合
 	case PLAYER_STATE_INTRACT:				Interact();      break;  // 現在の状態がINTRACTの場合
 	case PLAYER_STATE_MELEE:				Melee();     break;  // 現在の状態がMELEEの場合
-	case PLAYER_STATE_MADESALAD:			
-		MadeSalad();     break;  // 現在の状態がMADESALADの場合
+	case PLAYER_STATE_MADESALAD:			MadeSalad();     break;  // 現在の状態がMADESALADの場合
 	}
 
 	if (isShootAttack_)	Shoot();
@@ -393,7 +410,7 @@ void Component_PlayerBehavior::Idle()
 		SetState(PLAYER_STATE_MELEE);
 	}
 	// Aボタン もしくは Eキー が押されていたら...インタラクト状態に遷移
-	else if (Input::IsKeyDown(DIK_E) || Input::IsPadButtonDown(XINPUT_GAMEPAD_A) && IsInteractable()) {
+	else if (Input::IsKeyDown(DIK_E) && IsInteractable() || Input::IsPadButtonDown(XINPUT_GAMEPAD_A) && IsInteractable()) {
 	
 		SetState(PLAYER_STATE_INTRACT);
 	}
@@ -446,7 +463,7 @@ void Component_PlayerBehavior::Walk()
 		SetState(PLAYER_STATE_MELEE);
 	}
 	// Aボタン もしくは Eキー が押されていたら...インタラクト状態に遷移
-	else if (Input::IsKeyDown(DIK_E) || Input::IsPadButtonDown(XINPUT_GAMEPAD_A) && IsInteractable()) {
+	else if (Input::IsKeyDown(DIK_E) && IsInteractable() || Input::IsPadButtonDown(XINPUT_GAMEPAD_A) && IsInteractable()) {
 		SetState(PLAYER_STATE_INTRACT);
 	}
 	else if (nowState_ != PLAYER_STATE_DEAD && isEatSaladEnd_ == true) {
@@ -733,6 +750,7 @@ void Component_PlayerBehavior::Dead()
 
 void Component_PlayerBehavior::Interact()
 {
+
 	// 必要情報の取得 & 宣言定義
 	Component_Timer* interactTimer = (Component_Timer*)(GetChildComponent("InteractTimer"));
 	bool isInteractNow = true;
