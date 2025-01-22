@@ -16,7 +16,6 @@ private:
 	CountDown* countDown_;	// カウントダウン
 	TPSCamera* tpsCamera_;	// TPSカメラ
 
-	int playTimeSec_;
 	std::chrono::system_clock::time_point start_;
 
 	bool isGameStart_ :1;		// ゲーム開始フラグ

@@ -78,3 +78,5 @@ string g_selectedStage = "";
 int g_selectedGameMode = 0;
 std::vector<PlantData> g_playerPlantData;
 std::vector<PlantData> g_thisPlayGetPlantData;
+
+int g_playTime;

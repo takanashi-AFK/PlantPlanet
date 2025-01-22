@@ -15,6 +15,7 @@
 #include "../Plants/PlantCollection.h"
 #include "../Objects/UI/UIImage.h"
 #include "../Objects/UI/UICursor.h"
+#include "../Otheres/UserManager.h"
 
 
 using namespace Constants;
@@ -79,6 +80,12 @@ void Scene_Result::Initialize()
 		}
 	}
 
+	UIText* timeUI = static_cast<UIText*>(uiPanel->GetUIObject("time"));
+	UserManager& um = UserManager::GetInstance();
+	auto user = um.GetLoggedInUser();
+
+	string timeStr = std::format("PLAY TIME:{:0>2}:{:0>2}", g_playTime / 60, g_playTime % 60);
+	timeUI->SetText(timeStr);
 
 }
 

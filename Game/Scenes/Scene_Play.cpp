@@ -61,7 +61,7 @@ void Scene_Play::Update()
 {
 	// カーソル固定化処理
 	auto playTime = std::chrono::system_clock::now() - start_;
-	playTimeSec_ = std::chrono::duration_cast<std::chrono::seconds>(playTime).count();
+	g_playTime = std::chrono::duration_cast<std::chrono::seconds>(playTime).count();
 	
 	SetCursorMode();
 
@@ -227,7 +227,7 @@ void Scene_Play::Release()
 	UserManager& um = UserManager::GetInstance();
 	auto user = um.GetLoggedInUser();
 
-	um.UpdatePlayTotalTime(user->userName, user->playTotalTime + playTimeSec_);
+	um.UpdatePlayTotalTime(user->userName, user->playTotalTime + g_playTime);
 }
 
 void Scene_Play::InitUIPanel()

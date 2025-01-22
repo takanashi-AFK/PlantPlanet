@@ -67,6 +67,8 @@ extern int g_selectedGameMode;	// 選択されたゲームモード
 extern std::vector<PlantData> g_playerPlantData;	// 植物データ
 extern std::vector<PlantData> g_thisPlayGetPlantData;
 
+extern int g_playTime;
+
 // エフェクトデータ
 // fix: 本来はここに置くべきではない
 struct EffectData {
