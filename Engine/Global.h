@@ -36,8 +36,8 @@ valeable :*/
 	extern int time;		 // タイム
 	extern int playerHp;	 // プレイヤーのHP
 	extern int justAvoidance;// ジャスト回避した回数
-	extern float recieveDMG ;// 受けたダメージ
-	extern float dealtDMG;	 // 与ダメージ
+	extern int recieveDMG ;// 受けたダメージ
+	extern int dealtDMG;	 // 与ダメージ
 	extern bool isClear;	 // クリアしたかどうか
 	extern string userName;	 // ユーザー名
 }
@@ -69,7 +69,7 @@ extern string g_selectedStage;	// 選択されたステージ
 extern int g_selectedGameMode;	// 選択されたゲームモード
 extern std::vector<PlantData> g_playerPlantData;	// 植物データ
 extern std::vector<PlantData> g_thisPlayGetPlantData;
-
+extern enum GameMode { MODE_ADVENTURE, MODE_SCOREATTACK, MODE_TUTORIAL } g_gameMode;	// ゲームモード
 extern int g_playTime;
 
 // エフェクトデータ

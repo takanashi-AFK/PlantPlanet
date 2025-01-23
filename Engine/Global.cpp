@@ -64,8 +64,8 @@ valeable :*/
 	int time;			// タイム
 	int playerHp;		// プレイヤーのHP
 	int justAvoidance;	// ジャスト回避した回数
-	float recieveDMG;	// 受けたダメージ
-	float dealtDMG;		// 与ダメージ
+	int recieveDMG;	// 受けたダメージ
+	int dealtDMG;		// 与ダメージ
 	bool isClear;		// クリアしたかどうか
 	string userName;	// ユーザー名
 }
@@ -81,5 +81,5 @@ string g_selectedStage = "";
 int g_selectedGameMode = 0;
 std::vector<PlantData> g_playerPlantData;
 std::vector<PlantData> g_thisPlayGetPlantData;
-
+GameMode g_gameMode;
 int g_playTime;
