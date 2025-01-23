@@ -264,7 +264,11 @@ void Scene_Play::UpdateAdventureMode(Component_PlayerBehavior* _playerBehavior, 
 		}
 
 		// 調査度がMAX かつ 帰還ゲートにインタラクトした場合...
-
+		constexpr int RESEARCH_POINT_MAX = 100;
+		if (_playerBehavior->GetResearchPoint() >= RESEARCH_POINT_MAX && /*帰還オブジェクトにインタラクトしたかどうか*/true)
+			isSceneChange = true;
+		
+		
 		// debug 終了ボタンが押された場合...
 		if (Input::IsKeyDown(DIK_ESCAPE) || Input::IsPadButtonDown(XINPUT_GAMEPAD_START))isSceneChange = true;
 	}
