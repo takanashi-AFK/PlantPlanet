@@ -61,9 +61,12 @@ namespace ScoreManager {
 	// NOTE: シーン間で共有する変数はここに記述する
 /*
 valeable :*/
-	int time;		// タイム
-	int playerHp;	// プレイヤーのHP
-	bool isClear;	// クリアしたかどうか
+	int time;			// タイム
+	int playerHp;		// プレイヤーのHP
+	int justAvoidance;	// ジャスト回避した回数
+	float recieveDMG;	// 受けたダメージ
+	float dealtDMG;		// 与ダメージ
+	bool isClear;		// クリアしたかどうか
 	string userName;	// ユーザー名
 }
 

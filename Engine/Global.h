@@ -33,10 +33,13 @@ constexpr float FPS = 60.0f;	// フレームレート
 namespace ScoreManager {
 /*
 valeable :*/
-	extern int time;		// タイム
-	extern int playerHp;	// プレイヤーのHP
-	extern bool isClear;	// クリアしたかどうか
-	extern string userName;	// ユーザー名
+	extern int time;		 // タイム
+	extern int playerHp;	 // プレイヤーのHP
+	extern int justAvoidance;// ジャスト回避した回数
+	extern float recieveDMG ;// 受けたダメージ
+	extern float dealtDMG;	 // 与ダメージ
+	extern bool isClear;	 // クリアしたかどうか
+	extern string userName;	 // ユーザー名
 }
 
 // ファイル管理namespace
