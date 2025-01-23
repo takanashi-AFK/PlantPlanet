@@ -141,6 +141,9 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Game\Objects\Stage\Components\TeleporterComponent\Component_ReturnGate.cpp" />
+    <ClCompile Include="Game\Objects\Stage\Components\BreakableWallComponents\Component_BreakableWall.cpp" />
+    <ClCompile Include="Game\Objects\Stage\BreakableWall.cpp" />
+    <ClCompile Include="Game\Objects\Stage\Components\DetectorComponents\Component_RectangleDetector.cpp" />
     <ClCompile Include="Game\Objects\Stage\Components\BehaviorComponents\Component_RangeEnemyBehavior.cpp" />
     <ClCompile Include="Game\Objects\Stage\Components\BehaviorComponents\Component_MeleeEnemyBehavior.cpp" />
     <ClCompile Include="Game\Objects\Stage\Components\MotionComponent\Component_Accessory.cpp" />
@@ -246,6 +249,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game\Objects\Stage\Components\TeleporterComponent\Component_ReturnGate.h" />
+    <ClInclude Include="Game\Objects\Stage\Components\BreakableWallComponents\Component_BreakableWall.h" />
+    <ClInclude Include="Game\Objects\Stage\BreakableWall.h" />
+    <ClInclude Include="Game\Objects\Stage\Components\DetectorComponents\Component_RectangleDetector.h" />
     <ClInclude Include="Game\Objects\Stage\Components\BehaviorComponents\Component_RangeEnemyBehavior.h" />
     <ClInclude Include="Game\Objects\Stage\Components\BehaviorComponents\Component_MeleeEnemyBehavior.h" />
     <ClInclude Include="Game\Objects\Stage\Components\MotionComponent\Component_Accessory.h" />

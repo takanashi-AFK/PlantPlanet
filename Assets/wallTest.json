@@ -132,7 +132,7 @@
     "isColliding_": true,
     "isCollisionWall_": false,
     "isOnGround_": false,
-    "modelFilePath_": "Models/Enemies/plantsEnemy.fbx",
+    "modelFilePath_": "Models/Enemies/meleeEnemy.fbx",
     "myComponents_": {
       "meleeEnemyBehavior": {
         "attackCoolTime_": 1.5,
@@ -179,14 +179,14 @@
     "position_": [ 4.956999778747559, 0.0, 21.892000198364258 ],
     "rotate_": [ 0.0, 180.0, 0.0 ],
     "scale_": [ 1.5, 1.5, 1.5 ],
-    "shaderType_": 0
+    "shaderType_": 4
   },
   "MeleeEnemy02": {
     "fallSpeed_": 1.0,
     "isColliding_": true,
     "isCollisionWall_": false,
     "isOnGround_": false,
-    "modelFilePath_": "Models/Enemies/plantsEnemy.fbx",
+    "modelFilePath_": "Models/Enemies/meleeEnemy.fbx",
     "myComponents_": {
       "MeleeEnemyBehavior": {
         "attackCoolTime_": 1.5,
@@ -235,15 +235,14 @@
     "position_": [ 21.726974487304688, 0.0, 2.3343582153320313 ],
     "rotate_": [ 0.0, 92.24259948730469, 0.0 ],
     "scale_": [ 1.5, 1.5, 1.5 ],
-    "shaderType_": 0
+    "shaderType_": 4
   },
   "MeleeEnemy03": {
     "fallSpeed_": 1.0,
     "isColliding_": true,
     "isCollisionWall_": false,
     "isOnGround_": false,
-    "modelFilePath_": "Models/Enemies/plantsEnemy.fbx",
-
+    "modelFilePath_": "Models/Enemies/meleeEnemy.fbx",
     "myComponents_": {
       "MeleeEnemyBehavior": {
         "attackCoolTime_": 1.5,
@@ -290,7 +289,7 @@
     "position_": [ 53.48899841308594, 0.0, 14.005000114440918 ],
     "rotate_": [ 0.0, -168.57879638671875, 0.0 ],
     "scale_": [ 1.5, 1.5, 1.5 ],
-    "shaderType_": 0
+    "shaderType_": 4
   },
   "RangeEnemy01": {
     "fallSpeed_": 1.0,
@@ -351,7 +350,7 @@
     "position_": [ 37.02399826049805, 0.0, 3.4728333950042725 ],
     "rotate_": [ 0.0, -97.50016784667969, 0.0 ],
     "scale_": [ 1.0, 1.0, 1.0 ],
-    "shaderType_": 0
+    "shaderType_": 4
   },
   "RangeEnemy02": {
     "fallSpeed_": 1.0,
@@ -412,7 +411,7 @@
     "position_": [ 0.7630000114440918, 0.0, 33.13399887084961 ],
     "rotate_": [ 0.0, 173.7166290283203, 0.0 ],
     "scale_": [ 1.0, 1.0, 1.0 ],
-    "shaderType_": 0
+    "shaderType_": 4
   },
   "area": {
     "fallSpeed_": 1.0,
@@ -451,5 +450,59 @@
     "rotate_": [ 0.0, 0.0, 0.0 ],
     "scale_": [ 1.0, 1.0, 1.0 ],
     "shaderType_": 2
+  },
+  "wall": {
+    "fallSpeed_": 1.0,
+    "isColliding_": true,
+    "isCollisionWall_": false,
+    "isOnGround_": false,
+    "modelFilePath_": "Models/DebugCollision/BoxCollider.fbx",
+    "myComponents_": {
+      "wall": {
+        "childComponents_": {
+          "RectangleDetector": {
+            "length_.x": 4.0,
+            "length_.y": 2.0,
+            "name_": "RectangleDetector",
+            "target_": "00_player",
+            "type_": 29
+          }
+        },
+        "name_": "wall",
+        "type_": 30
+      }
+    },
+    "onGroundOffset_": [ 0.0, 0.0, 0.0 ],
+    "position_": [ 2.5, 2.0, 12.600000381469727 ],
+    "rotate_": [ 0.0, 0.0, 0.0 ],
+    "scale_": [ 8.399999618530273, 4.300000190734863, 0.10000000149011612 ],
+    "shaderType_": 0
+  },
+  "wall2": {
+    "fallSpeed_": 1.0,
+    "isColliding_": true,
+    "isCollisionWall_": false,
+    "isOnGround_": false,
+    "modelFilePath_": "Models/DebugCollision/BoxCollider.fbx",
+    "myComponents_": {
+      "wasssd": {
+        "childComponents_": {
+          "RectangleDetector": {
+            "length_.x": 4.0,
+            "length_.y": 2.0,
+            "name_": "RectangleDetector",
+            "target_": "00_player",
+            "type_": 29
+          }
+        },
+        "name_": "wasssd",
+        "type_": 30
+      }
+    },
+    "onGroundOffset_": [ 0.0, 0.0, 0.0 ],
+    "position_": [ 13.199999809265137, 2.0, 3.0999999046325684 ],
+    "rotate_": [ 0.0, 90.0, 0.0 ],
+    "scale_": [ 8.399999618530273, 4.300000190734863, 0.10000000149011612 ],
+    "shaderType_": 0
   }
 }

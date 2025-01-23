@@ -210,6 +210,9 @@ private:
 
 	//帰還ゲートがインタラクト範囲内にあるか判定
 	bool IsAbleToReturn(Component_ReturnGate* &rg);
+	/// <summary> 付近の壁を取得 </summary>
+	StageObject* GetNearestWall();
+	
 	/*
 	state :*/
 	/// <summary> 待機状態時の処理 </summary>

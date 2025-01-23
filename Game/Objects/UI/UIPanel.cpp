@@ -247,6 +247,9 @@ void UIPanel::RemoveButtonFromArray(UIButton* b)
 void UIPanel::ResetArrayOfButton()
 {
 	arrayButton_.clear();
+	selectingButton_ = nullptr;
+	buttonIndexX_ = 0;
+	buttonIndexY_ = 0;
 }
 
 void UIPanel::CheckSelectingButton()

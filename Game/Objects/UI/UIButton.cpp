@@ -11,7 +11,7 @@ using namespace FileManager;
 
 UIButton::UIButton(string _name, UIObject* parent , int _layerNum)
 	: UIObject(_name, UIType::UI_BUTTON, parent, _layerNum), imageHandle_(-1), 
-	imageFilePath_(), arrayPlaceX_(1), arrayPlaceY_(1),isSetShader_(false)
+	imageFilePath_(), arrayPlaceX_(1), arrayPlaceY_(1),isSetShader_(false),shaderType_(Direct3D::SHADER_BUTTON_NOTSELECT)
 {
 }
 
