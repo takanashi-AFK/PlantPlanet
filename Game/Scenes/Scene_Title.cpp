@@ -43,6 +43,8 @@ Scene_Title::Scene_Title(GameObject* parent)
 
 void Scene_Title::Initialize()
 {
+	UserManager::GetInstance().LoadUser("Datas/userData.json");
+
 	// UIパネル & レイアウトの読込
 	json loadData;
 	if (JsonReader::Load("Datas/SceneLayout/title.json", loadData)) UIPanel::GetInstance()->Load(loadData);

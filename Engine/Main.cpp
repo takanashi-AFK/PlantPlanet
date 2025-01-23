@@ -21,6 +21,7 @@
 #include "ResourceManager/VFX.h"
 #include "ResourceManager/Transition.h"
 #include "../Game/Objects/UI/UICursor.h"
+#include "../Game/Otheres/UserManager.h"
 
 // effekseerのヘッダーをインクルード
 
@@ -319,6 +320,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 	{
 	//ウィンドウを閉じた
 	case WM_DESTROY:
+		UserManager::GetInstance().SaveUser("Datas/UserData.json");
 		PostQuitMessage(0);	//プログラム終了
 		return 0;
 
