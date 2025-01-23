@@ -259,7 +259,7 @@ Component* CreateComponent(string _name, ComponentType _type, StageObject* _hold
 		case Accessory: comp = new Component_Accessory(_name, _holder, _parent); break;
 		case WeakRangeEnemy: comp = new Component_RangeEnemyBehavior(_name, _holder, _parent); break;
 		case MeleeEnemyBehavior: comp = new Component_MeleeEnemyBehavior(_name, _holder, _parent); break;
-		case Returngate: comp = new Component_ReturnGate(_name, _holder, _parent); break;
+		case ReturnGate: comp = new Component_ReturnGate(_name, _holder, _parent); break;
 
 
 		default: /* その他コンポーネントを追加する時は上記のように追加 */ break;
@@ -305,7 +305,7 @@ string ComponentTypeToString(ComponentType _type)
 	case Accessory: return "AccessoryComponent";
 	case WeakRangeEnemy: return "Weak RangeEnemy";
 	case MeleeEnemyBehavior: return "MeleeEnemyBehaviorComponent";
-	case Returngate: return "ReturnGateComponent";
+	case ReturnGate: return "ReturnGateComponent";
 		// その他コンポーネントを追加する時は上記のように追加
 
 	default: return "None";

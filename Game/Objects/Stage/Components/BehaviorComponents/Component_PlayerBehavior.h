@@ -9,8 +9,7 @@
 #include "../../../../Plants/Plant.h"
 #include "../../../UI/UIImage.h"
 #include "../../../UI/UIText.h"
-#include "../../ReturnGate.h"
-
+#include "../TeleporterComponent/Component_ReturnGate.h"
 
 // 前方宣言
 class CountDown;
@@ -209,7 +208,8 @@ private:
 	/// <summary> 付近の植物を取得 </summary>
 	StageObject* GetNearestPlant(PlantData& _plantData);
 
-	bool IsAbleToReturn(ReturnGate* &rg);
+	//帰還ゲートがインタラクト範囲内にあるか判定
+	bool IsAbleToReturn(Component_ReturnGate* &rg);
 	/*
 	state :*/
 	/// <summary> 待機状態時の処理 </summary>

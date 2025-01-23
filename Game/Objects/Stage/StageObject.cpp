@@ -56,7 +56,7 @@ namespace {
 
 StageObject::StageObject(string _name, string _modelFilePath, GameObject* _parent)
 	:GameObject(_parent, _name), modelFilePath_(_modelFilePath), modelHandle_(-1), myComponents_(), fallSpeed_(1), isOnGround_(false)
-	,shaderType_(Direct3D::SHADER_3D), isColliding_(true),objectType_(ObjectType::TYPE_NONE)
+	,shaderType_(Direct3D::SHADER_3D), isColliding_(true),objectType_(ObjectType::TYPE_NONE),isDrawing_(true)
 {
 }
 
@@ -265,6 +265,8 @@ void StageObject::Update()
 
 void StageObject::Draw()
 {
+	if (!isDrawing_)	return;
+
 	Direct3D::SetShader(shaderType_);
 
 	// モデルの描画
@@ -297,10 +299,10 @@ void StageObject::Save(json& _saveObj)
 	_saveObj["rotate_"] = { REFERENCE_XMFLOAT3(transform_.rotate_) };
 	_saveObj["scale_"] = { REFERENCE_XMFLOAT3(transform_.scale_)};
 	_saveObj["fallSpeed_"] = fallSpeed_;
-	_saveObj["isOnGround_"] = isOnGround_;
-	_saveObj["isCollisionWall_"] = isCollisionWall_;
+	_saveObj["isOnGround_"] = (bool)isOnGround_;
+	_saveObj["isCollisionWall_"] = (bool)isCollisionWall_;
 	_saveObj["onGroundOffset_"] = { REFERENCE_XMFLOAT3(onGroundOffset_) };
-	_saveObj["isColliding_"] = isColliding_;
+	_saveObj["isColliding_"] = (bool)isColliding_;
 	
 	// 自身のモデルのファイルパスを保存
 	_saveObj["modelFilePath_"] = modelFilePath_;
@@ -309,8 +311,8 @@ void StageObject::Save(json& _saveObj)
 	_saveObj["shaderType_"] = (int)shaderType_;
 
 	// 接地処理の情報を保存
-	_saveObj["isOnGround_"] = isOnGround_;
-	_saveObj["isCollisionWall_"] = isCollisionWall_;
+	_saveObj["isOnGround_"] = (bool)isOnGround_;
+	_saveObj["isCollisionWall_"] = (bool)isCollisionWall_;
 	_saveObj["fallSpeed_"] = fallSpeed_;
 
 	// コンポーネント情報を保存
@@ -381,15 +383,24 @@ void StageObject::DrawData()
 	// ＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝
 	// 接地処理
 	// ＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝
+
+	bool isOnGround = isOnGround_;
+	bool isCollisionWall = isCollisionWall_;
+	bool isColliding = isColliding_;
+
 	if (ImGui::TreeNode("OnGround")) {
-		ImGui::Checkbox("isOnGround", &isOnGround_);
+		ImGui::Checkbox("isOnGround", &isOnGround);
 		ImGui::SameLine();
-		ImGui::Checkbox("isCollisionWall",&isCollisionWall_);
-		ImGui::Checkbox("isColliding_" ,&isColliding_);
+		ImGui::Checkbox("isCollisionWall",&isCollisionWall);
+		ImGui::Checkbox("isColliding_" ,&isColliding);
 		ImGui::DragFloat("fallSpeed", &fallSpeed_, 0.1f, 0.f, 1.f);
 		ImGui::DragFloat3("onGroundOffset", &onGroundOffset_.x, 0.1f);
 		ImGui::TreePop();
 	}
+
+	isOnGround_ = isOnGround;
+	isCollisionWall_ = isCollisionWall;
+	isColliding_ = isColliding;
 
 	// ＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝
 	// シェードの表示

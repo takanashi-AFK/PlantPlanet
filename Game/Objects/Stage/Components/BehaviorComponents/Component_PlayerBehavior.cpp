@@ -350,10 +350,20 @@ void Component_PlayerBehavior::AddReserchPoint(int point)
 	researchPoint_ += point;
 	constexpr int MAX_RESERCH_POINT = 100;
 
-	//100を超えていたかつ初めての時、帰還ゲートを生成する
+	//100を超えていたかつ初めての時、帰還ゲートを可視化する
 	if (researchPoint_ >= MAX_RESERCH_POINT && isFirstOverMAXReserchPoint)
 	{
-		CreateReturnGate(holder_->GetParent());
+		//ゲートを見つける
+		Component_ReturnGate* rg = static_cast<Component_ReturnGate*>
+			(((StageObject*)holder_->FindObject("ReturnGate"))->FindComponent("ReturnGate"));
+
+		if (!rg)return;
+
+		//ゲートを可視化し使用可能にする
+		rg->SetUsable(true);
+		rg->SetVisible(true);
+
+		//次から初めてじゃないので,フラグを下げてここに入らないようにする
 		isFirstOverMAXReserchPoint = false;
 	}
 }
@@ -782,12 +792,11 @@ void Component_PlayerBehavior::Interact()
 			PlantData plantData;
 			nearestPlant = GetNearestPlant(plantData);
 
-			ReturnGate* returnGate = {};
+			Component_ReturnGate* returnGate;
 			
-
 			if (IsAbleToReturn(returnGate))
 			{
-				returnGate->Intaract();
+				returnGate->Work();
 			}
 
 			else if (nearestPlant != nullptr) {
@@ -1191,17 +1200,23 @@ StageObject* Component_PlayerBehavior::GetNearestPlant(PlantData& _plantData)
 	return nearPlant;
 }
 
-bool Component_PlayerBehavior::IsAbleToReturn(ReturnGate* &rg)
+bool Component_PlayerBehavior::IsAbleToReturn(Component_ReturnGate* &rg)
 {
 	Component_CircleRangeDetector* detector = (Component_CircleRangeDetector*)(GetChildComponent("IsInteractableDetector"));
 	if (!detector)return false;
 
-	// 全植物オブジェクトを取得
-	rg = static_cast<ReturnGate*>(holder_->FindObject("ReturnGate"));
+	//ゲートのオブジェクトを探す
+	auto rgObj = (StageObject*)(holder_->FindObject("ReturnGate"));
+	if (!rgObj) return false;
+
+	//ゲートコンポーネントを格納
+	rg = static_cast<Component_ReturnGate*>
+		(rgObj->FindComponent("ReturnGate"));
 	if (!rg)return false;
 	
 	detector->SetRadius(1.2f);
-	detector->SetTarget(rg);
+	detector->SetTarget(rgObj);
 
+	//範囲内にゲートがあるかどうか
 	return detector->IsContains();
 }

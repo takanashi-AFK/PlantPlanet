@@ -44,7 +44,7 @@ enum ComponentType
 	Accessory,
 	WeakRangeEnemy,
 	MeleeEnemyBehavior,
-	Returngate,
+	ReturnGate,
 	// コンポーネント追加時に識別番号を追加
 	Max
 	
