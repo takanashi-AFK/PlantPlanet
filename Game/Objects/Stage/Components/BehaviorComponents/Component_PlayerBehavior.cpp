@@ -22,7 +22,6 @@
 #include "../../../UI/Components/Component_UIEasing.h"
 #include "../../../UI/UIInventory.h"
 
-
 // child components include
 #include "../AttackComponents/Component_MeleeAttack.h"
 #include "../AttackComponents/Component_ShootAttack.h"
@@ -35,6 +34,7 @@
 #include "../GaugeComponents/Component_StaminaGauge.h"
 #include "../../Salad.h"
 #include "../../MakeSalad.h"
+#include "../../Bullet.h"
 #include "../BreakableWallComponents/Component_BreakableWall.h"
 
 using namespace Constants;
@@ -100,7 +100,8 @@ Component_PlayerBehavior::Component_PlayerBehavior(string _name, StageObject* _h
 	stamina_decrease_shoot_(10),
 	timeCollectPlant(defaultTime_CollectPlant),
 	saladEffects_{},
-	isEatSaladEnd_(false)
+	isEatSaladEnd_(false),
+	isFirstOverMAXReserchPoint(true)
 {
 }
 
@@ -343,6 +344,29 @@ void Component_PlayerBehavior::EatSalad(Salad salad)
 	static_cast<Component_MeleeAttack*>(GetChildComponent("MeleeAttack"))->SetPower(defaultPow_Melee);
 	static_cast<Component_ShootAttack*>(GetChildComponent("ShootAttack"))->SetPower(defaultPow_Range);
 	static_cast<Component_WASDInputMove*>(GetChildComponent("InputMove"))->SetSpeed(defaultSpeed_Walk);
+}
+
+void Component_PlayerBehavior::AddReserchPoint(int point)
+{
+	researchPoint_ += point;
+	constexpr int MAX_RESERCH_POINT = 100;
+
+	//100を超えていたかつ初めての時、帰還ゲートを可視化する
+	if (researchPoint_ >= MAX_RESERCH_POINT && isFirstOverMAXReserchPoint)
+	{
+		//ゲートを見つける
+		Component_ReturnGate* rg = static_cast<Component_ReturnGate*>
+			(((StageObject*)holder_->FindObject("ReturnGate"))->FindComponent("ReturnGate"));
+
+		if (!rg)return;
+
+		//ゲートを可視化し使用可能にする
+		rg->SetUsable(true);
+		rg->SetVisible(true);
+
+		//次から初めてじゃないので,フラグを下げてここに入らないようにする
+		isFirstOverMAXReserchPoint = false;
+	}
 }
 
 void Component_PlayerBehavior::SetTimeCollectPlant(float time)
@@ -767,6 +791,16 @@ void Component_PlayerBehavior::Interact()
 
 			// 最も近いオブジェクトを取得
 			PlantData plantData;
+			nearestPlant = GetNearestPlant(plantData);
+
+			Component_ReturnGate* returnGate;
+			
+			if (IsAbleToReturn(returnGate))
+			{
+				returnGate->Work();
+			}
+
+			else if (nearestPlant != nullptr) {
 			nearestObject = GetNearestWall();
 			if(nearestObject == nullptr) // 壁が近くになかったら
 			nearestObject = GetNearestPlant(plantData);
@@ -776,7 +810,7 @@ void Component_PlayerBehavior::Interact()
 				myPlants_.push_back(plantData);
 
 				// 調査ポイントを加算
-				researchPoint_ += GetResearchPointByRarity(plantData);
+				AddReserchPoint(GetResearchPointByRarity(plantData));
 
 				Stage* pStage = ((Stage*)holder_->FindObject("Stage"));
 
@@ -1178,6 +1212,28 @@ StageObject* Component_PlayerBehavior::GetNearestPlant(PlantData& _plantData)
 	return nearPlant;
 }
 
+bool Component_PlayerBehavior::IsAbleToReturn(Component_ReturnGate* &rg)
+{
+	Component_CircleRangeDetector* detector = (Component_CircleRangeDetector*)(GetChildComponent("IsInteractableDetector"));
+	if (!detector)return false;
+
+	//ゲートのオブジェクトを探す
+	auto rgObj = (StageObject*)(holder_->FindObject("ReturnGate"));
+	if (!rgObj) return false;
+
+	//ゲートコンポーネントを格納
+	rg = static_cast<Component_ReturnGate*>
+		(rgObj->FindComponent("ReturnGate"));
+	if (!rg)return false;
+	
+	detector->SetRadius(1.2f);
+	detector->SetTarget(rgObj);
+
+	//範囲内にゲートがあるかどうか
+	return detector->IsContains();
+}
+
+  
 StageObject* Component_PlayerBehavior::GetNearestWall()
 {
 	StageObject* nearWall = nullptr;
@@ -1208,7 +1264,7 @@ StageObject* Component_PlayerBehavior::GetNearestWall()
 			if (wallComponent->IsPlayerContains()) nearWall = wallObj;
 		}
 
-	}
+	
 	// 一番近い壁オブジェクトを返す
 	return nearWall;
 }

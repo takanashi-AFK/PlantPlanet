@@ -6,7 +6,6 @@
 #include "../TimerComponent/Component_Timer.h"
 #include "../../../../../Engine/Global.h"
 #include "../MoveComponents/Component_WASDInputMove.h"
-#include "../../../../../Engine/Global.h"
 
 namespace {
 	EFFEKSEERLIB::EFKTransform t;/*ššš*/
