@@ -18,6 +18,7 @@ public:
 		TYPE_PLAYER = 0,
 		TYPE_ENEMY,
 		TYPE_PLANT,
+		TYPE_WALL,
 		TYPE_NONE
 	};
 protected:
@@ -32,6 +33,7 @@ protected:
 	bool isOnGround_;                   // 地面に設置するかどうか
 	bool isCollisionWall_;              // 壁に当たったかどうか
 	bool isColliding_;                  // ほかのオブジェクトと衝突するかどうか
+	bool isInteractable_;               // プレイヤーがインタラクト可能かどうか
 	XMFLOAT3 onGroundOffset_;           // 地面に設置する際のオフセット
 	XMFLOAT3 raycastDirection_;
 	float fallSpeed_;                   // 落下速度
@@ -108,6 +110,9 @@ getter :*/
 
 	/// <summary> オブジェクトの種類を取得 </summary>
 	ObjectType GetObjectType() { return objectType_; }
+
+	/// <summary> オブジェクトがインタラクト可能かどうかを取得 </summary>
+	bool GetIsInteractable() { return isInteractable_; }
 /*
 setter :*/
 	/// <summary> モデル番号の設定 </summary>
