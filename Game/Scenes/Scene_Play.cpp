@@ -313,7 +313,7 @@ void Scene_Play::UpdateNormalUI(Component_PlayerBehavior* _playerBehavior, Compo
 	if (_playerBehavior != nullptr) {
 
 		// カメラのターゲットをプレイヤーに設定
-		tpsCamera_->SetTarget(_playerBehavior->GetHolder());
+		if(tpsCamera_ != nullptr)tpsCamera_->SetTarget(_playerBehavior->GetHolder());
 
 		// プレイヤーのHP情報を取得 & 反映
 		Component_HealthGauge* playerHealthGauge = (Component_HealthGauge*)_playerBehavior->GetChildComponent("PlayerHealthGauge");
