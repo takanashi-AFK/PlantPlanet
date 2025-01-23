@@ -27,7 +27,8 @@ private:
 	UIImage* descriptionImage;
 
 	std::vector<PlantData> countedPlantData_;
-	std::vector<UIButton*> plantButtonList;
+	std::vector<UIButton*> plantFrameButtonList;
+	std::vector<UIImage*> plantImageList;
 	std::unordered_map<std::string, PlantData> plantDataMap_;
 
 	std::vector<UIObject*> uiObject_;
@@ -86,8 +87,5 @@ private:
 	void UpdateTabButtonImages(MenuType _menuType);
 
 	bool ConfirmButton(UIButton* _button);
-
-	bool IsButtonMouseOver(UIButton* _button);
-
 };
 

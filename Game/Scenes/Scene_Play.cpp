@@ -21,6 +21,7 @@
 #include "../Objects/UI/UIProgressCircle.h"
 #include "../Objects/UI/UIInventory.h"
 #include "../../Game/Objects/UI/UICursor.h"
+#include "../Otheres/UserManager.h"
 
 
 using namespace Constants;
@@ -52,11 +53,16 @@ void Scene_Play::Initialize()
 	InitCamera();
 
 	UIInventory::Initialize();
+
+	start_ = std::chrono::system_clock::now();
 }
 
 void Scene_Play::Update()
 {
 	// カーソル固定化処理
+	auto playTime = std::chrono::system_clock::now() - start_;
+	playTimeSec_ = std::chrono::duration_cast<std::chrono::seconds>(playTime).count();
+	
 	SetCursorMode();
 
 	//	// カメラのアクティブ化
@@ -218,6 +224,10 @@ void Scene_Play::Draw()
 
 void Scene_Play::Release()
 {
+	UserManager& um = UserManager::GetInstance();
+	auto user = um.GetLoggedInUser();
+
+	um.UpdatePlayTotalTime(user->userName, user->playTotalTime + playTimeSec_);
 }
 
 void Scene_Play::InitUIPanel()
@@ -246,11 +256,6 @@ void Scene_Play::InitStage()
 	
 	// 植物の生成
 	{
-		// 植物データの読み込み
-		json loadData;
-		JsonReader::Load("Datas/PlantData/TentativeFlowers.json", loadData);
-		PlantCollection::Load(loadData);
-
 		// generatorの起動
 		for (auto pg : (pStage_->GetStageObject("generator"))->FindComponent(ComponentType::PlantGenerator))pg->Execute();
 	}
@@ -343,8 +348,6 @@ void Scene_Play::SpawnBossEnemy()
 void Scene_Play::DrawDebugDataEditWindow()
 {
 	if (!isDebugDataEditWindowOpen_) return;
-
-
 
 	Component_PlayerBehavior* playerBehavior = nullptr;
 	for (auto pb : pStage_->FindComponents(ComponentType::PlayerBehavior))

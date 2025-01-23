@@ -17,7 +17,7 @@ CountDown::CountDown(GameObject* _parent):
 
 void CountDown::Initialize()
 {
-	for (int i = 0; i < COUNT_DOWN_IMAGE_NUM; i++) countDownImages_.push_back(Image::Load("Images/playScene/countDown/count_" + std::to_string(i) + ".png"));
+	for (int i = 0; i < COUNT_DOWN_IMAGE_NUM; i++) countDownImages_.push_back(Image::Load("Images/playScene/SCA/countDown/count_" + std::to_string(i) + ".png"));
 }
 
 void CountDown::Update()

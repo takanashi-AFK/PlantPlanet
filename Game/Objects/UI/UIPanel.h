@@ -59,6 +59,7 @@ getter :*/
 	/// <summary> オブジェクトリストの取得 </summary>
 	vector<UIObject*> GetUIObjects() { return childList_; };
 
+
 /*
 setter :*/
 	/// <summary> オブジェクトの可視化を設定 </summary>
@@ -81,7 +82,7 @@ private:
 	int buttonIndexX_;
 	int buttonIndexY_;
 	UIButton* selectingButton_;
-
+	
 public:
 
 	enum class SELECTOR_MOVE_TO
@@ -94,6 +95,7 @@ public:
 		AMOUNT
 	};
 
+	bool SetButtonArrayIndex(UIButton* b);
 	bool SetButtonArrayIndex(int x, int y);
 	void GetButtonIndex(int* x, int* y);
 	UIButton* GetSelectingButton();

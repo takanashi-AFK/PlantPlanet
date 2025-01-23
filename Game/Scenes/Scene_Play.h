@@ -2,7 +2,7 @@
 
 // インクルード
 #include"../../Engine/GameObject/GameObject.h"
-
+#include<chrono>
 
 // 前方宣言
 class Stage;
@@ -16,12 +16,15 @@ private:
 	CountDown* countDown_;	// カウントダウン
 	TPSCamera* tpsCamera_;	// TPSカメラ
 
-	bool isGameStart_;		// ゲーム開始フラグ
-	bool fixedCursorPos;	// カーソル固定化
-	bool cursorVisible;		// カーソル表示
-	bool isBossSpawn_;
-	bool isDebugDataEditWindowOpen_;
-	bool isShowInventoryFirstTime_;
+	int playTimeSec_;
+	std::chrono::system_clock::time_point start_;
+
+	bool isGameStart_ :1;		// ゲーム開始フラグ
+	bool fixedCursorPos :1;	// カーソル固定化
+	bool cursorVisible :1;		// カーソル表示
+	bool isBossSpawn_:1;
+	bool isDebugDataEditWindowOpen_:1;
+	bool isShowInventoryFirstTime_:1;
 
 	enum PlaySceneState {
 		PlaySceneState_None = 0,
