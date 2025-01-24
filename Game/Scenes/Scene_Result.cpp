@@ -97,10 +97,6 @@ void Scene_Result::InitializeScoreAttackResult()
 	if (JsonReader::Load("Datas/Test/SoreAttackResultTent.json", loadData)) uiPanel->Load(loadData);
 
 	totalScore_ = CalculateScore(ScoreManager::isClear, ScoreManager::time, ScoreManager::playerHp);
-	remainHP_ = ScoreManager::playerHp;
-	dealtDMG_ = ScoreManager::dealtDMG;
-	recieveDMG_ = ScoreManager::recieveDMG;
-	justAvoidanceAmount_ = ScoreManager::justAvoidance;
 
 	ApplyFinalData();
 
@@ -284,10 +280,10 @@ void Scene_Result::UpdateValues()
 	auto uiPanel = UIPanel::GetInstance();
 
 	//êîílÇÇøÇ·ÇÒÇ∆ÇµÇΩÇ‡ÇÃÇ…Ç∑ÇÈ
-	static_cast<UIText*>(uiPanel->GetUIObject("Value_remainingHP"))->SetText(to_string(remainHP_));
-	static_cast<UIText*>(uiPanel->GetUIObject("Value_recieveDamageAmount"))->SetText(to_string(recieveDMG_));
-	static_cast<UIText*>(uiPanel->GetUIObject("Value_justAvoidanceAmount"))->SetText(to_string(justAvoidanceAmount_));
-	static_cast<UIText*>(uiPanel->GetUIObject("Value_dealtDamageAmount"))->SetText(to_string(dealtDMG_));
+	static_cast<UIText*>(uiPanel->GetUIObject("Value_remainingHP"))->SetText(to_string(ScoreManager::playerHp));
+	static_cast<UIText*>(uiPanel->GetUIObject("Value_recieveDamageAmount"))->SetText(to_string(ScoreManager::recieveDMG));
+	static_cast<UIText*>(uiPanel->GetUIObject("Value_justAvoidanceAmount"))->SetText(to_string(ScoreManager::justAvoidance));
+	static_cast<UIText*>(uiPanel->GetUIObject("Value_dealtDamageAmount"))->SetText(to_string(ScoreManager::dealtDMG));
 }
 
 void Scene_Result::UpdateTotalScore()
@@ -382,9 +378,9 @@ void Scene_Result::ApplyFinalData()
 		easing->pile_ = .0f;
 	}
 
-	static_cast<UIText*>(uiPanel->GetUIObject("Value_remainingHP"))->SetText(to_string(remainHP_));
-	static_cast<UIText*>(uiPanel->GetUIObject("Value_recieveDamageAmount"))->SetText(to_string(recieveDMG_));
-	static_cast<UIText*>(uiPanel->GetUIObject("Value_justAvoidanceAmount"))->SetText(to_string(justAvoidanceAmount_));
-	static_cast<UIText*>(uiPanel->GetUIObject("Value_dealtDamageAmount"))->SetText(to_string(dealtDMG_));
+	static_cast<UIText*>(uiPanel->GetUIObject("Value_remainingHP"))->SetText(to_string(ScoreManager::playerHp));
+	static_cast<UIText*>(uiPanel->GetUIObject("Value_recieveDamageAmount"))->SetText(to_string(ScoreManager::recieveDMG));
+	static_cast<UIText*>(uiPanel->GetUIObject("Value_justAvoidanceAmount"))->SetText(to_string(ScoreManager::justAvoidance));
+	static_cast<UIText*>(uiPanel->GetUIObject("Value_dealtDamageAmount"))->SetText(to_string(ScoreManager::dealtDMG));
 	static_cast<UIText*>(uiPanel->GetUIObject("Value_TotalScore"))->SetText(to_string(totalScore_));
 }

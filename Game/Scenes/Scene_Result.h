@@ -59,10 +59,6 @@ private:
 	float easingValue_;
 	int totalScore_;
 
-	int remainHP_;
-	int dealtDMG_;
-	int recieveDMG_;
-	int justAvoidanceAmount_;
 //-----------------------------------------
 };
 
