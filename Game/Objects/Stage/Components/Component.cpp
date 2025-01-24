@@ -34,7 +34,6 @@
 #include "MotionComponent/Component_Accessory.h"
 #include "BehaviorComponents/Component_RangeEnemyBehavior.h"
 #include "BehaviorComponents/Component_MeleeEnemyBehavior.h"
-#include "TeleporterComponent/Component_ReturnGate.h"
 #include "DetectorComponents/Component_RectangleDetector.h"
 #include "BreakableWallComponents/Component_BreakableWall.h"
 
@@ -259,9 +258,7 @@ Component* CreateComponent(string _name, ComponentType _type, StageObject* _hold
 		case Plant: comp = new Component_Plant(_name, _holder, _parent); break;
 		case StaminaGauge: comp = new Component_StaminaGauge(_name, _holder, _parent); break;
 		case Accessory: comp = new Component_Accessory(_name, _holder, _parent); break;
-		case WeakRangeEnemy: comp = new Component_RangeEnemyBehavior(_name, _holder, _parent); break;
 		case MeleeEnemyBehavior: comp = new Component_MeleeEnemyBehavior(_name, _holder, _parent); break;
-		case ReturnGate: comp = new Component_ReturnGate(_name, _holder, _parent); break;
 		case WeakRangeEnemy : comp = new Component_RangeEnemyBehavior(_name, _holder, _parent); break;
 		case RectangleDetector: comp = new Component_RectangleDetector(_name, _holder, _parent); break;
 		case BreakableWall: comp = new Component_BreakableWall(_name, _holder, _parent); break;
@@ -308,7 +305,6 @@ string ComponentTypeToString(ComponentType _type)
 	case Accessory: return "AccessoryComponent";
 	case WeakRangeEnemy: return "Weak RangeEnemy";
 	case MeleeEnemyBehavior: return "MeleeEnemyBehaviorComponent";
-	case ReturnGate: return "ReturnGateComponent";
 	case RectangleDetector: return "RectangleDetectorComponent";
 	case BreakableWall: return "BreakableWallComponent";
 		// その他コンポーネントを追加する時は上記のように追加

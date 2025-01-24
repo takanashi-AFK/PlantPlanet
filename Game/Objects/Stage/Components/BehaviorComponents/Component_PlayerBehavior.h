@@ -9,7 +9,6 @@
 #include "../../../../Plants/Plant.h"
 #include "../../../UI/UIImage.h"
 #include "../../../UI/UIText.h"
-#include "../TeleporterComponent/Component_ReturnGate.h"
 
 // 前方宣言
 class CountDown;
@@ -71,8 +70,6 @@ private:
 	bool isEatSaladEnd_  : 1;
 	bool isBreakableWall_: 1;
 
-	bool isFirstOverMAXReserchPoint : 1;
-
 	float stamina_decrease_dodge_;
 	float stamina_decrease_melee_;
 	float stamina_decrease_shoot_;
@@ -128,8 +125,6 @@ public:
 
 	void EatSalad(Salad salad);
 
-	//リサーチポイントの増加とゲートの開放を管理
-	void AddReserchPoint(int point);
 	/*
 	setter :*/
 	/// <param name="_state"> プレイヤーの状態 </param>
@@ -208,8 +203,6 @@ private:
 	/// <summary> 付近の植物を取得 </summary>
 	StageObject* GetNearestPlant(PlantData& _plantData);
 
-	//帰還ゲートがインタラクト範囲内にあるか判定
-	bool IsAbleToReturn(Component_ReturnGate* &rg);
 	/// <summary> 付近の壁を取得 </summary>
 	StageObject* GetNearestWall();
 	

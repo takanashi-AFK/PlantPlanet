@@ -44,7 +44,6 @@ enum ComponentType
 	Accessory,
 	WeakRangeEnemy,
 	MeleeEnemyBehavior,
-	ReturnGate,
 	RectangleDetector,
 	BreakableWall,
 	// コンポーネント追加時に識別番号を追加
@@ -72,7 +71,7 @@ public:
 	/// </summary>
 	/// <param name="_holder">保有者</param>
 	/// <param name="_name">名前</param>
-	Component(StageObject* _holder, string _name,ComponentType  _type);
+	Component(StageObject* _holder, string _name, ComponentType _type);
 	Component(StageObject* _holder, string _name,ComponentType _type,Component* _parent);
 
 	virtual ~Component();

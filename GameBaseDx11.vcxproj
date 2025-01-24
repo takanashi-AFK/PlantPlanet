@@ -140,7 +140,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Game\Objects\Stage\Components\TeleporterComponent\Component_ReturnGate.cpp" />
     <ClCompile Include="Game\Objects\Stage\Components\BreakableWallComponents\Component_BreakableWall.cpp" />
     <ClCompile Include="Game\Objects\Stage\BreakableWall.cpp" />
     <ClCompile Include="Game\Objects\Stage\Components\DetectorComponents\Component_RectangleDetector.cpp" />
@@ -248,7 +247,6 @@
     <ClCompile Include="Game\Otheres\UserManager.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Game\Objects\Stage\Components\TeleporterComponent\Component_ReturnGate.h" />
     <ClInclude Include="Game\Objects\Stage\Components\BreakableWallComponents\Component_BreakableWall.h" />
     <ClInclude Include="Game\Objects\Stage\BreakableWall.h" />
     <ClInclude Include="Game\Objects\Stage\Components\DetectorComponents\Component_RectangleDetector.h" />

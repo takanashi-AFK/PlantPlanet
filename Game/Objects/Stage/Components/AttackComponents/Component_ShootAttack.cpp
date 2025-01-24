@@ -28,7 +28,6 @@ void Component_ShootAttack::Update()
 	if (isActive_ == false)return;
 
 	// 撃ち放つプレハブを生成
-	
 	Bullet* bulletPrefab = CreateBullet(holder_->GetParent(), effectData,bulletColliderRadius_); {
 
 		// 弾を撃ち放ったオブジェクトを設定
