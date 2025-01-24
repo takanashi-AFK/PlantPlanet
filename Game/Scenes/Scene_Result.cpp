@@ -52,17 +52,17 @@ void Scene_Result::Update()
 	switch (g_gameMode) {
 	case MODE_ADVENTURE:
 		UpdateAdventureResult();
+		// ボタンが押されたら
+		if (((UIButton*)UIPanel::GetInstance()->GetUIObject("returnButton"))->OnClick() || Input::IsPadButtonDown(XINPUT_GAMEPAD_A)) {
+			SceneManager* sceneManager = (SceneManager*)FindObject("SceneManager");
+			sceneManager->ChangeScene(SCENE_ID_END, TID_BLACKOUT);
+		}
+
 		break;
 
 	case MODE_SCOREATTACK:
 		UpdateScoreAttackResult();
 		break;
-	}
-
-	// ボタンが押されたら
-	if (((UIButton*)UIPanel::GetInstance()->GetUIObject("returnButton"))->OnClick() || Input::IsPadButtonDown(XINPUT_GAMEPAD_A)) {
-		SceneManager* sceneManager = (SceneManager*)FindObject("SceneManager");
-		sceneManager->ChangeScene(SCENE_ID_END, TID_BLACKOUT);
 	}
 }
 
