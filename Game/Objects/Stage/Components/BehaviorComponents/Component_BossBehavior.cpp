@@ -87,6 +87,22 @@ void Component_BossBehavior::Update()
 	// 対象が存在しない または アクティブでない場合は処理を行わない
 	if (target_ == nullptr || isActive_ == false) return;
 
+	{
+		// プレイヤーのHPゲージコンポーネントを取得
+		Component_HealthGauge* hg = (Component_HealthGauge*)(GetChildComponent("HealthGauge"));
+
+		// UIProgressBarを取得
+		UIProgressBar* hpBar = (UIProgressBar*)UIPanel::GetInstance()->FindObject(PLAY_SCENE_BOSS_HP_GAUGE_NAME);
+
+		// HPの値を移動
+		ScoreManager::playerHp = (int)hg->now_;
+
+		// HPバーの値を設定
+		if (hpBar != nullptr && hg != nullptr)hpBar->SetProgress(hg->now_, hg->max_);
+
+		if(hg->now_ <= 0) SetState(BOSS_STATE_DEAD);
+	}
+
 
 	// 状態によって処理を分岐
 	switch (bNowState_)

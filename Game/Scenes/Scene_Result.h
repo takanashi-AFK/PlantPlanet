@@ -4,26 +4,26 @@
 class Scene_Result :public GameObject
 {
 private:
-	int scoreNum_;	// ƒXƒRƒA
+	int scoreNum_;	// ã‚¹ã‚³ã‚¢
 	int layerNumberCount_;
 public:
-	/// <summary> ƒRƒ“ƒXƒgƒ‰ƒNƒ^ </summary>
+	/// <summary> ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿ </summary>
 	Scene_Result(GameObject* parent_);
 
-	/// <summary> ‰Šú‰» </summary>
+	/// <summary> åˆæœŸåŒ– </summary>
 	void Initialize() override;
 
-	/// <summary> XV </summary>
+	/// <summary> æ›´æ–° </summary>
 	void Update() override;
 
-	/// <summary> •`‰æ </summary>
+	/// <summary> æç”» </summary>
 	void Draw() override;
 
-	/// <summary> ‰ğ•ú </summary>
+	/// <summary> è§£æ”¾ </summary>
 	void Release() override;
 
 private:
-	/// <summary> ƒXƒRƒA‚ÌŒvZ </summary>
+	/// <summary> ã‚¹ã‚³ã‚¢ã®è¨ˆç®— </summary>
 	int CalculateScore(bool isCleared, int remainingTime, int remainingHP);
 
 	void InitializeScoreAttackResult();
@@ -31,27 +31,27 @@ private:
 	void UpdateScoreAttackResult();
 	void UpdateAdventureResult();
 
-//ƒXƒRƒAƒAƒ^ƒbƒN—p--------------
-	//ƒXƒRƒAƒAƒ^ƒbƒN‚Ì‰‰o‚ªƒXƒLƒbƒv‚³‚ê‚½‚©Šm”F
+//ã‚¹ã‚³ã‚¢ã‚¢ã‚¿ãƒƒã‚¯ç”¨--------------
+	//ã‚¹ã‚³ã‚¢ã‚¢ã‚¿ãƒƒã‚¯ã®æ¼”å‡ºãŒã‚¹ã‚­ãƒƒãƒ—ã•ã‚ŒãŸã‹ç¢ºèª
 	void CheckSkipScoreAttackResult();
 
-	//ƒeƒLƒXƒgŒQ‚ÌƒC[ƒWƒ“ƒO
+	//ãƒ†ã‚­ã‚¹ãƒˆç¾¤ã®ã‚¤ãƒ¼ã‚¸ãƒ³ã‚°
 	void UpdateTexts();
 
-	//ƒXƒRƒA”’l‚ÌƒC[ƒWƒ“ƒO
+	//ã‚¹ã‚³ã‚¢æ•°å€¤ã®ã‚¤ãƒ¼ã‚¸ãƒ³ã‚°
 	void UpdateValues();
 
-	//ƒg[ƒ^ƒ‹ƒXƒRƒA‚ÌƒC[ƒWƒ“ƒO
+	//ãƒˆãƒ¼ã‚¿ãƒ«ã‚¹ã‚³ã‚¢ã®ã‚¤ãƒ¼ã‚¸ãƒ³ã‚°
 	void UpdateTotalScore();
 
-	//ƒ{ƒ^ƒ“‚ÌƒC[ƒWƒ“ƒO
+	//ãƒœã‚¿ãƒ³ã®ã‚¤ãƒ¼ã‚¸ãƒ³ã‚°
 	void UpdateButton();
 
-	//ÅI“I‚Èupdateó‘ÔBƒ{ƒ^ƒ“‚ğ‰Ÿ‚³‚ê‚é‚Ì‚ğ‘Ò‚Á‚Ä‚¢‚éB
+	//æœ€çµ‚çš„ãªupdateçŠ¶æ…‹ã€‚ãƒœã‚¿ãƒ³ã‚’æŠ¼ã•ã‚Œã‚‹ã®ã‚’å¾…ã£ã¦ã„ã‚‹ã€‚
 	void UpdateWaitingForReturn();
 
 	void UpdateEmptyWork();
-	//ÅI“I‚È”’lB³‹K‚Ìî•ñ
+	//æœ€çµ‚çš„ãªæ•°å€¤ã€‚æ­£è¦ã®æƒ…å ±
 	void ApplyFinalData();
 private:
 
@@ -60,6 +60,7 @@ private:
 	int totalScore_;
 
 //-----------------------------------------
+
 };
 
 	

@@ -1,0 +1,107 @@
+{
+  "BossHPBarBackGround": {
+    "imageFilePath_": "Images/playScene/SCA/02_barBack.png",
+    "isVisible_": true,
+    "layerNumber_": 7,
+    "objectName_": "BossHPBarBackGround",
+    "position_": [ -0.6000000238418579, 0.800000011920929, 0.0 ],
+    "rotate_": [ 0.0, 0.0, 0.0 ],
+    "scale_": [ 3.0, 0.5, 1.0 ],
+    "type_": 2
+  },
+  "HPBarBackGround": {
+    "imageFilePath_": "Images/playScene/ADV/02_barBack.png",
+    "isVisible_": true,
+    "layerNumber_": 2,
+    "objectName_": "HPBarBackGround",
+    "position_": [ -0.8500000238418579, -0.6499999761581421, 0.0 ],
+    "rotate_": [ 0.0, 0.0, 0.0 ],
+    "scale_": [ 1.850000023841858, 1.0, 1.0 ],
+    "type_": 2
+  },
+  "HPIcon": {
+    "imageFilePath_": "Images/playScene/ADV/08_hpIcon.png",
+    "isVisible_": true,
+    "layerNumber_": 5,
+    "objectName_": "HPIcon",
+    "position_": [ -0.949999988079071, -0.8500000238418579, 0.0 ],
+    "rotate_": [ 0.0, 0.0, 0.0 ],
+    "scale_": [ 1.0, 1.0, 1.0 ],
+    "type_": 2
+  },
+  "STBarBackGround": {
+    "imageFilePath_": "Images/playScene/ADV/02_barBack.png",
+    "isVisible_": true,
+    "layerNumber_": 1,
+    "objectName_": "STBarBackGround",
+    "position_": [ -0.8500000238418579, -0.8500000238418579, 0.0 ],
+    "rotate_": [ 0.0, 0.0, 0.0 ],
+    "scale_": [ 1.899999976158142, 1.0, 1.0 ],
+    "type_": 2
+  },
+  "STIcon": {
+    "imageFilePath_": "Images/playScene/ADV/09_stIcon.png",
+    "isVisible_": true,
+    "layerNumber_": 6,
+    "objectName_": "STIcon",
+    "position_": [ -0.949999988079071, -0.6499999761581421, 0.0 ],
+    "rotate_": [ 0.0, 0.0, 0.0 ],
+    "scale_": [ 1.0, 1.0, 1.0 ],
+    "type_": 2
+  },
+  "boss_hpGauge": {
+    "frameImage_": { "filePath_": "Images/playScene/SCA/00_barFrame.png" },
+    "gaugeImage_": {
+      "color_": [ 1.0, 0.0, 0.0 ],
+      "filePath_": "Images/playScene/SCA/01_barGauge.png"
+    },
+    "isVisible_": true,
+    "layerNumber_": 8,
+    "objectName_": "boss_hpGauge",
+    "position_": [ -0.6000000238418579, 0.800000011920929, 0.0 ],
+    "rotate_": [ 0.0, 0.0, 0.0 ],
+    "scale_": [ 3.0, 0.5, 1.0 ],
+    "type_": 4
+  },
+  "player_hpGauge": {
+    "frameImage_": { "filePath_": "Images/playScene/ADV/00_barFrame.png" },
+    "gaugeImage_": {
+      "color_": [ 0.0, 1.0, 0.058823585510253906 ],
+      "filePath_": "Images/playScene/ADV/01_barGauge.png"
+    },
+    "isVisible_": true,
+    "layerNumber_": 3,
+    "objectName_": "player_hpGauge",
+    "position_": [ -0.8799999952316284, -0.8500000238418579, 0.0 ],
+    "rotate_": [ 0.0, 0.0, 0.0 ],
+    "scale_": [ 2.0, 1.0, 1.0 ],
+    "type_": 4
+  },
+  "staminaGauge": {
+    "frameImage_": { "filePath_": "Images/playScene/ADV/00_barFrame.png" },
+    "gaugeImage_": {
+      "color_": [ 1.0, 0.7058823108673096, 0.0 ],
+      "filePath_": "Images/playScene/ADV/01_barGauge.png"
+    },
+    "isVisible_": true,
+    "layerNumber_": 4,
+    "objectName_": "staminaGauge",
+    "position_": [ -0.8799999952316284, -0.6499999761581421, 0.0 ],
+    "rotate_": [ 0.0, 0.0, 0.0 ],
+    "scale_": [ 2.0, 1.0, 1.0 ],
+    "type_": 4
+  },
+  "timer": {
+    "circleGaugeImage": "Images/defaults/Timer_Gauge.png",
+    "drawType": 0,
+    "isVisible_": true,
+    "layerNumber_": 9,
+    "max": 180.0,
+    "objectName_": "timer",
+    "position_": [ 0.0, -0.699999988079071, 0.0 ],
+    "rotate_": [ 0.0, 0.0, 0.0 ],
+    "scale_": [ 1.0, 1.0, 1.0 ],
+    "size": 1.0,
+    "type_": 6
+  }
+}
