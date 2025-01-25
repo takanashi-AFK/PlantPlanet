@@ -4,23 +4,23 @@ void FileManager::ReplaceBackslashes(string& str)
 {
 	size_t found = str.find("\\");
 	while (found != string::npos) {
-		str.replace(found, 1, "/"); // "\\" ‚ğ "/" ‚É’uŠ·‚·‚é
-		found = str.find("\\", found + 1); // Ÿ‚Ì "\\" ‚ğŒŸõ‚·‚é
+		str.replace(found, 1, "/"); // "\\" ã‚’ "/" ã«ç½®æ›ã™ã‚‹
+		found = str.find("\\", found + 1); // æ¬¡ã® "\\" ã‚’æ¤œç´¢ã™ã‚‹
 	}
 }
 
 std::string FileManager::GetAssetsRelativePath(const std::string& absolutePath)
 {
 	const std::string assetsFolder = "Assets\\";
-	// "Assets\\" ‚ÌˆÊ’u‚ğŒŸõ
+	// "Assets\\" ã®ä½ç½®ã‚’æ¤œç´¢
 	size_t assetsPos = absolutePath.find(assetsFolder);
 	if (assetsPos != std::string::npos) {
-		// "Assets\\" ‚Ì•”•ª‚ğœ‚¢‚½A‚»‚êˆÈ~‚Ì•”•ª‚ğæ“¾
+		// "Assets\\" ã®éƒ¨åˆ†ã‚’é™¤ã„ãŸã€ãã‚Œä»¥é™ã®éƒ¨åˆ†ã‚’å–å¾—
 		std::string relativePath = absolutePath.substr(assetsPos + assetsFolder.size());
 		return relativePath;
 	}
 	else {
-		// "Assets\\" ‚ªŒ©‚Â‚©‚ç‚È‚¢ê‡‚ÍAŒ³‚Ìƒtƒ@ƒCƒ‹ƒpƒX‚ğ•Ô‚·
+		// "Assets\\" ãŒè¦‹ã¤ã‹ã‚‰ãªã„å ´åˆã¯ã€å…ƒã®ãƒ•ã‚¡ã‚¤ãƒ«ãƒ‘ã‚¹ã‚’è¿”ã™
 		return absolutePath;
 	}
 }
@@ -31,7 +31,7 @@ std::string FileManager::GetFileNameFromPath(const std::string& path)
 }
 
 
-// ŠÖ”: ƒpƒX‚©‚çŠg’£q‚È‚µ‚Ìƒtƒ@ƒCƒ‹–¼‚ğæ“¾‚·‚é
+// é–¢æ•°: ãƒ‘ã‚¹ã‹ã‚‰æ‹¡å¼µå­ãªã—ã®ãƒ•ã‚¡ã‚¤ãƒ«åã‚’å–å¾—ã™ã‚‹
 std::string FileManager::GetFileNameWithoutExtension(const std::string& path) {
 	return std::filesystem::path(path).stem().string();
 }
@@ -55,16 +55,19 @@ XMFLOAT3 operator*(XMFLOAT3 a, const XMFLOAT3 b)
 	return XMFLOAT3(a.x * b.x, a.y * b.y, a.z * b.z);
 }
 
-// ƒQ[ƒ€‚ÌƒXƒRƒA
+// ã‚²ãƒ¼ãƒ ã®ã‚¹ã‚³ã‚¢
 namespace ScoreManager {
 
-	// NOTE: ƒV[ƒ“ŠÔ‚Å‹¤—L‚·‚é•Ï”‚Í‚±‚±‚É‹Lq‚·‚é
+	// NOTE: ã‚·ãƒ¼ãƒ³é–“ã§å…±æœ‰ã™ã‚‹å¤‰æ•°ã¯ã“ã“ã«è¨˜è¿°ã™ã‚‹
 /*
 valeable :*/
-	int time;		// ƒ^ƒCƒ€
-	int playerHp;	// ƒvƒŒƒCƒ„[‚ÌHP
-	bool isClear;	// ƒNƒŠƒA‚µ‚½‚©‚Ç‚¤‚©
-	string userName;	// ƒ†[ƒU[–¼
+	int time;			// ã‚¿ã‚¤ãƒ 
+	int playerHp;		// ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®HP
+	int justAvoidance;	// ã‚¸ãƒ£ã‚¹ãƒˆå›é¿ã—ãŸå›æ•°
+	int recieveDMG;	// å—ã‘ãŸãƒ€ãƒ¡ãƒ¼ã‚¸
+	int dealtDMG;		// ä¸ãƒ€ãƒ¡ãƒ¼ã‚¸
+	bool isClear;		// ã‚¯ãƒªã‚¢ã—ãŸã‹ã©ã†ã‹
+	string userName;	// ãƒ¦ãƒ¼ã‚¶ãƒ¼å
 }
 
 namespace Light
@@ -79,3 +82,5 @@ int g_selectedGameMode = 0;
 std::vector<PlantData> g_playerPlantData;
 std::vector<PlantData> g_thisPlayGetPlantData;
 GameMode g_gameMode;
+int g_playTime;
+

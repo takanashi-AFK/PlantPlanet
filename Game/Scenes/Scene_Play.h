@@ -1,89 +1,103 @@
 #pragma once
 
-// ƒCƒ“ƒNƒ‹[ƒhƒfƒBƒŒƒNƒeƒBƒu
+// ã‚¤ãƒ³ã‚¯ãƒ«ãƒ¼ãƒ‰ãƒ‡ã‚£ãƒ¬ã‚¯ãƒ†ã‚£ãƒ–
 #include"../../Engine/GameObject/GameObject.h"
+#include<chrono>
 
-// usingƒfƒBƒŒƒNƒeƒBƒu
+// usingãƒ‡ã‚£ãƒ¬ã‚¯ãƒ†ã‚£ãƒ–
 using std::string;
 
-// ‘O•ûéŒ¾
+// å‰æ–¹å®£è¨€
 class Stage;
 class CountDown;
 class TPSCamera;
 class Component_PlayerBehavior;
 class Component_BossBehavior;
 
-/// <summary> ƒQ[ƒ€ƒvƒŒƒCƒV[ƒ“ƒNƒ‰ƒX </summary>
+/// <summary> ã‚²ãƒ¼ãƒ ãƒ—ãƒ¬ã‚¤ã‚·ãƒ¼ãƒ³ã‚¯ãƒ©ã‚¹ </summary>
 class Scene_Play:public GameObject
 {
 private:
-	Stage* pStage_;					// ƒXƒe[ƒW
-	TPSCamera* tpsCamera_;			// TPSƒJƒƒ‰
+	Stage* pStage_;			// ã‚¹ãƒ†ãƒ¼ã‚¸
+	CountDown* countDown_;	// ã‚«ã‚¦ãƒ³ãƒˆãƒ€ã‚¦ãƒ³
+	TPSCamera* tpsCamera_;	// TPSã‚«ãƒ¡ãƒ©
 
-	bool fixedCursorPos_;			// ƒJ[ƒ\ƒ‹ŒÅ’è‰»
-	bool cursorVisible_;				// ƒJ[ƒ\ƒ‹•\¦
-	bool isShowInventoryFirstTime_;	// ƒCƒ“ƒxƒ“ƒgƒŠUI‚ğ‰‚ß‚Ä•\¦‚µ‚½‚©‚Ìƒtƒ‰ƒO
-	bool isOpenInventoryUI_;		// ƒCƒ“ƒxƒ“ƒgƒŠUI‚ğŠJ‚¢‚Ä‚¢‚é‚©‚Ìƒtƒ‰ƒO
-	bool isGameStart_;
-	CountDown* countDown_;			// ƒJƒEƒ“ƒgƒ_ƒEƒ“
+	std::chrono::system_clock::time_point start_;
+
+	bool isGameStart_ :1;		// ã‚²ãƒ¼ãƒ é–‹å§‹ãƒ•ãƒ©ã‚°
+	bool fixedCursorPos :1;	// ã‚«ãƒ¼ã‚½ãƒ«å›ºå®šåŒ–
+	bool cursorVisible :1;		// ã‚«ãƒ¼ã‚½ãƒ«è¡¨ç¤º
+	bool isBossSpawn_:1;
+	bool isDebugDataEditWindowOpen_:1;
+	bool isShowInventoryFirstTime_:1;
+ 	bool isOpenInventoryUI_;		// ã‚¤ãƒ³ãƒ™ãƒ³ãƒˆãƒªUIã‚’é–‹ã„ã¦ã„ã‚‹ã‹ã®ãƒ•ãƒ©ã‚°
+
+	enum PlaySceneState {
+		PlaySceneState_None = 0,
+		PlaySceneState_Play,
+		PlaySceneState_Inventory,
+		PlaySceneState_Max
+	}currentState_;
+
+
 public:
-	/// <summary> ƒRƒ“ƒXƒgƒ‰ƒNƒ^ </summary>
+	/// <summary> ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿ </summary>
 	Scene_Play(GameObject* parent);
 
-	/// <summary> ‰Šú‰» </summary>
+	/// <summary> åˆæœŸåŒ– </summary>
 	void Initialize() override;
 
-	/// <summary> XV </summary>
+	/// <summary> æ›´æ–° </summary>
 	void Update() override;
 
-	/// <summary> •`‰æ </summary>
+	/// <summary> æç”» </summary>
 	void Draw() override;
 
-	/// <summary> ‰ğ•ú </summary>
+	/// <summary> è§£æ”¾ </summary>
 	void Release() override;
 
 private:
-	/// <summary> ƒCƒ“ƒxƒ“ƒgƒŠUI‚ğ”ñ•\¦ </summary>
+	/// <summary> ã‚¤ãƒ³ãƒ™ãƒ³ãƒˆãƒªUIã‚’éè¡¨ç¤º </summary>
 	void CloseInventoryUI();
 
-	/// <summary> ƒCƒ“ƒxƒ“ƒgƒŠUI‚ğ•\¦ </summary>
+	/// <summary> ã‚¤ãƒ³ãƒ™ãƒ³ãƒˆãƒªUIã‚’è¡¨ç¤º </summary>
 	void OpenInventoryUI();
 
-	/// <summary> ƒJ[ƒ\ƒ‹‚Ìó‘Ô‚ğİ’è </summary>
+	/// <summary> ã‚«ãƒ¼ã‚½ãƒ«ã®çŠ¶æ…‹ã‚’è¨­å®š </summary>
 	void SetCursorMode();
 
 /*
 initialize:*/
-	/// <summary> ƒAƒhƒxƒ“ƒ`ƒƒ[ƒ‚[ƒh‚Ì‰Šú‰» </summary>
+	/// <summary> ã‚¢ãƒ‰ãƒ™ãƒ³ãƒãƒ£ãƒ¼ãƒ¢ãƒ¼ãƒ‰ã®åˆæœŸåŒ– </summary>
 	void InitAdventureMode();
 	
-	/// <summary> ƒXƒRƒAƒAƒ^ƒbƒNƒ‚[ƒh‚Ì‰Šú‰» </summary>
+	/// <summary> ã‚¹ã‚³ã‚¢ã‚¢ã‚¿ãƒƒã‚¯ãƒ¢ãƒ¼ãƒ‰ã®åˆæœŸåŒ– </summary>
 	void InitScoreAttackMode();
 
-	/// <summary> UIƒpƒlƒ‹‚Ì‰Šú‰» </summary>
+	/// <summary> UIãƒ‘ãƒãƒ«ã®åˆæœŸåŒ– </summary>
 	void InitUIPanel(const string& _fileName);
 
-	/// <summary> ƒXƒe[ƒW‚Ì‰Šú‰» </summary>
+	/// <summary> ã‚¹ãƒ†ãƒ¼ã‚¸ã®åˆæœŸåŒ– </summary>
 	void InitStage(const string& _fileName);
 
-	/// <summary> ƒJƒƒ‰‚Ì‰Šú‰» </summary>
+	/// <summary> ã‚«ãƒ¡ãƒ©ã®åˆæœŸåŒ– </summary>
 	void InitCamera();
 /*
 update :*/
-	/// <summary> ƒXƒRƒAƒAƒ^ƒbƒNƒ‚[ƒh‚ÌXV </summary>
+	/// <summary> ã‚¹ã‚³ã‚¢ã‚¢ã‚¿ãƒƒã‚¯ãƒ¢ãƒ¼ãƒ‰ã®æ›´æ–° </summary>
 	void UpdateScoreAttackMode(Component_PlayerBehavior* _playerBehavior,Component_BossBehavior* _bossBehavior);
 
-	/// <summary> ƒAƒhƒxƒ“ƒ`ƒƒ[ƒ‚[ƒh‚ÌXV </summary>
+	/// <summary> ã‚¢ãƒ‰ãƒ™ãƒ³ãƒãƒ£ãƒ¼ãƒ¢ãƒ¼ãƒ‰ã®æ›´æ–° </summary>
 	void UpdateAdventureMode(Component_PlayerBehavior* _playerBehavior, Component_BossBehavior* _bossBehavior);
 
-	/// <summary> ƒCƒ“ƒxƒ“ƒgƒŠ‚ğ•\¦‚·‚éUI‚ÌXV </summary>
+	/// <summary> ã‚¤ãƒ³ãƒ™ãƒ³ãƒˆãƒªã‚’è¡¨ç¤ºã™ã‚‹UIã®æ›´æ–° </summary>
 	void UpdateInventoryUI();
 
-	/// <summary> ƒvƒŒƒCƒ„[‚Ìó‘Ô‚ğ•\¦‚·‚éUI‚ÌXV </summary>
+	/// <summary> ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®çŠ¶æ…‹ã‚’è¡¨ç¤ºã™ã‚‹UIã®æ›´æ–° </summary>
 	void UpdateNormalUI(Component_PlayerBehavior* _playerBehavior, Component_BossBehavior* _bossBehavior);
 /*
 debug :*/
-	/// <summary> ƒfƒoƒbƒOƒf[ƒ^•ÒWƒEƒBƒ“ƒhƒE‚Ì•`‰æ ¦íœ—\’è </summary>
+	/// <summary> ãƒ‡ãƒãƒƒã‚°ãƒ‡ãƒ¼ã‚¿ç·¨é›†ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ã®æç”» â€»å‰Šé™¤äºˆå®š </summary>
 	void DrawDebugDataEditWindow();
 };
 

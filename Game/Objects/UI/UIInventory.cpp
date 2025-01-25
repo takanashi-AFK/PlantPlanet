@@ -285,6 +285,13 @@ namespace UIInventory {
 		}
 		showInventory_ = isShow;
 		makeButton_->SetVisible(isShow);
+
+		// 履歴が揃っているか確認
+		for (auto i = 0; i < MakeSalad::NEED_PLANT_NUM; ++i)
+		{
+			if (prevRecipe_[i].id_ == -1)	isShow = false;
+		}
+		makeFromHistoryButton_->SetVisible(isShow);
 	}
 
 	void InventoryDataSet()

@@ -21,6 +21,7 @@
 #include "../Objects/UI/UIProgressCircle.h"
 #include "../Objects/UI/UIInventory.h"
 #include "../../Game/Objects/UI/UICursor.h"
+#include "../Otheres/UserManager.h"
 
 namespace {
 	// UIレイアウトのjsonファイルパス
@@ -48,6 +49,7 @@ Scene_Play::Scene_Play(GameObject* parent)
 
 void Scene_Play::Initialize()
 {
+	start_ = std::chrono::system_clock::now();
 	// ゲームモードによる初期化処理
 	switch (g_gameMode) 
 	{
@@ -59,6 +61,9 @@ void Scene_Play::Initialize()
 void Scene_Play::Update()
 {
 	// カーソル固定化処理
+	auto playTime = std::chrono::system_clock::now() - start_;
+	g_playTime = std::chrono::duration_cast<std::chrono::seconds>(playTime).count();
+	
 	SetCursorMode();
 
 	// カメラのアクティブ化
@@ -95,6 +100,10 @@ void Scene_Play::Draw()
 
 void Scene_Play::Release()
 {
+	UserManager& um = UserManager::GetInstance();
+	auto user = um.GetLoggedInUser();
+
+	um.UpdatePlayTotalTime(user->userName, user->playTotalTime + g_playTime);
 }
 
 void Scene_Play::InitUIPanel(const string& _fileName)

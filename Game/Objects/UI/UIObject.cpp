@@ -138,9 +138,9 @@ void UIObject::ChildDrawData()
 		if (ImGui::TreeNode("Easing Data")) {
 			auto& eas = *easing_.get();
 
-			ImGui::DragFloat3("2nd Pos", &eas.secTransform_.position_.x, 0.1f);
-			ImGui::DragFloat3("2nd Rot", &eas.secTransform_.rotate_.x, 0.1f);
-			ImGui::DragFloat3("2nd Scale", &eas.secTransform_.scale_.x, 0.1f);
+			ImGui::DragFloat3("End Pos", &eas.secTransform_.position_.x, 0.1f);
+			ImGui::DragFloat3("End Rot", &eas.secTransform_.rotate_.x, 0.1f);
+			ImGui::DragFloat3("End Scale", &eas.secTransform_.scale_.x, 0.1f);
 
 			ImGui::DragFloat("Ratio now", &eas.GetEasing()->pile_, 0.005f,.0f,1.0f);
 			ImGui::DragFloat("Ratio/Frame", &eas.GetEasing()->ratio_, 0.005f ,-1.0f,1.0f);
@@ -149,9 +149,15 @@ void UIObject::ChildDrawData()
 
 			auto settable_in_Line = 4u;
 
-			for (auto i = 0u; i < static_cast<int>(Easing::TYPE::AMOUNT); i++) {
-				ImGui::RadioButton(Easing::GetEnumName(static_cast<Easing::TYPE>(i)).c_str(), reinterpret_cast<int*>(&eas.easing_type), i);	
-				if((i < static_cast<int>(Easing::TYPE::AMOUNT) -1) && (i+1)%settable_in_Line)ImGui::SameLine();
+			if (ImGui::BeginCombo(": Easing Type", Easing::GetEnumName(easing_.get()->easing_type).c_str()))
+			{
+				for (auto i = 0u; i < static_cast<int>(Easing::TYPE::AMOUNT); i++) {
+					if (ImGui::Selectable(Easing::GetEnumName(static_cast<Easing::TYPE>(i)).c_str(), easing_.get()->easing_type == static_cast<Easing::TYPE>(i)))
+					{
+						easing_.get()->easing_type = static_cast<Easing::TYPE>(i);
+					}
+				}
+				ImGui::EndCombo();
 			}
 			ImGui::TreePop();
 		}

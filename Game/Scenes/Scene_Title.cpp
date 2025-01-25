@@ -266,7 +266,7 @@ void Scene_Title::ProcessButtonAction(UIPanel* _uiPanel,string _buttonName, stri
 
 					// ƒvƒŒƒCŽžŠÔ‚ð“K‰ž
 					string playTotalTimeStr; {
-						int totalSec = um.GetPlayTotalTime(_inputUserName) / FPS;
+						int totalSec = um.GetPlayTotalTime(_inputUserName) ;
 
 						int hour = totalSec / 3600;
 						int min = (totalSec % 3600) / 60;
