@@ -18,6 +18,7 @@ public:
 		TYPE_PLAYER = 0,
 		TYPE_ENEMY,
 		TYPE_PLANT,
+		TYPE_WALL,
 		TYPE_NONE
 	};
 protected:
@@ -109,6 +110,9 @@ getter :*/
 
 	/// <summary> オブジェクトの種類を取得 </summary>
 	ObjectType GetObjectType() { return objectType_; }
+
+	/// <summary> オブジェクトがインタラクト可能かどうかを取得 </summary>
+	bool GetIsInteractable() { return isInteractable_; }
 /*
 setter :*/
 	/// <summary> モデル番号の設定 </summary>
