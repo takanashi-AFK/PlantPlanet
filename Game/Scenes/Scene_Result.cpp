@@ -37,7 +37,6 @@ void Scene_Result::Initialize()
 	case MODE_SCOREATTACK:
 		InitializeScoreAttackResult();
 		break;
-
 	}
 
 
@@ -93,7 +92,7 @@ void Scene_Result::InitializeScoreAttackResult()
 
 	// UIパネルを取得
 	UIPanel* uiPanel = UIPanel::GetInstance();
-	
+
 	// UIパネル情報を読み込む
 	if (JsonReader::Load("Datas/Test/SoreAttackResultTent.json", loadData)) uiPanel->Load(loadData);
 
@@ -121,46 +120,6 @@ void Scene_Result::InitializeScoreAttackResult()
 		auto easing = item->GetEasing()->GetEasing();
 		easing->pile_ = 1.0f;
 	}
-}
-
-void Scene_Result::InitializeAdventureResult()
-{
-
-	// jsonファイル読込用オブジェクトを用意
-	json loadData;
-
-	// スカイスフィアの生成
-	SkySphere* skySphere = Instantiate<SkySphere>(this);
-
-	// UIパネルを取得
-	UIPanel* uiPanel = UIPanel::GetInstance();
-
-	// UIパネル情報を読み込む
-	if (JsonReader::Load(RESULT_SCENE_UI_LAYOUT_JSON, loadData)) uiPanel->Load(loadData);
-
-	// UIパネルの情報を取得・設定
-	{
-		// テキストにプレイヤーのHPの値を設定
-		UIText* hpNumText = (UIText*)uiPanel->GetUIObject(RESULT_SCENE_HP_TEXT_NAME);
-		hpNumText->SetText(&ScoreManager::playerHp);
-
-		// テキストにタイムの値を設定
-		UIText* timeNumText = (UIText*)uiPanel->GetUIObject(RESULT_SCENE_TIME_TEXT_NAME);
-		timeNumText->SetText(&ScoreManager::time);
-
-		// スコアの計算
-		scoreNum_ = CalculateScore(ScoreManager::isClear, ScoreManager::time, ScoreManager::playerHp);
-
-		// テキストにスコアの値を設定
-		UIText* scoreNumText = (UIText*)uiPanel->GetUIObject(RESULT_SCENE_SCORE_TEXT_NAME);
-		scoreNumText->SetText(&scoreNum_);
-	}
-
-	
-
-	// ステージを作成 & 読み込み
-	Stage* pStage = Instantiate<Stage>(this);
-	if (JsonReader::Load(STAGE_BACKGROUND_JSON, loadData))pStage->Load(loadData);
 }
 
 void Scene_Result::InitializeAdventureResult()
@@ -329,10 +288,6 @@ void Scene_Result::UpdateValues()
 
 void Scene_Result::UpdateTotalScore()
 {
-}
-
-void Scene_Result::UpdateScoreAttackResult()
-{
 	//スキップしたかどうか確認
 	CheckSkipScoreAttackResult();
 
@@ -404,9 +359,6 @@ void Scene_Result::UpdateWaitingForReturn()
 
 		scoreAttackUpdateFunction = &Scene_Result::UpdateEmptyWork;
 	}
-
-void Scene_Result::UpdateAdventureResult()
-{
 }
 
 void Scene_Result::UpdateEmptyWork()

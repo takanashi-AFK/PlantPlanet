@@ -25,8 +25,8 @@ private:
 	std::chrono::system_clock::time_point start_;
 
 	bool isGameStart_ :1;		// ゲーム開始フラグ
-	bool fixedCursorPos :1;	// カーソル固定化
-	bool cursorVisible :1;		// カーソル表示
+	bool fixedCursorPos_ :1;	// カーソル固定化
+	bool cursorVisible_ :1;		// カーソル表示
 	bool isBossSpawn_:1;
 	bool isDebugDataEditWindowOpen_:1;
 	bool isShowInventoryFirstTime_:1;
