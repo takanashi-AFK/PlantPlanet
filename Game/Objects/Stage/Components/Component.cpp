@@ -262,7 +262,6 @@ Component* CreateComponent(string _name, ComponentType _type, StageObject* _hold
 		case WeakRangeEnemy: comp = new Component_RangeEnemyBehavior(_name, _holder, _parent); break;
 		case MeleeEnemyBehavior: comp = new Component_MeleeEnemyBehavior(_name, _holder, _parent); break;
 		case ReturnGate: comp = new Component_ReturnGate(_name, _holder, _parent); break;		
-    case WeakRangeEnemy : comp = new Component_RangeEnemyBehavior(_name, _holder, _parent); break;
 		case RectangleDetector: comp = new Component_RectangleDetector(_name, _holder, _parent); break;
 		case BreakableWall: comp = new Component_BreakableWall(_name, _holder, _parent); break;
 		default: /* その他コンポーネントを追加する時は上記のように追加 */ break;

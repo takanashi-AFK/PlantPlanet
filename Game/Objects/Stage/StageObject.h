@@ -111,8 +111,6 @@ getter :*/
 	/// <summary> オブジェクトの種類を取得 </summary>
 	ObjectType GetObjectType() { return objectType_; }
 
-	/// <summary> オブジェクトがインタラクト可能かどうかを取得 </summary>
-	bool GetIsInteractable() { return isInteractable_; }
 /*
 setter :*/
 	/// <summary> モデル番号の設定 </summary>

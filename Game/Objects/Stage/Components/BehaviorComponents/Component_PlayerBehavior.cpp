@@ -792,7 +792,7 @@ void Component_PlayerBehavior::Interact()
 
 			// 最も近いオブジェクトを取得
 			PlantData plantData;
-			nearestPlant = GetNearestPlant(plantData);
+			nearestObject = GetNearestPlant(plantData);
 
 			Component_ReturnGate* returnGate;
 			
@@ -801,11 +801,11 @@ void Component_PlayerBehavior::Interact()
 				returnGate->Work();
 			}
 
-			else if (nearestPlant != nullptr && nearestObject->GetObjectType() == StageObject::TYPE_WALL:) {
+			else if (nearestObject != nullptr && nearestObject->GetObjectType() == StageObject::TYPE_WALL) {
 			nearestObject = GetNearestWall();
 			    if(nearestObject == nullptr) // 壁が近くになかったら
 		    	nearestObject = GetNearestPlant(plantData);
-      }
+			}
 
 			else if (nearestObject != nullptr && nearestObject->GetObjectType() == StageObject::TYPE_PLANT) {
 				// 所持植物リストに追加
