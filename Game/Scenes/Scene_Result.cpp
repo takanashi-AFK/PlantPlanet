@@ -55,7 +55,7 @@ void Scene_Result::Update()
 		// ボタンが押されたら
 		if (((UIButton*)UIPanel::GetInstance()->GetUIObject("returnButton"))->OnClick() || Input::IsPadButtonDown(XINPUT_GAMEPAD_A)) {
 			SceneManager* sceneManager = (SceneManager*)FindObject("SceneManager");
-			sceneManager->ChangeScene(SCENE_ID_END, TID_BLACKOUT);
+			sceneManager->ChangeScene(SCENE_ID_MENU, TID_BLACKOUT);
 		}
 
 		break;
