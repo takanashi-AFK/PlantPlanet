@@ -18,6 +18,7 @@ public:
 		TYPE_PLAYER = 0,
 		TYPE_ENEMY,
 		TYPE_PLANT,
+		TYPE_WALL,
 		TYPE_NONE
 	};
 protected:
@@ -29,9 +30,10 @@ protected:
 	string modelFilePath_;              // モデルのファイルパス
 	int modelHandle_;                   // モデル番号
 
-	bool isOnGround_;                   // 地面に設置するかどうか
-	bool isCollisionWall_;              // 壁に当たったかどうか
-	bool isColliding_;                  // ほかのオブジェクトと衝突するかどうか
+	bool isOnGround_:1;                   // 地面に設置するかどうか
+	bool isCollisionWall_:1;              // 壁に当たったかどうか
+	bool isColliding_:1;                  // ほかのオブジェクトと衝突するかどうか
+	bool isDrawing_ : 1;				 //描画するかどうか
 	XMFLOAT3 onGroundOffset_;           // 地面に設置する際のオフセット
 	XMFLOAT3 raycastDirection_;
 	float fallSpeed_;                   // 落下速度
@@ -108,6 +110,7 @@ getter :*/
 
 	/// <summary> オブジェクトの種類を取得 </summary>
 	ObjectType GetObjectType() { return objectType_; }
+
 /*
 setter :*/
 	/// <summary> モデル番号の設定 </summary>
@@ -131,6 +134,8 @@ setter :*/
 	void SetObjectType(ObjectType _type) { objectType_ = _type; }
   
 	void SetRayCastDirection(XMFLOAT3 dir) { this->raycastDirection_ = dir; };
+
+	void SetVisible(bool flag) { this->isDrawing_ = flag; };
 /*
 predicate :*/
 	/// <summary> 地面に設置するかどうかを判定 </summary>

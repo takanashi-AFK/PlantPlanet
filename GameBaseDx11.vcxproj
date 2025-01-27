@@ -140,6 +140,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Game\Objects\Stage\Components\TeleporterComponent\Component_ReturnGate.cpp" />
+    <ClCompile Include="Game\Objects\Stage\Components\BreakableWallComponents\Component_BreakableWall.cpp" />
+    <ClCompile Include="Game\Objects\Stage\BreakableWall.cpp" />
+    <ClCompile Include="Game\Objects\Stage\Components\DetectorComponents\Component_RectangleDetector.cpp" />
     <ClCompile Include="Game\Objects\Stage\Components\BehaviorComponents\Component_RangeEnemyBehavior.cpp" />
     <ClCompile Include="Game\Objects\Stage\Components\BehaviorComponents\Component_MeleeEnemyBehavior.cpp" />
     <ClCompile Include="Game\Objects\Stage\Components\MotionComponent\Component_Accessory.cpp" />
@@ -241,8 +245,13 @@
     <ClCompile Include="Game\Objects\UI\UIInventory.cpp" />
     <ClCompile Include="Game\Objects\Stage\MakeSalad.cpp" />
     <ClCompile Include="Game\Scenes\Scene_Menu.cpp" />
+    <ClCompile Include="Game\Otheres\UserManager.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Game\Objects\Stage\Components\TeleporterComponent\Component_ReturnGate.h" />
+    <ClInclude Include="Game\Objects\Stage\Components\BreakableWallComponents\Component_BreakableWall.h" />
+    <ClInclude Include="Game\Objects\Stage\BreakableWall.h" />
+    <ClInclude Include="Game\Objects\Stage\Components\DetectorComponents\Component_RectangleDetector.h" />
     <ClInclude Include="Game\Objects\Stage\Components\BehaviorComponents\Component_RangeEnemyBehavior.h" />
     <ClInclude Include="Game\Objects\Stage\Components\BehaviorComponents\Component_MeleeEnemyBehavior.h" />
     <ClInclude Include="Game\Objects\Stage\Components\MotionComponent\Component_Accessory.h" />
@@ -348,6 +357,7 @@
     <ClInclude Include="Game\Objects\Stage\MakeSalad.h" />
     <ClInclude Include="Game\Objects\Stage\Salad.h" />
     <ClInclude Include="Game\Scenes\Scene_Menu.h" />
+    <ClInclude Include="Game\Otheres\UserManager.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Assets\Shader\BillBoard.hlsl">

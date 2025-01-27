@@ -11,7 +11,7 @@ using namespace FileManager;
 
 UIButton::UIButton(string _name, UIObject* parent , int _layerNum)
 	: UIObject(_name, UIType::UI_BUTTON, parent, _layerNum), imageHandle_(-1), 
-	imageFilePath_(), arrayPlaceX_(1), arrayPlaceY_(1),isSetShader_(false)
+	imageFilePath_(), arrayPlaceX_(1), arrayPlaceY_(1),isSetShader_(false),shaderType_(Direct3D::SHADER_BUTTON_NOTSELECT)
 {
 }
 
@@ -211,6 +211,63 @@ void UIButton::DrawData()
 				}
 			}
 		}
+
+
+		if (ImGui::SmallButton("Image")) {
+			//現在のカレントディレクトリを覚えておく
+			char defaultCurrentDir[MAX_PATH];
+			GetCurrentDirectory(MAX_PATH, defaultCurrentDir);
+
+			// 追加するオブジェクトのモデルファイルパスを設定
+			{
+				// 「ファイルを開く」ダイアログの設定用構造体を設定
+				OPENFILENAME ofn; {
+					TCHAR szFile[MAX_PATH] = {}; // ファイル名を格納するバッファ
+					ZeroMemory(&ofn, sizeof(ofn)); // 構造体の初期化
+					ofn.lStructSize = sizeof(ofn); // 構造体のサイズ
+					ofn.lpstrFile = szFile; // ファイル名を格納するバッファ
+					ofn.lpstrFile[0] = '\0'; // 初期化
+					ofn.nMaxFile = sizeof(szFile); // ファイル名バッファのサイズ
+					ofn.lpstrFilter = TEXT("PNGファイル(*.png)\0*.png\0すべてのファイル(*.*)\0*.*\0"); // フィルター（FBXファイルのみ表示）
+					ofn.nFilterIndex = 1; // 初期選択するフィルター
+					ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST; // フラグ（ファイルが存在すること、パスが存在することを確認）
+					ofn.lpstrInitialDir = TEXT("."); // カレントディレクトリを初期選択位置として設定
+				}
+
+				// ファイルを選択するダイアログの表示
+				if (GetOpenFileName(&ofn) == TRUE) {
+					// ファイルパスを取得
+					imageFilePath_ = ofn.lpstrFile;
+
+					// カレントディレクトリからの相対パスを取得
+					imageFilePath_ = FileManager::GetAssetsRelativePath(imageFilePath_);
+
+					// 文字列内の"\\"を"/"に置換
+					FileManager::ReplaceBackslashes(imageFilePath_);
+
+					// ディレクトリを戻す
+					SetCurrentDirectory(defaultCurrentDir);
+
+					// 画像を読み込む
+					imageHandle_ = Image::Load(imageFilePath_);
+				}
+				else {
+					return;
+				}
+			}
+		}
+
+		if (ImGui::Button("Clear"))
+		{
+			imageFilePath_ = {};
+			selectImageFilePath_ = {};
+			defaultImageFilePath_ = {};
+			imageHandle_ = -1;
+			selectImageHandle_ = -1;
+			defaultImageHandle_ = -1;
+			isChangeImage_ = false;
+		}
+
 		ImGui::TreePop();
 	}
 
@@ -247,6 +304,28 @@ void UIButton::SetArrayPlace(int x, int y)
 {
 	arrayPlaceX_ = x;
 	arrayPlaceY_ = y;
+}
+
+UIButton* UIButton::GetTopSelectingUI(vector<UIObject*> list)
+{
+    UIObject* topButton = nullptr;
+    int depth = -1;
+
+    for (auto& button : list) {
+
+        XMFLOAT2 mousePos = { Input::GetMousePosition().x,Input::GetMousePosition().y };
+        static_cast<UIButton*>(button)->ConvertToImageCoordinates(mousePos);
+
+		static_cast<UIButton*>(button)->IsMouseOver(mousePos) && depth < button->GetLayerNumber() && button->IsVisible() ?
+            topButton = button, depth = button->GetLayerNumber() : NULL;
+
+        static_cast<UIButton*>(button)->SetShader(Direct3D::SHADER_TYPE::SHADER_BUTTON_NOTSELECT);
+    }
+
+	if (topButton)
+        static_cast<UIButton*>(topButton)->SetShader(Direct3D::SHADER_TYPE::SHADER_BUTTON_SELECT);
+
+	return static_cast<UIButton*>(topButton);
 }
 
 void UIButton::GetArrayPlace(int* x, int* y) const

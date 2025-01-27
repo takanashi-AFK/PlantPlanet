@@ -9,6 +9,7 @@
 #include "../../../../Plants/Plant.h"
 #include "../../../UI/UIImage.h"
 #include "../../../UI/UIText.h"
+#include "../TeleporterComponent/Component_ReturnGate.h"
 
 // 前方宣言
 class CountDown;
@@ -51,7 +52,6 @@ private:
 	int lockRotateFrame_;				// 回転を固定する時間
 	int lockRotateFrameLeft_;			// 回転を固定してから経過した時間
 	int researchPoint_;
-	bool isEatSaladEnd_;
 	vector<PlantData> myPlants_;
 	std::list<std::function<PlantData::FuncValue(Component_PlayerBehavior*)>> saladEffects_;
 
@@ -65,31 +65,44 @@ private:
 	bool isUseStamina_ : 1;					// スタミナを使用したか
 	bool isShootAttack_: 1;					
   
-	bool isMeleeStart_: 1;
+	bool isMeleeStart_	 : 1;
 	bool isRenewalPopUp_ : 1;
+
+	bool isEatSaladEnd_  : 1;
+	bool isBreakableWall_: 1;
+
+	bool isFirstOverMAXReserchPoint : 1;
 
 	float stamina_decrease_dodge_;
 	float stamina_decrease_melee_;
 	float stamina_decrease_shoot_;
 
 	float timeCollectPlant;
+
+	static constexpr int NEED_PLANT_NUM = 3;
+
 	struct PopUpInfo
 	{
 		int time;
 		
 		UIText*  info_;
-		UIText*	 texts_[3];
+		UIText*	 texts_[NEED_PLANT_NUM];
 
 		UIImage* backGround_;
-		UIImage* images_[3];
+		UIImage* images_[NEED_PLANT_NUM];
 
 	}popUpInfo_;
 
 	struct SaladEffectLogo
 	{
-		UIText* texts_[3];
-		UIImage* images_[3];
+		UIText* texts_[NEED_PLANT_NUM];
+		UIImage* images_[NEED_PLANT_NUM];
 	}saladEffectLogo_;
+
+	SaladEffectLogo historySaladEffect_;
+	UIImage* historySaladPlant_[NEED_PLANT_NUM];
+
+	string plantFilePath_[NEED_PLANT_NUM];
 
 public:
 	/// <summary> コンストラクタ </summary>
@@ -115,6 +128,8 @@ public:
 
 	void EatSalad(Salad salad);
 
+	//リサーチポイントの増加とゲートの開放を管理
+	void AddReserchPoint(int point);
 	/*
 	setter :*/
 	/// <param name="_state"> プレイヤーの状態 </param>
@@ -135,6 +150,8 @@ public:
 
 	void SetTimeCollectPlant(float time);
 	void SetMyPlants(vector<PlantData> _plants) { myPlants_.clear(); myPlants_ = _plants; }
+
+	void SetBreakableWall(bool _flag) { isBreakableWall_ = _flag; }
 
 	/// <returns> プレイヤーの状態 </returns>
 	PlayerState GetState() const { return nowState_; }
@@ -182,12 +199,21 @@ predicate :*/
 	/// <returns> 現在の状態が指定した状態か </returns>
 	bool IsState(PlayerState _state) const { return nowState_ == _state; }
 
+	bool IsBreakableWall() const { return isBreakableWall_; }
+
 private:
 	/// <summary> 射撃方向の計算 </summary>
 	XMVECTOR CalcShootDirection();
 
 	/// <summary> 付近の植物を取得 </summary>
 	StageObject* GetNearestPlant(PlantData& _plantData);
+
+	//帰還ゲートがインタラクト範囲内にあるか判定
+	bool IsAbleToReturn(Component_ReturnGate* &rg);
+
+	/// <summary> 付近の壁を取得 </summary>
+	StageObject* GetNearestWall();
+
 	/*
 	state :*/
 	/// <summary> 待機状態時の処理 </summary>

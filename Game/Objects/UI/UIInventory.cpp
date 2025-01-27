@@ -10,6 +10,7 @@
 #include "UIText.h"
 #include "../Stage/MakeSalad.h"
 #include "../../../Engine/DirectX/Input.h"
+
 namespace UIInventory {
 	UIPanel* itemPanel_;
 	std::vector<UIObject*> getPlantTable_;
@@ -27,18 +28,21 @@ namespace UIInventory {
 	std::vector<std::string> selectedPlant_;
 	MakeSalad maker_;
 	UIButton* makeButton_;
-	bool showInventory_ = false;
+	UIButton* makeFromHistoryButton_;
 
+	bool showInventory_ = false;
 	bool isMadeSalad_ = false;
 
+	Salad prevSalad;
+	std::array<PlantData, MakeSalad::NEED_PLANT_NUM> prevRecipe_;
 	bool isFirstSelectButton_ = true;
 
 	void Initialize()
 	{
 		itemPanel_ = UIPanel::GetInstance();
 		allPlantData = PlantCollection::GetPlants();
-		// ƒAƒCƒeƒ€ƒe[ƒuƒ‹‚Ì‚İ‚ğæ“¾
-		// ŠeíƒIƒuƒWƒFƒNƒg‚ğ‘Å‚¿•ª‚¯
+		// ã‚¢ã‚¤ãƒ†ãƒ ãƒ†ãƒ¼ãƒ–ãƒ«ã®ã¿ã‚’å–å¾—
+		// å„ç¨®ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’æ‰“ã¡åˆ†ã‘
 		for (auto& item : itemPanel_->GetUIObjects()) {
 			if (item->GetObjectName().starts_with("INV")) {
 				invTable_.push_back(item);
@@ -46,15 +50,28 @@ namespace UIInventory {
 				if (item->GetObjectName().starts_with("INV-Ingredients"))ingredientTable_.push_back(item);
 				else if (item->GetObjectName().starts_with("INV-GetPlantText"))invTextTable_.push_back(item);
 				else if (item->GetObjectName().starts_with("INV-GetPlant"))getPlantTable_.push_back(item);
-
 				else if (item->GetObjectName() == "INV-MakeButton")makeButton_ = static_cast<UIButton*>(item);
+				else if (item->GetObjectName() == "INV-History-Button")makeFromHistoryButton_ = static_cast<UIButton*>(item);
 			}
 		}
-		// ingredient(ã‚Ì‘I‘ğ’†‚Ìƒ{ƒ^ƒ“)‚ğ‚·‚×‚Äblank‚É‚·‚é
+		// ingredient(ä¸Šã®é¸æŠä¸­ã®ãƒœã‚¿ãƒ³)ã‚’ã™ã¹ã¦blankã«ã™ã‚‹
 		for (auto ingredient : ingredientTable_) {
 			((UIButton*)ingredient)->SetImage("Models/tentativeFlowers/BlankFlowerImage.png");
 		}
-		// ‘I‘ğ‚Å‚«‚éƒ{ƒ^ƒ“‚ğ‚·‚×‚ÄƒŠƒZƒbƒg
+
+		prevSalad.effect_0 = PlantData::GetFunction(-1);
+		prevSalad.effect_1 = PlantData::GetFunction(-1);
+		prevSalad.effect_2 = PlantData::GetFunction(-1);
+
+		prevRecipe_[0].id_ = -1;
+		prevRecipe_[1].id_ = -1;
+		prevRecipe_[2].id_ = -1;
+
+		json load;
+		JsonReader::Load("Datas/Test/SaladMenu.json", load);
+		maker_.Load(load);
+
+		// é¸æŠã§ãã‚‹ãƒœã‚¿ãƒ³ã‚’ã™ã¹ã¦ãƒªã‚»ãƒƒãƒˆ
 		itemPanel_->ResetArrayOfButton();
 
 	}
@@ -67,19 +84,19 @@ namespace UIInventory {
 
 		{
 			if (Input::IsPadButtonDown(XINPUT_GAMEPAD_DPAD_LEFT)) {
-				// Å‰‚Ì“ü—Í‚©‚ÂA‘I‘ğ‚Å‚«‚éƒ{ƒ^ƒ“‚ª‚ ‚éê‡
+				// æœ€åˆã®å…¥åŠ›ã‹ã¤ã€é¸æŠã§ãã‚‹ãƒœã‚¿ãƒ³ãŒã‚ã‚‹å ´åˆ
 				if (isFirstSelectButton_ == true && itemPanel_->GetArrayList().size() != 0) {
-					// inventory‚Ìˆê”Ô¶‚Ìƒ{ƒ^ƒ“‚ğ‘I‘ğ
+					// inventoryã®ä¸€ç•ªå·¦ã®ãƒœã‚¿ãƒ³ã‚’é¸æŠ
 					itemPanel_->SetButtonArrayIndex(0, -1);
 					isFirstSelectButton_ = false;
 				}
 				else
-					// ‘I‘ğ’†‚Ìƒ{ƒ^ƒ“‚ğ¶‚ÉˆÚ“®
+					// é¸æŠä¸­ã®ãƒœã‚¿ãƒ³ã‚’å·¦ã«ç§»å‹•
 					itemPanel_->SelectorMove(UIPanel::SELECTOR_MOVE_TO::LEFT);
 			}
 			if (Input::IsPadButtonDown(XINPUT_GAMEPAD_DPAD_RIGHT)) {
 				if (isFirstSelectButton_ == true && itemPanel_->GetArrayList().size() != 0) {
-					// inventory‚Ìˆê”Ô¶‚Ìƒ{ƒ^ƒ“‚ğ‘I‘ğ
+					// inventoryã®ä¸€ç•ªå·¦ã®ãƒœã‚¿ãƒ³ã‚’é¸æŠ
 
 					itemPanel_->SetButtonArrayIndex(0, -1);
 					isFirstSelectButton_ = false;
@@ -90,30 +107,30 @@ namespace UIInventory {
 
 			if (Input::IsPadButtonDown(XINPUT_GAMEPAD_DPAD_UP)) {
 				if (isFirstSelectButton_ == true && itemPanel_->GetArrayList().size() != 0) {
-					// inventory‚Ìˆê”Ô¶‚Ìƒ{ƒ^ƒ“‚ğ‘I‘ğ
+					// inventoryã®ä¸€ç•ªå·¦ã®ãƒœã‚¿ãƒ³ã‚’é¸æŠ
 					itemPanel_->SetButtonArrayIndex(0, -1);
 					isFirstSelectButton_ = false;
 				}
-				else if (y == -1) { // ƒCƒ“ƒxƒ“ƒgƒŠ‚Ìˆê”Ôã‚Ìƒ{ƒ^ƒ“‚ğ‘I‘ğ‚µ‚Ä‚¢‚éê‡
+				else if (y == -1) { // ã‚¤ãƒ³ãƒ™ãƒ³ãƒˆãƒªã®ä¸€ç•ªä¸Šã®ãƒœã‚¿ãƒ³ã‚’é¸æŠã—ã¦ã„ã‚‹å ´åˆ
 
-					// inventoryButtonList‚Ì‚È‚©‚ÌAselectablearray‚É“ü‚Á‚Ä‚éŠ‚Âˆê”ÔID‚ªá‚¢‚à‚Ì‚ğ‘I‘ğ
-					// Å¬‚ÌXÀ•W
+					// inventoryButtonListã®ãªã‹ã®ã€selectablearrayã«å…¥ã£ã¦ã‚‹ä¸”ã¤ä¸€ç•ªIDãŒè‹¥ã„ã‚‚ã®ã‚’é¸æŠ
+					// æœ€å°ã®Xåº§æ¨™
 					int lowestX = INT_MAX;
 					for (auto ingredient : ingredientTable_) {
 						for (auto selectable : itemPanel_->GetArrayList()) {
-							// inv‚ª‘I‘ğ‚Å‚«‚éê‡
+							// invãŒé¸æŠã§ãã‚‹å ´åˆ
 							if (ingredient == selectable) {
-								// inv‚ÌÀ•W‚ğæ“¾
+								// invã®åº§æ¨™ã‚’å–å¾—
 								int x, y;
 								((UIButton*)ingredient)->GetArrayPlace(&x, &y);
-								// array‚ÌxÀ•W‚ªÅ¬‚Ì‚à‚Ì‚ğ‘I‘ğ
+								// arrayã®xåº§æ¨™ãŒæœ€å°ã®ã‚‚ã®ã‚’é¸æŠ
 								if (x <= lowestX)
 									lowestX = x;
 							}
 						}
 					}
 
-					// ˆê”Ôarray‚ÌX‚ªá‚¢ƒ{ƒ^ƒ“‚ğ‘I‘ğ
+					// ä¸€ç•ªarrayã®XãŒè‹¥ã„ãƒœã‚¿ãƒ³ã‚’é¸æŠ
 					itemPanel_->SetButtonArrayIndex(lowestX, 0);
 				}
 				else
@@ -125,7 +142,7 @@ namespace UIInventory {
 					isFirstSelectButton_ = false;
 				}
 				else if (y == 0) {
-					// getPlantTable_‚Ì‚È‚©‚ÌAselectablearray‚É“ü‚Á‚Ä‚éŠ‚Âˆê”ÔID‚ªá‚¢‚à‚Ì‚ğ‘I‘ğ
+					// getPlantTable_ã®ãªã‹ã®ã€selectablearrayã«å…¥ã£ã¦ã‚‹ä¸”ã¤ä¸€ç•ªIDãŒè‹¥ã„ã‚‚ã®ã‚’é¸æŠ
 
 					int arrayX = INT_MAX;
 					for (auto inv : getPlantTable_) {
@@ -139,13 +156,13 @@ namespace UIInventory {
 						}
 					}
 
-					// ˆê”Ôarray‚ÌX‚ªá‚¢ƒ{ƒ^ƒ“‚ğ‘I‘ğ
+					// ä¸€ç•ªarrayã®XãŒè‹¥ã„ãƒœã‚¿ãƒ³ã‚’é¸æŠ
 					itemPanel_->SetButtonArrayIndex(arrayX, -1);
 				}
 				else
 					itemPanel_->SelectorMove(UIPanel::SELECTOR_MOVE_TO::BOTTOM);
 			}
-			// ƒCƒ“ƒxƒ“ƒgƒŠ‚ğ•\¦‚·‚é
+			// ã‚¤ãƒ³ãƒ™ãƒ³ãƒˆãƒªã‚’è¡¨ç¤ºã™ã‚‹
 			if (Input::IsPadButtonDown(XINPUT_GAMEPAD_B)) {
 				ShowInventory(false);
 				isFirstSelectButton_ = true;
@@ -154,49 +171,50 @@ namespace UIInventory {
 		}
 
 
-		// ƒCƒ“ƒxƒ“ƒgƒŠ‚Ìƒ{ƒ^ƒ“‚ª‰Ÿ‚³‚ê‚½ê‡
+
+		// ã‚¤ãƒ³ãƒ™ãƒ³ãƒˆãƒªã®ãƒœã‚¿ãƒ³ãŒæŠ¼ã•ã‚ŒãŸå ´åˆ
 		for (auto inv : getPlantTable_) {
 			if (Confirm((UIButton*)inv)) {
 
-				// ‘I‘ğ‚µ‚½A•¨‚ª3‚ÂˆÈã‚É‚È‚Á‚½‚ç”²‚¯‚é
+				// é¸æŠã—ãŸæ¤ç‰©ãŒ3ã¤ä»¥ä¸Šã«ãªã£ãŸã‚‰æŠœã‘ã‚‹
 				if (selectedPlant_.size() >= 3) continue;
 
-				// ‘I‘ğ‚µ‚½A•¨‚ğselectedPlant_‚É’Ç‰Á
+				// é¸æŠã—ãŸæ¤ç‰©ã‚’selectedPlant_ã«è¿½åŠ 
 				for (auto& a : allPlantData) {
 					if (a.second.imageFilePath_ == ((UIButton*)inv)->GetImageFilePath()) {
 						selectedPlant_.push_back(a.second.name_);
-						// ƒ}ƒbƒ`‚µ‚½‚çI—¹
+						// ãƒãƒƒãƒã—ãŸã‚‰çµ‚äº†
 						break;
 					}
 				}
 
-				// ƒNƒŠƒbƒN‚³‚ê‚½‚çAINV-Ingredients0‚Ì‰æ‘œ‚ğ·‚µ‘Ö‚¦
-				// INV-Ingredients0‚ª‚à‚¤“ü‚Á‚Ä‚½‚ç1‚ÉA1‚ª“ü‚Á‚Ä‚½‚ç2‚É
+				// ã‚¯ãƒªãƒƒã‚¯ã•ã‚ŒãŸã‚‰ã€INV-Ingredients0ã®ç”»åƒã‚’å·®ã—æ›¿ãˆ
+				// INV-Ingredients0ãŒã‚‚ã†å…¥ã£ã¦ãŸã‚‰1ã«ã€1ãŒå…¥ã£ã¦ãŸã‚‰2ã«
 				for (auto& ingredient : ingredientTable_) {
 					if (((UIButton*)ingredient)->GetImageFilePath() == "Models/tentativeFlowers/BlankFlowerImage.png") {
-						// ingredient‚Ì‰æ‘œ‚ğ·‚µ‘Ö‚¦
+						// ingredientã®ç”»åƒã‚’å·®ã—æ›¿ãˆ
 						((UIButton*)ingredient)->SetImage(((UIButton*)inv)->GetImageFilePath());
-						// ‰æ‘œ‚ª‘}“ü‚³‚ê‚½ƒ{ƒ^ƒ“‚ğ‘I‘ğ‰Â”\ƒŠƒXƒg‚É’Ç‰Á
+						// ç”»åƒãŒæŒ¿å…¥ã•ã‚ŒãŸãƒœã‚¿ãƒ³ã‚’é¸æŠå¯èƒ½ãƒªã‚¹ãƒˆã«è¿½åŠ 
 						itemPanel_->PushButtonToArray((UIButton*)ingredient);
 						break;
 					}
 				}
 			}
-			// XV
+			// æ›´æ–°
 			InventoryDataSet();
 		}
 
-		// ƒŒƒVƒs‚Ìƒ{ƒ^ƒ“‚ğ‰Ÿ‚µ‚½ê‡ 
+		// ãƒ¬ã‚·ãƒ”ã®ãƒœã‚¿ãƒ³ã‚’æŠ¼ã—ãŸå ´åˆ 
 		for (auto ingre : ingredientTable_) {
 			if (Confirm((UIButton*)ingre)) {
 				if (((UIButton*)ingre)->GetObjectName().starts_with("INV-Ingredients")) {
 
 					for (auto& a : allPlantData) {
 						if (a.second.imageFilePath_ == ((UIButton*)ingre)->GetImageFilePath()) {
-							// `selectedPlant_`‚©‚çÅ‰‚ÉŒ©‚Â‚©‚Á‚½1‚Â‚¾‚¯‚ğíœ
+							// `selectedPlant_`ã‹ã‚‰æœ€åˆã«è¦‹ã¤ã‹ã£ãŸ1ã¤ã ã‘ã‚’å‰Šé™¤
 							auto it = std::find(selectedPlant_.begin(), selectedPlant_.end(), a.second.name_);
 							if (it != selectedPlant_.end()) {
-								// ‘I‘ğ‚µ‚½A•¨‚ğselectedPlant_‚©‚çíœ
+								// é¸æŠã—ãŸæ¤ç‰©ã‚’selectedPlant_ã‹ã‚‰å‰Šé™¤
 								selectedPlant_.erase(it);
 							}
 							break;
@@ -204,22 +222,23 @@ namespace UIInventory {
 					}
 					for (auto& inventory : getPlantTable_) {
 						if (((UIButton*)inventory)->GetImageFilePath() == "Models/tentativeFlowers/BlankFlowerImage.png") {
-							// inventory‚Ì‰æ‘œ‚ğ·‚µ‘Ö‚¦
+							// inventoryã®ç”»åƒã‚’å·®ã—æ›¿ãˆ
 							((UIButton*)inventory)->SetImage(((UIButton*)ingre)->GetImageFilePath());
-							// ingredient‚Ì‰æ‘œ‚ğ·‚µ‘Ö‚¦
+							// ingredientã®ç”»åƒã‚’å·®ã—æ›¿ãˆ
 							((UIButton*)ingre)->SetImage("Models/tentativeFlowers/BlankFlowerImage.png");
-							// ‚©‚ç‚Ì‰æ‘œ‚ª“ü‚Á‚Ä‚¢‚éƒ{ƒ^ƒ“‚ğ‘I‘ğ‰Â”\ƒŠƒXƒg‚©‚ç”rœ
+							// ã‹ã‚‰ã®ç”»åƒãŒå…¥ã£ã¦ã„ã‚‹ãƒœã‚¿ãƒ³ã‚’é¸æŠå¯èƒ½ãƒªã‚¹ãƒˆã‹ã‚‰æ’é™¤
 							itemPanel_->RemoveButtonFromArray((UIButton*)ingre);
 							break;
 						}
 					}
 				}
-				// XV
+
+				// æ›´æ–°
 					InventoryDataSet();
 			}
 		}
 
-		// ƒTƒ‰ƒ_‚ğì‚éƒ{ƒ^ƒ“‚ª‰Ÿ‚³‚ê‚½ê‡
+		// ã‚µãƒ©ãƒ€ã‚’ä½œã‚‹ãƒœã‚¿ãƒ³ãŒæŠ¼ã•ã‚ŒãŸå ´åˆ
 		if (Confirm(makeButton_))
 		{
 			if (!Check()) return;
@@ -227,8 +246,8 @@ namespace UIInventory {
 			Make();
 			isMadeSalad_ = true;
 
-			//ƒCƒ“ƒxƒ“ƒgƒŠ‚©‚ç‘fŞ‚ğÁ‚·
-			//ƒCƒ“ƒxƒ“ƒgƒŠ‚ğ”²‚¯‚é
+			//ã‚¤ãƒ³ãƒ™ãƒ³ãƒˆãƒªã‹ã‚‰ç´ æã‚’æ¶ˆã™
+			//ã‚¤ãƒ³ãƒ™ãƒ³ãƒˆãƒªã‚’æŠœã‘ã‚‹
 
 			vector<PlantData>pPlant = playerBehavior_->GetMyPlants();
 
@@ -236,7 +255,7 @@ namespace UIInventory {
 			for (const auto& selected : selectedPlant_) {
 				for (auto it = pPlant.begin(); it != pPlant.end(); ++it) {
 					if (it->name_ == selected) {
-						pPlant.erase(it); // Å‰‚ÉŒ©‚Â‚©‚Á‚½1‚Â‚¾‚¯‚ğíœ
+						pPlant.erase(it); // æœ€åˆã«è¦‹ã¤ã‹ã£ãŸ1ã¤ã ã‘ã‚’å‰Šé™¤
 						break;
 					}
 				}
@@ -250,6 +269,11 @@ namespace UIInventory {
 			}
 			ShowInventory(false);
 		}
+
+		if (makeFromHistoryButton_->OnClick())
+		{
+			MakeFromHistory();
+		}
 	}
 
 	void ShowInventory(bool isShow)
@@ -260,6 +284,13 @@ namespace UIInventory {
 		}
 		showInventory_ = isShow;
 		makeButton_->SetVisible(isShow);
+
+		// å±¥æ­´ãŒæƒã£ã¦ã„ã‚‹ã‹ç¢ºèª
+		for (auto i = 0; i < MakeSalad::NEED_PLANT_NUM; ++i)
+		{
+			if (prevRecipe_[i].id_ == -1)	isShow = false;
+		}
+		makeFromHistoryButton_->SetVisible(isShow);
 	}
 
 	void InventoryDataSet()
@@ -270,13 +301,13 @@ namespace UIInventory {
 
 		itemPanel_->PushButtonToArray(makeButton_);
 
-		// ƒvƒŒƒCƒ„[î•ñ‚ğæ“¾
+		// ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼æƒ…å ±ã‚’å–å¾—
 		{
 			for (auto pb : pStage_->FindComponents(ComponentType::PlayerBehavior))playerBehavior_ = (Component_PlayerBehavior*)pb;
 		}
-		// ‚»‚ÌƒAƒCƒeƒ€‰æ‘œ‚ğƒAƒCƒeƒ€ƒe[ƒuƒ‹‚É’Ç‰Á
+		// ãã®ã‚¢ã‚¤ãƒ†ãƒ ç”»åƒã‚’ã‚¢ã‚¤ãƒ†ãƒ ãƒ†ãƒ¼ãƒ–ãƒ«ã«è¿½åŠ 
 		countedPlant.clear();
-		// “¯‚¶A•¨‚Ì”‚ğƒJƒEƒ“ƒg
+		// åŒã˜æ¤ç‰©ã®æ•°ã‚’ã‚«ã‚¦ãƒ³ãƒˆ
 		for (const auto& plant : playerBehavior_->GetMyPlants()) {
 			countedPlant[plant.name_]++;
 		}
@@ -289,17 +320,17 @@ namespace UIInventory {
 
 		for (int i = 0; i < getPlantTable_.size(); i++) {
 
-			// ƒJƒEƒ“ƒg‚µ‚½A•¨‚Ì”‚ğæ“¾
+			// ã‚«ã‚¦ãƒ³ãƒˆã—ãŸæ¤ç‰©ã®æ•°ã‚’å–å¾—
 			int plantSize = countedPlant.size();
 
-			// A•¨‚Ì”‚ªi‚æ‚è‘å‚«‚¢ê‡(æ“¾‚Å‚«‚éê‡)
-			if (i < plantSize ) {
-				// countedPlant‚Ì’†‚©‚çi”Ô–Ú‚ÌA•¨‚ğæ“¾
+			// æ¤ç‰©ã®æ•°ãŒiã‚ˆã‚Šå¤§ãã„å ´åˆ(å–å¾—ã§ãã‚‹å ´åˆ)
+			if (i < plantSize) {
+				// countedPlantã®ä¸­ã‹ã‚‰iç•ªç›®ã®æ¤ç‰©ã‚’å–å¾—
 				auto it = countedPlant.begin();
-				std::advance(it, i); // i”Ô–Ú‚Ì—v‘f‚ÉˆÚ“®
+				std::advance(it, i); // iç•ªç›®ã®è¦ç´ ã«ç§»å‹•
 
-				const std::string& plantName = it->first; // A•¨‚Ì–¼‘O
-				int plantCount = it->second;			  // A•¨‚Ì”
+				const std::string& plantName = it->first; // æ¤ç‰©ã®åå‰
+				int plantCount = it->second;			  // æ¤ç‰©ã®æ•°
 
 				for (const auto& p : allPlantData) {
 					if (plantName == p.second.name_) {
@@ -317,12 +348,12 @@ namespace UIInventory {
 				}
 			}
 			else {
-				// æ“¾‚Å‚«‚È‚¢ê‡‚Í‹ó‚Ì‰æ‘œ‚ÆƒeƒLƒXƒg‚ğ•\¦
+				// å–å¾—ã§ããªã„å ´åˆã¯ç©ºã®ç”»åƒã¨ãƒ†ã‚­ã‚¹ãƒˆã‚’è¡¨ç¤º
 				if (getPlantTable_[i]->GetObjectName().find("INV-InventoryBack") != 0) {
 					((UIButton*)getPlantTable_[i])->SetImage("Models/tentativeFlowers/BlankFlowerImage.png");
+
 					((UIText*)invTextTable_[i])->SetText(" ");
 					itemPanel_->RemoveButtonFromArray((UIButton*)getPlantTable_[i]);
-
 				}
 			}
 		}
@@ -360,8 +391,9 @@ namespace UIInventory {
 		for (auto deleteobj : ingredientTable_) {
 			itemPanel_->DeleteUIObject(deleteobj);
 		}
-		
+
 	}
+
 	bool Check()
 	{
 		if (selectedPlant_.size() < 3) return false;
@@ -372,7 +404,7 @@ namespace UIInventory {
 	void Make()
 	{
 		for (const auto& plant : allPlantData) {
-		
+
 			bool isMake = false;
 			int index = -1;
 
@@ -387,7 +419,13 @@ namespace UIInventory {
 
 		if (!playerBehavior_)	return;
 
+		prevSalad = salad;
+		for (auto i = 0u; i < MakeSalad::NEED_PLANT_NUM; ++i) {
+			prevRecipe_[i] = maker_.GetRecipeDatum(i);
+		}
+
 		playerBehavior_->EatSalad(salad);
+
 	}
 
 	bool IsShowInventory()
@@ -399,6 +437,36 @@ namespace UIInventory {
 	{
 		return isMadeSalad_;
 	}
+
+	void MakeFromHistory()
+	{
+
+		if (selectedPlant_.size() > 0)	return;
+
+
+		for (auto i = 0; i < MakeSalad::NEED_PLANT_NUM; ++i)
+		{
+			if (prevRecipe_[i].id_ == -1)	return;
+		}
+
+		for (auto& itr : prevRecipe_) {
+
+			if (countedPlant[itr.name_] > 0)
+			{
+				--countedPlant[itr.name_];
+				selectedPlant_.push_back(itr.name_);
+				for (auto& ingredient : ingredientTable_) {
+					if (((UIButton*)ingredient)->GetImageFilePath() == "Models/tentativeFlowers/BlankFlowerImage.png")
+					{
+						((UIButton*)ingredient)->SetImage(itr.imageFilePath_);
+						break;
+					}
+				}
+			}
+		}
+		InventoryDataSet();
+	}
+
 	bool Confirm(UIButton* _button)
 	{
 		itemPanel_ = UIPanel::GetInstance();

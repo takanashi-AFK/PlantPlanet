@@ -3,6 +3,7 @@
 // インクルード
 #include "../../Engine/GameObject/GameObject.h"
 #include <string>
+#include "../Objects/Stage/MakeSalad.h"
 using std::string;
 
 // 前方宣言
@@ -22,6 +23,7 @@ enum EditType
 	UIPANEL,
 	CAMERA,
 	PLANT,
+	SALADRECIPE,
 };
 
 enum CameraType
@@ -48,6 +50,7 @@ private:
 	XMFLOAT3 threeDCamMove_{};			// 3Dカメラの移動量
 	bool isShowPlantWindow_;			// 植物ウィンドウを表示するか
 	int selectEditPlantIndex_;			// 選択中の植物のインデックス
+	MakeSalad maker_;
 
 public:
 	/// <summary> コンストラクタ </summary>
@@ -111,6 +114,12 @@ camera :*/
 	/// <summary> 使用する3人称カメラを設定 </summary>
 	void SetTPSCamera(TPSCamera* _tpsCamera) { tpsCamera_ = _tpsCamera; }
 
+/*
+Salad Recipe :*/
+
+	void SaveRecipe();
+	void LoadRecipe();
+	
 private:
 	/// <summary> ワールドアウトライナーを描画 </summary>
 	void DrawWorldOutLiner();
@@ -128,6 +137,7 @@ outLiner :*/
 	/// <summary> 植物用アウトライナーを描画 </summary>
 	void DrawPlantOutLiner();
 
+	void DrawSaladRecipeOutLiner();
 /*
 datails :*/
 	/// <summary> ステージオブジェクトの詳細情報を描画 </summary>
@@ -141,6 +151,8 @@ datails :*/
 
 	/// <summary> カメラの詳細情報を描画 </summary>
 	void DrawDatalsCamera();
+
+	void DrawSaladRecipeDatails();
 
 /*
 otheres :*/

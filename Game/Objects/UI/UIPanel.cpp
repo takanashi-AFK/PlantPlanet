@@ -133,6 +133,20 @@ void UIPanel::SetVisible(string _name, bool _visible)
 		if (obj->GetObjectName() == _name)obj->SetVisible(_visible);
 	}
 }
+bool UIPanel::SetButtonArrayIndex(UIButton* b)
+{
+	for (auto& itr : arrayButton_)
+	{
+		if (itr == b)
+		{
+			selectingButton_ = b;
+			b->GetArrayPlace(&buttonIndexX_, &buttonIndexY_);
+			return true;
+		}
+	}
+
+	return false;
+}
 //---------------------
 bool UIPanel::SetButtonArrayIndex(int x, int y)
 {
@@ -187,6 +201,8 @@ void UIPanel::SelectorMove(SELECTOR_MOVE_TO way)
 			r->GetArrayPlace(&x, &y);
 			auto right = x + y;
 
+			if (left == right)return l->GetLayerNumber() < r->GetLayerNumber();
+
 			return left < right;
 		};
 
@@ -197,6 +213,8 @@ void UIPanel::SelectorMove(SELECTOR_MOVE_TO way)
 
 			r->GetArrayPlace(&x, &y);
 			auto right = x + y;
+
+			if (left == right)return l->GetLayerNumber() > r->GetLayerNumber();
 
 			return left > right;
 		};
@@ -229,6 +247,9 @@ void UIPanel::RemoveButtonFromArray(UIButton* b)
 void UIPanel::ResetArrayOfButton()
 {
 	arrayButton_.clear();
+	selectingButton_ = nullptr;
+	buttonIndexX_ = 0;
+	buttonIndexY_ = 0;
 }
 
 void UIPanel::CheckSelectingButton()
