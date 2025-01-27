@@ -812,6 +812,9 @@ void Component_PlayerBehavior::Interact()
 			PlantData plantData;
 			nearestObject = GetNearestPlant(plantData);
 
+				UserManager& um = UserManager::GetInstance();
+				um.UpdateLibraryStatus(um.GetLoggedInUser()->userName, plantData.id_);
+			
 			Component_ReturnGate* returnGate;
 			
 			if (IsAbleToReturn(returnGate))
