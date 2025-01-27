@@ -315,10 +315,15 @@
     <ClCompile Include="Game\Objects\UI\UICursor.cpp" />
     <ClCompile Include="Game\Objects\UI\UIItemTable.cpp" />
     <ClCompile Include="Game\Objects\Stage\MakeSalad.cpp" />
+    <ClCompile Include="Game\Objects\Stage\BreakableWall.cpp" />
+    <ClCompile Include="Game\Objects\Stage\Components\DetectorComponents\Component_RectangleDetector.cpp" />
     <ClCompile Include="Game\Plants\Plant.cpp" />
     <ClCompile Include="Game\Objects\UI\UIInventory.cpp" />
     <ClCompile Include="Game\Scenes\Scene_Menu.cpp" />
+    <ClCompile Include="Game\Objects\Stage\Components\BreakableWallComponents\Component_BreakableWall.cpp" />
     <ClCompile Include="Game\Otheres\UserManager.cpp" />
+    <ClCompile Include="Game\Objects\Stage\ReturnGate.cpp" />
+    <ClCompile Include="Game\Objects\Stage\Components\TeleporterComponent\Component_ReturnGate.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Collider\BoxCollider.h">
@@ -561,10 +566,15 @@
     <ClInclude Include="Game\Objects\UI\UICursor.h" />
     <ClInclude Include="Game\Objects\UI\UIItemTable.h" />
     <ClInclude Include="Game\Objects\Stage\MakeSalad.h" />
+    <ClInclude Include="Game\Objects\Stage\BreakableWall.h" />
+    <ClInclude Include="Game\Objects\Stage\Components\DetectorComponents\Component_RectangleDetector.h" />
     <ClInclude Include="Game\Objects\UI\UIInventory.h" />
     <ClInclude Include="Game\Objects\Stage\Salad.h" />
     <ClInclude Include="Game\Scenes\Scene_Menu.h" />
+    <ClInclude Include="Game\Objects\Stage\Components\BreakableWallComponents\Component_BreakableWall.h" />
     <ClInclude Include="Game\Otheres\UserManager.h" />
+    <ClInclude Include="Game\Objects\Stage\ReturnGate.h" />
+    <ClInclude Include="Game\Objects\Stage\Components\TeleporterComponent\Component_ReturnGate.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Assets\Shader\Simple2D.hlsl">

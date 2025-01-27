@@ -334,7 +334,6 @@ void GameObject::UpdateSub()
 {
 	Update();
 	//Transform();
-	SceneManager* sceneManager = (SceneManager*)FindObject("SceneManager");
 
 	for (auto it = childList_.begin(); it != childList_.end(); it++)
 	{

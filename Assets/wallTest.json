@@ -8,21 +8,9 @@
     "myComponents_": {
       "HandGun": {
         "Accessory ModelPath": "Models/Player/blasterA.fbx",
-        "Accessory Original Position": [
-          0.0,
-          0.0,
-          0.0
-        ],
-        "Accessory Original Rotate": [
-          0.0,
-          0.0,
-          0.0
-        ],
-        "Accessory Original Scale": [
-          1.0,
-          1.0,
-          1.0
-        ],
+        "Accessory Original Position": [ 0.0, 0.0, 0.0 ],
+        "Accessory Original Rotate": [ 0.0, 0.0, 0.0 ],
+        "Accessory Original Scale": [ 1.0, 1.0, 1.0 ],
         "name_": "HandGun",
         "type_": 26
       },
@@ -94,21 +82,13 @@
             "EffectData": {
               "name": "A_Salamander4",
               "path": "Effects/A_Salamander4.efk",
-              "scale": [
-                0.20000000298023224,
-                0.20000000298023224,
-                0.20000000298023224
-              ]
+              "scale": [ 0.20000000298023224, 0.20000000298023224, 0.20000000298023224 ]
             },
             "bulletColliderRadius_": 0.20000000298023224,
             "bulletLifeTime_": 1.0,
             "name_": "ShootAttack",
             "power_": 10,
-            "shootingDirection_": [
-              0.0,
-              8.0,
-              40.0
-            ],
+            "shootingDirection_": [ 0.0, 8.0, 40.0 ],
             "shootingSpeed_": 0.20000000298023224,
             "type_": 17
           },
@@ -117,13 +97,13 @@
               "Timer": {
                 "maxTime_": 180.0,
                 "name_": "Timer",
-                "nowTime_": 5.0,
+                "nowTime_": 180.0,
                 "type_": 19
               }
             },
             "max_": 100.0,
             "name_": "StaminaGauge",
-            "now_": 53.039127349853516,
+            "now_": 2.9498291015625,
             "type_": 25
           },
           "TackleMove": {
@@ -141,26 +121,10 @@
         "type_": 11
       }
     },
-    "onGroundOffset_": [
-      0.0,
-      0.5,
-      0.0
-    ],
-    "position_": [
-      0.6778802871704102,
-      -0.2499999701976776,
-      1.1079012155532837
-    ],
-    "rotate_": [
-      0.0,
-      0.0,
-      0.0
-    ],
-    "scale_": [
-      0.5,
-      0.5,
-      0.5
-    ],
+    "onGroundOffset_": [ 0.0, 0.5, 0.0 ],
+    "position_": [ 1.6778805255889893, -0.2499999701976776, 1.807901382446289 ],
+    "rotate_": [ 0.0, 0.0, 0.0 ],
+    "scale_": [ 0.5, 0.5, 0.5 ],
     "shaderType_": 0
   },
   "MeleeEnemy01": {
@@ -168,7 +132,7 @@
     "isColliding_": true,
     "isCollisionWall_": false,
     "isOnGround_": false,
-    "modelFilePath_": "Models/Enemies/plantsEnemy.fbx",
+    "modelFilePath_": "Models/Enemies/meleeEnemy.fbx",
     "myComponents_": {
       "meleeEnemyBehavior": {
         "attackCoolTime_": 1.5,
@@ -211,34 +175,18 @@
         "type_": 28
       }
     },
-    "onGroundOffset_": [
-      0.0,
-      0.0,
-      0.0
-    ],
-    "position_": [
-      4.956999778747559,
-      0.0,
-      21.892000198364258
-    ],
-    "rotate_": [
-      0.0,
-      180.0,
-      0.0
-    ],
-    "scale_": [
-      1.5,
-      1.5,
-      1.5
-    ],
-    "shaderType_": 0
+    "onGroundOffset_": [ 0.0, 0.0, 0.0 ],
+    "position_": [ 4.956999778747559, 0.0, 21.892000198364258 ],
+    "rotate_": [ 0.0, 180.0, 0.0 ],
+    "scale_": [ 1.5, 1.5, 1.5 ],
+    "shaderType_": 4
   },
   "MeleeEnemy02": {
     "fallSpeed_": 1.0,
     "isColliding_": true,
     "isCollisionWall_": false,
     "isOnGround_": false,
-    "modelFilePath_": "Models/Enemies/plantsEnemy.fbx",
+    "modelFilePath_": "Models/Enemies/meleeEnemy.fbx",
     "myComponents_": {
       "MeleeEnemyBehavior": {
         "attackCoolTime_": 1.5,
@@ -283,34 +231,18 @@
         "type_": 28
       }
     },
-    "onGroundOffset_": [
-      0.0,
-      0.0,
-      0.0
-    ],
-    "position_": [
-      21.726974487304688,
-      0.0,
-      2.3343582153320313
-    ],
-    "rotate_": [
-      0.0,
-      92.24259948730469,
-      0.0
-    ],
-    "scale_": [
-      1.5,
-      1.5,
-      1.5
-    ],
-    "shaderType_": 0
+    "onGroundOffset_": [ 0.0, 0.0, 0.0 ],
+    "position_": [ 21.726974487304688, 0.0, 2.3343582153320313 ],
+    "rotate_": [ 0.0, 92.24259948730469, 0.0 ],
+    "scale_": [ 1.5, 1.5, 1.5 ],
+    "shaderType_": 4
   },
   "MeleeEnemy03": {
     "fallSpeed_": 1.0,
     "isColliding_": true,
     "isCollisionWall_": false,
     "isOnGround_": false,
-    "modelFilePath_": "Models/Enemies/plantsEnemy.fbx",
+    "modelFilePath_": "Models/Enemies/meleeEnemy.fbx",
     "myComponents_": {
       "MeleeEnemyBehavior": {
         "attackCoolTime_": 1.5,
@@ -353,27 +285,11 @@
         "type_": 28
       }
     },
-    "onGroundOffset_": [
-      0.0,
-      0.0,
-      0.0
-    ],
-    "position_": [
-      53.48899841308594,
-      0.0,
-      14.005000114440918
-    ],
-    "rotate_": [
-      0.0,
-      -168.57879638671875,
-      0.0
-    ],
-    "scale_": [
-      1.5,
-      1.5,
-      1.5
-    ],
-    "shaderType_": 0
+    "onGroundOffset_": [ 0.0, 0.0, 0.0 ],
+    "position_": [ 53.48899841308594, 0.0, 14.005000114440918 ],
+    "rotate_": [ 0.0, -168.57879638671875, 0.0 ],
+    "scale_": [ 1.5, 1.5, 1.5 ],
+    "shaderType_": 4
   },
   "RangeEnemy01": {
     "fallSpeed_": 1.0,
@@ -408,21 +324,13 @@
             "EffectData": {
               "name": "Sylph13",
               "path": "Effects/Sylph13.efk",
-              "scale": [
-                0.30000001192092896,
-                0.30000001192092896,
-                0.30000001192092896
-              ]
+              "scale": [ 0.30000001192092896, 0.30000001192092896, 0.30000001192092896 ]
             },
             "bulletColliderRadius_": 0.5,
             "bulletLifeTime_": 1.5,
             "name_": "ShootAttack",
             "power_": 1,
-            "shootingDirection_": [
-              -0.9414645433425903,
-              0.0,
-              -0.33711206912994385
-            ],
+            "shootingDirection_": [ -0.9414645433425903, 0.0, -0.33711206912994385 ],
             "shootingSpeed_": 0.10000000149011612,
             "type_": 17
           },
@@ -438,27 +346,11 @@
         "type_": 27
       }
     },
-    "onGroundOffset_": [
-      0.0,
-      0.0,
-      0.0
-    ],
-    "position_": [
-      37.02399826049805,
-      0.0,
-      3.4728333950042725
-    ],
-    "rotate_": [
-      0.0,
-      -97.50016784667969,
-      0.0
-    ],
-    "scale_": [
-      1.0,
-      1.0,
-      1.0
-    ],
-    "shaderType_": 0
+    "onGroundOffset_": [ 0.0, 0.0, 0.0 ],
+    "position_": [ 37.02399826049805, 0.0, 3.4728333950042725 ],
+    "rotate_": [ 0.0, -97.50016784667969, 0.0 ],
+    "scale_": [ 1.0, 1.0, 1.0 ],
+    "shaderType_": 4
   },
   "RangeEnemy02": {
     "fallSpeed_": 1.0,
@@ -493,21 +385,13 @@
             "EffectData": {
               "name": "Sylph13",
               "path": "Effects/Sylph13.efk",
-              "scale": [
-                0.30000001192092896,
-                0.30000001192092896,
-                0.30000001192092896
-              ]
+              "scale": [ 0.30000001192092896, 0.30000001192092896, 0.30000001192092896 ]
             },
             "bulletColliderRadius_": 0.5,
             "bulletLifeTime_": 1.5,
             "name_": "ShootAttack",
             "power_": 1,
-            "shootingDirection_": [
-              0.21675221621990204,
-              0.0,
-              0.9762266278266907
-            ],
+            "shootingDirection_": [ 0.21675221621990204, 0.0, 0.9762266278266907 ],
             "shootingSpeed_": 0.10000000149011612,
             "type_": 17
           },
@@ -523,63 +407,11 @@
         "type_": 27
       }
     },
-    "onGroundOffset_": [
-      0.0,
-      0.0,
-      0.0
-    ],
-    "position_": [
-      0.7630000114440918,
-      0.0,
-      33.13399887084961
-    ],
-    "rotate_": [
-      0.0,
-      173.7166290283203,
-      0.0
-    ],
-    "scale_": [
-      1.0,
-      1.0,
-      1.0
-    ],
-    "shaderType_": 0
-  },
-  "ReturnGate": {
-    "fallSpeed_": 1.0,
-    "isColliding_": true,
-    "isCollisionWall_": false,
-    "isOnGround_": false,
-    "modelFilePath_": "Models/DebugCollision/BoxCollider.fbx",
-    "myComponents_": {
-      "ReturnGate": {
-        "IsUsable": false,
-        "IsVisible": false,
-        "name_": "ReturnGate",
-        "type_": 29
-      }
-    },
-    "onGroundOffset_": [
-      0.0,
-      0.0,
-      0.0
-    ],
-    "position_": [
-      0.0,
-      0.0,
-      0.0
-    ],
-    "rotate_": [
-      0.0,
-      0.0,
-      0.0
-    ],
-    "scale_": [
-      1.0,
-      1.0,
-      1.0
-    ],
-    "shaderType_": 0
+    "onGroundOffset_": [ 0.0, 0.0, 0.0 ],
+    "position_": [ 0.7630000114440918, 0.0, 33.13399887084961 ],
+    "rotate_": [ 0.0, 173.7166290283203, 0.0 ],
+    "scale_": [ 1.0, 1.0, 1.0 ],
+    "shaderType_": 4
   },
   "area": {
     "fallSpeed_": 1.0,
@@ -587,26 +419,10 @@
     "isCollisionWall_": false,
     "isOnGround_": false,
     "modelFilePath_": "Models/Area/Area.fbx",
-    "onGroundOffset_": [
-      0.0,
-      0.0,
-      0.0
-    ],
-    "position_": [
-      0.0,
-      0.0,
-      0.0
-    ],
-    "rotate_": [
-      0.0,
-      0.0,
-      0.0
-    ],
-    "scale_": [
-      0.05000000074505806,
-      0.05000000074505806,
-      0.05000000074505806
-    ],
+    "onGroundOffset_": [ 0.0, 0.0, 0.0 ],
+    "position_": [ 0.0, 0.0, 0.0 ],
+    "rotate_": [ 0.0, 0.0, 0.0 ],
+    "scale_": [ 0.05000000074505806, 0.05000000074505806, 0.05000000074505806 ],
     "shaderType_": 0
   },
   "generator": {
@@ -629,26 +445,64 @@
         "type_": 23
       }
     },
-    "onGroundOffset_": [
-      0.0,
-      0.0,
-      0.0
-    ],
-    "position_": [
-      27.200000762939453,
-      0.0,
-      27.100000381469727
-    ],
-    "rotate_": [
-      0.0,
-      0.0,
-      0.0
-    ],
-    "scale_": [
-      1.0,
-      1.0,
-      1.0
-    ],
+    "onGroundOffset_": [ 0.0, 0.0, 0.0 ],
+    "position_": [ 27.200000762939453, 0.0, 27.100000381469727 ],
+    "rotate_": [ 0.0, 0.0, 0.0 ],
+    "scale_": [ 1.0, 1.0, 1.0 ],
     "shaderType_": 2
+  },
+  "wall": {
+    "fallSpeed_": 1.0,
+    "isColliding_": true,
+    "isCollisionWall_": false,
+    "isOnGround_": false,
+    "modelFilePath_": "Models/DebugCollision/BoxCollider.fbx",
+    "myComponents_": {
+      "wall": {
+        "childComponents_": {
+          "RectangleDetector": {
+            "length_.x": 4.0,
+            "length_.y": 2.0,
+            "name_": "RectangleDetector",
+            "target_": "00_player",
+            "type_": 29
+          }
+        },
+        "name_": "wall",
+        "type_": 30
+      }
+    },
+    "onGroundOffset_": [ 0.0, 0.0, 0.0 ],
+    "position_": [ 2.5, 2.0, 12.600000381469727 ],
+    "rotate_": [ 0.0, 0.0, 0.0 ],
+    "scale_": [ 8.399999618530273, 4.300000190734863, 0.10000000149011612 ],
+    "shaderType_": 0
+  },
+  "wall2": {
+    "fallSpeed_": 1.0,
+    "isColliding_": true,
+    "isCollisionWall_": false,
+    "isOnGround_": false,
+    "modelFilePath_": "Models/DebugCollision/BoxCollider.fbx",
+    "myComponents_": {
+      "wasssd": {
+        "childComponents_": {
+          "RectangleDetector": {
+            "length_.x": 4.0,
+            "length_.y": 2.0,
+            "name_": "RectangleDetector",
+            "target_": "00_player",
+            "type_": 29
+          }
+        },
+        "name_": "wasssd",
+        "type_": 30
+      }
+    },
+    "onGroundOffset_": [ 0.0, 0.0, 0.0 ],
+    "position_": [ 13.199999809265137, 2.0, 3.0999999046325684 ],
+    "rotate_": [ 0.0, 90.0, 0.0 ],
+    "scale_": [ 8.399999618530273, 4.300000190734863, 0.10000000149011612 ],
+    "shaderType_": 0
   }
 }
