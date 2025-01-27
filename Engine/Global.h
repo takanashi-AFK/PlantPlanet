@@ -5,52 +5,55 @@
 #include <vector>
 #include "../Game/Plants/Plant.h"
 
-//  ƒ}ƒNƒ  //
+// ï¼ï¼ ãƒã‚¯ãƒ­ ï¼ï¼ï¼ï¼ï¼ï¼ï¼ï¼ï¼ï¼ï¼ï¼ï¼ï¼ï¼ï¼ï¼ï¼ï¼ //
 
-//ˆÀ‘S‚Éƒƒ‚ƒŠ‚ğŠJ•ú‚·‚é‚½‚ß‚Ìƒ}ƒNƒ
+//å®‰å…¨ã«ãƒ¡ãƒ¢ãƒªã‚’é–‹æ”¾ã™ã‚‹ãŸã‚ã®ãƒã‚¯ãƒ­
 #define SAFE_DELETE(p) {if ((p)!=nullptr) { delete (p); (p)=nullptr;}}
 #define SAFE_DELETE_ARRAY(p) {if ((p)!=nullptr) { delete[] (p); (p)=nullptr;}}
 #define SAFE_RELEASE(p) {if ((p)!=nullptr) { p->Release(); (p)=nullptr;}}
 
-// XMFLOAT3Œ^‚Ì•Ï”‚ğƒRƒ“ƒ}‹æØ‚è‚Å•\¦‚·‚éƒ}ƒNƒ
+// XMFLOAT3å‹ã®å¤‰æ•°ã‚’ã‚³ãƒ³ãƒåŒºåˆ‡ã‚Šã§è¡¨ç¤ºã™ã‚‹ãƒã‚¯ãƒ­
 #define REFERENCE_XMFLOAT3(p) p.x,p.y,p.z 
 #define REFERENCE_XMFLOAT4(p) p.x,p.y,p.z,p.w 
 #define REFERENCE_XMVECTOR3(p) XMVectorGetX(p),XMVectorGetY(p),XMVectorGetZ(p)
 #define REFERENCE_XMINT2(p) p.x,p.y
 
-// ƒIƒyƒŒ[ƒ^[‚ÌƒI[ƒo[ƒ[ƒh
+// ã‚ªãƒšãƒ¬ãƒ¼ã‚¿ãƒ¼ã®ã‚ªãƒ¼ãƒãƒ¼ãƒ­ãƒ¼ãƒ‰
 XMFLOAT3 operator+(XMFLOAT3 a, const XMFLOAT3 b);
 XMFLOAT3 operator-(XMFLOAT3 a, const XMFLOAT3 b);
 XMFLOAT3 operator*(XMFLOAT3 a, const float b);
 XMFLOAT3 operator*(XMFLOAT3 a, const XMFLOAT3 b);
 
-//  ’è”  //
+// ï¼ï¼ å®šæ•° ï¼ï¼ï¼ï¼ï¼ï¼ï¼ï¼ï¼ï¼ï¼ï¼ï¼ï¼ï¼ï¼ï¼ï¼ï¼ï¼ //
 
-constexpr float FPS = 60.0f;	// ƒtƒŒ[ƒ€ƒŒ[ƒg
+constexpr float FPS = 60.0f;	// ãƒ•ãƒ¬ãƒ¼ãƒ ãƒ¬ãƒ¼ãƒˆ
 
-//  //
+// ï¼ï¼ï¼ï¼ï¼ï¼ï¼ï¼ï¼ï¼ï¼ï¼ï¼ï¼ï¼ï¼ï¼ï¼ï¼ï¼ï¼ï¼ï¼ï¼ï¼ //
 
 namespace ScoreManager {
 /*
 valeable :*/
-	extern int time;		// ƒ^ƒCƒ€
-	extern int playerHp;	// ƒvƒŒƒCƒ„[‚ÌHP
-	extern bool isClear;	// ƒNƒŠƒA‚µ‚½‚©‚Ç‚¤‚©
-	extern string userName;	// ƒ†[ƒU[–¼
+	extern int time;		 // ã‚¿ã‚¤ãƒ 
+	extern int playerHp;	 // ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®HP
+	extern int justAvoidance;// ã‚¸ãƒ£ã‚¹ãƒˆå›é¿ã—ãŸå›æ•°
+	extern int recieveDMG ;// å—ã‘ãŸãƒ€ãƒ¡ãƒ¼ã‚¸
+	extern int dealtDMG;	 // ä¸ãƒ€ãƒ¡ãƒ¼ã‚¸
+	extern bool isClear;	 // ã‚¯ãƒªã‚¢ã—ãŸã‹ã©ã†ã‹
+	extern string userName;	 // ãƒ¦ãƒ¼ã‚¶ãƒ¼å
 }
 
-// ƒtƒ@ƒCƒ‹ŠÇ—namespace
+// ãƒ•ã‚¡ã‚¤ãƒ«ç®¡ç†namespace
 namespace FileManager {
-	// •¶š—ñ“à‚Ì‘S‚Ä‚Ì "\\" ‚ğ "/" ‚É’uŠ·‚·‚éŠÖ”
+	// æ–‡å­—åˆ—å†…ã®å…¨ã¦ã® "\\" ã‚’ "/" ã«ç½®æ›ã™ã‚‹é–¢æ•°
 	void ReplaceBackslashes(string& str);
 
-	// ƒJƒŒƒ“ƒgƒfƒBƒŒƒNƒgƒŠ‚©‚ç‚Ì‘Š‘ÎƒpƒX‚ğæ“¾‚·‚éŠÖ”
+	// ã‚«ãƒ¬ãƒ³ãƒˆãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªã‹ã‚‰ã®ç›¸å¯¾ãƒ‘ã‚¹ã‚’å–å¾—ã™ã‚‹é–¢æ•°
 	std::string GetAssetsRelativePath(const std::string& absolutePath);
 
-	// ŠÖ”: ƒpƒX‚©‚çƒtƒ@ƒCƒ‹–¼‚ğæ“¾‚·‚é
+	// é–¢æ•°: ãƒ‘ã‚¹ã‹ã‚‰ãƒ•ã‚¡ã‚¤ãƒ«åã‚’å–å¾—ã™ã‚‹
 	std::string GetFileNameFromPath(const std::string& path);
 
-	// ŠÖ”: ƒpƒX‚©‚çŠg’£q‚È‚µ‚Ìƒtƒ@ƒCƒ‹–¼‚ğæ“¾‚·‚é
+	// é–¢æ•°: ãƒ‘ã‚¹ã‹ã‚‰æ‹¡å¼µå­ãªã—ã®ãƒ•ã‚¡ã‚¤ãƒ«åã‚’å–å¾—ã™ã‚‹
 	std::string GetFileNameWithoutExtension(const std::string& path);
 }
 
@@ -61,14 +64,18 @@ namespace Light
 	extern XMFLOAT4 ambientLight;
 }
 
-/// —Õ‚ÌƒOƒ[ƒoƒ‹•Ï” fix: –{—ˆ‚Í‚±‚±‚É’u‚­‚×‚«‚Å‚Í‚È‚¢ 
-extern string g_selectedStage;	// ‘I‘ğ‚³‚ê‚½ƒXƒe[ƒW
-extern int g_selectedGameMode;	// ‘I‘ğ‚³‚ê‚½ƒQ[ƒ€ƒ‚[ƒh
-extern std::vector<PlantData> g_playerPlantData;	// A•¨ƒf[ƒ^
-extern std::vector<PlantData> g_thisPlayGetPlantData;
+/// è‡¨æ™‚ã®ã‚°ãƒ­ãƒ¼ãƒãƒ«å¤‰æ•° fix: æœ¬æ¥ã¯ã“ã“ã«ç½®ãã¹ãã§ã¯ãªã„ 
+extern string g_selectedStage;	// é¸æŠã•ã‚ŒãŸã‚¹ãƒ†ãƒ¼ã‚¸
+extern int g_selectedGameMode;	// é¸æŠã•ã‚ŒãŸã‚²ãƒ¼ãƒ ãƒ¢ãƒ¼ãƒ‰
+extern std::vector<PlantData> g_playerPlantData;	// æ¤ç‰©ãƒ‡ãƒ¼ã‚¿
 
-// ƒGƒtƒFƒNƒgƒf[ƒ^
-// fix: –{—ˆ‚Í‚±‚±‚É’u‚­‚×‚«‚Å‚Í‚È‚¢
+extern int g_playTime;
+
+extern std::vector<PlantData> g_thisPlayGetPlantData;	// ä»Šå›å–å¾—ã—ãŸæ¤ç‰©ãƒ‡ãƒ¼ã‚¿
+extern enum GameMode { MODE_ADVENTURE, MODE_SCOREATTACK, MODE_TUTORIAL } g_gameMode;	// ã‚²ãƒ¼ãƒ ãƒ¢ãƒ¼ãƒ‰
+
+// ã‚¨ãƒ•ã‚§ã‚¯ãƒˆãƒ‡ãƒ¼ã‚¿
+// fix: æœ¬æ¥ã¯ã“ã“ã«ç½®ãã¹ãã§ã¯ãªã„
 struct EffectData {
 	std::string name;
 	std::string path;

@@ -60,17 +60,38 @@ void Component_BossBehavior::Initialize()
 	if(!FindChildComponent("CircleRangeDetector")) AddChildComponent(CreateComponent("CircleRangeDetector", CircleRangeDetector, holder_, this));
 
 	// effekseer: :Effectの読み込み
-	EFFEKSEERLIB::gEfk->AddEffect("sword", "Effects/Salamander12.efk");/*★★★*/
-	EFFEKSEERLIB::gEfk->AddEffect("fire", "Effects/Fire3.efk");/*★★★*/
+	EFFEKSEERLIB::gEfk->AddEffect("sword", "Effects/Salamander12.efk");
+	EFFEKSEERLIB::gEfk->AddEffect("fire", "Effects/Fire3.efk");
 
 	// コライダーの追加
 	// fix: コライダーのサイズを今後データから読み込むように変更
 	holder_->AddCollider(new BoxCollider({}, BOSS_COLLIDER_SIZE));
-	holder_->SetShader(Direct3D::SHADER_BOSS);
+
+	//holder_->SetShader(Direct3D::SHADER_BOSS);
 }
 
 void Component_BossBehavior::Update()
 {
+
+	CountDown* countDown = (CountDown*)(holder_->FindObject("CountDown"));
+	if (countDown != nullptr && isGameStart_ == false) {
+
+		// カウントダウンが終了した場合
+		if (countDown->IsFinished()) {
+
+			//移動を可能にする
+			isActive_ = true;
+
+			// ゲームスタートフラグを立てる
+			isGameStart_ = true;
+		}
+		else {
+			// 移動を不可能にする
+			isActive_ = false;
+			return;
+		}
+	}
+
 	// ターゲットの取得処理
 	if (target_ == nullptr) target_ = (StageObject*)holder_->GetParent()->FindChildObject(targetName_);
 
@@ -86,6 +107,22 @@ void Component_BossBehavior::Update()
 
 	// 対象が存在しない または アクティブでない場合は処理を行わない
 	if (target_ == nullptr || isActive_ == false) return;
+
+	{
+		// プレイヤーのHPゲージコンポーネントを取得
+		Component_HealthGauge* hg = (Component_HealthGauge*)(GetChildComponent("HealthGauge"));
+
+		// UIProgressBarを取得
+		UIProgressBar* hpBar = (UIProgressBar*)UIPanel::GetInstance()->FindObject(PLAY_SCENE_BOSS_HP_GAUGE_NAME);
+
+		// HPの値を移動
+		ScoreManager::playerHp = (int)hg->now_;
+
+		// HPバーの値を設定
+		if (hpBar != nullptr && hg != nullptr)hpBar->SetProgress(hg->now_, hg->max_);
+
+		if(hg->now_ <= 0) SetState(BOSS_STATE_DEAD);
+	}
 
 
 	// 状態によって処理を分岐

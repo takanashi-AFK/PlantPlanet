@@ -1,14 +1,1 @@
-[
-  {
-    "bestScore": 200,
-    "libraryStatus": [ false, true, false, false, false, true, true, true, false, false ],
-    "playTotalTime": 40000,
-    "userName": "sugawara"
-  },
-  {
-    "bestScore": 2555,
-    "libraryStatus": [ false, true, false, false, true, false, true, false, false, false ],
-    "playTotalTime": 0,
-    "userName": "takanashi"
-  }
-]
+null

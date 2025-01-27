@@ -23,6 +23,15 @@
 #include "../../Game/Objects/UI/UICursor.h"
 #include "../Otheres/UserManager.h"
 
+namespace {
+	// UIレイアウトのjsonファイルパス
+	const string ADVENTURE_MODE_UI_LAYOUT_JSON = "Datas/Test/Inventory.json";
+	const string SCOREATTACK_MODE_UI_LAYOUT_JSON = "Datas/SceneLayout/PlayScene/scoreAttackMode.json";
+
+	// ステージのjsonファイルパス
+	const string ADVENTURE_MODE_STAGE_JSON = "Datas/Test/TentativeGameData20241210.json";
+	const string SCOREATTACK_MODE_STAGE_JSON = "Datas/StageLayouts/stage_normal.json";
+}
 
 using namespace Constants;
 
@@ -30,193 +39,60 @@ Scene_Play::Scene_Play(GameObject* parent)
 	:GameObject(parent, "Scene_Play"),
 	pStage_(nullptr),
 	tpsCamera_(nullptr), 
-	fixedCursorPos(true), 
-	cursorVisible(true),
-	isGameStart_(false), 
-	isBossSpawn_(false),
-	isDebugDataEditWindowOpen_(false),
+	fixedCursorPos_(true), 
+	cursorVisible_(true),
 	isShowInventoryFirstTime_(false),
-	currentState_(PlaySceneState::PlaySceneState_Play)
+	isOpenInventoryUI_(false)
 {
 	UICursor::ToHide(true);
 }
 
 void Scene_Play::Initialize()
 {
-	// UIパネルの初期化
-	InitUIPanel();
-
-	// ステージの初期化
-	InitStage();
-
-	// カメラの初期化
-	InitCamera();
-
-	UIInventory::Initialize();
-
 	start_ = std::chrono::system_clock::now();
+	// ゲームモードによる初期化処理
+	switch (g_gameMode) 
+	{
+	case MODE_ADVENTURE:	InitAdventureMode();	break;
+	case MODE_SCOREATTACK:	InitScoreAttackMode();	break;
+	}
 }
 
 void Scene_Play::Update()
 {
 	// カーソル固定化処理
 	auto playTime = std::chrono::system_clock::now() - start_;
-	playTimeSec_ = std::chrono::duration_cast<std::chrono::seconds>(playTime).count();
+	g_playTime = std::chrono::duration_cast<std::chrono::seconds>(playTime).count();
 	
 	SetCursorMode();
 
-	//	// カメラのアクティブ化
-	tpsCamera_->SetActive(true);
+	// カメラのアクティブ化
+	if(tpsCamera_ != nullptr)tpsCamera_->SetActive(true);
 
 	// プレイヤー情報を取得
 	Component_PlayerBehavior* playerBehavior = nullptr; {
+		if (pStage_ != nullptr)
 		for (auto pb : pStage_->FindComponents(ComponentType::PlayerBehavior))playerBehavior = (Component_PlayerBehavior*)pb;
 	}
 
 	// ボス情報を取得
 	Component_BossBehavior* bossBehavior = nullptr; {
+		if (pStage_ != nullptr)
 		for (auto bb : pStage_->FindComponents(ComponentType::BossBehavior))bossBehavior = (Component_BossBehavior*)bb;
 	}
 
-	if (currentState_ == PlaySceneState::PlaySceneState_Play) {
-		// プレイヤーをカメラのターゲットに設定
-		if (playerBehavior != nullptr)tpsCamera_->SetTarget(playerBehavior->GetHolder());
-
-		// プレイ情報の表示処理
-		SetPlayInfo();
-
-		// シーン遷移処理
-		bool isSceneChange = false;
-		{
-			// ボスに関わる処理
-			if (bossBehavior != nullptr) {
-
-				// ボスのHPが0になったら
-				for (auto healthGauge : bossBehavior->GetChildComponent(ComponentType::HealthGauge)) {
-					if (((Component_HealthGauge*)healthGauge)->now_ <= 0) {
-
-						// ボスの状態を死亡に変更
-						bossBehavior->SetState(BossState::BOSS_STATE_DEAD);
-
-						// シーン遷移フラグを立てる
-						isSceneChange = true;
-					}
-				}
-
-				// プレイヤーのHPが0になったら
-				for (auto healthGauge : playerBehavior->GetChildComponent(ComponentType::HealthGauge)) {
-					if (((Component_HealthGauge*)healthGauge)->now_ <= 0) {
-
-						// プレイヤーの状態を死亡に変更
-						playerBehavior->SetState(PlayerState::PLAYER_STATE_DEAD);
-
-						// シーン遷移フラグを立てる
-						isSceneChange = true;
-					}
-				}
-
-			}
-
-			// 終了ボタンが押されたら
-			if (Input::IsKeyDown(DIK_ESCAPE) || Input::IsPadButtonDown(XINPUT_GAMEPAD_START)) {
-
-				isSceneChange = true;
-
-			}
-
-			if (isSceneChange == true) {
-
-				for (auto getPlantData : playerBehavior->GetMyPlants()) {
-					bool exists = false;
-					for (const auto& plantData : g_playerPlantData) {
-						if (plantData.name_ == getPlantData.name_) {
-							exists = true;
-							break;
-						}
-					}
-					if (!exists) {
-						g_playerPlantData.push_back(getPlantData);
-					}
-				}
-
-				g_thisPlayGetPlantData.clear();
-				g_thisPlayGetPlantData = playerBehavior->GetMyPlants();
-				UIInventory::Release();
-
-				SceneManager* sceneManager = (SceneManager*)FindObject("SceneManager");
-				sceneManager->ChangeScene(SCENE_ID_RESULT, TID_BLACKOUT);
-			}
-
-		}
-
-		// ボス出現処理
-		{
-
-			if (playerBehavior->GetResearchPoint() >= 100 && isBossSpawn_ == false) {
-				// ボス敵の生成
-				SpawnBossEnemy(); isBossSpawn_ = true;
-			}
-			// 
-			//else playerBehavior->SetResearchPoint(playerBehavior->GetResearchPoint() + 1);
-		}
-
-		if (Input::IsKeyDown(DIK_Q) || Input::IsPadButtonDown(XINPUT_GAMEPAD_B)) {
-			SetState(PlaySceneState::PlaySceneState_Inventory);
-			UIInventory::SetStage(pStage_);
-			UIInventory::InventoryDataSet();
-			UIInventory::ShowInventory(true);
-			LeaveOtherObject(this);
-			isShowInventoryFirstTime_ = true;
-
-
-
-			// カーソル固定化の切り替え
-			fixedCursorPos = !fixedCursorPos;
-
-			// カーソルの表示状態を切り替える
-			cursorVisible = !fixedCursorPos;
-			UICursor::ToHide(!cursorVisible);
-
-
-		}
-	}
-	else if (currentState_ == PlaySceneState::PlaySceneState_Inventory) {
-		if (isShowInventoryFirstTime_ == true) {
-			isShowInventoryFirstTime_ = false;
-		}
-
-
-		if (Input::IsKeyDown(DIK_Q) || Input::IsPadButtonDown(XINPUT_GAMEPAD_B)||UIInventory::IsShowInventory() == false) {
-			SetState(PlaySceneState::PlaySceneState_Play);
-			UIInventory::ShowInventory(false);
-			EnterOtherObject(this);
-			isShowInventoryFirstTime_ = true;
-
-
-				// カーソル固定化の切り替え
-				fixedCursorPos = !fixedCursorPos;
-
-				// カーソルの表示状態を切り替える
-				cursorVisible = !fixedCursorPos;
-				UICursor::ToHide(!cursorVisible);
-			
-		}
-
-	UIInventory::Update();
+	// ゲームモードによる更新処理
+	switch (g_gameMode)
+	{
+	case MODE_ADVENTURE:	UpdateAdventureMode(playerBehavior, bossBehavior);	break;
+	case MODE_SCOREATTACK:	UpdateScoreAttackMode(playerBehavior, bossBehavior);break;
 	}
 
-
-	if (Input::IsKeyDown(DIK_O)) {
-		// カーソル固定化の切り替え
-		fixedCursorPos = !fixedCursorPos;
-
-		// カーソルの表示状態を切り替える
-		cursorVisible = !fixedCursorPos;
-		UICursor::ToHide(!cursorVisible);
-		isDebugDataEditWindowOpen_ = !isDebugDataEditWindowOpen_;
-	}
-
-	DrawDebugDataEditWindow();
+	// debug
+	static bool isDebugMode = false;
+	if (Input::IsKeyDown(DIK_0))isDebugMode = !isDebugMode;
+	if (isDebugMode)DrawDebugDataEditWindow();
+	// debug
 }
 void Scene_Play::Draw()
 {
@@ -227,37 +103,31 @@ void Scene_Play::Release()
 	UserManager& um = UserManager::GetInstance();
 	auto user = um.GetLoggedInUser();
 
-	um.UpdatePlayTotalTime(user->userName, user->playTotalTime + playTimeSec_);
+	um.UpdatePlayTotalTime(user->userName, user->playTotalTime + g_playTime);
 }
 
-void Scene_Play::InitUIPanel()
+void Scene_Play::InitUIPanel(const string& _fileName)
 {
 	// UIパネル & レイアウトの読み込み
 	json loadData;
-	if (JsonReader::Load("Datas/Test/Inventory.json", loadData))
-		UIPanel::GetInstance()->Load(loadData);
+	if (JsonReader::Load(_fileName, loadData))UIPanel::GetInstance()->Load(loadData);
 }
 
-void Scene_Play::InitStage()
+void Scene_Play::InitStage(const string& _fileName)
 {
 	// スカイスフィアの生成
 	Instantiate<SkySphere>(this);
+	// ※ スカイスフィアの時間帯をランダムで設定する処理を追記予定
 
 	// ステージデータの読み込み
 	json loadData;
-	if (JsonReader::Load("Datas/Test/TentativeGameData20241210.json", loadData)) {
+	if (JsonReader::Load(_fileName, loadData)) {
 
 		// ステージを生成
 		pStage_ = Instantiate<Stage>(this);
 
 		// ステージの読み込み
 		pStage_->Load(loadData);
-	}
-	
-	// 植物の生成
-	{
-		// generatorの起動
-		for (auto pg : (pStage_->GetStageObject("generator"))->FindComponent(ComponentType::PlantGenerator))pg->Execute();
 	}
 }
 
@@ -284,71 +154,21 @@ void Scene_Play::SetCursorMode()
 	if (Input::IsKeyDown(DIK_F3)) {
 
 		// カーソル固定化の切り替え
-		fixedCursorPos = !fixedCursorPos;
+		fixedCursorPos_ = !fixedCursorPos_;
 
 		// カーソルの表示状態を切り替える
-		cursorVisible = !fixedCursorPos;
-		UICursor::ToHide(!cursorVisible);
+		cursorVisible_ = !fixedCursorPos_;
+		UICursor::ToHide(!cursorVisible_);
 	}
 
 	// カーソルの位置を中央に固定
-	if (fixedCursorPos) {
+	if (fixedCursorPos_) {
 		SetCursorPos(Direct3D::screenWidth_ / 2, Direct3D::screenHeight_ / 2);
 	}
 }
 
-void Scene_Play::SetPlayInfo()
-{
-	// プレイヤーの情報を設定しUIパネルに反映
-	{
-		// `PlayerBehavior`コンポーネントの取得
-		Component_PlayerBehavior* playerBehavior = nullptr;
-		for (auto pb : pStage_->FindComponents(ComponentType::PlayerBehavior))playerBehavior = (Component_PlayerBehavior*)pb;
-
-		// プレイヤーのHP情報を取得 & 反映
-		Component_HealthGauge* playerHealthGauge = (Component_HealthGauge*)playerBehavior->GetChildComponent("PlayerHealthGauge");
-		UIProgressBar* playerHPBar = (UIProgressBar*)UIPanel::GetInstance()->FindObject("HPBar");
-		if (playerHPBar != nullptr && playerHealthGauge != nullptr)playerHPBar->SetProgress(playerHealthGauge->now_, playerHealthGauge->max_);
-	
-		// プレイヤーのスタミナ情報を取得 & 反映
-		Component_StaminaGauge* playerStaminaGauge = (Component_StaminaGauge*)playerBehavior->GetChildComponent("StaminaGauge");
-		UIProgressBar* playerSTBar = (UIProgressBar*)UIPanel::GetInstance()->FindObject("STBar");
-		if (playerSTBar != nullptr && playerStaminaGauge != nullptr)playerSTBar->SetProgress(playerStaminaGauge->now_, playerStaminaGauge->max_);
-
-		// プレイヤーの調査度情報を取得 & 反映
-		UIProgressCircle* playerResearchPointCircle = (UIProgressCircle*)UIPanel::GetInstance()->FindObject("ResearchCircle");
-		if (playerResearchPointCircle != nullptr)playerResearchPointCircle->SetProgress(playerBehavior->GetResearchPoint(), 100);
-	}
-
-}
-
-void Scene_Play::SpawnBossEnemy()
-{
-	// ボスの情報を読込 ※読込失敗時は処理を中断
-	json loadData;
-	if (JsonReader::Load("Datas/Test/testBoss.json", loadData) == false) return;
-
-	// ステージオブジェクトの生成
-	StageObject* stageObject_Boss = CreateStageObject(loadData.begin().key(), loadData.begin().value()["modelFilePath_"], pStage_);
-
-	// 読み込んだデータを反映
-	stageObject_Boss->Load(loadData.begin().value());
-
-	// 位置を設定
-	stageObject_Boss->SetPosition(27.5, 2, 27.5);
-
-	// ターゲットを設定
-	for (auto bossBehavior : stageObject_Boss->FindComponent(ComponentType::BossBehavior)) 
-		((Component_BossBehavior*)bossBehavior)->SetTarget(pStage_->GetStageObject("00_Player"));
-	
-	// ステージに追加
-	pStage_->AddStageObject(stageObject_Boss);
-}
-
 void Scene_Play::DrawDebugDataEditWindow()
 {
-	if (!isDebugDataEditWindowOpen_) return;
-
 	Component_PlayerBehavior* playerBehavior = nullptr;
 	for (auto pb : pStage_->FindComponents(ComponentType::PlayerBehavior))
 		playerBehavior = (Component_PlayerBehavior*)pb;
@@ -411,4 +231,222 @@ void Scene_Play::DrawDebugDataEditWindow()
 		if (ImGui::Button("Apply Camera Sensitivity"))tpsCamera_->SetSensitivity(sens);
 	}
 	ImGui::End();
+}
+
+void Scene_Play::InitAdventureMode()
+{
+	// UIパネルの初期化処理 ※アドベンチャーモード用
+	InitUIPanel(ADVENTURE_MODE_UI_LAYOUT_JSON);
+
+	// ステージの初期化処理 ※アドベンチャーモード用
+	InitStage(ADVENTURE_MODE_STAGE_JSON);
+
+	// ステージ上に植物をランダムに生成
+	if (pStage_ != nullptr)for (auto pg : (pStage_->GetStageObject("generator"))->FindComponent(ComponentType::PlantGenerator))pg->Execute();
+
+	// カメラの初期化処理
+	InitCamera();
+
+	// UIインベントリの初期化
+	UIInventory::Initialize();
+}
+
+void Scene_Play::UpdateAdventureMode(Component_PlayerBehavior* _playerBehavior, Component_BossBehavior* _bossBehavior)
+{
+	// UIの表示状態による更新処理
+	if (isOpenInventoryUI_ == true) UpdateInventoryUI();
+	else							UpdateNormalUI(_playerBehavior, _bossBehavior);
+
+	// シーン遷移条件検知処理
+	bool isSceneChange = false; {
+
+		// プレイヤーが死亡した場合...
+		for (auto comp_healthGauge : _playerBehavior->GetChildComponent(ComponentType::HealthGauge)) {
+			if (((Component_HealthGauge*)comp_healthGauge)->IsDead() == true) {
+
+				// プレイヤーの状態を`死亡`に変更
+				_playerBehavior->SetState(PlayerState::PLAYER_STATE_DEAD);
+
+				// シーン遷移フラグを立てる
+				isSceneChange = true;
+			}
+		}
+
+		// 調査度がMAX かつ 帰還ゲートにインタラクトした場合...
+		constexpr int RESEARCH_POINT_MAX = 100;
+		if (_playerBehavior->GetResearchPoint() >= RESEARCH_POINT_MAX && /*帰還オブジェクトにインタラクトしたかどうか*/true)
+			isSceneChange = true;
+		
+		
+		// debug 終了ボタンが押された場合...
+		if (Input::IsKeyDown(DIK_ESCAPE) || Input::IsPadButtonDown(XINPUT_GAMEPAD_START))isSceneChange = true;
+	}
+
+	// シーン遷移処理
+	if (isSceneChange == true) {
+
+		for (auto getPlantData : _playerBehavior->GetMyPlants()) {
+			bool exists = false;
+			for (const auto& plantData : g_playerPlantData) {
+				if (plantData.name_ == getPlantData.name_) {
+					exists = true;
+					break;
+				}
+			}
+			if (!exists) {
+				g_playerPlantData.push_back(getPlantData);
+			}
+		}
+
+		g_thisPlayGetPlantData.clear();
+		g_thisPlayGetPlantData = _playerBehavior->GetMyPlants();
+		UIInventory::Release();
+
+		SceneManager* sceneManager = (SceneManager*)FindObject("SceneManager");
+		sceneManager->ChangeScene(SCENE_ID_RESULT, TID_BLACKOUT);
+	}
+}
+
+void Scene_Play::UpdateInventoryUI()
+{
+	// この処理の目的 ； 不明
+	// 記述した方は、この処理の目的をコメントアウトしてください
+	if (isShowInventoryFirstTime_ == true) isShowInventoryFirstTime_ = false;
+
+	// インベントリUIを閉じる(非表示にする)処理
+	if (Input::IsKeyDown(DIK_Q) || Input::IsPadButtonDown(XINPUT_GAMEPAD_B) || UIInventory::IsShowInventory() == false) CloseInventoryUI();
+
+	// UIインベントリの更新処理
+	UIInventory::Update();
+}
+
+void Scene_Play::UpdateNormalUI(Component_PlayerBehavior* _playerBehavior, Component_BossBehavior* _bossBehavior)
+{
+	// プレイヤーの情報が取得できた場合...
+	if (_playerBehavior != nullptr) {
+
+		// カメラのターゲットをプレイヤーに設定
+		if(tpsCamera_ != nullptr)tpsCamera_->SetTarget(_playerBehavior->GetHolder());
+
+		// プレイヤーのHP情報を取得 & 反映
+		Component_HealthGauge* playerHealthGauge = (Component_HealthGauge*)_playerBehavior->GetChildComponent("PlayerHealthGauge");
+		UIProgressBar* playerHPBar = (UIProgressBar*)UIPanel::GetInstance()->FindObject("HPBar");
+		if (playerHPBar != nullptr && playerHealthGauge != nullptr)playerHPBar->SetProgress(playerHealthGauge->now_, playerHealthGauge->max_);
+
+		// プレイヤーのスタミナ情報を取得 & 反映
+		Component_StaminaGauge* playerStaminaGauge = (Component_StaminaGauge*)_playerBehavior->GetChildComponent("StaminaGauge");
+		UIProgressBar* playerSTBar = (UIProgressBar*)UIPanel::GetInstance()->FindObject("STBar");
+		if (playerSTBar != nullptr && playerStaminaGauge != nullptr)playerSTBar->SetProgress(playerStaminaGauge->now_, playerStaminaGauge->max_);
+
+		// プレイヤーの調査度情報を取得 & 反映
+		UIProgressCircle* playerResearchPointCircle = (UIProgressCircle*)UIPanel::GetInstance()->FindObject("ResearchCircle");
+		if (playerResearchPointCircle != nullptr)playerResearchPointCircle->SetProgress(_playerBehavior->GetResearchPoint(), 100);
+	}
+
+	// インベントリUIを開く(表示する)処理
+	if (Input::IsKeyDown(DIK_Q) || Input::IsPadButtonDown(XINPUT_GAMEPAD_B)) OpenInventoryUI();
+}
+
+void Scene_Play::CloseInventoryUI()
+{
+	isOpenInventoryUI_ = false;			// インベントリUIを閉じる(非表示にする)処理
+	UIInventory::ShowInventory(false);	// インベントリUIを非表示にする
+	EnterOtherObject(this);				// 他のオブジェクトを有効化
+	isShowInventoryFirstTime_ = true;	// インベントリUIを初めて表示したかのフラグを立てる
+
+	// カーソル固定化の切り替え
+	fixedCursorPos_ = !fixedCursorPos_;
+
+	// カーソルの表示状態を切り替える
+	cursorVisible_ = !fixedCursorPos_;
+	UICursor::ToHide(!cursorVisible_);
+}
+
+void Scene_Play::OpenInventoryUI()
+{
+	isOpenInventoryUI_ = true;			// インベントリUIを開く(表示する)処理
+	UIInventory::SetStage(pStage_);		// ステージ情報をインベントリUIに設定
+	UIInventory::InventoryDataSet();	// インベントリUIのデータセット
+	UIInventory::ShowInventory(true);	// インベントリUIを表示する
+	LeaveOtherObject(this);				// 他のオブジェクトを無効化
+	isShowInventoryFirstTime_ = true;	// インベントリUIを初めて表示したかのフラグを立てる
+
+	// カーソル固定化の切り替え
+	fixedCursorPos_ = !fixedCursorPos_;
+
+	// カーソルの表示状態を切り替える
+	cursorVisible_ = !fixedCursorPos_;
+	UICursor::ToHide(!cursorVisible_);
+}
+
+void Scene_Play::InitScoreAttackMode()
+{
+	// UIパネルの初期化
+	InitUIPanel(SCOREATTACK_MODE_UI_LAYOUT_JSON);
+
+	// ステージの初期化
+	InitStage(SCOREATTACK_MODE_STAGE_JSON);
+
+	// カメラの初期化
+	InitCamera();
+
+	// カウントダウンの生成
+	countDown_ = Instantiate<CountDown>(this);
+	countDown_->Start();
+
+	// カーソルの非表示化
+	ShowCursor(false);
+}
+
+void Scene_Play::UpdateScoreAttackMode(Component_PlayerBehavior* _playerBehavior, Component_BossBehavior* _bossBehavior)
+{
+	// タイマーの取得
+	UITimer* uiTimer = (UITimer*)UIPanel::GetInstance()->FindObject(PLAY_SCENE_TIMER_NAME);
+
+	// カーソル固定化処理
+	SetCursorMode();
+
+	// ゲーム開始処理
+	if (countDown_->IsFinished() && isGameStart_ == false) {
+
+		// カメラのアクティブ化
+		tpsCamera_->SetActive(true);
+
+		// ゲーム開始フラグを立てる
+		isGameStart_ = true;
+
+		// タイマーの開始
+		if (uiTimer != nullptr) uiTimer->StartTimer();
+	}
+
+	// シーン切替処理
+	{
+		// シーン切替フラグを用意
+		bool isSceneChange = false;
+
+		// プレイヤーが死んだ場合、切替フラグを立てる
+		for (auto playerBehavior : pStage_->FindComponents(ComponentType::PlayerBehavior))if (((Component_PlayerBehavior*)playerBehavior)->IsDead()) { ScoreManager::isClear = false; isSceneChange = true; }
+
+		// ボスが死んだ場合、切替フラグを立てる
+		for (auto bossBehavior : pStage_->FindComponents(ComponentType::BossBehavior)) if (((Component_BossBehavior*)bossBehavior)->IsDead()) { ScoreManager::isClear = true; isSceneChange = true; }
+
+		// タイマーが終了した場合、切替フラグを立てる
+		if (uiTimer != nullptr)
+			if (uiTimer->IsEnd()) 
+			{ ScoreManager::isClear = false; isSceneChange = true; }
+
+		// シーン切替フラグが立っている場合
+		if (isSceneChange == true) {
+
+			// タイマーの最終値を取得
+			ScoreManager::time = uiTimer->GetSeconds();
+
+			// シーンを切り替える
+			SceneManager* sceneManager = (SceneManager*)FindObject("SceneManager");
+			sceneManager->ChangeScene(SCENE_ID_RESULT, TID_BLACKOUT);
+		}
+	}
+
+	// プレイヤーをカメラのターゲットに設定
+	for (auto playerBehavior : pStage_->FindComponents(ComponentType::PlayerBehavior))tpsCamera_->SetTarget(playerBehavior->GetHolder());
 }

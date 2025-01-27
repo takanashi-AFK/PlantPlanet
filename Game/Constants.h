@@ -49,6 +49,7 @@ namespace Constants {
 	const string PLAY_SCENE_TIMER_NAME = "timer";
 	const string PLAY_SCENE_PLAYER_HP_GAUGE_NAME = "player_hpGauge";
 	const string PLAY_SCENE_BOSS_HP_GAUGE_NAME = "boss_hpGauge";
+	const string PLAY_SCENE_STAMINA_GAUGE_NAME = "staminaGauge";
 
 	// リザルトシーンで使用するオブジェクト名
 	const string RESULT_SCENE_HP_TEXT_NAME = "hpNum";

@@ -14,10 +14,10 @@
     "text": "023",
     "type_": 3
   },
-  "nextButton": {
+  "returnButton": {
     "imageFilePath_": "Images/resultScene/nextButton.png",
     "layerNumber_": 2,
-    "objectName_": "nextButton",
+    "objectName_": "returnButton",
     "position_": [ 0.0, 0.0, 0.0 ],
     "rotate_": [ 0.0, 0.0, 0.0 ],
     "scale_": [ 1.0, 1.0, 1.0 ],
