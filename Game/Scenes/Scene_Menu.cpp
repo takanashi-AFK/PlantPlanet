@@ -151,9 +151,9 @@ void Scene_Menu::Index()
 		
 		// 検証にあたり、コメントアウト
 		// globalから今まで取得したことのある植物のデータを取得
-		/*for (const auto plant : g_playerPlantData) {
+		for (const auto plant : g_playerPlantData) {
 			plantDataMap_[plant.name_] = plant;
-		}*/
+		}
 
 		// 検証用※　`plantDataMap_`に現在ログイン中のユーザーの植物データを格納
 		{
@@ -251,11 +251,12 @@ void Scene_Menu::Index()
 				havePlantFlag = false;
 				
 				for(auto havePlant : g_playerPlantData){
-					if (havePlant.id_ != id) {
-						havePlantFlag = false;
+					if (havePlant.id_ == id) {
+						havePlantFlag = true;
+						break;
 					}
 					else {
-						havePlantFlag = true;
+						havePlantFlag = false;
 					}
 				}
 
@@ -453,7 +454,7 @@ void Scene_Menu::Option()
 
 	if(ConfirmButton(gameEndButton_)){
 		SceneManager* sceneManager = (SceneManager*)FindObject("SceneManager");
-		sceneManager->ChangeScene(SCENE_ID_TITLE, TID_BLACKOUT);
+		sceneManager->ChangeScene(SCENE_ID_END, TID_BLACKOUT);
 
 	}
 

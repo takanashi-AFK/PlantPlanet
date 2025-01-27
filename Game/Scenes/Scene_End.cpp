@@ -32,9 +32,10 @@ void Scene_End::Update()
 		// 一定時間経過したらシーンを切り替える
 		if (count_ >= LIMIT_TIME * FPS) {
 
-			// シーンを切り替える
-			SceneManager* sceneManager = (SceneManager*)FindObject("SceneManager");
-			sceneManager->ChangeScene(SCENE_ID_TITLE, TID_BLACKOUT);
+			//// シーンを切り替える
+			//SceneManager* sceneManager = (SceneManager*)FindObject("SceneManager");
+			//sceneManager->ChangeScene(SCENE_ID_TITLE, TID_BLACKOUT);
+			PostQuitMessage(0);
 		}
 
 		// 経過時間を加算
