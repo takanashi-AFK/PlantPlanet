@@ -182,7 +182,10 @@ void Scene_Result::UpdateScoreAttackResult()
 
 void Scene_Result::UpdateAdventureResult()
 {
-
+	for (auto getPlant : g_playerPlantData) {
+		UserManager& um = UserManager::GetInstance();
+		um.UpdateLibraryStatus(um.GetLoggedInUser()->userName, getPlant.id_);
+	}
 }
 
 void Scene_Result::CheckSkipScoreAttackResult()

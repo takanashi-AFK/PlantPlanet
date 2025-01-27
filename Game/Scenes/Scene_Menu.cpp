@@ -454,7 +454,7 @@ void Scene_Menu::Option()
 
 	if(ConfirmButton(gameEndButton_)){
 		SceneManager* sceneManager = (SceneManager*)FindObject("SceneManager");
-		sceneManager->ChangeScene(SCENE_ID_TITLE, TID_BLACKOUT);
+		sceneManager->ChangeScene(SCENE_ID_END, TID_BLACKOUT);
 
 	}
 
