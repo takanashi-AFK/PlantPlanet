@@ -60,17 +60,38 @@ void Component_BossBehavior::Initialize()
 	if(!FindChildComponent("CircleRangeDetector")) AddChildComponent(CreateComponent("CircleRangeDetector", CircleRangeDetector, holder_, this));
 
 	// effekseer: :Effectの読み込み
-	EFFEKSEERLIB::gEfk->AddEffect("sword", "Effects/Salamander12.efk");/*★★★*/
-	EFFEKSEERLIB::gEfk->AddEffect("fire", "Effects/Fire3.efk");/*★★★*/
+	EFFEKSEERLIB::gEfk->AddEffect("sword", "Effects/Salamander12.efk");
+	EFFEKSEERLIB::gEfk->AddEffect("fire", "Effects/Fire3.efk");
 
 	// コライダーの追加
 	// fix: コライダーのサイズを今後データから読み込むように変更
 	holder_->AddCollider(new BoxCollider({}, BOSS_COLLIDER_SIZE));
-	holder_->SetShader(Direct3D::SHADER_BOSS);
+
+	//holder_->SetShader(Direct3D::SHADER_BOSS);
 }
 
 void Component_BossBehavior::Update()
 {
+
+	CountDown* countDown = (CountDown*)(holder_->FindObject("CountDown"));
+	if (countDown != nullptr && isGameStart_ == false) {
+
+		// カウントダウンが終了した場合
+		if (countDown->IsFinished()) {
+
+			//移動を可能にする
+			isActive_ = true;
+
+			// ゲームスタートフラグを立てる
+			isGameStart_ = true;
+		}
+		else {
+			// 移動を不可能にする
+			isActive_ = false;
+			return;
+		}
+	}
+
 	// ターゲットの取得処理
 	if (target_ == nullptr) target_ = (StageObject*)holder_->GetParent()->FindChildObject(targetName_);
 
