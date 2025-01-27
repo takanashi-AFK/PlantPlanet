@@ -215,6 +215,13 @@ void Scene_Menu::Index()
 		for(auto plantButton : plantFrameButtonList)
 		panel->PushButtonToArray(plantButton);
 
+		UserManager& um = UserManager::GetInstance();
+		g_playerPlantData.clear();
+		for (int i = 0; i < 10; i++) {
+			if (um.GetLoggedInUser()->libraryStatus[i] == true) {
+				g_playerPlantData.push_back(PlantCollection::GetPlants()[i]);
+			}
+		}
 
 
 		descriptionImage->SetVisible(false);

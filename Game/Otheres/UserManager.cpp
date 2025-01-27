@@ -137,6 +137,13 @@ int UserManager::GetPlayTotalTime(const string& _userName)
 	return registeredUsers_[_userName]->playTotalTime;
 }
 
+vector<bool> UserManager::GetPlantData(const string& _userName)
+{
+	// ユーザーの図鑑データを取得
+	return registeredUsers_[_userName]->libraryStatus;
+
+}
+
 bool UserManager::isUserRegistered(const string& _userName)
 {
 	// ユーザーが登録されているかどうかを返す

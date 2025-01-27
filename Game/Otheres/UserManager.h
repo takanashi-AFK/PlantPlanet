@@ -78,6 +78,9 @@ getter :*/
 
     /// <summary> プレイ時間を取得(フレーム) </summary>
     int GetPlayTotalTime(const string& _userName);
+
+	/// <summary> 何の植物を所持しているかを取得 </summary>
+	vector<bool> GetPlantData(const string& _userName);
 /*
 predicate :*/
     /// <summary> ユーザーが登録されているかどうかを判定 </summary>
