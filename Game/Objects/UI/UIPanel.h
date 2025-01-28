@@ -99,6 +99,8 @@ public:
 	bool SetButtonArrayIndex(int x, int y);
 	void GetButtonIndex(int* x, int* y);
 	UIButton* GetSelectingButton();
+
+	[[deprecated("³í“®ì‚µ‚È‚¢‚½‚ß”ñ„§")]]
 	void SetCursorToSelectingButton();
 	void SelectorMove(SELECTOR_MOVE_TO way);
 

@@ -157,7 +157,7 @@ void Scene_Title::HandleUIInput(UIPanel* _uiPanel, bool& _isFirstSelectButton)
 	
 	// パッドのAボタンが押下された場合... ( レイヤーに関係なく )
 	selectingButton = _uiPanel->GetSelectingButton();
-	if (selectingButton == nullptr) return;
+	if (selectingButton == nullptr || !Input::IsPadConnected(0)) return;
 	
 	// ボタンのシェーダーを変更
 	selectingButton->SetShader(Direct3D::SHADER_BUTTON_SELECT);
