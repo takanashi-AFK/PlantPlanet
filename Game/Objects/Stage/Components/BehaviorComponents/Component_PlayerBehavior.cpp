@@ -819,7 +819,7 @@ void Component_PlayerBehavior::Interact()
 			
 			if (IsAbleToReturn(returnGate))
 			{
-				returnGate->Work();
+				isExchangeScene = returnGate->IsUsable();
 			}
 
 			else if (nearestObject != nullptr && nearestObject->GetObjectType() == StageObject::TYPE_WALL) {

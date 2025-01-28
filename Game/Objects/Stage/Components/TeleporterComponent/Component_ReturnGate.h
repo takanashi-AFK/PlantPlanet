@@ -14,6 +14,7 @@ public:
 	//ŠO•”‚©‚çŒÄ‚Ño‚³‚ê‚éŠÖ”
 	void Work();
 
+
 	void SetVisible(bool b);
 	void SetUsable(bool b);
 
