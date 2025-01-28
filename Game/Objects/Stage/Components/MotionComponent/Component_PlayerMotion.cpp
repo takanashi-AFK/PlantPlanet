@@ -17,7 +17,7 @@ void Component_PlayerMotion::Initialize()
     // モデルのハンドルリストにモデルを追加
     modelHandleList_[PLAYER_STATE_WALK] = MotionData(PLAYER_STATE_WALK_FBX, 0, 40, 1,true);
     modelHandleList_[PLAYER_STATE_SHOOT] = MotionData(PLAYER_STATE_SHOOT_FBX, 0, shotRecoilFrame_, 1,false);
-    modelHandleList_[PLAYER_STATE_IDLE] = MotionData(PLAYER_STATE_IDLE_FBX, 0, 200, 1,true);
+    modelHandleList_[PLAYER_STATE_IDLE] = MotionData(PLAYER_STATE_IDLE_FBX, 0, 150, 1,true);
     modelHandleList_[PLAYER_STATE_DODGE] = MotionData(PLAYER_STATE_DODGE_FBX, 0, 60, 1,false);
     modelHandleList_[PLAYER_STATE_DEAD] = MotionData(PLAYER_STATE_DEAD_FBX, 0, 182, 1,false);
     modelHandleList_[PLAYER_STATE_SHOOT_WALK_LEFT] = MotionData(PLAYER_STATE_SHOOT_WALK_LEFT_FBX, 0, shotWalkFrame_, 1, true);
@@ -25,7 +25,7 @@ void Component_PlayerMotion::Initialize()
     modelHandleList_[PLAYER_STATE_SHOOT_WALK_BACK] = MotionData(PLAYER_STATE_SHOOT_WALK_BACK_FBX, 0, shotWalkFrame_, 1, true);
     modelHandleList_[PLAYER_STATE_SHOOT_WALK_FORWARD] = MotionData(PLAYER_STATE_SHOOT_WALK_FORWARD_FBX, 0, shotWalkFrame_, 1, true);
     modelHandleList_[PLAYER_STATE_SHOOT_IDLE] = MotionData(PLAYER_STATE_SHOOT_IDLE_FBX, 0, shotWalkFrame_, 1, true);
-    modelHandleList_[PLAYER_STATE_INTRACT] = MotionData(PLAYER_STATE_INTRACT_FBX, 0, 280, 1,false);
+    modelHandleList_[PLAYER_STATE_INTRACT] = MotionData(PLAYER_STATE_INTRACT_FBX, 0, 280 , (280/FPS)*Component_PlayerBehavior::defaultTime_CollectPlant,false);
 	modelHandleList_[PLAYER_STATE_MELEE] = MotionData(PLAYER_STATE_MELEE_FBX, 0, 60, 1, false);
 	modelHandleList_[PLAYER_STATE_MADESALAD] = MotionData(PLAYER_STATE_MADESALAD_FBX, 0, 120, 1, false);
 

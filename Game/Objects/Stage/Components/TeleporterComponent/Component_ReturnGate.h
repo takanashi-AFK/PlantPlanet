@@ -11,7 +11,7 @@ public:
 	void Update() override;
 	void Release() override;
 	
-	//外部から呼び出される関数
+	[[deprecated("Sceneの派生クラスでのみシーンチェンジを行うと決まったため、この関数を使ったシーンチェンジは非推奨です")]]
 	void Work();
 
 	void SetVisible(bool b);

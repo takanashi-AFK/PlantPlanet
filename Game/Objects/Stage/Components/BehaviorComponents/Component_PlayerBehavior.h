@@ -77,6 +77,7 @@ private:
 	bool canInteract_	 : 1;
 	
 	bool isFirstOverMAXReserchPoint : 1;
+	bool isExchangeScene : 1;
 
 	float stamina_decrease_dodge_;
 	float stamina_decrease_melee_;
@@ -205,6 +206,8 @@ predicate :*/
 	bool IsState(PlayerState _state) const { return nowState_ == _state; }
 
 	bool IsBreakableWall() const { return isBreakableWall_; }
+
+	bool IsExchangeScene() const { return isExchangeScene; };
 
 private:
 	/// <summary> 射撃方向の計算 </summary>

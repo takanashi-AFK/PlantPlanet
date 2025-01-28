@@ -157,7 +157,7 @@ void Scene_Title::HandleUIInput(UIPanel* _uiPanel, bool& _isFirstSelectButton)
 	
 	// パッドのAボタンが押下された場合... ( レイヤーに関係なく )
 	selectingButton = _uiPanel->GetSelectingButton();
-	if (selectingButton == nullptr) return;
+	if (selectingButton == nullptr || !Input::IsPadConnected(0)) return;
 	
 	// ボタンのシェーダーを変更
 	// selectingButton->SetShader(Direct3D::SHADER_BUTTON_SELECT);
@@ -172,6 +172,18 @@ void Scene_Title::ProcessButtonAction(UIPanel* _uiPanel,string _buttonName, stri
 {
 	// ユーザーマネージャーのインスタンスを取得
 	UserManager& um = UserManager::GetInstance();
+
+	//ボタンが選択できるかどうか設定する
+	auto SetSelectableButton_ContinueAndStart = [&](bool flag) 
+		{
+			UIButton* startButton = static_cast<UIButton*>(_uiPanel->GetUIObject(BUTTON_NAME_START));
+			UIButton* continueButton = static_cast<UIButton*>(_uiPanel->GetUIObject(BUTTON_NAME_CONTINUE));
+
+			if (!(startButton && continueButton)) return;
+
+			startButton->SetSelctable(flag);
+			continueButton->SetSelctable(flag);
+		};
 
 	//ゲームパッドのボタンで失敗したときの配列場所
 	int failerButtonX = 0;
@@ -199,6 +211,8 @@ void Scene_Title::ProcessButtonAction(UIPanel* _uiPanel,string _buttonName, stri
 			_uiPanel->PushButtonToArray((UIButton*)_uiPanel->GetUIObject(BUTTON_NAME_OK));
 			_uiPanel->SetButtonArrayIndex(failerButtonX, failerButtonY);
 
+			SetSelectableButton_ContinueAndStart(false);
+
 			status_ = 0;
 		}
 
@@ -213,6 +227,8 @@ void Scene_Title::ProcessButtonAction(UIPanel* _uiPanel,string _buttonName, stri
 				_uiPanel->PushButtonToArray((UIButton*)_uiPanel->GetUIObject(BUTTON_NAME_OK));
 				_uiPanel->SetButtonArrayIndex(failerButtonX, failerButtonY);
 
+				SetSelectableButton_ContinueAndStart(false);
+
 				status_ = 1;
 			}
 
@@ -224,6 +240,8 @@ void Scene_Title::ProcessButtonAction(UIPanel* _uiPanel,string _buttonName, stri
 				_uiPanel->PushButtonToArray((UIButton*)_uiPanel->GetUIObject(BUTTON_NAME_OK));
 				_uiPanel->PushButtonToArray((UIButton*)_uiPanel->GetUIObject(BUTTON_NAME_NO));
 				_uiPanel->SetButtonArrayIndex(failerButtonX, failerButtonY);
+
+				SetSelectableButton_ContinueAndStart(false);
 
 				status_ = 2;
 			}
@@ -240,6 +258,8 @@ void Scene_Title::ProcessButtonAction(UIPanel* _uiPanel,string _buttonName, stri
 			_uiPanel->PushButtonToArray((UIButton*)_uiPanel->GetUIObject(BUTTON_NAME_OK));
 			_uiPanel->SetButtonArrayIndex(failerButtonX, failerButtonY);
 
+			SetSelectableButton_ContinueAndStart(false);
+
 			status_ = 0;
 		}
 
@@ -253,6 +273,7 @@ void Scene_Title::ProcessButtonAction(UIPanel* _uiPanel,string _buttonName, stri
 				SetUIVisible(_uiPanel, { IMAGE_TEXT3, TEXT_USER_NAME, TEXT_LIBRARY_STATUS, TEXT_PLAY_TOTAL_TIME, IMAGE_POPUP, BUTTON_NAME_OK,BUTTON_NAME_NO }, true);
 				_uiPanel->PushButtonToArray((UIButton*)_uiPanel->GetUIObject(BUTTON_NAME_OK));
 				_uiPanel->PushButtonToArray((UIButton*)_uiPanel->GetUIObject(BUTTON_NAME_NO));
+				SetSelectableButton_ContinueAndStart(false);
 				_uiPanel->SetButtonArrayIndex(failerButtonX, failerButtonY);
 
 				// ユーザー情報を適応
@@ -294,7 +315,7 @@ void Scene_Title::ProcessButtonAction(UIPanel* _uiPanel,string _buttonName, stri
 				SetUIVisible(_uiPanel, { IMAGE_TEXT4, IMAGE_POPUP, BUTTON_NAME_OK }, true);
 				_uiPanel->PushButtonToArray((UIButton*)_uiPanel->GetUIObject(BUTTON_NAME_OK));
 				_uiPanel->SetButtonArrayIndex(failerButtonX, failerButtonY);
-				
+				SetSelectableButton_ContinueAndStart(false);
 				status_ = 4;
 			}
 		}
@@ -316,6 +337,7 @@ void Scene_Title::ProcessButtonAction(UIPanel* _uiPanel,string _buttonName, stri
 
 		_uiPanel->RemoveButtonFromArray((UIButton*)_uiPanel->GetUIObject(BUTTON_NAME_OK));
 		_uiPanel->RemoveButtonFromArray((UIButton*)_uiPanel->GetUIObject(BUTTON_NAME_NO));
+		SetSelectableButton_ContinueAndStart(true);
 	}
 
 	else if (_buttonName == BUTTON_NAME_NO) {
@@ -323,6 +345,7 @@ void Scene_Title::ProcessButtonAction(UIPanel* _uiPanel,string _buttonName, stri
 		_uiPanel->SetButtonArrayIndex(defaultButtonX, defaultButtonY);
 		_uiPanel->RemoveButtonFromArray((UIButton*)_uiPanel->GetUIObject(BUTTON_NAME_OK));
 		_uiPanel->RemoveButtonFromArray((UIButton*)_uiPanel->GetUIObject(BUTTON_NAME_NO));
+		SetSelectableButton_ContinueAndStart(true);
 		ClosePopup(_uiPanel);
 	}
 

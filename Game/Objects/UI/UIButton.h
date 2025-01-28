@@ -5,59 +5,61 @@
 class UIButton : public UIObject
 {
 private:
-	string imageFilePath_; // ‰æ‘œƒtƒ@ƒCƒ‹ƒpƒX
-	int imageHandle_;		// ‰æ‘œƒnƒ“ƒhƒ‹
+	string imageFilePath_; // ç”»åƒãƒ•ã‚¡ã‚¤ãƒ«ãƒ‘ã‚¹
+	int imageHandle_;		// ç”»åƒãƒãƒ³ãƒ‰ãƒ«
 	Direct3D::SHADER_TYPE shaderType_;
 
-	string defaultImageFilePath_; // ƒfƒtƒHƒ‹ƒg‰æ‘œƒtƒ@ƒCƒ‹ƒpƒX
-	int defaultImageHandle_;		// ƒfƒtƒHƒ‹ƒg‰æ‘œƒnƒ“ƒhƒ‹
+	string defaultImageFilePath_; // ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆç”»åƒãƒ•ã‚¡ã‚¤ãƒ«ãƒ‘ã‚¹
+	int defaultImageHandle_;		// ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆç”»åƒãƒãƒ³ãƒ‰ãƒ«
 
-	string selectImageFilePath_; // ‘I‘ğ‰æ‘œƒtƒ@ƒCƒ‹ƒpƒX
-	int selectImageHandle_;		// ‘I‘ğ‰æ‘œƒnƒ“ƒhƒ‹
+	string selectImageFilePath_; // é¸æŠç”»åƒãƒ•ã‚¡ã‚¤ãƒ«ãƒ‘ã‚¹
+	int selectImageHandle_;		// é¸æŠç”»åƒãƒãƒ³ãƒ‰ãƒ«
 
 	int arrayPlaceX_;
 	int arrayPlaceY_;
 	bool isAutoShader_;
 	bool isChangeImage_;
+	bool isSelectable_;
 
 public:
-	/// <summary> ƒRƒ“ƒXƒgƒ‰ƒNƒ^ </summary>
+	/// <summary> ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿ </summary>
 	UIButton(string _name, UIObject* parent, int _layerNum);
 	~UIButton() override;
 
-	/// <summary> ‰Šú‰» </summary>
+	/// <summary> åˆæœŸåŒ– </summary>
 	void Initialize() override;
 	
-	/// <summary> XV </summary>
+	/// <summary> æ›´æ–° </summary>
 	void Update() override;
 	
-	/// <summary> •`‰æ </summary>
+	/// <summary> æç”» </summary>
 	void Draw() override;
 	
-	/// <summary> ‰ğ•ú </summary>
+	/// <summary> è§£æ”¾ </summary>
 	void Release() override;
 
-	/// <summary> •Û‘¶ </summary>
+	/// <summary> ä¿å­˜ </summary>
 	void Save(json& saveObj) override;
 	
-	/// <summary> “Ç </summary>
+	/// <summary> èª­è¾¼ </summary>
 	void Load(json& loadObj) override;
 	
-	/// <summary> ImGui•\¦ </summary>
+	/// <summary> ImGuiè¡¨ç¤º </summary>
 	void DrawData() override;
 
 
 /*
 setter :*/
-	/// <summary> ‰æ‘œƒtƒ@ƒCƒ‹ƒpƒX‚ğİ’è </summary>
+	/// <summary> ç”»åƒãƒ•ã‚¡ã‚¤ãƒ«ãƒ‘ã‚¹ã‚’è¨­å®š </summary>
 	void SetImage(string _imageFilePath);
 	void SetShader(Direct3D::SHADER_TYPE type);
 	void SetArrayPlace(int x, int y);
 	void SetAutoShader(bool flag) { isAutoShader_ = flag; };
+	void SetSelctable(bool flag) { isSelectable_ = flag; };
 /*
 getter */
 
-	//‚±‚Ì”z—ñ‚Ì’†‚É‚ ‚éƒ{ƒ^ƒ“‚Åˆê”Ôã‚©‚Â‘I‘ğ‚³‚ê‚Ä‚¢‚éƒ{ƒ^ƒ“‚ğæ“¾
+	//ã“ã®é…åˆ—ã®ä¸­ã«ã‚ã‚‹ãƒœã‚¿ãƒ³ã§ä¸€ç•ªä¸Šã‹ã¤é¸æŠã•ã‚Œã¦ã„ã‚‹ãƒœã‚¿ãƒ³ã‚’å–å¾—
 	static UIButton* GetTopSelectingUI(vector<UIObject*> list);
 
 	void GetArrayPlace(int* x, int* y) const;
@@ -66,26 +68,28 @@ getter */
 
 	Direct3D::SHADER_TYPE  GetShader()const;
 
-	// ‚±‚Ìƒ{ƒ^ƒ“‚Éƒ}ƒEƒX‚ªæ‚Á‚Ä‚¢‚é‚©
+	// ã“ã®ãƒœã‚¿ãƒ³ã«ãƒã‚¦ã‚¹ãŒä¹—ã£ã¦ã„ã‚‹ã‹
 	bool GetIsMouseOverThisButton();
+
+	bool IsSelectable() const { return isSelectable_; };
 /*
 setter :*/
-	/// <summary> ‰æ‘œƒtƒ@ƒCƒ‹ƒpƒX‚ğİ’è </summary>
+	/// <summary> ç”»åƒãƒ•ã‚¡ã‚¤ãƒ«ãƒ‘ã‚¹ã‚’è¨­å®š </summary>
 
 	void SetSelectImage(string _imageFilePath);
 	void SetDefaultImage(string _imageFilePath);
 /*
 predicate :*/
-	/// <summary> ƒ{ƒ^ƒ“‚ªƒNƒŠƒbƒN‚³‚ê‚½‚© </summary>
+	/// <summary> ãƒœã‚¿ãƒ³ãŒã‚¯ãƒªãƒƒã‚¯ã•ã‚ŒãŸã‹ </summary>
 	bool OnClick();
 
-	/// <summary> ƒ}ƒEƒX‚ªƒ{ƒ^ƒ“‚Ìã‚É‚ ‚é‚© </summary>
+	/// <summary> ãƒã‚¦ã‚¹ãŒãƒœã‚¿ãƒ³ã®ä¸Šã«ã‚ã‚‹ã‹ </summary>
 	bool IsMouseOver(XMFLOAT2 _position);
 
 	void UnselectShader();
 	void SelectShader();
 private:
-	/// <summary> ‰æ‘œÀ•W‚ğ‰æ–ÊÀ•W‚É•ÏŠ· </summary>
+	/// <summary> ç”»åƒåº§æ¨™ã‚’ç”»é¢åº§æ¨™ã«å¤‰æ› </summary>
 	void ConvertToImageCoordinates(XMFLOAT2& _position);
 };
 
