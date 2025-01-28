@@ -160,7 +160,7 @@ void Scene_Title::HandleUIInput(UIPanel* _uiPanel, bool& _isFirstSelectButton)
 	if (selectingButton == nullptr) return;
 	
 	// ボタンのシェーダーを変更
-	selectingButton->SetShader(Direct3D::SHADER_BUTTON_SELECT);
+	// selectingButton->SetShader(Direct3D::SHADER_BUTTON_SELECT);
 	
 	// パッドのAボタンが押下された場合...
 	if (Input::IsPadButtonDown(XINPUT_GAMEPAD_A))

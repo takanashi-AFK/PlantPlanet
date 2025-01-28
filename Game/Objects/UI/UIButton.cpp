@@ -46,6 +46,7 @@ void UIButton::Update()
 		SetShader(Direct3D::SHADER_BUTTON_NOTSELECT);
 		if (IsMouseOver(mousePos) || (panel->GetSelectingButton() != nullptr && panel->GetSelectingButton() == this)) {
 			imageHandle_ = selectImageHandle_;
+			
 		}
 		else {
 			imageHandle_ = defaultImageHandle_;

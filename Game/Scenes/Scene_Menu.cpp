@@ -231,22 +231,19 @@ void Scene_Menu::Index()
 		panel->SetButtonArrayIndex(0, 0);
 	}
 
-	/*if (Input::IsMouseButtonDown(0)) {
-		panel->ResetSelectedButton();
-	}*/
-
 	for (auto item : plantFrameButtonList) {
 		if (((UIButton*)item)->GetIsMouseOverThisButton()) {
 			panel->ResetSelectedButton();
 			int x, y;
 			item->GetArrayPlace(&x,&y);
 			panel->SetButtonArrayIndex(x, y);
-
 		}
 	}
 
-	for (auto plantButton : plantFrameButtonList) {
-		if (ConfirmButton(plantButton)) {
+	vector<UIObject*>list(plantFrameButtonList.begin(), plantFrameButtonList.end());
+	UIButton* plantButton = UIButton::GetTopSelectingUI(list);
+
+		if (plantButton != nullptr && ConfirmButton(plantButton)) {
 			bool havePlantFlag = false;
 			std::string buttonName = ((UIButton*)plantButton)->GetObjectName();
 
@@ -273,7 +270,7 @@ void Scene_Menu::Index()
 							descriptionImage->SetImage(plants.second.descriptionImageFilePath_Complete_);
 							descriptionImage->SetVisible(true);
 						}
-							
+
 						else if (havePlantFlag == false) {
 							descriptionImage->SetImage(plants.second.descriptionImageFilePath_InComplete_);
 							descriptionImage->SetVisible(true);
@@ -320,7 +317,7 @@ void Scene_Menu::Index()
 			//		break;
 			//	}
 			//}
-		}
+		
 	}
 
 	//// ê‹ÇËï‘Ç∑èàóù Ç§Ç‹Ç≠Ç¢Ç©Ç»Ç…
