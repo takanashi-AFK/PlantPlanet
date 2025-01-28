@@ -11,7 +11,7 @@ using namespace FileManager;
 
 UIButton::UIButton(string _name, UIObject* parent , int _layerNum)
 	: UIObject(_name, UIType::UI_BUTTON, parent, _layerNum), imageHandle_(-1), 
-	imageFilePath_(), arrayPlaceX_(1), arrayPlaceY_(1),isSetShader_(false),shaderType_(Direct3D::SHADER_BUTTON_NOTSELECT)
+	imageFilePath_(), arrayPlaceX_(1), arrayPlaceY_(1),isSetShader_(false),shaderType_(Direct3D::SHADER_BUTTON_NOTSELECT),isSelectable_(true)
 {
 }
 
@@ -86,6 +86,7 @@ void UIButton::Save(json& saveObj)
 	saveObj["selectImageFilePath_"] = selectImageFilePath_;
 	saveObj["ArrayPlace_X"] = arrayPlaceX_;
 	saveObj["ArrayPlace_Y"] = arrayPlaceY_;
+	saveObj["IsSelectable"] = isSelectable_;
 }
 
 void UIButton::Load(json& loadObj)
@@ -110,6 +111,7 @@ void UIButton::Load(json& loadObj)
 	}
 	if (loadObj.contains("ArrayPlace_X")) arrayPlaceX_ = loadObj["ArrayPlace_X"].get<int>();
 	if (loadObj.contains("ArrayPlace_Y")) arrayPlaceY_ = loadObj["ArrayPlace_Y"].get<int>();
+	if(loadObj.contains("IsSelectable")) isSelectable_ = loadObj["IsSelectable"].get<bool>();
 }
 
 void UIButton::DrawData()
@@ -280,6 +282,8 @@ void UIButton::DrawData()
 		ConvertToImageCoordinates(mousePos);
 		if (imageHandle_ >= 0)ImGui::Text("IsMouseOver: %s", IsMouseOver(mousePos) ? "true" : "false");
 
+		ImGui::Checkbox("IsSelectable", &isSelectable_);
+
 		ImGui::TreePop();
 	}
 
@@ -319,6 +323,7 @@ UIButton* UIButton::GetTopSelectingUI(vector<UIObject*> list)
 		static_cast<UIButton*>(button)->IsMouseOver(mousePos) && depth < button->GetLayerNumber() && button->IsVisible() ?
             topButton = button, depth = button->GetLayerNumber() : NULL;
 
+		if(button)
         static_cast<UIButton*>(button)->SetShader(Direct3D::SHADER_TYPE::SHADER_BUTTON_NOTSELECT);
     }
 
@@ -423,7 +428,8 @@ bool UIButton::IsMouseOver(XMFLOAT2 _mousePosition)
 	float right = center.x + (imageHelfWidth * 2.f * scale.x);      // 画像の中心から右に画像の幅の半分の距離
 	
 	// 判定範囲内にマウスカーソルが入っているかどうかを返す
-	return (_mousePosition.x >= left && _mousePosition.x <= right && _mousePosition.y >= top && _mousePosition.y <= bottom);
+	return (_mousePosition.x >= left && _mousePosition.x <= right && _mousePosition.y >= top && _mousePosition.y <= bottom) 
+		&& isSelectable_;
 }
 
 void UIButton::ConvertToImageCoordinates(XMFLOAT2& _position)

@@ -19,6 +19,7 @@ private:
 	int arrayPlaceY_;
 	bool isSetShader_;
 	bool isChangeImage_;
+	bool isSelectable_;
 
 public:
 	/// <summary> コンストラクタ </summary>
@@ -53,7 +54,7 @@ setter :*/
 	void SetImage(string _imageFilePath);
 	void SetShader(Direct3D::SHADER_TYPE type);
 	void SetArrayPlace(int x, int y);
-
+	void SetSelctable(bool flag) { isSelectable_ = flag; };
 /*
 getter */
 
@@ -68,6 +69,8 @@ getter */
 
 	// このボタンにマウスが乗っているか
 	bool GetIsMouseOverThisButton();
+
+	bool IsSelectable() const { return isSelectable_; };
 /*
 setter :*/
 	/// <summary> 画像ファイルパスを設定 </summary>
