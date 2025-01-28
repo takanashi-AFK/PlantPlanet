@@ -155,12 +155,16 @@ void Scene_Title::HandleUIInput(UIPanel* _uiPanel, bool& _isFirstSelectButton)
 	if (selectingButton != nullptr && selectingButton->OnClick())
 		ProcessButtonAction(_uiPanel, selectingButton->GetObjectName(), uiInputString->GetInputString());
 	
-	// パッドのAボタンが押下された場合... ( レイヤーに関係なく )
 	selectingButton = _uiPanel->GetSelectingButton();
-	if (selectingButton == nullptr || !Input::IsPadConnected(0)) return;
+	if (selectingButton == nullptr || !Input::IsPadConnected(0))
+	{
+		_uiPanel->SetSelectingButton(nullptr);
+		return;
+	}
 	
 	// ボタンのシェーダーを変更
-	// selectingButton->SetShader(Direct3D::SHADER_BUTTON_SELECT);
+	
+	selectingButton->SelectShader();
 	
 	// パッドのAボタンが押下された場合...
 	if (Input::IsPadButtonDown(XINPUT_GAMEPAD_A))

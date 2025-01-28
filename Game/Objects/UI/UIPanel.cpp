@@ -169,6 +169,11 @@ bool UIPanel::SetButtonArrayIndex(int x, int y)
 	return false;
 }
 
+void UIPanel::SetSelectingButton(UIButton* btn)
+{
+	selectingButton_ = btn;
+}
+
 void UIPanel::GetButtonIndex(int* x, int* y)
 {
 	*x = buttonIndexX_;

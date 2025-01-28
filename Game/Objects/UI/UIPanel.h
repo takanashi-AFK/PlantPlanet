@@ -97,6 +97,7 @@ public:
 
 	bool SetButtonArrayIndex(UIButton* b);
 	bool SetButtonArrayIndex(int x, int y);
+	void SetSelectingButton(UIButton* btn);
 	void GetButtonIndex(int* x, int* y);
 	UIButton* GetSelectingButton();
 
