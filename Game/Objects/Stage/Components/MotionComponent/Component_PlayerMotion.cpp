@@ -17,7 +17,7 @@ void Component_PlayerMotion::Initialize()
     // モデルのハンドルリストにモデルを追加
     modelHandleList_[PLAYER_STATE_WALK] = MotionData(PLAYER_STATE_WALK_FBX, 0, 40, 1,true);
     modelHandleList_[PLAYER_STATE_SHOOT] = MotionData(PLAYER_STATE_SHOOT_FBX, 0, shotRecoilFrame_, 1,false);
-    modelHandleList_[PLAYER_STATE_IDLE] = MotionData(PLAYER_STATE_IDLE_FBX, 0, 200, 1,true);
+    modelHandleList_[PLAYER_STATE_IDLE] = MotionData(PLAYER_STATE_IDLE_FBX, 0, 150, 1,true);
     modelHandleList_[PLAYER_STATE_DODGE] = MotionData(PLAYER_STATE_DODGE_FBX, 0, 60, 1,false);
     modelHandleList_[PLAYER_STATE_DEAD] = MotionData(PLAYER_STATE_DEAD_FBX, 0, 182, 1,false);
     modelHandleList_[PLAYER_STATE_SHOOT_WALK_LEFT] = MotionData(PLAYER_STATE_SHOOT_WALK_LEFT_FBX, 0, shotWalkFrame_, 1, true);
