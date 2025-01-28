@@ -18,27 +18,16 @@ class Component_BossBehavior;
 class Scene_Play:public GameObject
 {
 private:
-	Stage* pStage_;			// ステージ
-	CountDown* countDown_;	// カウントダウン
-	TPSCamera* tpsCamera_;	// TPSカメラ
+	Stage* pStage_;									// ステージ
+	CountDown* countDown_;							// カウントダウン
+	TPSCamera* tpsCamera_;							// TPSカメラ
+	std::chrono::system_clock::time_point start_;	// ゲーム開始時間
 
-	std::chrono::system_clock::time_point start_;
-
-	bool isGameStart_ :1;		// ゲーム開始フラグ
-	bool fixedCursorPos_ :1;	// カーソル固定化
-	bool cursorVisible_ :1;		// カーソル表示
-	bool isBossSpawn_:1;
-	bool isDebugDataEditWindowOpen_:1;
-	bool isShowInventoryFirstTime_:1;
- 	bool isOpenInventoryUI_;		// インベントリUIを開いているかのフラグ
-
-	enum PlaySceneState {
-		PlaySceneState_None = 0,
-		PlaySceneState_Play,
-		PlaySceneState_Inventory,
-		PlaySceneState_Max
-	}currentState_;
-
+	bool isGameStart_ :1;				// ゲーム開始フラグ
+	bool fixedCursorPos_ :1;			// カーソル固定化
+	bool cursorVisible_ :1;				// カーソル表示
+	bool isShowInventoryFirstTime_:1;	// インベントリを初めて表示するかのフラグ
+ 	bool isOpenInventoryUI_ :1;			// インベントリUIを開いているかのフラグ
 
 public:
 	/// <summary> コンストラクタ </summary>

@@ -89,11 +89,12 @@ void Scene_Play::Update()
 	}
 
 	// debug
-	static bool isDebugMode = false;
+	/*static bool isDebugMode = false;
 	if (Input::IsKeyDown(DIK_0))isDebugMode = !isDebugMode;
-	if (isDebugMode)DrawDebugDataEditWindow();
+	if (isDebugMode)DrawDebugDataEditWindow();*/
 	// debug
 }
+
 void Scene_Play::Draw()
 {
 }
