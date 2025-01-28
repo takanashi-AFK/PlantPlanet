@@ -17,7 +17,7 @@ private:
 
 	int arrayPlaceX_;
 	int arrayPlaceY_;
-	bool isSetShader_;
+	bool isAutoShader_;
 	bool isChangeImage_;
 
 public:
@@ -53,7 +53,7 @@ setter :*/
 	void SetImage(string _imageFilePath);
 	void SetShader(Direct3D::SHADER_TYPE type);
 	void SetArrayPlace(int x, int y);
-
+	void SetAutoShader(bool flag) { isAutoShader_ = flag; };
 /*
 getter */
 
@@ -82,6 +82,8 @@ predicate :*/
 	/// <summary> マウスがボタンの上にあるか </summary>
 	bool IsMouseOver(XMFLOAT2 _position);
 
+	void Unselect();
+	void Select();
 private:
 	/// <summary> 画像座標を画面座標に変換 </summary>
 	void ConvertToImageCoordinates(XMFLOAT2& _position);

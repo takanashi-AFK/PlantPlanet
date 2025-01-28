@@ -11,7 +11,7 @@ using namespace FileManager;
 
 UIButton::UIButton(string _name, UIObject* parent , int _layerNum)
 	: UIObject(_name, UIType::UI_BUTTON, parent, _layerNum), imageHandle_(-1), 
-	imageFilePath_(), arrayPlaceX_(1), arrayPlaceY_(1),isSetShader_(false),shaderType_(Direct3D::SHADER_BUTTON_NOTSELECT)
+	imageFilePath_(), arrayPlaceX_(1), arrayPlaceY_(1),isAutoShader_(true),shaderType_(Direct3D::SHADER_BUTTON_NOTSELECT)
 {
 }
 
@@ -29,11 +29,7 @@ void UIButton::Update()
 {
 	if (imageHandle_ < 0)return;
 
-	if (isSetShader_)
-	{
-		isSetShader_ = false;
-		return;
-	}
+	if (!isAutoShader_)return;
 
 	static UIPanel* panel = UIPanel::GetInstance();
 	// マウスの座標を取得
@@ -307,6 +303,20 @@ void UIButton::SetArrayPlace(int x, int y)
 	arrayPlaceY_ = y;
 }
 
+void UIButton::Unselect()
+{
+	if (isChangeImage_)imageHandle_ = defaultImageHandle_;
+
+	else SetShader(Direct3D::SHADER_TYPE::SHADER_BUTTON_NOTSELECT);
+}
+
+void UIButton::Select()
+{
+	if (isChangeImage_)imageHandle_ = selectImageHandle_;
+
+	else SetShader(Direct3D::SHADER_TYPE::SHADER_BUTTON_SELECT);
+}
+
 UIButton* UIButton::GetTopSelectingUI(vector<UIObject*> list)
 {
     UIObject* topButton = nullptr;
@@ -339,7 +349,6 @@ void UIButton::SetShader(Direct3D::SHADER_TYPE type)
 {
 	shaderType_ = type;
 
-	isSetShader_ = true;
 }
 
 Direct3D::SHADER_TYPE UIButton::GetShader() const

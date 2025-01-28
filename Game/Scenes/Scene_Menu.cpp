@@ -243,18 +243,27 @@ void Scene_Menu::Index()
 	vector<UIObject*>list(plantFrameButtonList.begin(), plantFrameButtonList.end());
 	UIButton* plantButton = UIButton::GetTopSelectingUI(list);
 
-		if (plantButton != nullptr && ConfirmButton(plantButton)) {
-			bool havePlantFlag = false;
-			std::string buttonName = ((UIButton*)plantButton)->GetObjectName();
+	for (auto& btn : plantFrameButtonList) {
+		btn->SetAutoShader(false);
+		btn->Unselect();
+	}
 
-			std::string idString = buttonName.substr(imageNameHead.size());
+		if (plantButton != nullptr){
 
-			int id = std::stoi(idString);
+			plantButton->Select();
 
-			if (g_playerPlantData.empty())
-				havePlantFlag = false;
-				
-				for(auto havePlant : g_playerPlantData){
+			if (ConfirmButton(plantButton)) {
+				bool havePlantFlag = false;
+				std::string buttonName = ((UIButton*)plantButton)->GetObjectName();
+
+				std::string idString = buttonName.substr(imageNameHead.size());
+
+				int id = std::stoi(idString);
+
+				if (g_playerPlantData.empty())
+					havePlantFlag = false;
+
+				for (auto havePlant : g_playerPlantData) {
 					if (havePlant.id_ == id) {
 						havePlantFlag = true;
 						break;
@@ -277,47 +286,47 @@ void Scene_Menu::Index()
 						}
 					}
 				}
-				
-			//
 
-			//if (plant.second.id_ == id) {
+				//
 
-			//	std::string imagePath = plant.second.descriptionImageFilePath_InComplete_;
-			//	imagePath.erase(0, imagePath.find_first_not_of(' ')); // 先頭のスペースを削除
-			//	imagePath.erase(imagePath.find_last_not_of(' ') + 1); // 末尾のスペースを削除
+				//if (plant.second.id_ == id) {
 
-			//	descriptionImage->SetImage(imagePath.c_str());
-			//	descriptionImage->SetVisible(true);
-			//	break;
+				//	std::string imagePath = plant.second.descriptionImageFilePath_InComplete_;
+				//	imagePath.erase(0, imagePath.find_first_not_of(' ')); // 先頭のスペースを削除
+				//	imagePath.erase(imagePath.find_last_not_of(' ') + 1); // 末尾のスペースを削除
 
-			//}
-			//// 対応するPlantDataがあるか確認
-			//for (auto [key, plantData] : plantDataMap_) {
-			//	// その植物を持っていたら完璧な説明を表示
-			//	if (plantButton->GetObjectName() == imageNameHead + std::to_string(plantData.id_)) {
-			//		havePlantID = plantData.id_;
+				//	descriptionImage->SetImage(imagePath.c_str());
+				//	descriptionImage->SetVisible(true);
+				//	break;
 
-			//		std::string buttonName = ((UIButton*)plantButton)->GetObjectName();
+				//}
+				//// 対応するPlantDataがあるか確認
+				//for (auto [key, plantData] : plantDataMap_) {
+				//	// その植物を持っていたら完璧な説明を表示
+				//	if (plantButton->GetObjectName() == imageNameHead + std::to_string(plantData.id_)) {
+				//		havePlantID = plantData.id_;
 
-			//		std::string idString = buttonName.substr(imageNameHead.size());
+				//		std::string buttonName = ((UIButton*)plantButton)->GetObjectName();
 
-			//		int id = std::stoi(idString);
+				//		std::string idString = buttonName.substr(imageNameHead.size());
 
-			//		for (auto plant : g_playerPlantData) {
-			//			if (plant.id_ == id) {
-			//				std::string imagePath = plant.descriptionImageFilePath_Complete_;
-			//				imagePath.erase(0, imagePath.find_first_not_of(' ')); // 先頭のスペースを削除
-			//				imagePath.erase(imagePath.find_last_not_of(' ') + 1); // 末尾のスペースを削除
+				//		int id = std::stoi(idString);
 
-			//				descriptionImage->SetImage(imagePath.c_str());
-			//				descriptionImage->SetVisible(true);
-			//				break;
-			//			}
-			//		}
-			//		break;
-			//	}
-			//}
-		
+				//		for (auto plant : g_playerPlantData) {
+				//			if (plant.id_ == id) {
+				//				std::string imagePath = plant.descriptionImageFilePath_Complete_;
+				//				imagePath.erase(0, imagePath.find_first_not_of(' ')); // 先頭のスペースを削除
+				//				imagePath.erase(imagePath.find_last_not_of(' ') + 1); // 末尾のスペースを削除
+
+				//				descriptionImage->SetImage(imagePath.c_str());
+				//				descriptionImage->SetVisible(true);
+				//				break;
+				//			}
+				//		}
+				//		break;
+				//	}
+				//}
+			}
 	}
 
 	//// 折り返す処理 うまくいかなに
