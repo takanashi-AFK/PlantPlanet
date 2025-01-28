@@ -245,12 +245,12 @@ void Scene_Menu::Index()
 
 	for (auto& btn : plantFrameButtonList) {
 		btn->SetAutoShader(false);
-		btn->Unselect();
+		btn->UnselectShader();
 	}
 
 		if (plantButton != nullptr){
 
-			plantButton->Select();
+			plantButton->SelectShader();
 
 			if (ConfirmButton(plantButton)) {
 				bool havePlantFlag = false;

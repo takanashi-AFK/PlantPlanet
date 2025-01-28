@@ -303,14 +303,14 @@ void UIButton::SetArrayPlace(int x, int y)
 	arrayPlaceY_ = y;
 }
 
-void UIButton::Unselect()
+void UIButton::UnselectShader()
 {
 	if (isChangeImage_)imageHandle_ = defaultImageHandle_;
 
 	else SetShader(Direct3D::SHADER_TYPE::SHADER_BUTTON_NOTSELECT);
 }
 
-void UIButton::Select()
+void UIButton::SelectShader()
 {
 	if (isChangeImage_)imageHandle_ = selectImageHandle_;
 

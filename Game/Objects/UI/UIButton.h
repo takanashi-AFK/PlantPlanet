@@ -82,8 +82,8 @@ predicate :*/
 	/// <summary> マウスがボタンの上にあるか </summary>
 	bool IsMouseOver(XMFLOAT2 _position);
 
-	void Unselect();
-	void Select();
+	void UnselectShader();
+	void SelectShader();
 private:
 	/// <summary> 画像座標を画面座標に変換 </summary>
 	void ConvertToImageCoordinates(XMFLOAT2& _position);
