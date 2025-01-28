@@ -231,33 +231,39 @@ void Scene_Menu::Index()
 		panel->SetButtonArrayIndex(0, 0);
 	}
 
-	/*if (Input::IsMouseButtonDown(0)) {
-		panel->ResetSelectedButton();
-	}*/
-
 	for (auto item : plantFrameButtonList) {
 		if (((UIButton*)item)->GetIsMouseOverThisButton()) {
 			panel->ResetSelectedButton();
 			int x, y;
 			item->GetArrayPlace(&x,&y);
 			panel->SetButtonArrayIndex(x, y);
-
 		}
 	}
 
-	for (auto plantButton : plantFrameButtonList) {
-		if (ConfirmButton(plantButton)) {
-			bool havePlantFlag = false;
-			std::string buttonName = ((UIButton*)plantButton)->GetObjectName();
+	vector<UIObject*>list(plantFrameButtonList.begin(), plantFrameButtonList.end());
+	UIButton* plantButton = UIButton::GetTopSelectingUI(list);
 
-			std::string idString = buttonName.substr(imageNameHead.size());
+	for (auto& btn : plantFrameButtonList) {
+		btn->SetAutoShader(false);
+		btn->UnselectShader();
+	}
 
-			int id = std::stoi(idString);
+		if (plantButton != nullptr){
 
-			if (g_playerPlantData.empty())
-				havePlantFlag = false;
-				
-				for(auto havePlant : g_playerPlantData){
+			plantButton->SelectShader();
+
+			if (ConfirmButton(plantButton)) {
+				bool havePlantFlag = false;
+				std::string buttonName = ((UIButton*)plantButton)->GetObjectName();
+
+				std::string idString = buttonName.substr(imageNameHead.size());
+
+				int id = std::stoi(idString);
+
+				if (g_playerPlantData.empty())
+					havePlantFlag = false;
+
+				for (auto havePlant : g_playerPlantData) {
 					if (havePlant.id_ == id) {
 						havePlantFlag = true;
 						break;
@@ -273,54 +279,54 @@ void Scene_Menu::Index()
 							descriptionImage->SetImage(plants.second.descriptionImageFilePath_Complete_);
 							descriptionImage->SetVisible(true);
 						}
-							
+
 						else if (havePlantFlag == false) {
 							descriptionImage->SetImage(plants.second.descriptionImageFilePath_InComplete_);
 							descriptionImage->SetVisible(true);
 						}
 					}
 				}
-				
-			//
 
-			//if (plant.second.id_ == id) {
+				//
 
-			//	std::string imagePath = plant.second.descriptionImageFilePath_InComplete_;
-			//	imagePath.erase(0, imagePath.find_first_not_of(' ')); // 先頭のスペースを削除
-			//	imagePath.erase(imagePath.find_last_not_of(' ') + 1); // 末尾のスペースを削除
+				//if (plant.second.id_ == id) {
 
-			//	descriptionImage->SetImage(imagePath.c_str());
-			//	descriptionImage->SetVisible(true);
-			//	break;
+				//	std::string imagePath = plant.second.descriptionImageFilePath_InComplete_;
+				//	imagePath.erase(0, imagePath.find_first_not_of(' ')); // 先頭のスペースを削除
+				//	imagePath.erase(imagePath.find_last_not_of(' ') + 1); // 末尾のスペースを削除
 
-			//}
-			//// 対応するPlantDataがあるか確認
-			//for (auto [key, plantData] : plantDataMap_) {
-			//	// その植物を持っていたら完璧な説明を表示
-			//	if (plantButton->GetObjectName() == imageNameHead + std::to_string(plantData.id_)) {
-			//		havePlantID = plantData.id_;
+				//	descriptionImage->SetImage(imagePath.c_str());
+				//	descriptionImage->SetVisible(true);
+				//	break;
 
-			//		std::string buttonName = ((UIButton*)plantButton)->GetObjectName();
+				//}
+				//// 対応するPlantDataがあるか確認
+				//for (auto [key, plantData] : plantDataMap_) {
+				//	// その植物を持っていたら完璧な説明を表示
+				//	if (plantButton->GetObjectName() == imageNameHead + std::to_string(plantData.id_)) {
+				//		havePlantID = plantData.id_;
 
-			//		std::string idString = buttonName.substr(imageNameHead.size());
+				//		std::string buttonName = ((UIButton*)plantButton)->GetObjectName();
 
-			//		int id = std::stoi(idString);
+				//		std::string idString = buttonName.substr(imageNameHead.size());
 
-			//		for (auto plant : g_playerPlantData) {
-			//			if (plant.id_ == id) {
-			//				std::string imagePath = plant.descriptionImageFilePath_Complete_;
-			//				imagePath.erase(0, imagePath.find_first_not_of(' ')); // 先頭のスペースを削除
-			//				imagePath.erase(imagePath.find_last_not_of(' ') + 1); // 末尾のスペースを削除
+				//		int id = std::stoi(idString);
 
-			//				descriptionImage->SetImage(imagePath.c_str());
-			//				descriptionImage->SetVisible(true);
-			//				break;
-			//			}
-			//		}
-			//		break;
-			//	}
-			//}
-		}
+				//		for (auto plant : g_playerPlantData) {
+				//			if (plant.id_ == id) {
+				//				std::string imagePath = plant.descriptionImageFilePath_Complete_;
+				//				imagePath.erase(0, imagePath.find_first_not_of(' ')); // 先頭のスペースを削除
+				//				imagePath.erase(imagePath.find_last_not_of(' ') + 1); // 末尾のスペースを削除
+
+				//				descriptionImage->SetImage(imagePath.c_str());
+				//				descriptionImage->SetVisible(true);
+				//				break;
+				//			}
+				//		}
+				//		break;
+				//	}
+				//}
+			}
 	}
 
 	//// 折り返す処理 うまくいかなに
