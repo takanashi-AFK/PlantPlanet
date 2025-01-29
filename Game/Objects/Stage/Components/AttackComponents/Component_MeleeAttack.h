@@ -26,7 +26,7 @@ private:
 	string easingType_;			// イージングの種類
 	float rate_;				// イージングの割合
 
-	bool isFirstMove_;	
+	bool isFirstMove_;
 	XMFLOAT3 startPosition_;
 	Component_FanRangeDetector* attackRange_;
 

@@ -117,6 +117,7 @@ void Component_PlayerBehavior::Initialize()
 	// effekseer: :Effectの読み込み
 	EFFEKSEERLIB::gEfk->AddEffect("dodge", "Effects/Lazer01.efk");
 	EFFEKSEERLIB::gEfk->AddEffect("impact", "Effects/Attack_Impact.efk");
+	EFFEKSEERLIB::gEfk->AddEffect("get", "Effects/twinkle.efk");
 
 	// 子コンポーネントの追加
 	if (FindChildComponent("InputMove") == false)AddChildComponent(CreateComponent("InputMove", WASDInputMove, holder_, this));
@@ -844,6 +845,14 @@ void Component_PlayerBehavior::Interact()
 
 				interactTimeCircle->SetVisible(false);
 				interactTimeCircleFrame->SetVisible(false);
+				EFFEKSEERLIB::EFKTransform t;
+
+				DirectX::XMStoreFloat4x4(&(t.matrix), holder_->GetWorldMatrix());
+				t.isLoop = false;
+				t.maxFrame = EFFECT_FRAME;
+				t.speed = EFFECT_SPEED;
+				effectModelTransform = EFFEKSEERLIB::gEfk->Play("get", t);
+
 			}
 			else if (nearestObject != nullptr && nearestObject->GetObjectType() == StageObject::TYPE_WALL) {
 				// 壁オブジェクトを削除

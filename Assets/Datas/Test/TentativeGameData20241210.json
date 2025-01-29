@@ -92,8 +92,8 @@
           },
           "ShootAttack": {
             "EffectData": {
-              "name": "Salamander14",
-              "path": "Effects/Salamander14.efk",
+              "name": "shoot",
+              "path": "Effects/shoot.efk",
               "scale": [
                 0.20000000298023224,
                 0.20000000298023224,
@@ -101,7 +101,7 @@
               ]
             },
             "bulletColliderRadius_": 0.20000000298023224,
-            "bulletLifeTime_": 1.0,
+            "bulletLifeTime_": 1.5,
             "name_": "ShootAttack",
             "power_": 10,
             "shootingDirection_": [

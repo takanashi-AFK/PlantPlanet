@@ -23,7 +23,7 @@ void Bullet::Initialize()
 
 	// effekseer: :Effectの読み込み
 	EFFEKSEERLIB::gEfk->AddEffect(data_.name, data_.path);
-	EFFEKSEERLIB::gEfk->AddEffect("Hit", "Effects/Salamander12.efk");
+	EFFEKSEERLIB::gEfk->AddEffect("hit", "Effects/Attack_Impact.efk");
 
 	// effekseer: :Effectの再生情報の設定
 	EFFEKSEERLIB::EFKTransform effectTransform;
@@ -75,6 +75,14 @@ void Bullet::OnCollision(GameObject* _target, Collider* _collider)
 	// ダメージ処理
 	for (auto hm : list) {
 
+		// エフェクト再生
+		EFFEKSEERLIB::EFKTransform t;
+		DirectX::XMStoreFloat4x4(&(t.matrix), target->GetWorldMatrix());
+		t.isLoop = false;
+		t.maxFrame = 60;
+		t.speed = 1.0f;
+
+		effectModelTransform_ = EFFEKSEERLIB::gEfk->Play("hit", t);
 		((Component_HealthGauge*)hm)->TakeDamage(power_);
 		this->KillMe();
 	}
