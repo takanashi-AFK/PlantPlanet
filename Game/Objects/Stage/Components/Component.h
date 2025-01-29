@@ -47,6 +47,7 @@ enum ComponentType
 	ReturnGate,
 	RectangleDetector,
 	BreakableWall,
+	RunningawayEnemy,
 	// コンポーネント追加時に識別番号を追加
 	Max
 	
