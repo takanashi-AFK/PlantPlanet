@@ -132,12 +132,15 @@ void Component_RunnigAwayEnemyBehavior::DrawData()
 
 	int index = 0;
 
-	//ImGui::PushItemWidth(200);
+	ImGui::PushItemWidth(200);
 	for (auto itr = points_.begin(); itr != points_.end();) {
 
-		if (ImGui::Button("Delete"))
+		auto eraseButton = std::format("Erase {: 2}", index);
+		if (ImGui::Button(eraseButton.c_str()))
 		{
 			itr = points_.erase(itr);
+
+			destinationPointIterator_ = points_.end();
 			continue;
 		}
 
@@ -149,7 +152,7 @@ void Component_RunnigAwayEnemyBehavior::DrawData()
 		++index;
 		++itr;
 	}
-	//ImGui::PopItemWidth();
+	ImGui::PopItemWidth();
 
 }
 
