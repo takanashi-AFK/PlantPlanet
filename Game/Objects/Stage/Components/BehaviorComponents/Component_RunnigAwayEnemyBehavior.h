@@ -42,6 +42,8 @@ private:
 	//HP‚ª0ˆÈ‰º‚©‚Ç‚¤‚©
 	bool IsDead();
 
+	void ExchangeRotate(XMFLOAT3 vec);
+
 private:
 	std::list<XMFLOAT3> points_;
 	std::list<XMFLOAT3>::iterator destinationPointIterator_;

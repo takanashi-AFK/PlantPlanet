@@ -132,7 +132,7 @@ void Component_RunnigAwayEnemyBehavior::DrawData()
 
 	int index = 0;
 
-	ImGui::PushItemWidth(200);
+	//ImGui::PushItemWidth(200);
 	for (auto itr = points_.begin(); itr != points_.end();) {
 
 		if (ImGui::Button("Delete"))
@@ -149,7 +149,7 @@ void Component_RunnigAwayEnemyBehavior::DrawData()
 		++index;
 		++itr;
 	}
-	ImGui::PopItemWidth();
+	//ImGui::PopItemWidth();
 
 }
 
@@ -171,6 +171,8 @@ void Component_RunnigAwayEnemyBehavior::RunawayProcess()
 	//目的地が移動量以下ならそのまま目的地にピッタリ同じ位置にする
 	if (length <= moveAmount_)holder_->SetPosition(*destinationPointIterator_);
 	else MoveTo(vec,moveAmount_);
+
+	ExchangeRotate(vec);
 
 	CheckDestination();
 }
@@ -262,4 +264,9 @@ bool Component_RunnigAwayEnemyBehavior::IsDead()
 	if (hp->GetNow() <= 0)return true;
 
 	return false;
+}
+
+void Component_RunnigAwayEnemyBehavior::ExchangeRotate(XMFLOAT3 vec)
+{
+	holder_->SetRotateY(XMConvertToDegrees(std::atan2f(vec.x, vec.z)));
 }
