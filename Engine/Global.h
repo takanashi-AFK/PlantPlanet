@@ -23,7 +23,8 @@ XMFLOAT3 operator+(XMFLOAT3 a, const XMFLOAT3 b);
 XMFLOAT3 operator-(XMFLOAT3 a, const XMFLOAT3 b);
 XMFLOAT3 operator*(XMFLOAT3 a, const float b);
 XMFLOAT3 operator*(XMFLOAT3 a, const XMFLOAT3 b);
-
+XMFLOAT3 operator/(XMFLOAT3 a, const float b);
+bool operator==(XMFLOAT3 a, const XMFLOAT3 b);
 // ＝＝ 定数 ＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝ //
 
 constexpr float FPS = 60.0f;	// フレームレート

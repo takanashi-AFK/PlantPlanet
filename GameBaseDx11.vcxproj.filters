@@ -322,8 +322,8 @@
     <ClCompile Include="Game\Scenes\Scene_Menu.cpp" />
     <ClCompile Include="Game\Objects\Stage\Components\BreakableWallComponents\Component_BreakableWall.cpp" />
     <ClCompile Include="Game\Otheres\UserManager.cpp" />
-    <ClCompile Include="Game\Objects\Stage\ReturnGate.cpp" />
     <ClCompile Include="Game\Objects\Stage\Components\TeleporterComponent\Component_ReturnGate.cpp" />
+    <ClCompile Include="Game\Objects\Stage\Components\BehaviorComponents\Component_RunnigAwayEnemyBehavior.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Collider\BoxCollider.h">
@@ -573,8 +573,8 @@
     <ClInclude Include="Game\Scenes\Scene_Menu.h" />
     <ClInclude Include="Game\Objects\Stage\Components\BreakableWallComponents\Component_BreakableWall.h" />
     <ClInclude Include="Game\Otheres\UserManager.h" />
-    <ClInclude Include="Game\Objects\Stage\ReturnGate.h" />
     <ClInclude Include="Game\Objects\Stage\Components\TeleporterComponent\Component_ReturnGate.h" />
+    <ClInclude Include="Game\Objects\Stage\Components\BehaviorComponents\Component_RunnigAwayEnemyBehavior.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Assets\Shader\Simple2D.hlsl">
