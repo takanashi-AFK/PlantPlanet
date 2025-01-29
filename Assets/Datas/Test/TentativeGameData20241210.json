@@ -92,8 +92,8 @@
           },
           "ShootAttack": {
             "EffectData": {
-              "name": "A_Salamander4",
-              "path": "Effects/A_Salamander4.efk",
+              "name": "Salamander14",
+              "path": "Effects/Salamander14.efk",
               "scale": [
                 0.20000000298023224,
                 0.20000000298023224,
@@ -603,9 +603,9 @@
       0.0
     ],
     "scale_": [
-      0.05000000074505806,
-      0.05000000074505806,
-      0.05000000074505806
+      0.5000000074505806,
+      0.5000000074505806,
+      0.5000000074505806
     ],
     "shaderType_": 0
   },

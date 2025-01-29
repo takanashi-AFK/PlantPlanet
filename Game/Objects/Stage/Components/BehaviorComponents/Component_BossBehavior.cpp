@@ -1,24 +1,24 @@
 ﻿#include "Component_BossBehavior.h"
 
 // インクルード
-#include "../../StageObject.h"
-#include "../TimerComponent/Component_Timer.h"
-#include "../AttackComponents/Component_ShootAttack.h"
-#include "../DetectorComponents/Component_CircleRangeDetector.h"
-#include "../MoveComponents/Component_TackleMove.h"
-#include "../../../../../Engine/ImGui/imgui.h"
-#include "../../Stage.h"
 #include "../../../../../Engine/Global.h"
-#include <random>
+#include "../../../../../Engine/ImGui/imgui.h"
 #include "../../../UI/CountDown.h"
-#include "../GaugeComponents/Component_HealthGauge.h"
 #include "../../../UI/UIPanel.h"
 #include "../../../UI/UIProgressBar.h"
+#include "../../Stage.h"
+#include "../../StageObject.h"
+#include "../AttackComponents/Component_ShootAttack.h"
+#include "../DetectorComponents/Component_CircleRangeDetector.h"
+#include "../GaugeComponents/Component_HealthGauge.h"
+#include "../MoveComponents/Component_TackleMove.h"
+#include "../TimerComponent/Component_Timer.h"
+#include <random>
 
 #include "../../../../../Engine/ResourceManager/Model.h"
 
-#include "../../../../Constants.h"
 #include "../../../../../Engine/ResourceManager/Audio.h"
+#include "../../../../Constants.h"
 
 using namespace Constants;
 

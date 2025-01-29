@@ -17,6 +17,10 @@ namespace
 	const float MOVE_DISTANCE = 2.5f;
 	const float MOVE_RAY_OFFSET = 0.5f;
 	const float MOVE_DISTANCE_LIMIT = 0.7f;
+
+	const int EFFECT_FRAME = 60;
+	const float EFFECT_SPEED = 1.0f;
+
 }
 
 Component_MeleeAttack::Component_MeleeAttack(string _name, StageObject* _holder, Component* _parent)
@@ -36,7 +40,8 @@ void Component_MeleeAttack::Initialize()
 {
 
 	holder_->AddCollider(new BoxCollider(XMFLOAT3(0, 0, 0), XMFLOAT3(1, 1, 1)));
-	power_ = 20;
+	EFFEKSEERLIB::gEfk->AddEffect("slash", "Effects/Slash.efk");
+
 	if (FindChildComponent("Timer") == false) AddChildComponent(CreateComponent("Timer", Timer, holder_, this));
 	if (FindChildComponent("attackRange") == false)AddChildComponent(CreateComponent("attackRange", FanRangeDetector, holder_, this));
 	if (FindChildComponent("tackle") == false)AddChildComponent(CreateComponent("tackle", TackleMove, holder_, this));
@@ -165,6 +170,14 @@ void Component_MeleeAttack::Slash()
 {
 	// 全敵オブジェクトを取得
 	vector<StageObject*> enemyObjects; {
+
+		EFFEKSEERLIB::EFKTransform t;
+		DirectX::XMStoreFloat4x4(&(t.matrix), holder_->GetWorldMatrix());
+		t.isLoop = false;
+		t.maxFrame = EFFECT_FRAME;
+		t.speed = EFFECT_SPEED;
+		
+		effectModelTransform = EFFEKSEERLIB::gEfk->Play("slash", t);
 
 		// ステージ情報の取得
 		Stage* pStage = (Stage*)(holder_->FindObject("Stage"));

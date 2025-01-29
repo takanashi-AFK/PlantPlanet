@@ -23,7 +23,7 @@ void Bullet::Initialize()
 
 	// effekseer: :Effect‚Ì“Ç‚İ‚İ
 	EFFEKSEERLIB::gEfk->AddEffect(data_.name, data_.path);
-	EFFEKSEERLIB::gEfk->AddEffect("Hit", "Effects/Attack_Impact.efk");
+	EFFEKSEERLIB::gEfk->AddEffect("Hit", "Effects/Salamander12.efk");
 
 	// effekseer: :Effect‚ÌÄ¶î•ñ‚Ìİ’è
 	EFFEKSEERLIB::EFKTransform effectTransform;
