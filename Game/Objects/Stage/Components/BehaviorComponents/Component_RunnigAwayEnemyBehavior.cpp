@@ -12,7 +12,7 @@
 #include<algorithm>
 
 Component_RunnigAwayEnemyBehavior::Component_RunnigAwayEnemyBehavior(string _name, StageObject* _holder, Component* _parent)
-	:Component(_holder, _name, RunningawayEnemy, _parent), points_{}, isFlowerSpawned_(false), destinationPointIterator_{}
+	:Component(_holder, _name, RunningawayEnemy, _parent), points_{}, isFlowerSpawned_(false), destinationPointIterator_{},moveAmount_{}
 {
 	nowProcess_ = [this]() {RunawayProcess(); };
 }
@@ -58,7 +58,9 @@ void Component_RunnigAwayEnemyBehavior::Load(json& _loadObj)
 {
 	if (_loadObj.contains("MoveAmount")) moveAmount_ = _loadObj["MoveAmount"].get<float>();
 	if (_loadObj.contains("DropFlowerName"))	dropFlowerName_ = _loadObj["DropFlowerName"].get<string>();
+
 	int list_max = 0;
+	
 	if (!_loadObj.contains("Point_Num")) return;
 	list_max = _loadObj["Point_Num"].get<int>();
 
@@ -157,6 +159,7 @@ void Component_RunnigAwayEnemyBehavior::OnCollision(GameObject* _target, Collide
 
 void Component_RunnigAwayEnemyBehavior::RunawayProcess()
 {
+	//目的地が未設定なら処理を終える
 	if (destinationPointIterator_ == points_.end())
 	{
 		destinationPointIterator_ = points_.begin();
@@ -165,6 +168,7 @@ void Component_RunnigAwayEnemyBehavior::RunawayProcess()
 
 	auto [length, vec] = GetLengthAndVectorToDestination();
 
+	//目的地が移動量以下ならそのまま目的地にピッタリ同じ位置にする
 	if (length <= moveAmount_)holder_->SetPosition(*destinationPointIterator_);
 	else MoveTo(vec,moveAmount_);
 

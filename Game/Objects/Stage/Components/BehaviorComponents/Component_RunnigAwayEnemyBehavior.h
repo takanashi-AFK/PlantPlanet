@@ -24,13 +24,22 @@ public:
 
 private:
 
+	//逃げ回っているときの挙動
 	void RunawayProcess();
+
+	//死亡時の挙動
 	void DeadProcess();
 
+	//目的地と現在地が同じかどうか確認。おなじであれば次の目的地の設定
 	void CheckDestination();
+
+	//指定された向きと量だけ移動
 	void MoveTo(XMFLOAT3 vec,float amount);
+
+	//距離と方向を返す
 	std::tuple<float,XMFLOAT3> GetLengthAndVectorToDestination();
 
+	//HPが0以下かどうか
 	bool IsDead();
 
 private:
