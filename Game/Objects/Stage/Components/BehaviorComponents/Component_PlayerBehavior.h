@@ -107,6 +107,7 @@ private:
 
 	SaladEffectLogo historySaladEffect_;
 	UIImage* historySaladPlant_[NEED_PLANT_NUM];
+	UIImage* checkLogoBreakableWall_;
 
 	string plantFilePath_[NEED_PLANT_NUM];
 

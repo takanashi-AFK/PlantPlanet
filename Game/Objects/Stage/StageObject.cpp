@@ -408,9 +408,6 @@ void StageObject::DrawData()
 	// ＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝
 	if (ImGui::TreeNode("shade")) {
 		
-		// fix: 存在しないシェーダーを入力可能なため修正が必要
-		// fix: シェーダータイプがint型で表示されるため修正が必要
-
 		constexpr uint8_t shader3d_MAX = Direct3D::SHADER_TYPE::SHADER_MAX;
 
 		ImGui::InputInt("shaderType_", (int*)&shaderType_);

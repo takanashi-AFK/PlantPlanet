@@ -82,6 +82,8 @@ namespace UIInventory {
 		int x, y;
 		itemPanel_->GetButtonIndex(&x, &y);
 
+		itemPanel_->GetUIObject("CheckLogo-IsBreakableWall")->SetVisible(false);
+
 		{
 			if (Input::IsPadButtonDown(XINPUT_GAMEPAD_DPAD_LEFT)) {
 				// 最初の入力かつ、選択できるボタンがある場合
