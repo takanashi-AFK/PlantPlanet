@@ -102,7 +102,8 @@ Component_PlayerBehavior::Component_PlayerBehavior(string _name, StageObject* _h
 	timeCollectPlant(defaultTime_CollectPlant),
 	saladEffects_{},
 	isEatSaladEnd_(false),
-	isFirstOverMAXReserchPoint(true)
+	isFirstOverMAXReserchPoint(true),
+	checkLogoBreakableWall_{nullptr}
 {
 }
 
@@ -183,6 +184,8 @@ void Component_PlayerBehavior::Initialize()
 
 	}
 
+	checkLogoBreakableWall_ = static_cast<UIImage*>(UIPanel::GetInstance()->FindObject("CheckLogo-IsBreakableWall"));
+
 	auto* move = static_cast<Component_WASDInputMove*>(GetChildComponent("InputMove"));
 	move->SetSpeed(this->defaultSpeed_Walk);
 
@@ -207,7 +210,7 @@ void Component_PlayerBehavior::Initialize()
 
 void Component_PlayerBehavior::Update()
 {
-	// ResetSaladEffectLogo();
+	ResetSaladEffectLogo();
 	ApplyEffects();
 	DrawPopUp();
 
@@ -845,11 +848,12 @@ void Component_PlayerBehavior::Interact()
 				interactTimeCircle->SetVisible(false);
 				interactTimeCircleFrame->SetVisible(false);
 			}
-			else if (nearestObject != nullptr && nearestObject->GetObjectType() == StageObject::TYPE_WALL) {
+			else if (nearestObject != nullptr && nearestObject->GetObjectType() == StageObject::TYPE_WALL && isBreakableWall_) {
 				// 壁オブジェクトを削除
 				Stage* pStage = ((Stage*)holder_->FindObject("Stage"));
 				pStage->DeleteStageObject(nearestObject);
 				nearestObject->KillMe();
+				isBreakableWall_ = false;
 			}
 
 			// インタラクト状態を終了
@@ -985,6 +989,8 @@ void Component_PlayerBehavior::ApplyEffects()
 		
 	}
 	isRenewalPopUp_ = false;
+
+	if (checkLogoBreakableWall_)checkLogoBreakableWall_->SetVisible(isBreakableWall_);
 }
 
 void Component_PlayerBehavior::ResetSaladEffectLogo()
@@ -995,6 +1001,8 @@ void Component_PlayerBehavior::ResetSaladEffectLogo()
 		saladEffectLogo_.images_[i]->SetImage("Models/tentativeFlowers/BlankFlowerImage.png");
 		saladEffectLogo_.texts_[i]->SetText("");
 	}
+
+	if (checkLogoBreakableWall_)checkLogoBreakableWall_->SetVisible(false);
 }
 
 void Component_PlayerBehavior::DrawPopUp()
