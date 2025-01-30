@@ -201,9 +201,9 @@ namespace UIInventory {
 						break;
 					}
 				}
+				// 更新
+				InventoryDataSet();
 			}
-			// 更新
-			InventoryDataSet();
 		}
 
 		// レシピのボタンを押した場合 

@@ -1128,7 +1128,9 @@ bool Component_PlayerBehavior::IsDead()
 bool Component_PlayerBehavior::IsInteractable()
 {
 	PlantData plantData;
-	return (GetNearestPlant(plantData) != nullptr || GetNearestWall() != nullptr);
+	Component_ReturnGate* returnGate;
+
+	return (GetNearestPlant(plantData) != nullptr || GetNearestWall() != nullptr || IsAbleToReturn(returnGate));
 }
 
 XMVECTOR Component_PlayerBehavior::CalcShootDirection()
