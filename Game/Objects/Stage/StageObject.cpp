@@ -5,6 +5,7 @@
 #include "../../../Engine/ImGui/imgui.h"
 #include "../../../Engine/ResourceManager/Model.h"
 #include "Stage.h"
+#include<codecvt>
 
 namespace {
 	static bool isShowAddComponentWindow_ = false; // コンポーネント追加ウィンドウの表示フラグ
@@ -414,6 +415,10 @@ void StageObject::DrawData()
 
 		ImGui::InputInt("shaderType_", (int*)&shaderType_);
 		shaderType_ = shaderType_ < 0 ?static_cast<Direct3D::SHADER_TYPE>( Direct3D::SHADER_MAX-1) :static_cast<Direct3D::SHADER_TYPE>(shaderType_ % shader3d_MAX);
+		
+		auto shaderName = Direct3D::GetShaderName(shaderType_);
+				
+		ImGui::Text(string{ shaderName.begin(), shaderName.end()}.c_str());
 
 		ImGui::TreePop();
 	}

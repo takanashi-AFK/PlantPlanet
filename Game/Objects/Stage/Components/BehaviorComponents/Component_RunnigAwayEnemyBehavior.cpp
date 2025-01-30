@@ -116,8 +116,8 @@ void Component_RunnigAwayEnemyBehavior::DrawData()
 	static int insertIndex = 0;
 	int max = ((std::max)(0, static_cast<int>(points_.size() - 1)));
 
-	ImGui::PushItemWidth(20);
-	ImGui::DragInt("Index:", &insertIndex, 1, 0, max);
+	ImGui::PushItemWidth(80);
+	ImGui::InputInt(":Index", &insertIndex);
 	ImGui::PopItemWidth();
 
 	insertIndex = std::clamp(insertIndex, 0, max);
