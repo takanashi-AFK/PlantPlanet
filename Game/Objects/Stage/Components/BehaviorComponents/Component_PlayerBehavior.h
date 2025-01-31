@@ -10,6 +10,7 @@
 #include "../../../UI/UIImage.h"
 #include "../../../UI/UIText.h"
 #include "../TeleporterComponent/Component_ReturnGate.h"
+#include <functional>
 
 // 前方宣言
 class CountDown;
@@ -41,6 +42,7 @@ public :
 	static constexpr int defaultMax_HP = 100;
 	static constexpr int defaultPow_Range = 10.f;
 	static constexpr int defaultPow_Melee = 20.f;
+	static constexpr int NEED_PLANT_NUM = 3;
 
 private:
 	PlayerState nowState_, prevState_;	// 現在の状態、前の状態
@@ -85,8 +87,6 @@ private:
 
 	float timeCollectPlant;
 
-	static constexpr int NEED_PLANT_NUM = 3;
-
 	struct PopUpInfo
 	{
 		int time;
@@ -105,11 +105,27 @@ private:
 		UIImage* images_[NEED_PLANT_NUM];
 	}saladEffectLogo_;
 
+	UIImage* pickUpPlantImage_;
+	UIImage* pickUpPlantBackGround_;
+
 	SaladEffectLogo historySaladEffect_;
 	UIImage* historySaladPlant_[NEED_PLANT_NUM];
 	UIImage* checkLogoBreakableWall_;
 
 	string plantFilePath_[NEED_PLANT_NUM];
+
+	std::function<void(void)> easingPickUpPlantImage;
+/*Function for easingPickUpPlantImage */
+
+	void PUPlantPutImageScreenOut();
+	void PUPlantRiseImage();
+	void PUPlantPutImageTopEasing();
+	void PUPlantFallImage();
+
+	unsigned int pickUpPlantImageTime_;
+	const float PUPlantEasingRatio_ = NULL;
+	static constexpr float PUPlantTopRemainSec_ = 1.5f;
+/**/
 
 public:
 	/// <summary> コンストラクタ </summary>
@@ -159,6 +175,8 @@ public:
 	void SetMyPlants(vector<PlantData> _plants) { myPlants_.clear(); myPlants_ = _plants; }
 
 	void SetBreakableWall(bool _flag) { isBreakableWall_ = _flag; }
+
+	void SetPickUpPlantImage(string imagePath);
 
 	/// <returns> プレイヤーの状態 </returns>
 	PlayerState GetState() const { return nowState_; }

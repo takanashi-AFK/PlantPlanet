@@ -82,6 +82,19 @@ namespace UIInventory {
 		int x, y;
 		itemPanel_->GetButtonIndex(&x, &y);
 
+		//ポップアップの非表示
+		(itemPanel_->FindObject("PopUp-Image-BackGround"))->SetVisible(false);
+		(itemPanel_->FindObject("PopUp-Text-Title"))->SetVisible(false);
+		for (auto i = 0u; i <Component_PlayerBehavior::NEED_PLANT_NUM; ++i) {
+
+			(itemPanel_->FindObject(std::format("PopUp-Image-Effect-Icon{}", i)))->SetVisible(false);
+			(UIPanel::GetInstance()->FindObject(std::format("PopUp-Text-Effect{}", i)))->SetVisible(false);
+		}
+
+		//拾った植物アイコンの非表示
+		(itemPanel_->FindObject("PickUp-Plant-Image"))->SetVisible(false);
+		(UIPanel::GetInstance()->FindObject("PickUp-Plant-BackGround"))->SetVisible(false);
+
 		itemPanel_->GetUIObject("CheckLogo-IsBreakableWall")->SetVisible(false);
 
 		{
@@ -171,8 +184,6 @@ namespace UIInventory {
 			}
 
 		}
-
-
 
 		// インベントリのボタンが押された場合
 		for (auto inv : getPlantTable_) {

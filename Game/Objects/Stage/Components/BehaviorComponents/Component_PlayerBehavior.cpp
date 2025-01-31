@@ -81,6 +81,83 @@ namespace {
 
 }
 
+void Component_PlayerBehavior::PUPlantPutImageScreenOut()
+{
+	auto UISet = [](UIImage* ui)
+		{
+			ui->SetVisible(true);
+			ui->GetEasing()->GetEasing()->pile_ = NULL;
+		};
+
+	UISet(pickUpPlantBackGround_);
+	UISet(pickUpPlantImage_);
+
+	pickUpPlantImageTime_ = 0u;
+}
+
+void Component_PlayerBehavior::PUPlantRiseImage()
+{
+	auto UISet = [this](UIImage* ui)
+		{
+			ui->SetVisible(true);
+
+			auto& pile = ui->GetEasing()->GetEasing()->pile_;
+			pile += PUPlantEasingRatio_;
+		};
+
+	UISet(pickUpPlantBackGround_);
+	UISet(pickUpPlantImage_);
+	
+	++pickUpPlantImageTime_;
+
+	if (pickUpPlantImage_->GetEasing()->GetEasing()->pile_ < 1.0)return;
+
+	easingPickUpPlantImage = [this]() {PUPlantPutImageTopEasing(); };
+	pickUpPlantImageTime_ = 0u;
+}
+
+void Component_PlayerBehavior::PUPlantPutImageTopEasing()
+{
+
+	auto UISet = [this](UIImage* ui)
+		{
+			ui->SetVisible(true);
+			ui->GetEasing()->GetEasing()->pile_ = 1.0f;
+		};
+
+	UISet(pickUpPlantBackGround_);
+	UISet(pickUpPlantImage_);
+
+	++pickUpPlantImageTime_;
+
+	if (pickUpPlantImageTime_ < PUPlantTopRemainSec_ * FPS)return;
+
+	easingPickUpPlantImage = [this]() {PUPlantFallImage(); };
+	pickUpPlantImageTime_ = 0u;
+}
+
+void Component_PlayerBehavior::PUPlantFallImage()
+{
+	auto UISet = [this](UIImage* ui)
+		{
+			ui->SetVisible(true);
+
+			auto& pile = ui->GetEasing()->GetEasing()->pile_;
+			pile -= PUPlantEasingRatio_;
+		};
+
+	++pickUpPlantImageTime_;
+
+	UISet(pickUpPlantBackGround_);
+	UISet(pickUpPlantImage_);
+
+	
+	if (pickUpPlantImage_->GetEasing()->GetEasing()->pile_ > .0f)return;
+
+	easingPickUpPlantImage = [this]() {PUPlantPutImageScreenOut(); };
+	pickUpPlantImageTime_ = 0u;
+}
+
 Component_PlayerBehavior::Component_PlayerBehavior(string _name, StageObject* _holder, Component* _parent)
 	: Component(_holder, _name, PlayerBehavior, _parent),
 	shootHeight_(1.0f),
@@ -184,6 +261,21 @@ void Component_PlayerBehavior::Initialize()
 
 	}
 
+	pickUpPlantImage_ = static_cast<UIImage*>(UIPanel::GetInstance()->FindObject("PickUp-Plant-Image"));
+	pickUpPlantBackGround_ = static_cast<UIImage*>(UIPanel::GetInstance()->FindObject("PickUp-Plant-BackGround"));
+
+	const_cast<float&>(PUPlantEasingRatio_) = pickUpPlantImage_->GetEasing()->GetEasing()->ratio_ ;
+
+	auto resetRatioAndPile = [this](UIObject* ui)
+		{
+			auto easingData = ui->GetEasing()->GetEasing();
+			easingData->ratio_ = NULL;
+			easingData->pile_ = NULL;
+		};
+
+	resetRatioAndPile(pickUpPlantImage_);
+	resetRatioAndPile(pickUpPlantBackGround_);
+
 	checkLogoBreakableWall_ = static_cast<UIImage*>(UIPanel::GetInstance()->FindObject("CheckLogo-IsBreakableWall"));
 
 	auto* move = static_cast<Component_WASDInputMove*>(GetChildComponent("InputMove"));
@@ -205,7 +297,7 @@ void Component_PlayerBehavior::Initialize()
 		if (staminaBar != nullptr && sg != nullptr)staminaBar->SetProgress(sg->now_, sg->max_);
 	}
 
-
+	easingPickUpPlantImage = [this]() {PUPlantPutImageScreenOut(); };
 }
 
 void Component_PlayerBehavior::Update()
@@ -213,6 +305,8 @@ void Component_PlayerBehavior::Update()
 	ResetSaladEffectLogo();
 	ApplyEffects();
 	DrawPopUp();
+
+	easingPickUpPlantImage();
 
 	// ＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝ //
 	// カウント制御されている場合の処理 //
@@ -393,6 +487,14 @@ void Component_PlayerBehavior::AddReserchPoint(int point)
 void Component_PlayerBehavior::SetTimeCollectPlant(float time)
 {
 	timeCollectPlant = time;
+}
+
+void Component_PlayerBehavior::SetPickUpPlantImage(string imagePath)
+{
+	PUPlantPutImageScreenOut();
+	easingPickUpPlantImage = [this]() {PUPlantRiseImage(); };
+	pickUpPlantImage_->SetImage(imagePath);
+	pickUpPlantImageTime_ = 0u;
 }
 
 void Component_PlayerBehavior::Idle()
@@ -840,6 +942,7 @@ void Component_PlayerBehavior::Interact()
 
 				Stage* pStage = ((Stage*)holder_->FindObject("Stage"));
 
+				SetPickUpPlantImage(plantData.imageFilePath_);
 
 				// 植物オブジェクトを削除
 				pStage->DeleteStageObject(nearestObject);
