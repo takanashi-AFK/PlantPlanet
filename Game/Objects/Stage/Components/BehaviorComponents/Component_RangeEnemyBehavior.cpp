@@ -238,7 +238,7 @@ void Component_RangeEnemyBehavior::WalkTo(XMFLOAT3 dir)
 
 		RayCastData RayData; {
 			RayData.start = holder_->GetPosition(); // ƒŒƒC‚Ì”­ËˆÊ’u
-			RayData.start.y += .5f;
+			RayData.start.y += .1f;
 			RayData.dir = dir;
 			Model::RayCast(hGroundModel, &RayData); // ƒŒƒC‚ğ”­Ë
 		}

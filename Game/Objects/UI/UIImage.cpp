@@ -22,6 +22,8 @@ void UIImage::Draw()
 	if (imageHandle_ < 0 || isDraw_ == false )return;
 
     auto t = GetCalcTransform();
+
+    Image::SetAlpha(imageHandle_, alpha_);
     Image::SetTransform(imageHandle_, t);
     Image::Draw(imageHandle_);
 }

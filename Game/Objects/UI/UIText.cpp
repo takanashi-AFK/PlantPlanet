@@ -45,8 +45,8 @@ void UIText::Draw()
 	float drawY = (t.position_.y * (Direct3D::screenHeight_ / 2)) + (Direct3D::screenHeight_ / 2);
 	
 	// テキストを描画
-	if (intNum_ == nullptr)pText_->Draw(drawX, drawY, drawText_.c_str());
-	else pText_->Draw(drawX, drawY,*intNum_);
+	if (intNum_ == nullptr)pText_->Draw(drawX, drawY, drawText_.c_str(),alpha_);
+	else pText_->Draw(drawX, drawY,*intNum_,alpha_);
 }
 
 void UIText::Release()

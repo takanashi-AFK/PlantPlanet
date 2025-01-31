@@ -68,6 +68,7 @@ void UIProgressBar::Draw()
         auto t = GetCalcTransform(LoaclTransform);
 
 		// ゲージの画像を描画
+        Image::SetAlpha(gaugeImage_.handle_, alpha_);
         Image::SetTransform(gaugeImage_.handle_, t);
         Image::Draw(gaugeImage_.handle_, Direct3D::SHADER_BAR, gaugeImage_.color_);
     }
@@ -79,6 +80,7 @@ void UIProgressBar::Draw()
         auto t = GetCalcTransform(LoaclTransform);
 
         // フレームの画像を描画
+        Image::SetAlpha(frameImage_.handle_, alpha_);
 		Image::SetTransform(frameImage_.handle_, t);
 		Image::Draw(frameImage_.handle_);
     }

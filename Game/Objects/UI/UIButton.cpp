@@ -69,6 +69,7 @@ void UIButton::Draw()
 
 	auto t = this->GetCalcTransform();
 
+	Image::SetAlpha(imageHandle_, alpha_);
 	Image::SetTransform(imageHandle_,t);
 	Image::Draw(imageHandle_,shaderType_);
 }

@@ -27,7 +27,7 @@ UIObject::UIObject(UIObject* parent):
 }
 
 UIObject::UIObject(string _name, UIType _type, UIObject* parent, int _layerNum)
-	:objectName_(_name), type_(_type), pParent_(parent), layerNumber_(_layerNum), isVisible_(true), isPositionLocked_(false), isRotateLocked_(false), isScaleLocked_(false)
+	:objectName_(_name), type_(_type), pParent_(parent), layerNumber_(_layerNum), isVisible_(true), isPositionLocked_(false), isRotateLocked_(false), isScaleLocked_(false),alpha_(255)
 {
 
 	childList_.clear();
@@ -216,6 +216,11 @@ void UIObject::KillMe()
 	state_.dead = 1;
 }
 
+void UIObject::SetAlpha(int8_t alpha)
+{
+	alpha_ = alpha;
+}
+
 UIObject* UIObject::FindChildObject(const std::string& name)
 {
 	//éqãüÇ™Ç¢Ç»Ç¢Ç»ÇÁèIÇÌÇË
@@ -390,6 +395,11 @@ Transform UIObject::GetCalcTransform(Transform _transform)
 Transform UIObject::GetCalcTransform()
 {
 	return GetCalcTransform(transform_);
+}
+
+uint8_t UIObject::GetAlpha()
+{
+	return alpha_;
 }
 
 void UIObject::UpdateSub()

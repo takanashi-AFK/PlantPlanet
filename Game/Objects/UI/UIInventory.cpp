@@ -255,7 +255,7 @@ namespace UIInventory {
 		if (Confirm(makeButton_))
 		{
 			if (!Check()) return;
-
+			
 			Make();
 			isMadeSalad_ = true;
 
