@@ -140,6 +140,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Game\Otheres\EffectManager.cpp" />
     <ClCompile Include="Game\Objects\Stage\Components\TeleporterComponent\Component_ReturnGate.cpp" />
     <ClCompile Include="Game\Objects\Stage\Components\BreakableWallComponents\Component_BreakableWall.cpp" />
     <ClCompile Include="Game\Objects\Stage\BreakableWall.cpp" />
@@ -248,6 +249,7 @@
     <ClCompile Include="Game\Otheres\UserManager.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Game\Otheres\EffectManager.h" />
     <ClInclude Include="Game\Objects\Stage\Components\TeleporterComponent\Component_ReturnGate.h" />
     <ClInclude Include="Game\Objects\Stage\Components\BreakableWallComponents\Component_BreakableWall.h" />
     <ClInclude Include="Game\Objects\Stage\BreakableWall.h" />
