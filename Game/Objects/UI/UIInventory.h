@@ -16,6 +16,7 @@ namespace UIInventory
 	void Make();
 	bool IsShowInventory();
 	bool IsMadeSalad();
+	void SetsAlpha(uint8_t alpha);
 
 	// A functions that make salad from history
 	void MakeFromHistory();

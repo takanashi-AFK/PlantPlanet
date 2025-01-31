@@ -451,6 +451,14 @@ namespace UIInventory {
 		return isMadeSalad_;
 	}
 
+	void SetsAlpha(uint8_t alpha)
+	{
+		//set all ui's alpha
+		for (auto& ui : itemPanel_->GetUIObjects()) {
+			ui->SetAlpha(alpha);
+		}
+	}
+
 	void MakeFromHistory()
 	{
 
