@@ -82,7 +82,7 @@ void EffectManager::Load(json& _loadObj)
 			if (effect["transform"].contains("maxFrame"))
 				transform.maxFrame = effect["transform"]["maxFrame"];
 
-			data.effectModelTransform = std::make_shared<EFKTransform>(transform);
+			data.effectModelTransform = std::make_shared<EFFEKSEERLIB::EFKTransform>(transform);
 		}
 
 		AddEffect(data);
@@ -121,6 +121,20 @@ void EffectManager::Save(json& _saveObj)
 void EffectManager::DrawData(int _selectIndex)
 {
 	ImGui::Text("%d",_selectIndex);
+
+	ImGui::Text("name", effects_[_selectIndex].name.c_str());
+	ImGui::Text("path", effects_[_selectIndex].path.c_str());
+	ImGui::Text("maxFrame", "%d", effects_[_selectIndex].maxFrame);
+	ImGui::Text("speed", "%f", effects_[_selectIndex].speed);
+
+	if (effects_[_selectIndex].holder != nullptr)
+		ImGui::Text("holder", effects_[_selectIndex].holder->GetObjectName().c_str());
+	else 
+		ImGui::Text("holder", "null");
+
+	if (ImGui::Button("Play"));
+		
+
 	// ここにエフェクトのデータを表示する処理を書く
 	// 情報の編集できるようにする
 	// 再生もここからできるといいね
