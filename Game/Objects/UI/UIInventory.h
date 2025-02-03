@@ -18,6 +18,9 @@ namespace UIInventory
 	bool IsMadeSalad();
 	void SetsAlpha(uint8_t alpha);
 
+	void SetFade(float fade);
+	float GetFade();
+
 	// A functions that make salad from history
 	void MakeFromHistory();
 

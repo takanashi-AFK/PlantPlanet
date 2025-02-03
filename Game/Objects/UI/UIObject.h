@@ -34,6 +34,7 @@ private:
 protected:
 	bool isVisible_;		// 描画するか
 	std::unique_ptr<Component_UIEasing> easing_;
+	float fade_;
 
 protected:
 	string objectName_;		// オブジェクトの名前

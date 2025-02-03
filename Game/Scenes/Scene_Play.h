@@ -29,6 +29,8 @@ private:
 	bool isShowInventoryFirstTime_:1;	// インベントリを初めて表示するかのフラグ
  	bool isOpenInventoryUI_ :1;			// インベントリUIを開いているかのフラグ
 
+	int16_t uiAlpha_;
+
 public:
 	/// <summary> コンストラクタ </summary>
 	Scene_Play(GameObject* parent);

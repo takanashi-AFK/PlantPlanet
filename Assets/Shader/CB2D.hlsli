@@ -13,6 +13,8 @@ cbuffer global
     matrix g_matWorld; // 頂点座標変換行列
     matrix g_matTexture; // テクスチャ座標変換行列
     float4 g_vecColor; // テクスチャ合成色
+    
+    float fade_;        //フェードイン/アウトに用いる変数
 };
 
 //───────────────────────────────────────

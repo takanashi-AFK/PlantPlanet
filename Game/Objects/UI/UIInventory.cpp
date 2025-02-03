@@ -32,10 +32,12 @@ namespace UIInventory {
 
 	bool showInventory_ = false;
 	bool isMadeSalad_ = false;
+	bool isFirstSelectButton_ = true;
 
 	Salad prevSalad;
 	std::array<PlantData, MakeSalad::NEED_PLANT_NUM> prevRecipe_;
-	bool isFirstSelectButton_ = true;
+
+	float fade_;
 
 	void Initialize()
 	{
@@ -454,9 +456,19 @@ namespace UIInventory {
 	void SetsAlpha(uint8_t alpha)
 	{
 		//set all ui's alpha
-		for (auto& ui : itemPanel_->GetUIObjects()) {
+		for (auto& ui : invTable_) {
 			ui->SetAlpha(alpha);
 		}
+	}
+
+	void SetFade(float fade)
+	{
+		fade_ = fade;
+	}
+
+	float GetFade()
+	{
+		return fade_;
 	}
 
 	void MakeFromHistory()

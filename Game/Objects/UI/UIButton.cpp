@@ -68,10 +68,10 @@ void UIButton::Draw()
 	if (imageHandle_ < 0)return;
 
 	auto t = this->GetCalcTransform();
-
+	
 	Image::SetAlpha(imageHandle_, alpha_);
 	Image::SetTransform(imageHandle_,t);
-	Image::Draw(imageHandle_,shaderType_);
+	Image::Draw(imageHandle_, shaderType_, {1,1,1},fade_);
 }
 
 void UIButton::Release()

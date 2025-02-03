@@ -258,6 +258,7 @@ void Scene_Play::UpdateAdventureMode(Component_PlayerBehavior* _playerBehavior, 
 	if (isOpenInventoryUI_ == true) UpdateInventoryUI();
 	else							UpdateNormalUI(_playerBehavior, _bossBehavior);
 
+
 	// シーン遷移条件検知処理
 	bool isSceneChange = false; {
 
@@ -318,6 +319,9 @@ void Scene_Play::UpdateInventoryUI()
 
 	// UIインベントリの更新処理
 	UIInventory::Update();
+
+	UIInventory::SetsAlpha(128);
+
 }
 
 void Scene_Play::UpdateNormalUI(Component_PlayerBehavior* _playerBehavior, Component_BossBehavior* _bossBehavior)
@@ -342,6 +346,9 @@ void Scene_Play::UpdateNormalUI(Component_PlayerBehavior* _playerBehavior, Compo
 		UIProgressCircle* playerResearchPointCircle = (UIProgressCircle*)UIPanel::GetInstance()->FindObject("ResearchCircle");
 		if (playerResearchPointCircle != nullptr)playerResearchPointCircle->SetProgress(_playerBehavior->GetResearchPoint(), 100);
 	}
+
+	UIInventory::ShowInventory(true);
+	UIInventory::SetsAlpha(200);
 
 	// インベントリUIを開く(表示する)処理
 	if (Input::IsKeyDown(DIK_Q) || Input::IsPadButtonDown(XINPUT_GAMEPAD_B)) OpenInventoryUI();
