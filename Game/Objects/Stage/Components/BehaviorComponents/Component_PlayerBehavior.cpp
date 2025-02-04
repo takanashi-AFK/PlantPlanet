@@ -912,25 +912,24 @@ void Component_PlayerBehavior::Interact()
 		//指定した秒数経過しているか
 		if (interactTimer->IsOnTime(timeCollectPlant)) {
 
-
 			// 最も近いオブジェクトを取得
+			nearestObject = GetNearestWall();
+
 			PlantData plantData;
-			nearestObject = GetNearestPlant(plantData);
+
+			if (!nearestObject)
+			{
+				nearestObject = GetNearestPlant(plantData);
 
 				UserManager& um = UserManager::GetInstance();
 				um.UpdateLibraryStatus(um.GetLoggedInUser()->userName, plantData.id_);
-			
+			}
+
 			Component_ReturnGate* returnGate;
 			
 			if (IsAbleToReturn(returnGate))
 			{
 				isExchangeScene = returnGate->IsUsable();
-			}
-
-			else if (nearestObject != nullptr && nearestObject->GetObjectType() == StageObject::TYPE_WALL) {
-			nearestObject = GetNearestWall();
-			    if(nearestObject == nullptr) // 壁が近くになかったら
-		    	nearestObject = GetNearestPlant(plantData);
 			}
 
 			else if (nearestObject != nullptr && nearestObject->GetObjectType() == StageObject::TYPE_PLANT) {

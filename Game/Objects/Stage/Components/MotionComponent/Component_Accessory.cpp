@@ -92,7 +92,7 @@ void Component_Accessory::ExchangeModel(std::string filePath)
 {
 	accessoryModelHandle_ = Model::Load(filePath);
 
-	accessory_->SetModelFilePath(filePath);
+	modelPath_ = filePath;
 	accessory_->SetModelHandle(accessoryModelHandle_);
 }
 
@@ -148,12 +148,16 @@ void Component_Accessory::Load(json& _loadObj)
 	if (_loadObj.contains("Accessory Original Scale"))originalScale_
 		= { _loadObj["Accessory Original Scale"][0].get<float>(),_loadObj["Accessory Original Scale"][1].get<float>(),_loadObj["Accessory Original Scale"][2].get<float>() };
 
-	ExchangeModel(_loadObj["Accessory ModelPath"].get<string>());
+	if (_loadObj.contains("Accessory ModelPath"))
+	{
+		modelPath_ = _loadObj["Accessory ModelPath"].get<string>();
+		ExchangeModel(modelPath_);
+	}
 }
 
 void Component_Accessory::Save(json& _saveObj)
 {
-	_saveObj["Accessory ModelPath"] = Model::GetModelName(accessoryModelHandle_);
+	_saveObj["Accessory ModelPath"] = modelPath_;
 
 	_saveObj["Accessory Original Position"] = { originalPosition_.x,originalPosition_.y,originalPosition_.z };
 	_saveObj["Accessory Original Rotate"] = { originalRotate_.x,originalRotate_.y,originalRotate_.z };

@@ -32,6 +32,7 @@ public:
 protected:
 	StageObject* accessory_;
 	int accessoryModelHandle_;
+	string modelPath_;
 
 	XMFLOAT3 originalRotate_;
 	XMFLOAT3 originalScale_;
