@@ -99,17 +99,7 @@ void Sprite::InitIndex()
 	Direct3D::pDevice_->CreateBuffer(&bd, &InitData, &pIndexBuffer_);
 }
 
-void Sprite::Draw(Transform& transform, RECT rect, float alpha)
-{
-	Draw(transform, rect, alpha, Direct3D::SHADER_2D);
-}
-
-void Sprite::Draw(Transform& transform, RECT rect, float alpha, Direct3D::SHADER_TYPE _shader)
-{
-	Draw(transform, rect, alpha, Direct3D::SHADER_2D,XMFLOAT3(1,1,1));
-}
-
-void Sprite::Draw(Transform& transform, RECT rect, float alpha, Direct3D::SHADER_TYPE _shader,XMFLOAT3 _color)
+void Sprite::Draw(Transform& transform, RECT rect, float alpha, Direct3D::SHADER_TYPE _shader,XMFLOAT3 _color,float fade)
 {
 	//いろいろ設定
 	Direct3D::SetShader(_shader);
@@ -152,6 +142,8 @@ void Sprite::Draw(Transform& transform, RECT rect, float alpha, Direct3D::SHADER
 	// テクスチャ合成色情報を渡す
 	cb.color = XMFLOAT4(_color.x, _color.y, _color.z, alpha);
 
+	cb.fade = fade;
+
 	Direct3D::pContext_->Map(pConstantBuffer_, 0, D3D11_MAP_WRITE_DISCARD, 0, &pdata);	// GPUからのリソースアクセスを一時止める
 	memcpy_s(pdata.pData, pdata.RowPitch, (void*)(&cb), sizeof(cb));		// リソースへ値を送る
 
@@ -172,12 +164,7 @@ void Sprite::Draw(Transform& transform, RECT rect, float alpha, Direct3D::SHADER
 	Direct3D::SetDepthBafferWriteEnable(true);
 }
 
-void Sprite::Draw(Transform& transform, RECT rect, float alpha, float startAngle, float endAngle)
-{
-	Draw(transform, rect, alpha, startAngle, endAngle, XMFLOAT3(1, 1, 1));
-}
-
-void Sprite::Draw(Transform& transform, RECT rect, float alpha, float startAngle, float endAngle, XMFLOAT3 _color)
+void Sprite::Draw(Transform& transform, RECT rect, float alpha, float startAngle, float endAngle, XMFLOAT3 _color = {1,1,1},float fade)
 {
 	//いろいろ設定
 	Direct3D::SetShader(Direct3D::SHADER_TIMER);
@@ -219,7 +206,7 @@ void Sprite::Draw(Transform& transform, RECT rect, float alpha, float startAngle
 	cb.world = XMMatrixTranspose(world);
 	cb.uvTrans = XMMatrixTranspose(mTexel);
 	cb.color = XMFLOAT4(_color.x , _color.y, _color.z, alpha);
-
+	cb.fade = fade;
 	cb.angle = XMFLOAT2(startAngle, endAngle);
 
 	Direct3D::pContext_->Map(pConstantBuffer_, 0, D3D11_MAP_WRITE_DISCARD, 0, &pdata);	// GPUからのリソースアクセスを一時止める

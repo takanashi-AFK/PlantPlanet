@@ -70,7 +70,7 @@ void UIProgressBar::Draw()
 		// ゲージの画像を描画
         Image::SetAlpha(gaugeImage_.handle_, alpha_);
         Image::SetTransform(gaugeImage_.handle_, t);
-        Image::Draw(gaugeImage_.handle_, Direct3D::SHADER_BAR, gaugeImage_.color_);
+        Image::Draw(gaugeImage_.handle_, fade_, Direct3D::SHADER_BAR, gaugeImage_.color_);
     }
 
     // フレーム画像が読み込まれている場合
@@ -82,7 +82,7 @@ void UIProgressBar::Draw()
         // フレームの画像を描画
         Image::SetAlpha(frameImage_.handle_, alpha_);
 		Image::SetTransform(frameImage_.handle_, t);
-		Image::Draw(frameImage_.handle_);
+		Image::Draw(frameImage_.handle_,fade_);
     }
 }
 

@@ -54,7 +54,7 @@ void UIInputString::Draw()
     float drawY = (t.position_.y * (Direct3D::screenHeight_ / 2)) + (Direct3D::screenHeight_ / 2);
 
     // テキストを描画
-    pText_->Draw(drawX, drawY, currentInput.c_str(),alpha_);
+    pText_->Draw(drawX, drawY, currentInput.c_str(),fade_);
 }
 
 void UIInputString::Release()

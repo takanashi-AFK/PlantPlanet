@@ -244,5 +244,5 @@ void CircleGauge::Update(float progress)
 void CircleGauge::Draw(Transform _transform)
 {
 	Image::SetTransform(imageHandle, _transform);
-	Image::Draw(imageHandle, startAngle, endAngle);
+	Image::Draw(imageHandle, NULL,startAngle, endAngle);
 }

@@ -9,7 +9,7 @@ cbuffer global
 	float4x4	g_matWorld;			// ワールド変換行列
 	float4		g_vecLightDir;		// ライトの方向ベクトル
     float4      g_light;            // Color of light and Intensity
-    float4      g_ambinetLight;     // Color of light and Intensity
+    float4      g_ambinetLight;     // Color of ambient light and Intensity
 	float4		g_vecDiffuse;		// ディフューズカラー（マテリアルの色）
 	float4		g_vecAmbient;		// アンビエントカラー（影の色）
 	float4		g_vecSpeculer;		// スペキュラーカラー（ハイライトの色）

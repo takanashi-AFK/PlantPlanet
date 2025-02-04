@@ -29,6 +29,10 @@ private:
 	bool isShowInventoryFirstTime_:1;	// インベントリを初めて表示するかのフラグ
  	bool isOpenInventoryUI_ :1;			// インベントリUIを開いているかのフラグ
 
+	float fade_;
+
+	static constexpr float FADESPEED = 0.1f;
+
 public:
 	/// <summary> コンストラクタ </summary>
 	Scene_Play(GameObject* parent);

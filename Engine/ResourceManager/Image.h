@@ -50,11 +50,8 @@ namespace Image
 	//描画
 	//引数：handle	描画したい画像の番号
 	//引数：matrix	ワールド行列
-	void Draw(int handle);
-	void Draw(int handle,Direct3D::SHADER_TYPE _type);
-	void Draw(int handle, Direct3D::SHADER_TYPE _type, XMFLOAT3 _color);
-	void Draw(int handle, float _startAngle, float _endAngle);
-	void Draw(int handle,float _startAngle,float _endAngle,XMFLOAT3 _color);
+	void Draw(int handle, float fade = 0.f, Direct3D::SHADER_TYPE _type = Direct3D::SHADER_2D, XMFLOAT3 _color = { 1,1,1 });
+	void Draw(int handle, float _startAngle, float _endAngle, float fade = 0.f, XMFLOAT3 _color = { 1,1,1 });
 
 	//任意の画像を開放
 	//引数：handle	開放したいモデルの番号

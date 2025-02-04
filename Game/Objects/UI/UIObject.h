@@ -34,6 +34,7 @@ private:
 protected:
 	bool isVisible_;		// 描画するか
 	std::unique_ptr<Component_UIEasing> easing_;
+	float fade_;
 
 protected:
 	string objectName_;		// オブジェクトの名前
@@ -142,6 +143,8 @@ setter :*/
 	inline void SetTrasform(Transform t) { this->transform_ = t; }
 
 	void SetAlpha(int8_t alpha);
+
+	void SetFade(float fade);
 /*
 getter :*/
 	/// <summary> 子オブジェクトを取得 </summary>
@@ -175,6 +178,8 @@ getter :*/
 	Transform GetCalcTransform();
 
 	uint8_t GetAlpha();
+
+	float GetFade();
 /*
 predicate :*/
 	/// <summary> 削除フラグが立っているかどうか </summary>
