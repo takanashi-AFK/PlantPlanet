@@ -118,6 +118,7 @@ void Component_PlayerBehavior::Initialize()
 	EFFEKSEERLIB::gEfk->AddEffect("dodge", "Effects/Lazer01.efk");
 	EFFEKSEERLIB::gEfk->AddEffect("impact", "Effects/Attack_Impact.efk");
 	EFFEKSEERLIB::gEfk->AddEffect("get", "Effects/twinkle.efk");
+	EFFEKSEERLIB::gEfk->AddEffect("powerUp", "Effects/PowerUp.efk");
 
 	// 子コンポーネントの追加
 	if (FindChildComponent("InputMove") == false)AddChildComponent(CreateComponent("InputMove", WASDInputMove, holder_, this));
@@ -932,6 +933,13 @@ void Component_PlayerBehavior::MadeSalad()
 	// 移動コンポーネントの取得 & 有無の確認
 	Component_WASDInputMove* move = (Component_WASDInputMove*)(GetChildComponent("InputMove"));
 	if (move == nullptr)return;
+
+	EFFEKSEERLIB::EFKTransform t;
+	DirectX::XMStoreFloat4x4(&(t.matrix), holder_->GetWorldMatrix());
+	t.isLoop = false;
+	t.maxFrame = EFFECT_FRAME;
+	t.speed = EFFECT_SPEED;
+	effectModelTransform = EFFEKSEERLIB::gEfk->Play("powerUp", t);
 
 	move->Stop();
 	if (motion->IsEnd() == true) {
