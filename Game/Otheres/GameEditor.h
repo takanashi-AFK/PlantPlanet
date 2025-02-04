@@ -24,6 +24,7 @@ enum EditType
 	CAMERA,
 	PLANT,
 	SALADRECIPE,
+	EFFECT,
 };
 
 enum CameraType
@@ -158,5 +159,19 @@ datails :*/
 otheres :*/
 	string GetFBXFilePath();
 	string GetPNGFilePath();
+	string GetEFKFilePath();
+
+
+	/*
+	Effects : ‰¼’u‚« o—ˆŸ‘æêŠ‚Æ‚©‚Í•Ï‚¦‚é*/
+
+	bool isShowEffectWindow_ = false;
+	int selectingEffectIndex_ = -1;
+
+	void DrawEffectDetails();
+
+	void DrawEffectOutLiner();
+
+	void ShowAddEffectWindow();
 };
 

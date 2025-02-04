@@ -15,6 +15,7 @@
 #include "WinUser.h"
 #include<format>
 #include "../Objects/UI/UIButton.h"
+#include "EffectManager.h"
 
 using namespace FileManager;
 
@@ -52,6 +53,9 @@ void GameEditor::Draw()
 
 	// UIオブジェクト作成ウィンドウを描画
 	if(isShowCreateUIObjectWindow_)UIObjectCreateWindow();
+
+	if(isShowEffectWindow_)	ShowAddEffectWindow();
+
 }
 
 void GameEditor::Release()
@@ -204,6 +208,12 @@ void GameEditor::DrawWorldOutLiner()
 			if (ImGui::BeginTabItem("Salad")) {
 				DrawSaladRecipeOutLiner();
 				editType_ = SALADRECIPE;
+				ImGui::EndTabItem();
+			}
+
+			if (ImGui::BeginTabItem("Effects")) {
+				DrawEffectOutLiner();
+				editType_ = EFFECT;
 				ImGui::EndTabItem();
 			}
 
@@ -1058,7 +1068,7 @@ string GameEditor::GetPNGFilePath()
 			ofn.lpstrFile = szFile; // ファイル名を格納するバッファ
 			ofn.lpstrFile[0] = '\0'; // 初期化
 			ofn.nMaxFile = sizeof(szFile); // ファイル名バッファのサイズ
-			ofn.lpstrFilter = TEXT("PNGファイル(*.fbx)\0*.png\0すべてのファイル(*.*)\0*.*\0"); // フィルター（FBXファイルのみ表示）
+			ofn.lpstrFilter = TEXT("PNGファイル(*.png)\0*.png\0すべてのファイル(*.*)\0*.*\0"); // フィルター（FBXファイルのみ表示）
 			ofn.nFilterIndex = 1; // 初期選択するフィルター
 			ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST; // フラグ（ファイルが存在すること、パスが存在することを確認）
 			ofn.lpstrInitialDir = TEXT("."); // カレントディレクトリを初期選択位置として設定
@@ -1085,4 +1095,137 @@ string GameEditor::GetPNGFilePath()
 
 	// ファイルパスを返す
 	return filePath;
+}
+
+string GameEditor::GetEFKFilePath()
+{
+	//現在のカレントディレクトリを覚えておく
+	char defaultCurrentDir[MAX_PATH];
+	GetCurrentDirectory(MAX_PATH, defaultCurrentDir);
+
+	// 追加するオブジェクトのモデルファイルパスを設定
+	string filePath{}; {
+		// 「ファイルを開く」ダイアログの設定用構造体を設定
+		OPENFILENAME ofn; {
+			TCHAR szFile[MAX_PATH] = {}; // ファイル名を格納するバッファ
+			ZeroMemory(&ofn, sizeof(ofn)); // 構造体の初期化
+			ofn.lStructSize = sizeof(ofn); // 構造体のサイズ
+			ofn.lpstrFile = szFile; // ファイル名を格納するバッファ
+			ofn.lpstrFile[0] = '\0'; // 初期化
+			ofn.nMaxFile = sizeof(szFile); // ファイル名バッファのサイズ
+			ofn.lpstrFilter = TEXT("EFKファイル(*.efk)\0*.efk\0すべてのファイル(*.*)\0*.*\0"); // フィルター（FBXファイルのみ表示）
+			ofn.nFilterIndex = 1; // 初期選択するフィルター
+			ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST; // フラグ（ファイルが存在すること、パスが存在することを確認）
+			ofn.lpstrInitialDir = TEXT("."); // カレントディレクトリを初期選択位置として設定
+		}
+
+		// ファイルを選択するダイアログの表示
+		if (GetOpenFileName(&ofn) == TRUE) {
+			// ファイルパスを取得
+			filePath = ofn.lpstrFile;
+
+			// カレントディレクトリからの相対パスを取得
+			filePath = GetAssetsRelativePath(filePath);
+
+			// 文字列内の"\\"を"/"に置換
+			ReplaceBackslashes(filePath);
+
+			// ディレクトリを戻す
+			SetCurrentDirectory(defaultCurrentDir);
+		}
+		else {
+			return "";
+		}
+	}
+
+	// ファイルパスを返す
+	return filePath;
+}
+
+void GameEditor::DrawEffectDetails()
+{
+	EffectManager& effectManager = EffectManager::GetInstance();
+
+	if (selectingEffectIndex_ != -1)
+		effectManager.DrawData(selectingEffectIndex_);
+}
+
+void GameEditor::DrawEffectOutLiner()
+{
+	EffectManager& effectManager = EffectManager::GetInstance();
+	ImGui::Text("Effects");
+
+	if (ImGui::Button("Add")) isShowEffectWindow_ = true;
+	ImGui::SameLine();
+
+	if (ImGui::Button("Save")) SaveRecipe();
+	ImGui::SameLine();
+
+	if (ImGui::Button("Load")) LoadRecipe();
+	ImGui::SameLine();
+
+	if (ImGui::Button("Delete")) maker_.Delete();
+
+	// エフェクトのリストを表示
+}
+
+void GameEditor::ShowAddEffectWindow()
+{
+	if (isShowEffectWindow_) {
+
+		EData data;
+		static char nameBuffer[256] = "";
+		static string pathBuffer;
+		static int maxFrame = 60;
+		static float speed = 1.0f;
+		static StageObject* holder = nullptr;
+		static XMFLOAT3 position = { 0.0f, 0.0f, 0.0f };
+		ImGui::Begin("Add Effect", &isShowEffectWindow_);
+		ImGui::Text("Please set the information of the effect to be added.");
+		ImGui::Separator();
+		//　名前入力
+		ImGui::InputTextWithHint(":setting name", "Input name...", nameBuffer, IM_ARRAYSIZE(nameBuffer));
+		ImGui::Text("Name %s", nameBuffer);
+
+		// ファイルパス入力
+		if (ImGui::Button("..."))pathBuffer = GetEFKFilePath();
+		ImGui::Text("Path %s", pathBuffer.c_str());
+
+		// 最大フレーム数入力
+		ImGui::DragInt(":setting MaxFrame", &maxFrame);
+
+		// 再生速度入力
+		ImGui::DragFloat(":setting Speed", &speed);
+
+		// ホルダー設定
+		{
+			// ステージ上に存在するオブジェクトの名前を全て取得
+			vector<string> nameList{}; nameList.push_back("None");
+			for (auto obj : (editStage_->GetStageObjects())) nameList.push_back(obj->GetObjectName());
+
+			// コンボボックスで選択
+			static int select = 0;
+			if (ImGui::BeginCombo(":holder", nameList[select].c_str())) {
+				for (int i = 0; i < nameList.size(); i++) {
+					bool is_selected = (select == i);
+					if (ImGui::Selectable(nameList[i].c_str(), is_selected)) select = i;
+					if (is_selected) ImGui::SetItemDefaultFocus();
+				}
+				ImGui::EndCombo();
+			}
+
+			// 選択された名前から対象を設定
+			if (select != 0) holder = (StageObject*)editStage_->FindObject(nameList[select]);
+		}
+		// ホルダーがいない場合、座標を入力
+		if (holder == nullptr)
+			ImGui::DragFloat3(":setting Position", &position.x); 
+		else
+			position = holder->GetPosition();
+
+		// 追加ボタン
+		if (ImGui::Button("Add"))isShowEffectWindow_ = false;
+
+		ImGui::End();
+	}
 }

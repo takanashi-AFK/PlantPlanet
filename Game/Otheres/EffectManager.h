@@ -14,10 +14,10 @@ struct EData
 {
 	string name;
 	string path; 
+	bool isLoop;
 	int maxFrame;
 	float speed;
 	StageObject* holder;
-	std::shared_ptr<EFFEKSEERLIB::EFKTransform> effectModelTransform;
 	XMFLOAT3 position;
 };
 

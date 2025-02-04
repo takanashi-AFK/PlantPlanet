@@ -23,10 +23,10 @@ void EffectManager::AddEffect(EData _data)
 	EData data = {
 		_data.name,
 		_data.path,
+		_data.isLoop,
 		_data.maxFrame,
 		_data.speed,
 		_data.holder,
-		_data.effectModelTransform,
 		_data.position
 	};
 
@@ -103,13 +103,6 @@ void EffectManager::Save(json& _saveObj)
 
 		// EFKTransform ‚Ì•Û‘¶
 		if (effect.effectModelTransform) {
-			auto& transform = *effect.effectModelTransform;
-			_saveObj["Effects"][effect.name]["transform"]["matrix"] = {
-				transform.matrix._11, transform.matrix._12, transform.matrix._13, transform.matrix._14,
-				transform.matrix._21, transform.matrix._22, transform.matrix._23, transform.matrix._24,
-				transform.matrix._31, transform.matrix._32, transform.matrix._33, transform.matrix._34,
-				transform.matrix._41, transform.matrix._42, transform.matrix._43, transform.matrix._44
-			};
 			_saveObj["Effects"][effect.name]["transform"]["isLoop"] = transform.isLoop;
 			_saveObj["Effects"][effect.name]["transform"]["speed"] = transform.speed;
 			_saveObj["Effects"][effect.name]["transform"]["maxFrame"] = transform.maxFrame;
@@ -148,7 +141,7 @@ void EffectManager::PlayEffectWithHolder(EData _data)
 	t.isLoop = false;
 	t.maxFrame = _data.maxFrame;
 	t.speed = _data.speed;
-	_data.effectModelTransform = EFFEKSEERLIB::gEfk->Play(_data.name, t);	
+	// _data.effectModelTransform = EFFEKSEERLIB::gEfk->Play(_data.name, t);	
 }
 
 void EffectManager::PlayEffecWithoutHolder(EData _data)
@@ -159,5 +152,5 @@ void EffectManager::PlayEffecWithoutHolder(EData _data)
 	t.isLoop = false;
 	t.maxFrame = _data.maxFrame;
 	t.speed = _data.speed;
-	_data.effectModelTransform = EFFEKSEERLIB::gEfk->Play(_data.name, t);
+	// _data.effectModelTransform = EFFEKSEERLIB::gEfk->Play(_data.name, t);
 }
