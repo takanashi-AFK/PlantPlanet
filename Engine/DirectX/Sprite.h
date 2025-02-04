@@ -34,7 +34,9 @@ protected:
 		XMMATRIX	world;		// 頂点座標変換行列
 		XMMATRIX	uvTrans;	// テクスチャ座標変換行列
 		XMFLOAT4	color;		// テクスチャとの合成色
+		XMFLOAT2	angle;		// 回転角度
 		float		fade;		// フェードイン/アウト
+		float		val;
 	};
 
 	//【頂点バッファ】

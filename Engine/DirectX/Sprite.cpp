@@ -142,7 +142,7 @@ void Sprite::Draw(Transform& transform, RECT rect, float alpha, Direct3D::SHADER
 	// テクスチャ合成色情報を渡す
 	cb.color = XMFLOAT4(_color.x, _color.y, _color.z, alpha);
 
-	cb.fade;
+	cb.fade = fade;
 
 	Direct3D::pContext_->Map(pConstantBuffer_, 0, D3D11_MAP_WRITE_DISCARD, 0, &pdata);	// GPUからのリソースアクセスを一時止める
 	memcpy_s(pdata.pData, pdata.RowPitch, (void*)(&cb), sizeof(cb));		// リソースへ値を送る
@@ -207,6 +207,7 @@ void Sprite::Draw(Transform& transform, RECT rect, float alpha, float startAngle
 	cb.uvTrans = XMMatrixTranspose(mTexel);
 	cb.color = XMFLOAT4(_color.x , _color.y, _color.z, alpha);
 	cb.fade = fade;
+	cb.angle = XMFLOAT2(startAngle, endAngle);
 
 	Direct3D::pContext_->Map(pConstantBuffer_, 0, D3D11_MAP_WRITE_DISCARD, 0, &pdata);	// GPUからのリソースアクセスを一時止める
 	memcpy_s(pdata.pData, pdata.RowPitch, (void*)(&cb), sizeof(cb));		// リソースへ値を送る

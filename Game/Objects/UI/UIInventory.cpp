@@ -289,6 +289,10 @@ namespace UIInventory {
 		{
 			MakeFromHistory();
 		}
+
+		for (auto& ui : invTable_) {
+			ui->SetFade(fade_);
+		}
 	}
 
 	void ShowInventory(bool isShow)

@@ -42,7 +42,8 @@ Scene_Play::Scene_Play(GameObject* parent)
 	fixedCursorPos_(true), 
 	cursorVisible_(true),
 	isShowInventoryFirstTime_(false),
-	isOpenInventoryUI_(false)
+	isOpenInventoryUI_(false),
+	fade_{ 1.f }
 {
 	UICursor::ToHide(true);
 }
@@ -318,10 +319,10 @@ void Scene_Play::UpdateInventoryUI()
 	if (Input::IsKeyDown(DIK_Q) || Input::IsPadButtonDown(XINPUT_GAMEPAD_B) || UIInventory::IsShowInventory() == false) CloseInventoryUI();
 
 	// UIインベントリの更新処理
+	UIInventory::SetFade(fade_);
 	UIInventory::Update();
-
-	UIInventory::SetsAlpha(128);
-
+	fade_ -= .1f;
+	fade_ = std::clamp(fade_, 0.f, 1.f);
 }
 
 void Scene_Play::UpdateNormalUI(Component_PlayerBehavior* _playerBehavior, Component_BossBehavior* _bossBehavior)
@@ -347,8 +348,16 @@ void Scene_Play::UpdateNormalUI(Component_PlayerBehavior* _playerBehavior, Compo
 		if (playerResearchPointCircle != nullptr)playerResearchPointCircle->SetProgress(_playerBehavior->GetResearchPoint(), 100);
 	}
 
-	UIInventory::ShowInventory(true);
-	UIInventory::SetsAlpha(200);
+	fade_ += 0.1;
+
+	UIInventory::ShowInventory(false);
+	if (fade_ < 1.f)
+	{
+		UIInventory::ShowInventory(true);
+		UIInventory::SetFade(fade_);
+		UIInventory::Update();
+	}
+	fade_ = std::clamp(fade_, 0.f, 1.f);
 
 	// インベントリUIを開く(表示する)処理
 	if (Input::IsKeyDown(DIK_Q) || Input::IsPadButtonDown(XINPUT_GAMEPAD_B)) OpenInventoryUI();
@@ -357,7 +366,7 @@ void Scene_Play::UpdateNormalUI(Component_PlayerBehavior* _playerBehavior, Compo
 void Scene_Play::CloseInventoryUI()
 {
 	isOpenInventoryUI_ = false;			// インベントリUIを閉じる(非表示にする)処理
-	UIInventory::ShowInventory(false);	// インベントリUIを非表示にする
+	UIInventory::ShowInventory(true);	// インベントリUIを非表示にする
 	EnterOtherObject(this);				// 他のオブジェクトを有効化
 	isShowInventoryFirstTime_ = true;	// インベントリUIを初めて表示したかのフラグを立てる
 
@@ -367,6 +376,9 @@ void Scene_Play::CloseInventoryUI()
 	// カーソルの表示状態を切り替える
 	cursorVisible_ = !fixedCursorPos_;
 	UICursor::ToHide(!cursorVisible_);
+
+	UIInventory::SetFade(1.0);
+	UIInventory::Update();
 }
 
 void Scene_Play::OpenInventoryUI()
@@ -384,6 +396,9 @@ void Scene_Play::OpenInventoryUI()
 	// カーソルの表示状態を切り替える
 	cursorVisible_ = !fixedCursorPos_;
 	UICursor::ToHide(!cursorVisible_);
+
+	UIInventory::SetFade(1.0);
+	UIInventory::Update();
 }
 
 void Scene_Play::InitScoreAttackMode()

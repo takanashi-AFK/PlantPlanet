@@ -80,7 +80,7 @@ namespace Image
 		_datas[handle]->pSprite->Draw(_datas[handle]->transform, _datas[handle]->rect, _datas[handle]->alpha, _type,_color,fade);
 	}
 
-	void Draw(int handle, float fade, float _startAngle, float _endAngle, XMFLOAT3 _color)
+	void Draw(int handle,  float _startAngle, float _endAngle, float fade, XMFLOAT3 _color)
 	{
 		if (handle < 0 || handle >= _datas.size() || _datas[handle] == nullptr)
 		{

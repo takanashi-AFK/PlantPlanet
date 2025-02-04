@@ -71,7 +71,7 @@ void UIButton::Draw()
 	
 	Image::SetAlpha(imageHandle_, alpha_);
 	Image::SetTransform(imageHandle_,t);
-	Image::Draw(imageHandle_, shaderType_, {1,1,1},fade_);
+	Image::Draw(imageHandle_,fade_,shaderType_);
 }
 
 void UIButton::Release()

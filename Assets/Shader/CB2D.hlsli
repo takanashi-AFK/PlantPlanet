@@ -13,8 +13,9 @@ cbuffer global
     matrix g_matWorld; // 頂点座標変換行列
     matrix g_matTexture; // テクスチャ座標変換行列
     float4 g_vecColor; // テクスチャ合成色
-    
+    float2 g_angle;
     float fade_;        //フェードイン/アウトに用いる変数
+    float val_;
 };
 
 //───────────────────────────────────────
@@ -24,4 +25,5 @@ struct VS_OUTPUT
 {
     float4 pos : SV_POSITION; // 位置
     float2 uv : TEXCOORD; // UV座標
+    float2 gpos : TEXCOORD1;
 };

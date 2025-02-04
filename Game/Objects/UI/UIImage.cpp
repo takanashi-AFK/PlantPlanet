@@ -25,7 +25,7 @@ void UIImage::Draw()
 
     Image::SetAlpha(imageHandle_, alpha_);
     Image::SetTransform(imageHandle_, t);
-    Image::Draw(imageHandle_);
+    Image::Draw(imageHandle_,fade_);
 }
 
 void UIImage::Release()

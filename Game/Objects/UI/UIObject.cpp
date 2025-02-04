@@ -221,6 +221,11 @@ void UIObject::SetAlpha(int8_t alpha)
 	alpha_ = alpha;
 }
 
+void UIObject::SetFade(float fade)
+{
+	fade_ = fade;
+}
+
 UIObject* UIObject::FindChildObject(const std::string& name)
 {
 	//éqãüÇ™Ç¢Ç»Ç¢Ç»ÇÁèIÇÌÇË
@@ -400,6 +405,11 @@ Transform UIObject::GetCalcTransform()
 uint8_t UIObject::GetAlpha()
 {
 	return alpha_;
+}
+
+float UIObject::GetFade()
+{
+	return fade_;
 }
 
 void UIObject::UpdateSub()
