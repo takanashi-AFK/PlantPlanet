@@ -36,7 +36,6 @@ protected:
 		XMFLOAT4	color;		// テクスチャとの合成色
 		XMFLOAT2	angle;		// 回転角度
 		float		fade;		// フェードイン/アウト
-		float		val;
 	};
 
 	//【頂点バッファ】

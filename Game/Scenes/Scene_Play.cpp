@@ -318,10 +318,10 @@ void Scene_Play::UpdateInventoryUI()
 	// インベントリUIを閉じる(非表示にする)処理
 	if (Input::IsKeyDown(DIK_Q) || Input::IsPadButtonDown(XINPUT_GAMEPAD_B) || UIInventory::IsShowInventory() == false) CloseInventoryUI();
 
-	// UIインベントリの更新処理
+	// UIインベントリの更新、フェード処理
 	UIInventory::SetFade(fade_);
 	UIInventory::Update();
-	fade_ -= .1f;
+	fade_ -= FADESPEED;
 	fade_ = std::clamp(fade_, 0.f, 1.f);
 }
 
@@ -348,9 +348,10 @@ void Scene_Play::UpdateNormalUI(Component_PlayerBehavior* _playerBehavior, Compo
 		if (playerResearchPointCircle != nullptr)playerResearchPointCircle->SetProgress(_playerBehavior->GetResearchPoint(), 100);
 	}
 
-	fade_ += 0.1;
-
+	fade_ += FADESPEED;
 	UIInventory::ShowInventory(false);
+
+	//フェード中ならUIInventoryを可視化しフェーディングする
 	if (fade_ < 1.f)
 	{
 		UIInventory::ShowInventory(true);

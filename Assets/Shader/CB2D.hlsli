@@ -15,7 +15,6 @@ cbuffer global
     float4 g_vecColor; // テクスチャ合成色
     float2 g_angle;
     float fade_;        //フェードイン/アウトに用いる変数
-    float val_;
 };
 
 //───────────────────────────────────────

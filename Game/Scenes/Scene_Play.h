@@ -31,6 +31,8 @@ private:
 
 	float fade_;
 
+	static constexpr float FADESPEED = 0.1f;
+
 public:
 	/// <summary> コンストラクタ </summary>
 	Scene_Play(GameObject* parent);
