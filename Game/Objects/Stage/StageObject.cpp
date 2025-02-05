@@ -408,7 +408,8 @@ void StageObject::DrawData()
 
 		ImGui::InputInt("shaderType_", (int*)&originalShaderType_);
 		originalShaderType_ = originalShaderType_ < 0 ?static_cast<Direct3D::SHADER_TYPE>( Direct3D::SHADER_MAX-1) :static_cast<Direct3D::SHADER_TYPE>(originalShaderType_ % shader3d_MAX);
-		
+		shaderType_ = originalShaderType_;
+
 		auto shaderName = Direct3D::GetShaderName(originalShaderType_);
 				
 		ImGui::Text(string{ shaderName.begin(), shaderName.end()}.c_str());

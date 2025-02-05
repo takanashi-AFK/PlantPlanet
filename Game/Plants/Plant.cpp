@@ -21,7 +21,9 @@ std::function<PlantData::FuncValue(Component_PlayerBehavior*)> PlantData::GetFun
 
 	switch (id)
 	{
-	case 0: return [&,time = SecToFrame(20.f),id](Component_PlayerBehavior* pb) mutable ->PlantData::FuncValue
+
+		//ÌŽæŽžŠÔŒ¸­(10%)
+	case 0: return [&,time = SecToFrame(20.f),id ,isFirst = true](Component_PlayerBehavior* pb) mutable ->PlantData::FuncValue
 		{
 			ret.isUsable = false;
 			ret.time = time / FPS;
@@ -29,15 +31,18 @@ std::function<PlantData::FuncValue(Component_PlayerBehavior*)> PlantData::GetFun
 			ret.filePath = "Images/SaladEffectLogo/PickUp.png";
 			ret.amount = 10;
 
-			if (time >= SecToFrame(20.f))
+			if (isFirst)
 			{
-				auto waitTime = pb->GetTimeCollectPlant() * 0.9;
+				auto effect = Component_PlayerBehavior::defaultTime_CollectPlant * .1f;
+				auto waitTime = pb->GetTimeCollectPlant()  - effect;
 
 				pb->SetTimeCollectPlant(waitTime);
 				
 				--time;
 
 				ret.isUsable = true;
+
+				isFirst = false;
 			}
 
 			else if (time > 0) 
@@ -48,13 +53,17 @@ std::function<PlantData::FuncValue(Component_PlayerBehavior*)> PlantData::GetFun
 
 			else
 			{
-				pb->SetTimeCollectPlant(pb->defaultTime_CollectPlant);
+				auto effect = Component_PlayerBehavior::defaultTime_CollectPlant * 0.1;
+				auto waitTime = pb->GetTimeCollectPlant() + effect;
+
+				pb->SetTimeCollectPlant(waitTime);
 				ret.isUsable = false;
 			}
 
 			return ret;
 		};
 
+		  //‰ñ•œ(5%)
 	case 1: return[&,id](Component_PlayerBehavior* pb) mutable ->PlantData::FuncValue
 		{
 			ret.isUsable = false;
@@ -71,7 +80,8 @@ std::function<PlantData::FuncValue(Component_PlayerBehavior*)> PlantData::GetFun
 			return ret;
 		};
 
-	case 2: return[&,time = SecToFrame(30),id](Component_PlayerBehavior* pb) mutable ->PlantData::FuncValue
+		  //‹ßÚUŒ‚—Í‘‰Á(8%)
+	case 2: return[&,time = SecToFrame(30),id , isFirst = true](Component_PlayerBehavior* pb) mutable ->PlantData::FuncValue
 		{
 			ret.isUsable = false;
 			ret.time = time / FPS;
@@ -80,25 +90,36 @@ std::function<PlantData::FuncValue(Component_PlayerBehavior*)> PlantData::GetFun
 			ret.amount = 8;
 
 			auto* mel = static_cast<Component_MeleeAttack*>(pb->GetChildComponent("MeleeAttack"));
+			if (!mel)	return ret;
 
-			if (time > 0)
+			if (isFirst)
 			{
-				if (!mel)	return ret;
-
-				mel->SetPower(pb->defaultPow_Melee * 1.08);
+				auto effect = Component_PlayerBehavior::defaultPow_Melee * .08f;
+				auto force = mel->GetPower() + effect;
+				mel->SetPower(force);
 				--time;
 
+				ret.isUsable = true;
+				isFirst = false;
+			}
+
+			else if (time > 0)
+			{
+				--time;
 				ret.isUsable = true;
 			}
 
 			else
 			{
-				mel->SetPower(pb->defaultPow_Melee);
+				auto effect = Component_PlayerBehavior::defaultPow_Melee * .08f;
+				auto force = mel->GetPower() - effect;
+				mel->SetPower(force);
 				ret.isUsable = false;
 			}
 			return ret;
 		};
 
+		  //‰ñ•œ(10%)
 	case 3: return[&,id](Component_PlayerBehavior* pb) mutable ->PlantData::FuncValue
 		{
 			ret.isUsable = false;
@@ -116,7 +137,8 @@ std::function<PlantData::FuncValue(Component_PlayerBehavior*)> PlantData::GetFun
 			return ret;
 		};
 
-	case 4: return[&,time = SecToFrame(30),id](Component_PlayerBehavior* pb) mutable ->PlantData::FuncValue
+		  //‰“‹——£UŒ‚—Í‘‰Á(8%)
+	case 4: return[&,time = SecToFrame(30),id ,isFirst = true](Component_PlayerBehavior* pb) mutable ->PlantData::FuncValue
 		{
 			ret.isUsable = false;
 			ret.time = time / FPS;
@@ -125,24 +147,36 @@ std::function<PlantData::FuncValue(Component_PlayerBehavior*)> PlantData::GetFun
 			ret.amount = 8;
 			auto* rng = static_cast<Component_ShootAttack*>(pb->GetChildComponent("ShootAttack"));
 
-			if (time > 0)
+			if (isFirst)
 			{
 				if (!rng)	return ret ;
 
-				rng->SetPower(pb->defaultPow_Range * 1.08);
+				auto effect = Component_PlayerBehavior::defaultPow_Range * .08f;
+				auto force = rng->GetPower() + effect;
+				rng->SetPower(force);
+				--time;
+				ret.isUsable = true;
+				isFirst = false;
+			}
+
+			else if (time > 0)
+			{
 				--time;
 				ret.isUsable = true;
 			}
 
 			else
 			{
-				rng->SetPower(pb->defaultPow_Range);
+				auto effect = Component_PlayerBehavior::defaultPow_Range * .08f;
+				auto force = rng->GetPower() - effect;
+				rng->SetPower(force);
 				ret.isUsable = false;
 			}
 
 			return ret;
 		};
 
+		  //‘Ì—Í’á‰º(20%)
 	case 5: return[&,id](Component_PlayerBehavior* pb) mutable ->PlantData::FuncValue
 		{
 			ret.isUsable = false;
@@ -160,6 +194,7 @@ std::function<PlantData::FuncValue(Component_PlayerBehavior*)> PlantData::GetFun
 			return ret;
 		};
 
+		  //Å‘å‘Ì—Í‘‰Á(25%)
 	case 6: return[&,id](Component_PlayerBehavior* pb) mutable ->PlantData::FuncValue
 		{
 			ret.isUsable = false;
@@ -171,14 +206,16 @@ std::function<PlantData::FuncValue(Component_PlayerBehavior*)> PlantData::GetFun
 			auto* hp = static_cast<Component_HealthGauge*>(pb->GetChildComponent("PlayerHealthGauge"));
 			if (!hp)	return ret;
 
-			auto fixedHP = (hp->GetMax() * 1.25);
+			auto effect = Component_PlayerBehavior::defaultMax_HP * 0.25;
+			auto fixedHP = (hp->GetMax() + effect);
 			hp->SetMax(fixedHP);
 			hp->SetNow(fixedHP);
 
 			return ret;
 		};
 
-	case 7: return[&,time = SecToFrame(100)](Component_PlayerBehavior* pb) mutable ->PlantData::FuncValue
+		  //•às‘¬“x‘‰Á(50%)
+	case 7: return[&,time = SecToFrame(100),isFirst = true](Component_PlayerBehavior* pb) mutable ->PlantData::FuncValue
 		{
 			ret.isUsable = false;
 			ret.time = time / FPS;
@@ -187,24 +224,35 @@ std::function<PlantData::FuncValue(Component_PlayerBehavior*)> PlantData::GetFun
 			ret.amount = 50;
 
 			auto* move = static_cast<Component_WASDInputMove*>(pb->GetChildComponent("InputMove"));
+			if (!move)	return ret;
 
-			if (time > 0)
+			if(isFirst)
 			{
-				if (!move)	return ret;
-
-				move->SetSpeed(pb->defaultSpeed_Walk *1.5);
+				auto effect = Component_PlayerBehavior::defaultSpeed_Walk * 0.5;
+				auto speed = move->GetSpeed() + effect;
+				move->SetSpeed(speed);
 				--time;
 				ret.isUsable = true;
+				isFirst = false;
+			}
+
+			else if (time > 0)
+			{
+				--time;
+				ret.isUsable = false;
 			}
 
 			else
 			{
-				move->SetSpeed(pb->defaultSpeed_Walk);
+				auto effect = Component_PlayerBehavior::defaultSpeed_Walk * 0.5;
+				auto speed = move->GetSpeed() - effect;
+				move->SetSpeed(speed);
 				ret.isUsable = false;
 			}
 			return ret;
 		};
 
+		  //‰ñ•œ(100%)
 	case 8: return[&,id](Component_PlayerBehavior* pb) mutable ->PlantData::FuncValue
 		{
 			ret.isUsable = false;
@@ -223,7 +271,8 @@ std::function<PlantData::FuncValue(Component_PlayerBehavior*)> PlantData::GetFun
 			return ret;
 		};
 
-	case 9: return[&,time = SecToFrame(20),id](Component_PlayerBehavior* pb) mutable ->PlantData::FuncValue
+		  //‹ßÚUŒ‚—Í‘‰Á(100%)
+	case 9: return[&,time = SecToFrame(20),id,isFirst = true](Component_PlayerBehavior* pb) mutable ->PlantData::FuncValue
 		{
 			ret.isUsable = false;
 			ret.time = time / FPS;
@@ -232,21 +281,33 @@ std::function<PlantData::FuncValue(Component_PlayerBehavior*)> PlantData::GetFun
 			ret.amount = 20;
 
 			auto* mel = static_cast<Component_MeleeAttack*>(pb->GetChildComponent("MeleeAttack"));
+			if (!mel)	return ret;
 
-			if (time > 0)
+			if (isFirst)
 			{
-				if (!mel)	return ret;
+				auto effect = Component_PlayerBehavior::defaultPow_Melee * 1.0f;
+				auto force = mel->GetPower() + effect;
+				mel->SetPower(force);
+				--time;
 
-				mel->SetPower(pb->defaultPow_Melee * 2.f);
+				ret.isUsable = true;
+				isFirst = false;
+			}
+
+			else if (time > 0)
+			{
 				--time;
 				ret.isUsable = true;
 			}
 
 			else
 			{
-				mel->SetPower(pb->defaultPow_Melee);
+				auto effect = Component_PlayerBehavior::defaultPow_Melee * 1.0f;
+				auto force = mel->GetPower() - effect;
+				mel->SetPower(force);
 				ret.isUsable = false;
 			}
+			return ret;
 
 			return ret;
 

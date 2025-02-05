@@ -50,6 +50,7 @@ Scene_Play::Scene_Play(GameObject* parent)
 
 void Scene_Play::Initialize()
 {
+	ScoreManager::justAvoidance = 0;
 	start_ = std::chrono::system_clock::now();
 	// ゲームモードによる初期化処理
 	switch (g_gameMode) 
@@ -446,23 +447,51 @@ void Scene_Play::UpdateScoreAttackMode(Component_PlayerBehavior* _playerBehavior
 	{
 		// シーン切替フラグを用意
 		bool isSceneChange = false;
+		Component_PlayerBehavior* pb = nullptr;
+		Component_BossBehavior* bb = nullptr;
 
 		// プレイヤーが死んだ場合、切替フラグを立てる
-		for (auto playerBehavior : pStage_->FindComponents(ComponentType::PlayerBehavior))if (((Component_PlayerBehavior*)playerBehavior)->IsDead()) { ScoreManager::isClear = false; isSceneChange = true; }
+		for (auto& playerBehavior : pStage_->FindComponents(ComponentType::PlayerBehavior))if (((Component_PlayerBehavior*)playerBehavior)->IsDead()) { ScoreManager::isClear = false; isSceneChange = true; pb = dynamic_cast<Component_PlayerBehavior*>(playerBehavior); }
 
 		// ボスが死んだ場合、切替フラグを立てる
-		for (auto bossBehavior : pStage_->FindComponents(ComponentType::BossBehavior)) if (((Component_BossBehavior*)bossBehavior)->IsDead()) { ScoreManager::isClear = true; isSceneChange = true; }
+		for (auto& bossBehavior : pStage_->FindComponents(ComponentType::BossBehavior)) if (((Component_BossBehavior*)bossBehavior)->IsDead()) { ScoreManager::isClear = true; isSceneChange = true; bb = dynamic_cast<Component_BossBehavior*>(bossBehavior); }
 
 		// タイマーが終了した場合、切替フラグを立てる
 		if (uiTimer != nullptr)
-			if (uiTimer->IsEnd()) 
-			{ ScoreManager::isClear = false; isSceneChange = true; }
+			if (uiTimer->IsEnd())
+			{}// { ScoreManager::isClear = false; isSceneChange = true; }
 
 		// シーン切替フラグが立っている場合
 		if (isSceneChange == true) {
 
+			//コンポーネントの取得
+			for (auto& playerBehavior : pStage_->FindComponents(ComponentType::PlayerBehavior))
+				pb = static_cast<Component_PlayerBehavior*>(playerBehavior);
+			for (auto& bossBehavior : pStage_->FindComponents(ComponentType::CactanBehavior))//BossBehaviorにするとplayerが返ってくる。謎
+				bb = dynamic_cast<Component_BossBehavior*>(bossBehavior);
+
 			// タイマーの最終値を取得
 			ScoreManager::time = uiTimer->GetSeconds();
+
+			//ユーザー名の取得
+			ScoreManager::userName = (UserManager::GetInstance().GetLoggedInUser())->userName;
+			{
+				//受けたダメージの計算、設定
+				Component_HealthGauge* hg = nullptr;
+				for (auto& itr : pb->GetChildComponent(ComponentType::HealthGauge))
+					hg = static_cast<Component_HealthGauge*>(itr);
+
+				ScoreManager::recieveDMG = hg->GetMax() - hg->GetNow();
+				ScoreManager::playerHp = hg->GetNow();
+			}
+
+			{
+				//ボスに与えたダメージの計算、設定
+				Component_HealthGauge* hg = nullptr;
+				hg = static_cast<Component_HealthGauge*>(bb->GetChildComponent("HealthGauge"));
+
+				ScoreManager::dealtDMG = hg->GetMax() - (hg->GetMax() - hg->GetNow());
+			}
 
 			// シーンを切り替える
 			SceneManager* sceneManager = (SceneManager*)FindObject("SceneManager");

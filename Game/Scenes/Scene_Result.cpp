@@ -107,7 +107,7 @@ void Scene_Result::InitializeScoreAttackResult()
 	static_cast<UIText*>(uiPanel->GetUIObject("Value_dealtDamageAmount"))->SetSize(0);
 	scoreAttackUpdateFunction = ScoreManager::isClear ?
 		&Scene_Result::UpdateTexts :
-		&Scene_Result::UpdateTexts;
+		&Scene_Result::UpdateWaitingForReturn;
 	//&Scene_Result::UpdateWaitingForReturn;
 
 
