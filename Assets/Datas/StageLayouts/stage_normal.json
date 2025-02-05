@@ -70,7 +70,7 @@
     "position_": [ 0.0, 1.5, 0.0 ],
     "rotate_": [ 0.0, 0.0, 0.0 ],
     "scale_": [ 3.0, 3.0, 3.0 ],
-    "shaderType_": 4
+    "shaderType_": 8
   },
   "00_player": {
     "fallSpeed_": 1.0,
@@ -130,7 +130,7 @@
     "position_": [ -1.0664944648742676, 5, -13.541975021362305 ],
     "rotate_": [ 0.0, 0.0, 0.0 ],
     "scale_": [ 0.5, 0.5, 0.5 ],
-    "shaderType_": 4
+    "shaderType_": 0
       
   },
   "blue01": {

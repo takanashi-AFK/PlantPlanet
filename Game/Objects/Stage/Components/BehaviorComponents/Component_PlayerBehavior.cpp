@@ -88,7 +88,7 @@ void Component_PlayerBehavior::PUPlantPutImageScreenOut()
 			if (!ui)return;
 
 			ui->SetVisible(true);
-			ui->GetEasing()->GetEasing()->pile_ = NULL;
+			ui->GetEasing()->GetEasing()->pile_ = .3f;
 		};
 
 	UISet(pickUpPlantBackGround_);

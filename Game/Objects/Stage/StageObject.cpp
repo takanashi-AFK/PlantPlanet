@@ -57,7 +57,7 @@ namespace {
 
 StageObject::StageObject(string _name, string _modelFilePath, GameObject* _parent)
 	:GameObject(_parent, _name), modelFilePath_(_modelFilePath), modelHandle_(-1), myComponents_(), fallSpeed_(1), isOnGround_(false)
-	,shaderType_(Direct3D::SHADER_3D), isColliding_(true),objectType_(ObjectType::TYPE_NONE),isDrawing_(true)
+	,shaderType_(Direct3D::SHADER_3D), isColliding_(true),objectType_(ObjectType::TYPE_NONE),isDrawing_(true),originalShaderType_(Direct3D::SHADER_3D)
 {
 }
 
@@ -309,7 +309,7 @@ void StageObject::Save(json& _saveObj)
 	_saveObj["modelFilePath_"] = modelFilePath_;
 
 	// 陰影の表示フラグを保存
-	_saveObj["shaderType_"] = (int)shaderType_;
+	_saveObj["shaderType_"] = (int)originalShaderType_;
 
 	// 接地処理の情報を保存
 	_saveObj["isOnGround_"] = (bool)isOnGround_;
@@ -338,7 +338,8 @@ void StageObject::Load(json& _loadObj)
 	modelFilePath_ = _loadObj["modelFilePath_"];
 
 	// 陰影の表示フラグを読込
-	if(_loadObj.contains("shaderType_"))shaderType_ = _loadObj["shaderType_"];
+	if(_loadObj.contains("shaderType_"))originalShaderType_ = _loadObj["shaderType_"];
+	shaderType_ = originalShaderType_;
 
 	// 接地処理の情報を読込
 	if (_loadObj.contains("isOnGround_"))isOnGround_ = _loadObj["isOnGround_"];
@@ -405,10 +406,10 @@ void StageObject::DrawData()
 		
 		constexpr uint8_t shader3d_MAX = Direct3D::SHADER_TYPE::SHADER_MAX;
 
-		ImGui::InputInt("shaderType_", (int*)&shaderType_);
-		shaderType_ = shaderType_ < 0 ?static_cast<Direct3D::SHADER_TYPE>( Direct3D::SHADER_MAX-1) :static_cast<Direct3D::SHADER_TYPE>(shaderType_ % shader3d_MAX);
+		ImGui::InputInt("shaderType_", (int*)&originalShaderType_);
+		originalShaderType_ = originalShaderType_ < 0 ?static_cast<Direct3D::SHADER_TYPE>( Direct3D::SHADER_MAX-1) :static_cast<Direct3D::SHADER_TYPE>(originalShaderType_ % shader3d_MAX);
 		
-		auto shaderName = Direct3D::GetShaderName(shaderType_);
+		auto shaderName = Direct3D::GetShaderName(originalShaderType_);
 				
 		ImGui::Text(string{ shaderName.begin(), shaderName.end()}.c_str());
 

@@ -39,7 +39,7 @@ protected:
 	float fallSpeed_;                   // 落下速度
 
 	Direct3D::SHADER_TYPE shaderType_;   // シェーダータイプ
-
+	Direct3D::SHADER_TYPE originalShaderType_;//本来のシェーダー(ダメージを受けたときにshaderType_がかわるため保持が必要)
 
 public:
 
@@ -104,6 +104,7 @@ getter :*/
 
 	/// <summary> シェーダータイプの取得 </summary>
 	Direct3D::SHADER_TYPE GetShaderType() const { return shaderType_; }
+	Direct3D::SHADER_TYPE GetOriginalShaderType() const { return originalShaderType_;}
 
 	/// <summary> 衝突するかどうかを取得 </summary>
 	bool GetIsColliding() { return isColliding_; }
@@ -130,6 +131,7 @@ setter :*/
 
 	/// <summary> シェーダータイプの設定 </summary>
 	void SetShader(Direct3D::SHADER_TYPE _type) { shaderType_ = _type; };
+	void SetOriginalShader(Direct3D::SHADER_TYPE _type) { originalShaderType_ = _type; }
 
 	void SetObjectType(ObjectType _type) { objectType_ = _type; }
   

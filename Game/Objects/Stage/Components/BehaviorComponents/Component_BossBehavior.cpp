@@ -67,7 +67,6 @@ void Component_BossBehavior::Initialize()
 	// fix: コライダーのサイズを今後データから読み込むように変更
 	holder_->AddCollider(new BoxCollider({}, BOSS_COLLIDER_SIZE));
 
-	//holder_->SetShader(Direct3D::SHADER_BOSS);
 }
 
 void Component_BossBehavior::Update()
