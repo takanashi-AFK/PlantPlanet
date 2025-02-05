@@ -118,7 +118,7 @@ void Component_PlayerBehavior::Initialize()
 	EFFEKSEERLIB::gEfk->AddEffect("dodge", "Effects/Lazer01.efk");
 	EFFEKSEERLIB::gEfk->AddEffect("impact", "Effects/Attack_Impact.efk");
 	EFFEKSEERLIB::gEfk->AddEffect("get", "Effects/twinkle.efk");
-	EFFEKSEERLIB::gEfk->AddEffect("powerUp", "Effects/wallBreak.efk");
+	EFFEKSEERLIB::gEfk->AddEffect("powerUp", "Effects/powerUp.efk");
 
 	// 子コンポーネントの追加
 	if (FindChildComponent("InputMove") == false)AddChildComponent(CreateComponent("InputMove", WASDInputMove, holder_, this));
@@ -942,7 +942,7 @@ void Component_PlayerBehavior::MadeSalad()
 		EFFEKSEERLIB::EFKTransform t;
 		DirectX::XMStoreFloat4x4(&(t.matrix), holder_->GetWorldMatrix());
 		t.isLoop = false;
-		t.maxFrame = 30;
+		t.maxFrame = 60;
 		t.speed = 1;
 
 		effectModelTransform = EFFEKSEERLIB::gEfk->Play("powerUp", t);
