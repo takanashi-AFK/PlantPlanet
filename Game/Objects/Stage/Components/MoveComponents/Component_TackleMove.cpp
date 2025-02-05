@@ -18,6 +18,7 @@ Component_TackleMove::Component_TackleMove(string _name, StageObject* _holder, C
 
 void Component_TackleMove::Initialize()
 {
+	volatile auto i = 0;
 }
 
 void Component_TackleMove::Update()

@@ -85,6 +85,8 @@ void Component_PlayerBehavior::PUPlantPutImageScreenOut()
 {
 	auto UISet = [](UIImage* ui)
 		{
+			if (!ui)return;
+
 			ui->SetVisible(true);
 			ui->GetEasing()->GetEasing()->pile_ = NULL;
 		};
@@ -99,6 +101,8 @@ void Component_PlayerBehavior::PUPlantRiseImage()
 {
 	auto UISet = [this](UIImage* ui)
 		{
+			if (!ui)return;
+
 			ui->SetVisible(true);
 
 			auto& pile = ui->GetEasing()->GetEasing()->pile_;
@@ -109,6 +113,8 @@ void Component_PlayerBehavior::PUPlantRiseImage()
 	UISet(pickUpPlantImage_);
 	
 	++pickUpPlantImageTime_;
+
+	if (!pickUpPlantImage_)return;
 
 	if (pickUpPlantImage_->GetEasing()->GetEasing()->pile_ < 1.0)return;
 
@@ -121,6 +127,8 @@ void Component_PlayerBehavior::PUPlantPutImageTopEasing()
 
 	auto UISet = [this](UIImage* ui)
 		{
+			if (!ui)return;
+
 			ui->SetVisible(true);
 			ui->GetEasing()->GetEasing()->pile_ = 1.0f;
 		};
@@ -140,6 +148,8 @@ void Component_PlayerBehavior::PUPlantFallImage()
 {
 	auto UISet = [this](UIImage* ui)
 		{
+			if (!ui)return;
+
 			ui->SetVisible(true);
 
 			auto& pile = ui->GetEasing()->GetEasing()->pile_;
@@ -151,7 +161,7 @@ void Component_PlayerBehavior::PUPlantFallImage()
 	UISet(pickUpPlantBackGround_);
 	UISet(pickUpPlantImage_);
 
-	
+	if (!pickUpPlantImage_)return;
 	if (pickUpPlantImage_->GetEasing()->GetEasing()->pile_ > .0f)return;
 
 	easingPickUpPlantImage = [this]() {PUPlantPutImageScreenOut(); };
@@ -266,10 +276,12 @@ void Component_PlayerBehavior::Initialize()
 	pickUpPlantImage_ = static_cast<UIImage*>(UIPanel::GetInstance()->FindObject("PickUp-Plant-Image"));
 	pickUpPlantBackGround_ = static_cast<UIImage*>(UIPanel::GetInstance()->FindObject("PickUp-Plant-BackGround"));
 
+	if(pickUpPlantImage_ && pickUpPlantBackGround_)
 	const_cast<float&>(PUPlantEasingRatio_) = pickUpPlantImage_->GetEasing()->GetEasing()->ratio_ ;
 
 	auto resetRatioAndPile = [this](UIObject* ui)
 		{
+			if (!ui)return;
 			auto easingData = ui->GetEasing()->GetEasing();
 			easingData->ratio_ = NULL;
 			easingData->pile_ = NULL;
@@ -1060,7 +1072,6 @@ void Component_PlayerBehavior::MadeSalad()
 
 void Component_PlayerBehavior::ApplyEffects()
 {
-
 	int index = 0;
 	for (auto itr = saladEffects_.begin(); itr != saladEffects_.end();) {
 		

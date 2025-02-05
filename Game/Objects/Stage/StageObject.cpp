@@ -326,11 +326,6 @@ void StageObject::Load(json& _loadObj)
 	this->DeleteAllComponent();
 
 	// ïœå`çsóÒèÓïÒÇì«çû
-	for (auto& itr : _loadObj.items())
-	{
-		auto str = itr.key();
-		int temp = 0;
-	}
 	if (_loadObj.contains("position_"))transform_.position_ = { _loadObj["position_"][0].get<float>(),_loadObj["position_"][1].get<float>(), _loadObj["position_"][2].get<float>() };
 	if (_loadObj.contains("rotate_"))transform_.rotate_ = { _loadObj["rotate_"][0].get<float>(),_loadObj["rotate_"][1].get<float>(), _loadObj["rotate_"][2].get<float>() };
 	if (_loadObj.contains("scale_"))transform_.scale_ = { _loadObj["scale_"][0].get<float>(),_loadObj["scale_"][1].get<float>(), _loadObj["scale_"][2].get<float>() };
