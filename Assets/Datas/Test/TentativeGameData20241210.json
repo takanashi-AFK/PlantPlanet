@@ -174,8 +174,8 @@
       "BreakableWall": {
         "childComponents_": {
           "RectangleDetector": {
-            "length_.x": 4.0,
-            "length_.y": 2.0,
+            "length_.x": 20.0,
+            "length_.y": 5.0,
             "name_": "RectangleDetector",
             "target_": "00_player",
             "type_": 30

@@ -68,6 +68,8 @@ public:
 	void SetLength(float _x, float _y) { SetLength(XMFLOAT2(_x, _y)); }
 
 
+	XMFLOAT2 GetLength() { return length_; }
+
 
 };
 
