@@ -195,6 +195,8 @@ void Component_PlayerBehavior::Initialize()
 	// effekseer: :Effectの読み込み
 	EFFEKSEERLIB::gEfk->AddEffect("dodge", "Effects/Lazer01.efk");
 	EFFEKSEERLIB::gEfk->AddEffect("impact", "Effects/Attack_Impact.efk");
+	EFFEKSEERLIB::gEfk->AddEffect("get", "Effects/twinkle.efk");
+	EFFEKSEERLIB::gEfk->AddEffect("powerUp", "Effects/powerUp.efk");
 
 	// 子コンポーネントの追加
 	if (FindChildComponent("InputMove") == false)AddChildComponent(CreateComponent("InputMove", WASDInputMove, holder_, this));
@@ -949,6 +951,14 @@ void Component_PlayerBehavior::Interact()
 
 				interactTimeCircle->SetVisible(false);
 				interactTimeCircleFrame->SetVisible(false);
+				EFFEKSEERLIB::EFKTransform t;
+
+				DirectX::XMStoreFloat4x4(&(t.matrix), holder_->GetWorldMatrix());
+				t.isLoop = false;
+				t.maxFrame = EFFECT_FRAME;
+				t.speed = EFFECT_SPEED;
+				effectModelTransform = EFFEKSEERLIB::gEfk->Play("get", t);
+
 			}
 			else if (nearestObject != nullptr && nearestObject->GetObjectType() == StageObject::TYPE_WALL && isBreakableWall_) {
 				// 壁オブジェクトを削除
@@ -1008,7 +1018,7 @@ void Component_PlayerBehavior::Melee()
 
 	// 攻撃処理が終了していたら...
 	if (melee->IsActive() == false) {
-
+	
 		// 攻撃フラグをリセット
 		isMeleeStart_ = true;
 
@@ -1030,8 +1040,18 @@ void Component_PlayerBehavior::MadeSalad()
 	Component_WASDInputMove* move = (Component_WASDInputMove*)(GetChildComponent("InputMove"));
 	if (move == nullptr) [[unlikely]] return;
 
+	
+
 	move->Stop();
 	if (motion->IsEnd() == true) {
+
+		EFFEKSEERLIB::EFKTransform t;
+		DirectX::XMStoreFloat4x4(&(t.matrix), holder_->GetWorldMatrix());
+		t.isLoop = false;
+		t.maxFrame = 60;
+		t.speed = 1;
+
+		effectModelTransform = EFFEKSEERLIB::gEfk->Play("powerUp", t);
 		move->Execute();
 		isEatSaladEnd_ = false;
 		IsWASDKey() ? SetState(PLAYER_STATE_WALK) : SetState(PLAYER_STATE_IDLE);

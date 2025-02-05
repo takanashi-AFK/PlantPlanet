@@ -29,6 +29,8 @@ void Component_MeleeEnemyBehavior::Initialize()
 {
 	holder_->AddCollider(new BoxCollider(XMFLOAT3(0, 0, 0), XMFLOAT3(1, 1, 1)));
 	holder_->SetObjectType(StageObject::TYPE_ENEMY);
+	EFFEKSEERLIB::gEfk->AddEffect("enemyDead", "Effects/EnemyDead.efk");
+
 
 	// 子コンポーネントを追加
 	if (FindChildComponent("CircleRangeDetector") == false)AddChildComponent(CreateComponent("CircleRangeDetector", CircleRangeDetector, holder_, this));
@@ -226,6 +228,13 @@ void Component_MeleeEnemyBehavior::Dead()
 
 	unordered_map<int, PlantData> plantData = PlantCollection::GetPlants();
 	if (plantData.size() <= 0)return;
+
+	EFFEKSEERLIB::EFKTransform t;
+	DirectX::XMStoreFloat4x4(&(t.matrix), holder_->GetWorldMatrix());
+	t.isLoop = false;
+	t.maxFrame = 60;
+	t.speed = 0.1;
+	effectModelTransform = EFFEKSEERLIB::gEfk->Play("enemyDead", t);
 
 	for (auto& plant : plantData) {
 		if (plant.second.name_ == dropFlowerName_) {

@@ -1,7 +1,8 @@
 #pragma once
 #include "../Component.h"
-class StageObject;
+#include "../../../../../EffekseeLib/EffekseerVFX.h"
 
+class StageObject;
 class Component_MeleeEnemyBehavior :
 	public Component
 {
@@ -25,6 +26,7 @@ private:
 	bool isFlowerSpawned_;
 
 	string dropFlowerName_;
+	std::shared_ptr<EFFEKSEERLIB::EFKTransform> effectModelTransform;
 
 public:
 	Component_MeleeEnemyBehavior(string _name, StageObject* _holder, Component* _parent);
@@ -34,6 +36,7 @@ public:
 	void Save(json& _saveObj) override;
 	void Load(json& _loadObj) override;
 	void DrawData() override;
+
 
 	void Idle();
 	void Move();
