@@ -29,6 +29,10 @@ float4 PS(VS_OUTPUT input) : SV_Target
     
     col.rg += edge;
     col.b -= edge;
+    
+    float gpos = ((input.pos.x / 1288.f) + (input.pos.y / 728.f)) / 2.f;
+    gpos = 1 - gpos;
+    col.a = gpos <= fade_ ? .0f : 1.f * col.a;
 
     return col;
 }

@@ -32,10 +32,12 @@ namespace UIInventory {
 
 	bool showInventory_ = false;
 	bool isMadeSalad_ = false;
+	bool isFirstSelectButton_ = true;
 
 	Salad prevSalad;
 	std::array<PlantData, MakeSalad::NEED_PLANT_NUM> prevRecipe_;
-	bool isFirstSelectButton_ = true;
+
+	float fade_;
 
 	void Initialize()
 	{
@@ -81,6 +83,21 @@ namespace UIInventory {
 		itemPanel_ = UIPanel::GetInstance();
 		int x, y;
 		itemPanel_->GetButtonIndex(&x, &y);
+
+		//ポップアップの非表示
+		(itemPanel_->FindObject("PopUp-Image-BackGround"))->SetVisible(false);
+		(itemPanel_->FindObject("PopUp-Text-Title"))->SetVisible(false);
+		for (auto i = 0u; i <Component_PlayerBehavior::NEED_PLANT_NUM; ++i) {
+
+			(itemPanel_->FindObject(std::format("PopUp-Image-Effect-Icon{}", i)))->SetVisible(false);
+			(UIPanel::GetInstance()->FindObject(std::format("PopUp-Text-Effect{}", i)))->SetVisible(false);
+		}
+
+		//拾った植物アイコンの非表示
+		(itemPanel_->FindObject("PickUp-Plant-Image"))->SetVisible(false);
+		(UIPanel::GetInstance()->FindObject("PickUp-Plant-BackGround"))->SetVisible(false);
+
+		itemPanel_->GetUIObject("CheckLogo-IsBreakableWall")->SetVisible(false);
 
 		{
 			if (Input::IsPadButtonDown(XINPUT_GAMEPAD_DPAD_LEFT)) {
@@ -170,8 +187,6 @@ namespace UIInventory {
 
 		}
 
-
-
 		// インベントリのボタンが押された場合
 		for (auto inv : getPlantTable_) {
 			if (Confirm((UIButton*)inv)) {
@@ -242,7 +257,7 @@ namespace UIInventory {
 		if (Confirm(makeButton_))
 		{
 			if (!Check()) return;
-
+			
 			Make();
 			isMadeSalad_ = true;
 
@@ -273,6 +288,10 @@ namespace UIInventory {
 		if (makeFromHistoryButton_->OnClick())
 		{
 			MakeFromHistory();
+		}
+
+		for (auto& ui : invTable_) {
+			ui->SetFade(fade_);
 		}
 	}
 
@@ -436,6 +455,24 @@ namespace UIInventory {
 	bool IsMadeSalad()
 	{
 		return isMadeSalad_;
+	}
+
+	void SetsAlpha(uint8_t alpha)
+	{
+		//set all ui's alpha
+		for (auto& ui : invTable_) {
+			ui->SetAlpha(alpha);
+		}
+	}
+
+	void SetFade(float fade)
+	{
+		fade_ = fade;
+	}
+
+	float GetFade()
+	{
+		return fade_;
 	}
 
 	void MakeFromHistory()

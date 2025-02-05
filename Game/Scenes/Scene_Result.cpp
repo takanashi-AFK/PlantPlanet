@@ -356,7 +356,7 @@ void Scene_Result::UpdateWaitingForReturn()
 	if (returnButton->OnClick() || Input::IsPadButtonDown(XINPUT_GAMEPAD_A))
 	{
 		SceneManager* sceneManager = (SceneManager*)FindObject("SceneManager");
-		sceneManager->ChangeScene(SCENE_ID_END, TID_BLACKOUT);
+		sceneManager->ChangeScene(SCENE_ID_MENU, TID_BLACKOUT);
 
 		scoreAttackUpdateFunction = &Scene_Result::UpdateEmptyWork;
 	}

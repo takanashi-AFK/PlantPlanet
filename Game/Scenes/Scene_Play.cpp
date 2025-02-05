@@ -42,7 +42,8 @@ Scene_Play::Scene_Play(GameObject* parent)
 	fixedCursorPos_(true), 
 	cursorVisible_(true),
 	isShowInventoryFirstTime_(false),
-	isOpenInventoryUI_(false)
+	isOpenInventoryUI_(false),
+	fade_{ 1.f }
 {
 	UICursor::ToHide(true);
 }
@@ -258,6 +259,7 @@ void Scene_Play::UpdateAdventureMode(Component_PlayerBehavior* _playerBehavior, 
 	if (isOpenInventoryUI_ == true) UpdateInventoryUI();
 	else							UpdateNormalUI(_playerBehavior, _bossBehavior);
 
+
 	// シーン遷移条件検知処理
 	bool isSceneChange = false; {
 
@@ -316,8 +318,11 @@ void Scene_Play::UpdateInventoryUI()
 	// インベントリUIを閉じる(非表示にする)処理
 	if (Input::IsKeyDown(DIK_Q) || Input::IsPadButtonDown(XINPUT_GAMEPAD_B) || UIInventory::IsShowInventory() == false) CloseInventoryUI();
 
-	// UIインベントリの更新処理
+	// UIインベントリの更新、フェード処理
+	UIInventory::SetFade(fade_);
 	UIInventory::Update();
+	fade_ -= FADESPEED;
+	fade_ = std::clamp(fade_, 0.f, 1.f);
 }
 
 void Scene_Play::UpdateNormalUI(Component_PlayerBehavior* _playerBehavior, Component_BossBehavior* _bossBehavior)
@@ -343,6 +348,18 @@ void Scene_Play::UpdateNormalUI(Component_PlayerBehavior* _playerBehavior, Compo
 		if (playerResearchPointCircle != nullptr)playerResearchPointCircle->SetProgress(_playerBehavior->GetResearchPoint(), 100);
 	}
 
+	fade_ += FADESPEED;
+	UIInventory::ShowInventory(false);
+
+	//フェード中ならUIInventoryを可視化しフェーディングする
+	if (fade_ < 1.f)
+	{
+		UIInventory::ShowInventory(true);
+		UIInventory::SetFade(fade_);
+		UIInventory::Update();
+	}
+	fade_ = std::clamp(fade_, 0.f, 1.f);
+
 	// インベントリUIを開く(表示する)処理
 	if (Input::IsKeyDown(DIK_Q) || Input::IsPadButtonDown(XINPUT_GAMEPAD_B)) OpenInventoryUI();
 }
@@ -350,7 +367,7 @@ void Scene_Play::UpdateNormalUI(Component_PlayerBehavior* _playerBehavior, Compo
 void Scene_Play::CloseInventoryUI()
 {
 	isOpenInventoryUI_ = false;			// インベントリUIを閉じる(非表示にする)処理
-	UIInventory::ShowInventory(false);	// インベントリUIを非表示にする
+	UIInventory::ShowInventory(true);	// インベントリUIを非表示にする
 	EnterOtherObject(this);				// 他のオブジェクトを有効化
 	isShowInventoryFirstTime_ = true;	// インベントリUIを初めて表示したかのフラグを立てる
 
@@ -360,6 +377,9 @@ void Scene_Play::CloseInventoryUI()
 	// カーソルの表示状態を切り替える
 	cursorVisible_ = !fixedCursorPos_;
 	UICursor::ToHide(!cursorVisible_);
+
+	UIInventory::SetFade(1.0);
+	UIInventory::Update();
 }
 
 void Scene_Play::OpenInventoryUI()
@@ -377,6 +397,9 @@ void Scene_Play::OpenInventoryUI()
 	// カーソルの表示状態を切り替える
 	cursorVisible_ = !fixedCursorPos_;
 	UICursor::ToHide(!cursorVisible_);
+
+	UIInventory::SetFade(1.0);
+	UIInventory::Update();
 }
 
 void Scene_Play::InitScoreAttackMode()

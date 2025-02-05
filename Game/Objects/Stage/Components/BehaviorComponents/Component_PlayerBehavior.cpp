@@ -81,6 +81,83 @@ namespace {
 
 }
 
+void Component_PlayerBehavior::PUPlantPutImageScreenOut()
+{
+	auto UISet = [](UIImage* ui)
+		{
+			ui->SetVisible(true);
+			ui->GetEasing()->GetEasing()->pile_ = NULL;
+		};
+
+	UISet(pickUpPlantBackGround_);
+	UISet(pickUpPlantImage_);
+
+	pickUpPlantImageTime_ = 0u;
+}
+
+void Component_PlayerBehavior::PUPlantRiseImage()
+{
+	auto UISet = [this](UIImage* ui)
+		{
+			ui->SetVisible(true);
+
+			auto& pile = ui->GetEasing()->GetEasing()->pile_;
+			pile += PUPlantEasingRatio_;
+		};
+
+	UISet(pickUpPlantBackGround_);
+	UISet(pickUpPlantImage_);
+	
+	++pickUpPlantImageTime_;
+
+	if (pickUpPlantImage_->GetEasing()->GetEasing()->pile_ < 1.0)return;
+
+	easingPickUpPlantImage = [this]() {PUPlantPutImageTopEasing(); };
+	pickUpPlantImageTime_ = 0u;
+}
+
+void Component_PlayerBehavior::PUPlantPutImageTopEasing()
+{
+
+	auto UISet = [this](UIImage* ui)
+		{
+			ui->SetVisible(true);
+			ui->GetEasing()->GetEasing()->pile_ = 1.0f;
+		};
+
+	UISet(pickUpPlantBackGround_);
+	UISet(pickUpPlantImage_);
+
+	++pickUpPlantImageTime_;
+
+	if (pickUpPlantImageTime_ < PUPlantTopRemainSec_ * FPS)return;
+
+	easingPickUpPlantImage = [this]() {PUPlantFallImage(); };
+	pickUpPlantImageTime_ = 0u;
+}
+
+void Component_PlayerBehavior::PUPlantFallImage()
+{
+	auto UISet = [this](UIImage* ui)
+		{
+			ui->SetVisible(true);
+
+			auto& pile = ui->GetEasing()->GetEasing()->pile_;
+			pile -= PUPlantEasingRatio_;
+		};
+
+	++pickUpPlantImageTime_;
+
+	UISet(pickUpPlantBackGround_);
+	UISet(pickUpPlantImage_);
+
+	
+	if (pickUpPlantImage_->GetEasing()->GetEasing()->pile_ > .0f)return;
+
+	easingPickUpPlantImage = [this]() {PUPlantPutImageScreenOut(); };
+	pickUpPlantImageTime_ = 0u;
+}
+
 Component_PlayerBehavior::Component_PlayerBehavior(string _name, StageObject* _holder, Component* _parent)
 	: Component(_holder, _name, PlayerBehavior, _parent),
 	shootHeight_(1.0f),
@@ -102,7 +179,8 @@ Component_PlayerBehavior::Component_PlayerBehavior(string _name, StageObject* _h
 	timeCollectPlant(defaultTime_CollectPlant),
 	saladEffects_{},
 	isEatSaladEnd_(false),
-	isFirstOverMAXReserchPoint(true)
+	isFirstOverMAXReserchPoint(true),
+	checkLogoBreakableWall_{nullptr}
 {
 }
 
@@ -148,7 +226,7 @@ void Component_PlayerBehavior::Initialize()
 		popUpInfo_.texts_[i] = static_cast<UIText*>(UIPanel::GetInstance()
 			->FindObject(std::format("PopUp-Text-Effect{}",i)));
 
-		if (!popUpInfo_.images_[i] || !popUpInfo_.texts_[i]) continue;
+		if (!popUpInfo_.images_[i] || !popUpInfo_.texts_[i])[[unlikely]] continue;
 
 		popUpInfo_.images_[i]->SetImage("Models/tentativeFlowers/BlankFlowerImage.png");
 		popUpInfo_.texts_[i]->SetText("");
@@ -169,7 +247,7 @@ void Component_PlayerBehavior::Initialize()
 		historySaladEffect_.texts_[i] = static_cast<UIText*>(UIPanel::GetInstance()
 			->FindObject(std::format("INV-History-Text{}", i)));
 
-		if (!historySaladEffect_.images_[i] || !historySaladEffect_.texts_[i]) continue;
+		if (!historySaladEffect_.images_[i] || !historySaladEffect_.texts_[i])[[unlikely]] continue;
 
 		historySaladEffect_.images_[i]->SetImage("Models/tentativeFlowers/BlankFlowerImage.png");
 		historySaladEffect_.texts_[i]->SetText("");
@@ -180,10 +258,27 @@ void Component_PlayerBehavior::Initialize()
 		historySaladPlant_[i] = static_cast<UIImage*>(UIPanel::GetInstance()
 			->FindObject(std::format("INV-History-Plant{}", i)));
 		plantFilePath_[i] = "Models/tentativeFlowers/BlankFlowerImage.png";
-		if (!historySaladPlant_[i]) continue;
+		if (!historySaladPlant_[i])[[unlikely]] continue;
 		historySaladPlant_[i]->SetImage("Models/tentativeFlowers/BlankFlowerImage.png");
 
 	}
+
+	pickUpPlantImage_ = static_cast<UIImage*>(UIPanel::GetInstance()->FindObject("PickUp-Plant-Image"));
+	pickUpPlantBackGround_ = static_cast<UIImage*>(UIPanel::GetInstance()->FindObject("PickUp-Plant-BackGround"));
+
+	const_cast<float&>(PUPlantEasingRatio_) = pickUpPlantImage_->GetEasing()->GetEasing()->ratio_ ;
+
+	auto resetRatioAndPile = [this](UIObject* ui)
+		{
+			auto easingData = ui->GetEasing()->GetEasing();
+			easingData->ratio_ = NULL;
+			easingData->pile_ = NULL;
+		};
+
+	resetRatioAndPile(pickUpPlantImage_);
+	resetRatioAndPile(pickUpPlantBackGround_);
+
+	checkLogoBreakableWall_ = static_cast<UIImage*>(UIPanel::GetInstance()->FindObject("CheckLogo-IsBreakableWall"));
 
 	auto* move = static_cast<Component_WASDInputMove*>(GetChildComponent("InputMove"));
 	move->SetSpeed(this->defaultSpeed_Walk);
@@ -204,14 +299,16 @@ void Component_PlayerBehavior::Initialize()
 		if (staminaBar != nullptr && sg != nullptr)staminaBar->SetProgress(sg->now_, sg->max_);
 	}
 
-
+	easingPickUpPlantImage = [this]() {PUPlantPutImageScreenOut(); };
 }
 
 void Component_PlayerBehavior::Update()
 {
-	// ResetSaladEffectLogo();
+	ResetSaladEffectLogo();
 	ApplyEffects();
 	DrawPopUp();
+
+	easingPickUpPlantImage();
 
 	// ＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝ //
 	// カウント制御されている場合の処理 //
@@ -372,7 +469,7 @@ void Component_PlayerBehavior::AddReserchPoint(int point)
 	constexpr int MAX_RESERCH_POINT = 100;
 
 	//100を超えていたかつ初めての時、帰還ゲートを可視化する
-	if (researchPoint_ >= MAX_RESERCH_POINT && isFirstOverMAXReserchPoint)
+	if (researchPoint_ >= MAX_RESERCH_POINT && isFirstOverMAXReserchPoint)[[unlikely]]
 	{
 		//ゲートを見つける
 		Component_ReturnGate* rg = static_cast<Component_ReturnGate*>
@@ -394,13 +491,21 @@ void Component_PlayerBehavior::SetTimeCollectPlant(float time)
 	timeCollectPlant = time;
 }
 
+void Component_PlayerBehavior::SetPickUpPlantImage(string imagePath)
+{
+	PUPlantPutImageScreenOut();
+	easingPickUpPlantImage = [this]() {PUPlantRiseImage(); };
+	pickUpPlantImage_->SetImage(imagePath);
+	pickUpPlantImageTime_ = 0u;
+}
+
 void Component_PlayerBehavior::Idle()
 {
 	// 移動コンポーネントの取得 & 有無の確認
 	Component_WASDInputMove* move = (Component_WASDInputMove*)(GetChildComponent("InputMove"));
-	if (move == nullptr)return;
+	if (move == nullptr)[[unlikely]]return;
 	Component_StaminaGauge* sg = (Component_StaminaGauge*)(GetChildComponent("StaminaGauge"));
-	if (sg == nullptr)return;
+	if (sg == nullptr)[[unlikely]]return;
 	// 状態優先度：歩行 > 射撃
 	// `InputMove`コンポーネントの移動フラグが立っていたら...歩行状態に遷移
 	if (move->IsMove()) SetState(PLAYER_STATE_WALK);
@@ -450,9 +555,9 @@ void Component_PlayerBehavior::Walk()
 {
 	// 移動コンポーネントの取得 & 有無の確認
 	Component_WASDInputMove* move = (Component_WASDInputMove*)(GetChildComponent("InputMove"));
-	if (move == nullptr)return;
+	if (move == nullptr)[[unlikely]]return;
 	Component_StaminaGauge* sg = (Component_StaminaGauge*)(GetChildComponent("StaminaGauge"));
-	if (sg == nullptr)return;
+	if (sg == nullptr) [[unlikely]] return;
 
 	// 移動コンポーネントが移動していなかったら...IDLE状態に遷移
 	if (move->IsMove() == false) {
@@ -510,15 +615,15 @@ void Component_PlayerBehavior::Shoot()
 	}
 
 	Component_StaminaGauge* sg = (Component_StaminaGauge*)(GetChildComponent("StaminaGauge"));
-	if (sg == nullptr)return;
+	if (sg == nullptr) [[unlikely]] return;
 
 	// モーションコンポーネントの取得 & 有無の確認
 	Component_PlayerMotion* motion = (Component_PlayerMotion*)(GetChildComponent("PlayerMotion"));
-	if (motion == nullptr)return;
+	if (motion == nullptr) [[unlikely]] return;
 
 	// TPSカメラの方向を取得
 	TPSCamera* tpsCamera = (TPSCamera*)holder_->FindObject("TPSCamera");
-	if (tpsCamera != nullptr)prevAngles_.y = tpsCamera->GetAngle().y; // 向きの更新
+	if (tpsCamera != nullptr)[[likely]]prevAngles_.y = tpsCamera->GetAngle().y; // 向きの更新
 
 	// 射撃モーションのアニメーションの現在の再生時間を取得
 	//float nowFrame = motion->GetNowFrame();
@@ -533,7 +638,7 @@ void Component_PlayerBehavior::Shoot()
 		Component_ShootAttack* shoot = (Component_ShootAttack*)(GetChildComponent("ShootAttack"));
 		{
 			// 射撃コンポーネントの有無の確認
-			if (shoot == nullptr)return;
+			if (shoot == nullptr) [[unlikely]] return;
 
 			// 発射位置を設定
 			XMFLOAT3 shootPosition = holder_->GetPosition();
@@ -597,11 +702,11 @@ void Component_PlayerBehavior::Dodge()
 
 	// プレイヤーのHPゲージコンポーネントを取得
 	Component_HealthGauge* hg = (Component_HealthGauge*)(GetChildComponent("PlayerHealthGauge"));
-	if (hg == nullptr)return;
+	if (hg == nullptr) [[unlikely]] return;
 
 	// 移動コンポーネントの取得 & 有無の確認
 	Component_WASDInputMove* move = (Component_WASDInputMove*)(GetChildComponent("InputMove"));
-	if (move == nullptr)return;
+	if (move == nullptr) [[unlikely]] return;
 
 
 	// 突進コンポーネントの取得 & 有無の確認
@@ -626,7 +731,7 @@ void Component_PlayerBehavior::Dodge()
 
 		// ステージ情報を取得
 		Stage* pStage = (Stage*)(holder_->FindObject("Stage"));
-		if (pStage == nullptr) return;
+		if (pStage == nullptr) [[unlikely]] return;
 		std::vector<StageObject*> stageObj = pStage->GetStageObjects();
 
 		// ステージオブジェクトすべてにレイを撃つ
@@ -709,7 +814,7 @@ void Component_PlayerBehavior::Dodge()
 
 	// ボス衝突判定
 	BossState bossState = BOSS_STATE_MAX;
-	if (bossBehavior != nullptr) {
+	if (bossBehavior != nullptr) [[likely]] {
 
 		// 情報の取得
 		XMFLOAT3 holderPos = holder_->GetPosition();
@@ -772,7 +877,7 @@ void Component_PlayerBehavior::Dead()
 {
 	// 移動コンポーネントの取得 & 有無の確認後、移動を不可能にする
 	Component_WASDInputMove* move = (Component_WASDInputMove*)(GetChildComponent("InputMove"));
-	if (move != nullptr)move->Stop();
+	if (move != nullptr) [[likely]] move->Stop();
 }
 
 void Component_PlayerBehavior::Interact()
@@ -784,7 +889,7 @@ void Component_PlayerBehavior::Interact()
 
 	// 移動コンポーネントの取得 & 有無の確認
 	Component_WASDInputMove* move = (Component_WASDInputMove*)(GetChildComponent("InputMove"));
-	if (move != nullptr) move->Stop();
+	if (move != nullptr) [[likely]] move->Stop();
 
 	// UIProgressBarを取得
 	UIProgressCircle* interactTimeCircle = (UIProgressCircle*)UIPanel::GetInstance()->FindObject("interactTimeCircle");
@@ -799,7 +904,7 @@ void Component_PlayerBehavior::Interact()
 
 
 	// タイマーコンポーネントが存在する場合、カウントを開始
-	if (interactTimer != nullptr)interactTimer->Start();
+	if (interactTimer != nullptr) [[likely]] interactTimer->Start();
 
 	// Aボタン もしくは Eキー が押されている場合...
 	if (Input::IsKey(DIK_E) || Input::IsPadButton(XINPUT_GAMEPAD_A)) {
@@ -809,25 +914,24 @@ void Component_PlayerBehavior::Interact()
 		//指定した秒数経過しているか
 		if (interactTimer->IsOnTime(timeCollectPlant)) {
 
-
 			// 最も近いオブジェクトを取得
+			nearestObject = GetNearestWall();
+
 			PlantData plantData;
-			nearestObject = GetNearestPlant(plantData);
+
+			if (!nearestObject)
+			{
+				nearestObject = GetNearestPlant(plantData);
 
 				UserManager& um = UserManager::GetInstance();
 				um.UpdateLibraryStatus(um.GetLoggedInUser()->userName, plantData.id_);
-			
+			}
+
 			Component_ReturnGate* returnGate;
 			
 			if (IsAbleToReturn(returnGate))
 			{
 				isExchangeScene = returnGate->IsUsable();
-			}
-
-			else if (nearestObject != nullptr && nearestObject->GetObjectType() == StageObject::TYPE_WALL) {
-			nearestObject = GetNearestWall();
-			    if(nearestObject == nullptr) // 壁が近くになかったら
-		    	nearestObject = GetNearestPlant(plantData);
 			}
 
 			else if (nearestObject != nullptr && nearestObject->GetObjectType() == StageObject::TYPE_PLANT) {
@@ -839,6 +943,7 @@ void Component_PlayerBehavior::Interact()
 
 				Stage* pStage = ((Stage*)holder_->FindObject("Stage"));
 
+				SetPickUpPlantImage(plantData.imageFilePath_);
 
 				// 植物オブジェクトを削除
 				pStage->DeleteStageObject(nearestObject);
@@ -855,11 +960,12 @@ void Component_PlayerBehavior::Interact()
 				effectModelTransform = EFFEKSEERLIB::gEfk->Play("get", t);
 
 			}
-			else if (nearestObject != nullptr && nearestObject->GetObjectType() == StageObject::TYPE_WALL) {
+			else if (nearestObject != nullptr && nearestObject->GetObjectType() == StageObject::TYPE_WALL && isBreakableWall_) {
 				// 壁オブジェクトを削除
 				Stage* pStage = ((Stage*)holder_->FindObject("Stage"));
 				pStage->DeleteStageObject(nearestObject);
 				nearestObject->KillMe();
+				isBreakableWall_ = false;
 			}
 
 			// インタラクト状態を終了
@@ -886,7 +992,7 @@ void Component_PlayerBehavior::Interact()
 		interactTimeCircle->SetVisible(false);
 		interactTimeCircleFrame->SetVisible(false);
 
-		if (move != nullptr) move->Execute();
+		if (move != nullptr) [[likely]] move->Execute();
 		// 待機状態に遷移
 		SetState(PLAYER_STATE_IDLE);
 	}
@@ -895,14 +1001,14 @@ void Component_PlayerBehavior::Interact()
 void Component_PlayerBehavior::Melee()
 {
 	Component_MeleeAttack* melee = (Component_MeleeAttack*)(GetChildComponent("MeleeAttack"));
-	if (melee == nullptr)return;
+	if (melee == nullptr) [[unlikely]] return;
 
 	// 移動コンポーネントの取得 & 有無の確認
 	Component_WASDInputMove* move = (Component_WASDInputMove*)(GetChildComponent("InputMove"));
-	if (move == nullptr) return;
+	if (move == nullptr) [[unlikely]] return;
 
 	Component_StaminaGauge* sg = (Component_StaminaGauge*)(GetChildComponent("StaminaGauge"));
-	if (sg == nullptr)return;
+	if (sg == nullptr) [[unlikely]] return;
 
 	if (isMeleeStart_ == true) {
 		melee->Execute();
@@ -929,10 +1035,10 @@ void Component_PlayerBehavior::Melee()
 void Component_PlayerBehavior::MadeSalad()
 {
 	Component_PlayerMotion* motion = (Component_PlayerMotion*)(GetChildComponent("PlayerMotion"));
-	if (motion == nullptr)return;
+	if (motion == nullptr) [[unlikely]] return;
 	// 移動コンポーネントの取得 & 有無の確認
 	Component_WASDInputMove* move = (Component_WASDInputMove*)(GetChildComponent("InputMove"));
-	if (move == nullptr)return;
+	if (move == nullptr) [[unlikely]] return;
 
 	
 
@@ -1005,21 +1111,25 @@ void Component_PlayerBehavior::ApplyEffects()
 		
 	}
 	isRenewalPopUp_ = false;
+
+	if (checkLogoBreakableWall_)checkLogoBreakableWall_->SetVisible(isBreakableWall_);
 }
 
 void Component_PlayerBehavior::ResetSaladEffectLogo()
 {
 	for (auto i = 0u; i < MakeSalad::NEED_PLANT_NUM; ++i) {
 
-		if (!saladEffectLogo_.images_[i] || !saladEffectLogo_.texts_[i])continue;
+		if (!saladEffectLogo_.images_[i] || !saladEffectLogo_.texts_[i]) [[unlikely]] continue;
 		saladEffectLogo_.images_[i]->SetImage("Models/tentativeFlowers/BlankFlowerImage.png");
 		saladEffectLogo_.texts_[i]->SetText("");
 	}
+
+	if (checkLogoBreakableWall_) [[likely]] checkLogoBreakableWall_->SetVisible(false);
 }
 
 void Component_PlayerBehavior::DrawPopUp()
 {
-	if (!popUpInfo_.backGround_ || !popUpInfo_.info_)return;
+	if (!popUpInfo_.backGround_ || !popUpInfo_.info_) [[unlikely]] return;
 
 	bool flag = false;
 	if (popUpInfo_.time <= 0)
@@ -1091,7 +1201,7 @@ void Component_PlayerBehavior::AdjustCameraDistance()
 	float distance = 3;
 
 	Stage* pStage = (Stage*)(holder_->FindObject("Stage"));
-	if (pStage == nullptr) return;
+	if (pStage == nullptr) [[unlikely]] return;
 	std::vector<StageObject*> stageObj = pStage->GetStageObjects();
 	std::list<int> forRaycastModels = {};
 
@@ -1133,14 +1243,16 @@ bool Component_PlayerBehavior::IsDead()
 {
 	Component_PlayerMotion* motion = (Component_PlayerMotion*)(GetChildComponent("PlayerMotion"));
 
-	if (motion != nullptr) return motion->IsEnd() && nowState_ == PLAYER_STATE_DEAD;
+	if (motion != nullptr) [[likely]] return motion->IsEnd() && nowState_ == PLAYER_STATE_DEAD;
 	return false;
 }
 
 bool Component_PlayerBehavior::IsInteractable()
 {
 	PlantData plantData;
-	return (GetNearestPlant(plantData) != nullptr || GetNearestWall() != nullptr);
+	Component_ReturnGate* returnGate;
+
+	return (GetNearestPlant(plantData) != nullptr || GetNearestWall() != nullptr || IsAbleToReturn(returnGate));
 }
 
 XMVECTOR Component_PlayerBehavior::CalcShootDirection()
@@ -1205,14 +1317,14 @@ StageObject* Component_PlayerBehavior::GetNearestPlant(PlantData& _plantData)
 {
 	// 範囲チェックコンポーネントの取得
 	Component_CircleRangeDetector* detector = (Component_CircleRangeDetector*)(GetChildComponent("IsInteractableDetector"));
-	if (detector == nullptr)return nullptr;
+	if (detector == nullptr) [[unlikely]] return nullptr;
 
 	// 全植物オブジェクトを取得
 	vector<StageObject*> plantObjects; {
 
 		// ステージ情報の取得
 		Stage* pStage = (Stage*)(holder_->FindObject("Stage"));
-		if (pStage == nullptr)return nullptr;
+		if (pStage == nullptr) [[unlikely]] return nullptr;
 
 		// ステージオブジェクトの取得
 		for (StageObject* object : pStage->GetStageObjects()) {
@@ -1247,7 +1359,7 @@ StageObject* Component_PlayerBehavior::GetNearestPlant(PlantData& _plantData)
 	}
 
 	// 植物コンポーネント情報から植物データを取得
-	if(nearPlant!=nullptr)
+	if(nearPlant!=nullptr) [[likely]]
 	for (auto plant : nearPlant->FindComponent(Plant)) 
 		_plantData = ((Component_Plant*)plant)->GetData();
 
@@ -1259,16 +1371,16 @@ StageObject* Component_PlayerBehavior::GetNearestPlant(PlantData& _plantData)
 bool Component_PlayerBehavior::IsAbleToReturn(Component_ReturnGate* &rg)
 {
 	Component_CircleRangeDetector* detector = (Component_CircleRangeDetector*)(GetChildComponent("IsInteractableDetector"));
-	if (!detector)return false;
+	if (!detector) [[unlikely]] return false;
 
 	//ゲートのオブジェクトを探す
 	auto rgObj = (StageObject*)(holder_->FindObject("ReturnGate"));
-	if (!rgObj) return false;
+	if (!rgObj) [[unlikely]] return false;
 
 	//ゲートコンポーネントを格納
 	rg = static_cast<Component_ReturnGate*>
 		(rgObj->FindComponent("ReturnGate"));
-	if (!rg)return false;
+	if (!rg) [[unlikely]] return false;
 	
 	detector->SetRadius(1.2f);
 	detector->SetTarget(rgObj);
@@ -1284,7 +1396,7 @@ StageObject* Component_PlayerBehavior::GetNearestWall()
 
 	// ステージ情報の取得
 	Stage* pStage = (Stage*)(holder_->FindObject("Stage"));
-	if (pStage == nullptr)return nullptr;
+	if (pStage == nullptr) [[unlikely]] return nullptr;
 
 	// ステージオブジェクトの取得
 	for (StageObject* object : pStage->GetStageObjects()) {

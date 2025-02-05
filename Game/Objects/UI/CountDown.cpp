@@ -40,7 +40,7 @@ void CountDown::Draw()
 
 	// ‰æ‘œ‚Ì•`‰æ
 	Image::SetTransform(countDownImages_[index], transform_);
-	Image::Draw(countDownImages_[index]);
+	Image::Draw(countDownImages_[index],NULL);
 	
 	// ƒJƒEƒ“ƒg‚ğŒ¸­
 	count_--;

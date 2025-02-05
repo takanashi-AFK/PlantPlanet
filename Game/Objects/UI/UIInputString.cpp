@@ -46,7 +46,7 @@ void UIInputString::Draw()
 {
     // 表示サイズを計算
     pText_->SetScale(size_);
-
+    
     // 表示位置を計算
     auto t = GetCalcTransform();
 
@@ -54,7 +54,7 @@ void UIInputString::Draw()
     float drawY = (t.position_.y * (Direct3D::screenHeight_ / 2)) + (Direct3D::screenHeight_ / 2);
 
     // テキストを描画
-    pText_->Draw(drawX, drawY, currentInput.c_str());
+    pText_->Draw(drawX, drawY, currentInput.c_str(),fade_);
 }
 
 void UIInputString::Release()

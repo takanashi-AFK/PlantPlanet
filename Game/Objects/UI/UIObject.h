@@ -32,7 +32,9 @@ private:
 	bool isScaleLocked_;
 
 protected:
+	bool isVisible_;		// 描画するか
 	std::unique_ptr<Component_UIEasing> easing_;
+	float fade_;
 
 protected:
 	string objectName_;		// オブジェクトの名前
@@ -40,8 +42,7 @@ protected:
 	int layerNumber_;		// レイヤー番号
 	Transform transform_;	// 位置、回転、拡大縮小
 	UIObject* pParent_;		// 親オブジェクト
-	bool isVisible_;		// 描画するか
-
+	uint8_t alpha_;
 	std::vector<UIObject*> childList_;  // 子オブジェクトのリスト
 
 	//フラグ
@@ -140,6 +141,10 @@ setter :*/
 	}
 
 	inline void SetTrasform(Transform t) { this->transform_ = t; }
+
+	void SetAlpha(int8_t alpha);
+
+	void SetFade(float fade);
 /*
 getter :*/
 	/// <summary> 子オブジェクトを取得 </summary>
@@ -172,6 +177,9 @@ getter :*/
 	Transform GetCalcTransform(Transform _transform);
 	Transform GetCalcTransform();
 
+	uint8_t GetAlpha();
+
+	float GetFade();
 /*
 predicate :*/
 	/// <summary> 削除フラグが立っているかどうか </summary>

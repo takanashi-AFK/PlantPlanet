@@ -36,8 +36,9 @@ void UIProgressCircle::Update()
 
 void UIProgressCircle::Draw()
 {
+	Image::SetAlpha(imageHandle_, alpha_);
 	Image::SetTransform(imageHandle_,transform_);
-	Image::Draw(imageHandle_, START_ANGLE, endAngle_, color_);
+	Image::Draw(imageHandle_,START_ANGLE, endAngle_, fade_, color_);
 }
 
 void UIProgressCircle::Release()

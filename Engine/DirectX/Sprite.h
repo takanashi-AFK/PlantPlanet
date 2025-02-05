@@ -35,6 +35,7 @@ protected:
 		XMMATRIX	uvTrans;	// テクスチャ座標変換行列
 		XMFLOAT4	color;		// テクスチャとの合成色
 		XMFLOAT2	angle;		// 回転角度
+		float		fade;		// フェードイン/アウト
 	};
 
 	//【頂点バッファ】
@@ -69,17 +70,13 @@ public:
 	//戻値：成功/失敗
 	HRESULT Load(std::string fileName);
 
-
 	//描画
 	//引数：matrix	変換行列（ワールド行列）
 	//引数：rect	画像の切り抜き範囲
 	//引数：alpha	アルファ値（不透明度）
 
-	void Draw(Transform& transform, RECT rect, float alpha);
-	void Draw(Transform& transform, RECT rect, float alpha, Direct3D::SHADER_TYPE _shader);
-	void Draw(Transform& transform, RECT rect, float alpha, Direct3D::SHADER_TYPE _shader, XMFLOAT3 _color);
-	void Draw(Transform& transform, RECT rect, float alpha,float startAngle,float endAngle);
-	void Draw(Transform& transform, RECT rect, float alpha, float startAngle, float endAngle, XMFLOAT3 _color);
+	void Draw(Transform& transform, RECT rect, float alpha, Direct3D::SHADER_TYPE _shader = Direct3D::SHADER_2D, XMFLOAT3 _color = {1,1,1},float fade =0.f);
+	void Draw(Transform& transform, RECT rect, float alpha, float startAngle, float endAngle, XMFLOAT3 _color ,float fade =0.f);
 	
 	//画像サイズの取得
 	//戻値：画像サイズ
