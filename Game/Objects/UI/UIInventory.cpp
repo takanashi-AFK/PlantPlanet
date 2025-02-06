@@ -53,7 +53,7 @@ namespace UIInventory {
 				else if (item->GetObjectName().starts_with("INV-GetPlantText"))invTextTable_.push_back(item);
 				else if (item->GetObjectName().starts_with("INV-GetPlant"))getPlantTable_.push_back(item);
 
-				else if (item->GetObjectName() == "INV-MakeButton")makeButton_ = static_cast<UIButton*>(item);
+				else if (item->GetObjectName() == "INV-CreateButton")makeButton_ = static_cast<UIButton*>(item);
 				else if (item->GetObjectName() == "INV-History-Button")makeFromHistoryButton_ = static_cast<UIButton*>(item);
 			}
 		}
@@ -99,8 +99,6 @@ namespace UIInventory {
 		(UIPanel::GetInstance()->FindObject("PickUp-Plant-BackGround"))->SetVisible(false);
 
 		itemPanel_->GetUIObject("CheckLogo-IsBreakableWall")->SetVisible(false);
-
-
 
 		{
 			if (Input::IsPadButtonDown(XINPUT_GAMEPAD_DPAD_LEFT)) {
@@ -288,10 +286,10 @@ namespace UIInventory {
 			ShowInventory(false);
 		}
 
-		if (makeFromHistoryButton_->OnClick())
+		/*if (makeFromHistoryButton_->OnClick())
 		{
 			MakeFromHistory();
-		}
+		}*/
 
 		for (auto& ui : invTable_) {
 			ui->SetFade(fade_);
@@ -301,7 +299,6 @@ namespace UIInventory {
 	void ShowInventory(bool isShow)
 	{
 		for (auto inv : invTable_) {
-
 			inv->SetVisible(isShow);
 		}
 		showInventory_ = isShow;

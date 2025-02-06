@@ -25,7 +25,7 @@
 
 namespace {
 	// UIレイアウトのjsonファイルパス
-	const string ADVENTURE_MODE_UI_LAYOUT_JSON = "Datas/tent20250206.json";
+	const string ADVENTURE_MODE_UI_LAYOUT_JSON = "Datas/NoInv.json";
 	const string SCOREATTACK_MODE_UI_LAYOUT_JSON = "Datas/SceneLayout/PlayScene/scoreAttackMode.json";
 
 	// ステージのjsonファイルパス
@@ -312,10 +312,6 @@ void Scene_Play::UpdateAdventureMode(Component_PlayerBehavior* _playerBehavior, 
 
 void Scene_Play::UpdateInventoryUI()
 {
-	// この処理の目的 ； 不明
-	// 記述した方は、この処理の目的をコメントアウトしてください
-	if (isShowInventoryFirstTime_ == true) isShowInventoryFirstTime_ = false;
-
 	// インベントリUIを閉じる(非表示にする)処理
 	if (Input::IsKeyDown(DIK_Q) || Input::IsPadButtonDown(XINPUT_GAMEPAD_B) || UIInventory::IsShowInventory() == false) CloseInventoryUI();
 
