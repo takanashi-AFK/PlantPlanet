@@ -3,11 +3,11 @@
 #include "../DetectorComponents/Component_RectangleDetector.h"
 #include "../../Stage.h"
 #include "../../StageObject.h"
-
+#include "../../../Engine/ImGui/imgui.h"
 namespace 
 {
-	const float INTERACTIVE_RANGE_X = 4.f;
-	const float INTERACTIVE_RANGE_Y = 2.f;
+	float interactiveRange_x = 4.f;
+	float interactiveRange_y = 2.f;
 }
 
 Component_BreakableWall::Component_BreakableWall(string _name, StageObject* _holder, Component* _parent)
@@ -37,7 +37,10 @@ void Component_BreakableWall::Update()
 {
 	Component_RectangleDetector* detector = (Component_RectangleDetector*)(GetChildComponent("RectangleDetector"));
 	if (detector == nullptr)return;
-	detector->SetLength(INTERACTIVE_RANGE_X,INTERACTIVE_RANGE_Y);
+
+	XMFLOAT2 length = detector->GetLength();
+	
+	detector->SetLength(length.x,length.y);
 
 	detector->SetTarget(playerObjects_);
 

@@ -208,6 +208,7 @@ void Component_PlayerBehavior::Initialize()
 	EFFEKSEERLIB::gEfk->AddEffect("impact", "Effects/Attack_Impact.efk");
 	EFFEKSEERLIB::gEfk->AddEffect("get", "Effects/twinkle.efk");
 	EFFEKSEERLIB::gEfk->AddEffect("powerUp", "Effects/powerUp.efk");
+	EFFEKSEERLIB::gEfk->AddEffect("wallBreak", "Effects/wallBreak.efk");
 
 	// 子コンポーネントの追加
 	if (FindChildComponent("InputMove") == false)AddChildComponent(CreateComponent("InputMove", WASDInputMove, holder_, this));
@@ -977,12 +978,20 @@ void Component_PlayerBehavior::Interact()
 				effectModelTransform = EFFEKSEERLIB::gEfk->Play("get", t);
 
 			}
-			else if (nearestObject != nullptr && nearestObject->GetObjectType() == StageObject::TYPE_WALL && isBreakableWall_) {
+			else if (nearestObject != nullptr && nearestObject->GetObjectType() == StageObject::TYPE_WALL /* && isBreakableWall_*/) {
 				// 壁オブジェクトを削除
 				Stage* pStage = ((Stage*)holder_->FindObject("Stage"));
 				pStage->DeleteStageObject(nearestObject);
 				nearestObject->KillMe();
 				isBreakableWall_ = false;
+
+				EFFEKSEERLIB::EFKTransform t;
+
+				DirectX::XMStoreFloat4x4(&(t.matrix), holder_->GetWorldMatrix());
+				t.isLoop = false;
+				t.maxFrame = EFFECT_FRAME;
+				t.speed = EFFECT_SPEED;
+				effectModelTransform = EFFEKSEERLIB::gEfk->Play("wallBreak", t);
 			}
 
 			// インタラクト状態を終了
