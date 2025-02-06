@@ -25,7 +25,7 @@
 
 namespace {
 	// UIレイアウトのjsonファイルパス
-	const string ADVENTURE_MODE_UI_LAYOUT_JSON = "Datas/Test/Inventory.json";
+	const string ADVENTURE_MODE_UI_LAYOUT_JSON = "Datas/tent20250206.json";
 	const string SCOREATTACK_MODE_UI_LAYOUT_JSON = "Datas/SceneLayout/PlayScene/scoreAttackMode.json";
 
 	// ステージのjsonファイルパス

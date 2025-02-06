@@ -52,6 +52,7 @@ namespace UIInventory {
 				if (item->GetObjectName().starts_with("INV-Ingredients"))ingredientTable_.push_back(item);
 				else if (item->GetObjectName().starts_with("INV-GetPlantText"))invTextTable_.push_back(item);
 				else if (item->GetObjectName().starts_with("INV-GetPlant"))getPlantTable_.push_back(item);
+
 				else if (item->GetObjectName() == "INV-MakeButton")makeButton_ = static_cast<UIButton*>(item);
 				else if (item->GetObjectName() == "INV-History-Button")makeFromHistoryButton_ = static_cast<UIButton*>(item);
 			}
@@ -98,6 +99,8 @@ namespace UIInventory {
 		(UIPanel::GetInstance()->FindObject("PickUp-Plant-BackGround"))->SetVisible(false);
 
 		itemPanel_->GetUIObject("CheckLogo-IsBreakableWall")->SetVisible(false);
+
+
 
 		{
 			if (Input::IsPadButtonDown(XINPUT_GAMEPAD_DPAD_LEFT)) {
