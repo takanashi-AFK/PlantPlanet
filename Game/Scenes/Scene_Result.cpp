@@ -94,7 +94,7 @@ void Scene_Result::InitializeScoreAttackResult()
 	UIPanel* uiPanel = UIPanel::GetInstance();
 
 	// UIパネル情報を読み込む
-	if (JsonReader::Load("Datas/Test/SoreAttackResultTent.json", loadData)) uiPanel->Load(loadData);
+	if (JsonReader::Load("Datas/Test/SoreAttackResult.json", loadData)) uiPanel->Load(loadData);
 
 	totalScore_ = CalculateScore(ScoreManager::isClear, ScoreManager::time, ScoreManager::playerHp);
 
@@ -105,11 +105,12 @@ void Scene_Result::InitializeScoreAttackResult()
 	static_cast<UIText*>(uiPanel->GetUIObject("Value_recieveDamageAmount"))->SetSize(0);
 	static_cast<UIText*>(uiPanel->GetUIObject("Value_justAvoidanceAmount"))->SetSize(0);
 	static_cast<UIText*>(uiPanel->GetUIObject("Value_dealtDamageAmount"))->SetSize(0);
+	static_cast<UIText*>(uiPanel->GetUIObject("Value_remainingTime"))->SetSize(0);
+
 	scoreAttackUpdateFunction = ScoreManager::isClear ?
 		&Scene_Result::UpdateTexts :
 		&Scene_Result::UpdateWaitingForReturn;
 	//&Scene_Result::UpdateWaitingForReturn;
-
 
 	for (auto& item : uiPanel->GetUIObjects()) {
 
@@ -252,7 +253,8 @@ void Scene_Result::UpdateValues()
 	bool isAllFinish = true;
 
 	float tempEasingValue = easingValue_;
-	constexpr float defaultCharSize = 1.5f;
+	constexpr float defaultCharSize = .35f;
+	constexpr float reminingTimeCharSize = .5f;
 
 	//取得したuiにイージング処理
 	for (auto& ui : texts) {
@@ -265,7 +267,7 @@ void Scene_Result::UpdateValues()
 
 		//イージングに合わせてサイズも変える
 		ui->SetSize((1 - tempEasingValue) * defaultCharSize);
-
+		static_cast<UIText*>(UIPanel::GetInstance()->GetUIObject("Value_remainingTime"))->SetSize((1 - tempEasingValue) * reminingTimeCharSize);
 		//4桁の乱数を表示
 		ui->SetText(to_string(rand() % 1001));
 	}
@@ -285,6 +287,8 @@ void Scene_Result::UpdateValues()
 	static_cast<UIText*>(uiPanel->GetUIObject("Value_recieveDamageAmount"))->SetText(to_string(ScoreManager::recieveDMG));
 	static_cast<UIText*>(uiPanel->GetUIObject("Value_justAvoidanceAmount"))->SetText(to_string(ScoreManager::justAvoidance));
 	static_cast<UIText*>(uiPanel->GetUIObject("Value_dealtDamageAmount"))->SetText(to_string(ScoreManager::dealtDMG));
+	static_cast<UIText*>(uiPanel->GetUIObject("Value_remainingTime"))->SetText(to_string(ScoreManager::time));
+
 }
 
 void Scene_Result::UpdateTotalScore()
@@ -318,8 +322,14 @@ void Scene_Result::UpdateButton()
 	CheckSkipScoreAttackResult();
 
 	//戻るためのボタンを探す
-	UIButton* returnButton = static_cast<UIButton*>(UIPanel::GetInstance()->GetUIObject("returnButton"));
-	returnButton->GetEasing()->GetEasing()->pile_ = easingValue_;
+	auto easingReturnLogo = [&,this](string uiName)
+		{
+			UIImage* returnButton = static_cast<UIImage*>(UIPanel::GetInstance()->GetUIObject(uiName));
+			returnButton->GetEasing()->GetEasing()->pile_ = easingValue_;
+		};
+
+	easingReturnLogo("returnLogo_PAD");
+	easingReturnLogo("returnLogo_KEY");
 
 	//1秒掛けてイージング
 	easingValue_ -= 1 / (1.0 * FPS);
@@ -336,7 +346,10 @@ void Scene_Result::UpdateWaitingForReturn()
 {
 	auto uiPanel = UIPanel::GetInstance();
 
-	constexpr float defaultCharSize = 1.5f;
+	constexpr float defaultCharSize = .35f;
+	constexpr float reminingTimeCharSize = .5f;
+
+	static_cast<UIText*>(uiPanel->GetUIObject("Value_remainingTime"))->SetSize(reminingTimeCharSize);
 	static_cast<UIText*>(uiPanel->GetUIObject("Value_remainingHP"))->SetSize(defaultCharSize);
 	static_cast<UIText*>(uiPanel->GetUIObject("Value_recieveDamageAmount"))->SetSize(defaultCharSize);
 	static_cast<UIText*>(uiPanel->GetUIObject("Value_justAvoidanceAmount"))->SetSize(defaultCharSize);
@@ -352,8 +365,7 @@ void Scene_Result::UpdateWaitingForReturn()
 		easing->pile_ = .0f;
 	}
 
-	UIButton* returnButton = static_cast<UIButton*>(UIPanel::GetInstance()->GetUIObject("returnButton"));
-	if (returnButton->OnClick() || Input::IsPadButtonDown(XINPUT_GAMEPAD_A))
+	if (Input::IsKeyDown(DIK_SPACE) || Input::IsPadButtonDown(XINPUT_GAMEPAD_A))
 	{
 		SceneManager* sceneManager = (SceneManager*)FindObject("SceneManager");
 		sceneManager->ChangeScene(SCENE_ID_MENU, TID_BLACKOUT);
@@ -382,4 +394,5 @@ void Scene_Result::ApplyFinalData()
 	static_cast<UIText*>(uiPanel->GetUIObject("Value_justAvoidanceAmount"))->SetText(to_string(ScoreManager::justAvoidance));
 	static_cast<UIText*>(uiPanel->GetUIObject("Value_dealtDamageAmount"))->SetText(to_string(ScoreManager::dealtDMG));
 	static_cast<UIText*>(uiPanel->GetUIObject("Value_TotalScore"))->SetText(to_string(totalScore_));
+	static_cast<UIText*>(uiPanel->GetUIObject("Value_remainingTime"))->SetText(to_string(ScoreManager::time));
 }
