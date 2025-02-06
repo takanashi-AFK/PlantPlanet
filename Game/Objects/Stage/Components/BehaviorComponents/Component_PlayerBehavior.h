@@ -29,6 +29,7 @@ enum PlayerState {
 	PLAYER_STATE_SHOOT_WALK_FORWARD,
 	PLAYER_STATE_SHOOT_IDLE,
 	PLAYER_STATE_INTRACT,
+	PLAYER_STATE_BREAK,
 	PLAYER_STATE_MELEE,	
 	PLAYER_STATE_MADESALAD,
 	PLAYER_STATE_MAX
@@ -39,6 +40,7 @@ class Component_PlayerBehavior : public Component
 public :
 	static constexpr float defaultSpeed_Walk = .1f;
 	static constexpr float defaultTime_CollectPlant = 1;
+	static constexpr float defaultTime_BreakWall = (77.0f *2.f) / FPS;
 	static constexpr int defaultMax_HP = 100;
 	static constexpr int defaultPow_Range = 10.f;
 	static constexpr int defaultPow_Melee = 20.f;

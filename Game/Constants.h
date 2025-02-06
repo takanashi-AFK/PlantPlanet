@@ -76,6 +76,7 @@ namespace Constants {
 	const string PLAYER_STATE_INTRACT_FBX = "Models/Player/Gathering Objects.fbx";
 	const string PLAYER_STATE_MELEE_FBX = "Models/Player/Sword And Shield Slash.fbx";
 	const string PLAYER_STATE_MADESALAD_FBX = "Models/Player/Drinking.fbx";
+	const string PLAYER_STATE_BREAK_FBX = "Models/Player/Breaking.fbx";
 
 // 各種データのパス ////////////////////////////////////////////////////
 

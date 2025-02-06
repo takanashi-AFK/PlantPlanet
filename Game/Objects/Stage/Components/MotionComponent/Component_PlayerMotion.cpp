@@ -28,7 +28,7 @@ void Component_PlayerMotion::Initialize()
     modelHandleList_[PLAYER_STATE_INTRACT] = MotionData(PLAYER_STATE_INTRACT_FBX, 0, 280 , (280/FPS)*Component_PlayerBehavior::defaultTime_CollectPlant,false);
 	modelHandleList_[PLAYER_STATE_MELEE] = MotionData(PLAYER_STATE_MELEE_FBX, 0, 60, 1, false);
 	modelHandleList_[PLAYER_STATE_MADESALAD] = MotionData(PLAYER_STATE_MADESALAD_FBX, 0, 120, 1, false);
-    
+    modelHandleList_[PLAYER_STATE_BREAK] = MotionData(PLAYER_STATE_BREAK_FBX, 0, 154, 1, false);
 }
 
 void Component_PlayerMotion::Update()
