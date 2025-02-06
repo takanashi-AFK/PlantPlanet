@@ -64,7 +64,10 @@ void AudioController::Update(GameObject* _root)
 		// ƒ_ƒ[ƒW‚ðŽó‚¯‚½Žž‚Ì‰¹‚ÌÄ¶
 		for (auto hg : stage->FindComponents(HealthGauge)) {
 			if (((Component_HealthGauge*)hg)->IsUnlockAndReduce()) Audio::Play(Audio::Load(DAMAGE_SE, false));
-			if (((Component_HealthGauge*)hg)->IsLockAndReduce()) Audio::Play(Audio::Load(JUST_DODGE_SE, false));
+			if (((Component_HealthGauge*)hg)->IsLockAndReduce())
+			{
+				Audio::Play(Audio::Load(JUST_DODGE_SE, false));
+			}
 		}
 
 		for (auto pb : stage->FindComponents(PlayerBehavior)) {

@@ -17,6 +17,7 @@
 #include "Component_BossBehavior.h"
 #include <algorithm> 
 #include <directxmath.h> 
+#include<format>
 #include "../../../UI/UIProgressCircle.h"
 #include "../../../UI/UIImage.h"
 #include "../../../UI/Components/Component_UIEasing.h"
@@ -426,6 +427,10 @@ void Component_PlayerBehavior::Update()
 		++lockRotateFrameLeft_;
 		return;
 	}
+
+	Component_HealthGauge* hg = (Component_HealthGauge*)(GetChildComponent("PlayerHealthGauge"));
+	//ジャスト回避か判定し、ジャスト回避ならカウントする
+	if (hg->IsLockAndReduce())	++ScoreManager::justAvoidance;
 	
 	lockRotateFrameLeft_ = NULL;
 	lockRotateFrame_ = NULL;
