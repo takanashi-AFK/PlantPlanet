@@ -459,7 +459,7 @@ void Scene_Play::UpdateScoreAttackMode(Component_PlayerBehavior* _playerBehavior
 		// タイマーが終了した場合、切替フラグを立てる
 		if (uiTimer != nullptr)
 			if (uiTimer->IsEnd())
-			{}// { ScoreManager::isClear = false; isSceneChange = true; }
+			{ ScoreManager::isClear = false; isSceneChange = true; }
 
 		// シーン切替フラグが立っている場合
 		if (isSceneChange == true) {
@@ -467,8 +467,8 @@ void Scene_Play::UpdateScoreAttackMode(Component_PlayerBehavior* _playerBehavior
 			//コンポーネントの取得
 			for (auto& playerBehavior : pStage_->FindComponents(ComponentType::PlayerBehavior))
 				pb = static_cast<Component_PlayerBehavior*>(playerBehavior);
-			for (auto& bossBehavior : pStage_->FindComponents(ComponentType::CactanBehavior))//BossBehaviorにするとplayerが返ってくる。謎
-				bb = dynamic_cast<Component_BossBehavior*>(bossBehavior);
+			for (auto& bossBehavior : pStage_->FindComponents(ComponentType::BossBehavior))
+				bb = static_cast<Component_BossBehavior*>(bossBehavior);
 
 			// タイマーの最終値を取得
 			ScoreManager::time = uiTimer->GetSeconds();
@@ -487,10 +487,10 @@ void Scene_Play::UpdateScoreAttackMode(Component_PlayerBehavior* _playerBehavior
 
 			{
 				//ボスに与えたダメージの計算、設定
-				Component_HealthGauge* hg = nullptr;
-				hg = static_cast<Component_HealthGauge*>(bb->GetChildComponent("HealthGauge"));
+				Component_HealthGauge* hge = nullptr;
+				hge = static_cast<Component_HealthGauge*>(bb->GetChildComponent("HealthGauge"));
 
-				ScoreManager::dealtDMG = hg->GetMax() - (hg->GetMax() - hg->GetNow());
+				ScoreManager::dealtDMG = hge->GetMax() - hge->GetNow();
 			}
 
 			// シーンを切り替える

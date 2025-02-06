@@ -67,7 +67,6 @@ void AudioController::Update(GameObject* _root)
 			if (((Component_HealthGauge*)hg)->IsLockAndReduce())
 			{
 				Audio::Play(Audio::Load(JUST_DODGE_SE, false));
-				++ScoreManager::justAvoidance;
 			}
 		}
 

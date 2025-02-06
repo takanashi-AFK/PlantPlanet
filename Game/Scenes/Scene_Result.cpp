@@ -357,8 +357,6 @@ void Scene_Result::UpdateWaitingForReturn()
 	{
 		SceneManager* sceneManager = (SceneManager*)FindObject("SceneManager");
 		sceneManager->ChangeScene(SCENE_ID_MENU, TID_BLACKOUT);
-
-		scoreAttackUpdateFunction = &Scene_Result::UpdateEmptyWork;
 	}
 }
 
