@@ -10,13 +10,20 @@
 #include "UIText.h"
 #include "../Stage/MakeSalad.h"
 #include "../../../Engine/DirectX/Input.h"
+#include <regex>
 
 namespace UIInventory {
-	UIPanel* itemPanel_;
-	std::vector<UIObject*> getPlantTable_;
-	std::vector<UIObject*> invTable_;
-	std::vector<UIObject*> invTextTable_;
-	std::vector<UIObject*> ingredientTable_;
+	UIPanel* itemPanel_; // 変更するUIパネル
+
+	std::vector<UIObject*> invTable_; // インベントリすべてのUIObject
+
+	std::vector<UIObject*> hasPlantTable_;// 取得した植物の画像リスト
+	std::vector<UIObject*> hasPlantButtons_;// 取得した植物のボタンリスト
+
+	std::vector<UIObject*> invTextTable_; // 取得した植物の数を表示するテキストリスト
+	std::vector<UIObject*> cuttingBoardButtons_; // カッティングボードのボタンリスト
+	std::vector<UIObject*> cuttingBoardPlants_; // カッティングボードのボタンリスト
+	
 
 	std::unordered_map<std::string, int> countedPlant;
 	std::unordered_map<int, PlantData>allPlantData;
@@ -49,16 +56,19 @@ namespace UIInventory {
 			if (item->GetObjectName().starts_with("INV")) {
 				invTable_.push_back(item);
 
-				if (item->GetObjectName().starts_with("INV-Ingredients"))ingredientTable_.push_back(item);
-				else if (item->GetObjectName().starts_with("INV-GetPlantText"))invTextTable_.push_back(item);
-				else if (item->GetObjectName().starts_with("INV-GetPlant"))getPlantTable_.push_back(item);
+				if (item->GetObjectName().starts_with("INV-CuttingBoardButton"))cuttingBoardButtons_.push_back(item);
+				else if (item->GetObjectName().starts_with("INV-CuttingBoardPlant"))cuttingBoardPlants_.push_back(item);
+
+				else if (item->GetObjectName().starts_with("INV-InventoryPlantText"))invTextTable_.push_back(item);
+				else if (item->GetObjectName().starts_with("INV-InventoryPlantImage"))hasPlantTable_.push_back(item);
+				else if (item->GetObjectName().starts_with("INV-InventoryFrameButton"))hasPlantButtons_.push_back(item);
 
 				else if (item->GetObjectName() == "INV-CreateButton")makeButton_ = static_cast<UIButton*>(item);
 				else if (item->GetObjectName() == "INV-History-Button")makeFromHistoryButton_ = static_cast<UIButton*>(item);
 			}
 		}
 		// ingredient(上の選択中のボタン)をすべてblankにする
-		for (auto ingredient : ingredientTable_) {
+		for (auto ingredient : cuttingBoardPlants_) {
 			((UIButton*)ingredient)->SetImage("Models/tentativeFlowers/BlankFlowerImage.png");
 		}
 
@@ -85,20 +95,23 @@ namespace UIInventory {
 		int x, y;
 		itemPanel_->GetButtonIndex(&x, &y);
 
-		//ポップアップの非表示
-		(itemPanel_->FindObject("PopUp-Image-BackGround"))->SetVisible(false);
-		(itemPanel_->FindObject("PopUp-Text-Title"))->SetVisible(false);
-		for (auto i = 0u; i <Component_PlayerBehavior::NEED_PLANT_NUM; ++i) {
+		{
 
-			(itemPanel_->FindObject(std::format("PopUp-Image-Effect-Icon{}", i)))->SetVisible(false);
-			(UIPanel::GetInstance()->FindObject(std::format("PopUp-Text-Effect{}", i)))->SetVisible(false);
+			//ポップアップの非表示
+			(itemPanel_->FindObject("PopUp-Image-BackGround"))->SetVisible(false);
+			(itemPanel_->FindObject("PopUp-Text-Title"))->SetVisible(false);
+			for (auto i = 0u; i < Component_PlayerBehavior::NEED_PLANT_NUM; ++i) {
+
+				(itemPanel_->FindObject(std::format("PopUp-Image-Effect-Icon{}", i)))->SetVisible(false);
+				(UIPanel::GetInstance()->FindObject(std::format("PopUp-Text-Effect{}", i)))->SetVisible(false);
+			}
+
+			//拾った植物アイコンの非表示
+			(itemPanel_->FindObject("PickUp-Plant-Image"))->SetVisible(false);
+			(UIPanel::GetInstance()->FindObject("PickUp-Plant-BackGround"))->SetVisible(false);
+
+			itemPanel_->GetUIObject("CheckLogo-IsBreakableWall")->SetVisible(false);
 		}
-
-		//拾った植物アイコンの非表示
-		(itemPanel_->FindObject("PickUp-Plant-Image"))->SetVisible(false);
-		(UIPanel::GetInstance()->FindObject("PickUp-Plant-BackGround"))->SetVisible(false);
-
-		itemPanel_->GetUIObject("CheckLogo-IsBreakableWall")->SetVisible(false);
 
 		{
 			if (Input::IsPadButtonDown(XINPUT_GAMEPAD_DPAD_LEFT)) {
@@ -134,7 +147,7 @@ namespace UIInventory {
 					// inventoryButtonListのなかの、selectablearrayに入ってる且つ一番IDが若いものを選択
 					// 最小のX座標
 					int lowestX = INT_MAX;
-					for (auto ingredient : ingredientTable_) {
+					for (auto ingredient : cuttingBoardButtons_) {
 						for (auto selectable : itemPanel_->GetArrayList()) {
 							// invが選択できる場合
 							if (ingredient == selectable) {
@@ -160,10 +173,10 @@ namespace UIInventory {
 					isFirstSelectButton_ = false;
 				}
 				else if (y == 0) {
-					// getPlantTable_のなかの、selectablearrayに入ってる且つ一番IDが若いものを選択
+					// hasPlantTable_のなかの、selectablearrayに入ってる且つ一番IDが若いものを選択
 
 					int arrayX = INT_MAX;
-					for (auto inv : getPlantTable_) {
+					for (auto inv : hasPlantButtons_) {
 						for (auto selectable : itemPanel_->GetArrayList()) {
 							if (inv == selectable) {
 								int x, y;
@@ -189,15 +202,30 @@ namespace UIInventory {
 		}
 
 		// インベントリのボタンが押された場合
-		for (auto inv : getPlantTable_) {
+		for (auto inv : hasPlantButtons_) {
 			if (Confirm((UIButton*)inv)) {
 
 				// 選択した植物が3つ以上になったら抜ける
 				if (selectedPlant_.size() >= 3) continue;
 
+				string input = inv->GetObjectName();
+				std::regex re("(\\d+-\\d+)");  //"数字-数字" をキャプチャ
+				std::smatch match;
+				std::regex_search(input, match, re);
+				std::string result = match[1].str();
+
+				UIImage* image = nullptr;
+
+				for (auto plant : hasPlantTable_){
+					if (plant->GetObjectName().find(result)){
+						image = (UIImage*)plant;
+						break;
+					}
+				}
+
 				// 選択した植物をselectedPlant_に追加
 				for (auto& a : allPlantData) {
-					if (a.second.imageFilePath_ == ((UIButton*)inv)->GetImageFilePath()) {
+					if (a.second.imageFilePath_ == image->GetImageFilePath()) {
 						selectedPlant_.push_back(a.second.name_);
 						// マッチしたら終了
 						break;
@@ -206,12 +234,12 @@ namespace UIInventory {
 
 				// クリックされたら、INV-Ingredients0の画像を差し替え
 				// INV-Ingredients0がもう入ってたら1に、1が入ってたら2に
-				for (auto& ingredient : ingredientTable_) {
-					if (((UIButton*)ingredient)->GetImageFilePath() == "Models/tentativeFlowers/BlankFlowerImage.png") {
+				for (auto& ingredient : cuttingBoardPlants_) {
+					if (((UIImage*)ingredient)->GetImageFilePath() == "Models/tentativeFlowers/BlankFlowerImage.png") {
 						// ingredientの画像を差し替え
-						((UIButton*)ingredient)->SetImage(((UIButton*)inv)->GetImageFilePath());
+						((UIImage*)ingredient)->SetImage(image->GetImageFilePath());
 						// 画像が挿入されたボタンを選択可能リストに追加
-						itemPanel_->PushButtonToArray((UIButton*)ingredient);
+						// itemPanel_->PushButtonToArray((UIImage*)ingredient);
 						break;
 					}
 				}
@@ -220,37 +248,34 @@ namespace UIInventory {
 			}
 		}
 
-		// レシピのボタンを押した場合 
-		for (auto ingre : ingredientTable_) {
+		// カッティングボードのボタンを押した場合 
+		for (auto ingre : cuttingBoardButtons_) {
 			if (Confirm((UIButton*)ingre)) {
-				if (((UIButton*)ingre)->GetObjectName().starts_with("INV-Ingredients")) {
 
-					for (auto& a : allPlantData) {
-						if (a.second.imageFilePath_ == ((UIButton*)ingre)->GetImageFilePath()) {
-							// `selectedPlant_`から最初に見つかった1つだけを削除
-							auto it = std::find(selectedPlant_.begin(), selectedPlant_.end(), a.second.name_);
-							if (it != selectedPlant_.end()) {
-								// 選択した植物をselectedPlant_から削除
-								selectedPlant_.erase(it);
-							}
-							break;
+				for (auto& a : allPlantData) {
+					if (a.second.imageFilePath_ == ((UIButton*)ingre)->GetImageFilePath()) {
+						// `selectedPlant_`から最初に見つかった1つだけを削除
+						auto it = std::find(selectedPlant_.begin(), selectedPlant_.end(), a.second.name_);
+						if (it != selectedPlant_.end()) {
+							// 選択した植物をselectedPlant_から削除
+							selectedPlant_.erase(it);
 						}
-					}
-					for (auto& inventory : getPlantTable_) {
-						if (((UIButton*)inventory)->GetImageFilePath() == "Models/tentativeFlowers/BlankFlowerImage.png") {
-							// inventoryの画像を差し替え
-							((UIButton*)inventory)->SetImage(((UIButton*)ingre)->GetImageFilePath());
-							// ingredientの画像を差し替え
-							((UIButton*)ingre)->SetImage("Models/tentativeFlowers/BlankFlowerImage.png");
-							// からの画像が入っているボタンを選択可能リストから排除
-							itemPanel_->RemoveButtonFromArray((UIButton*)ingre);
-							break;
-						}
+						break;
 					}
 				}
-
+				for (auto& inventory : hasPlantTable_) {
+					if (((UIButton*)inventory)->GetImageFilePath() == "Models/tentativeFlowers/BlankFlowerImage.png") {
+						// inventoryの画像を差し替え
+						((UIButton*)inventory)->SetImage(((UIButton*)ingre)->GetImageFilePath());
+						// ingredientの画像を差し替え
+						((UIButton*)ingre)->SetImage("Models/tentativeFlowers/BlankFlowerImage.png");
+						// からの画像が入っているボタンを選択可能リストから排除
+						itemPanel_->RemoveButtonFromArray((UIButton*)ingre);
+						break;
+					}
+				}
 				// 更新
-					InventoryDataSet();
+				InventoryDataSet();
 			}
 		}
 
@@ -280,7 +305,7 @@ namespace UIInventory {
 			playerBehavior_->SetMyPlants(pPlant);
 			selectedPlant_.clear();
 
-			for (auto& ingredient : ingredientTable_) {
+			for (auto& ingredient : cuttingBoardButtons_) {
 				((UIButton*)ingredient)->SetImage("Models/tentativeFlowers/BlankFlowerImage.png");
 			}
 			ShowInventory(false);
@@ -337,7 +362,7 @@ namespace UIInventory {
 			}
 		}
 
-		for (int i = 0; i < getPlantTable_.size(); i++) {
+		for (int i = 0; i < hasPlantTable_.size(); i++) {
 
 			// カウントした植物の数を取得
 			int plantSize = countedPlant.size();
@@ -354,32 +379,31 @@ namespace UIInventory {
 				for (const auto& p : allPlantData) {
 					if (plantName == p.second.name_) {
 						PlantData plantData = p.second;
-						((UIButton*)getPlantTable_[i])->SetImage(plantData.imageFilePath_);
+						((UIImage*)hasPlantTable_[i])->SetImage(plantData.imageFilePath_);
 						((UIText*)invTextTable_[i])->SetText("x" + std::to_string(plantCount));
-						itemPanel_->PushButtonToArray((UIButton*)getPlantTable_[i]);
+						//itemPanel_->PushButtonToArray((UIImage*)hasPlantTable_[i]);
 						break;
 					}
 				}
 				if (plantCount <= 0) {
-					((UIButton*)getPlantTable_[i])->SetImage("Models/tentativeFlowers/BlankFlowerImage.png");
+					((UIImage*)hasPlantTable_[i])->SetImage("Models/tentativeFlowers/BlankFlowerImage.png");
 					((UIText*)invTextTable_[i])->SetText("");
-					itemPanel_->RemoveButtonFromArray((UIButton*)getPlantTable_[i]);
+					//itemPanel_->RemoveButtonFromArray((UIImage*)hasPlantTable_[i]);
 				}
 			}
 			else {
 				// 取得できない場合は空の画像とテキストを表示
-				if (getPlantTable_[i]->GetObjectName().find("INV-InventoryBack") != 0) {
-					((UIButton*)getPlantTable_[i])->SetImage("Models/tentativeFlowers/BlankFlowerImage.png");
+				if (hasPlantTable_[i]->GetObjectName().find("INV-BackGround") != 0) {
+					((UIImage*)hasPlantTable_[i])->SetImage("Models/tentativeFlowers/BlankFlowerImage.png");
 
-					((UIText*)invTextTable_[i])->SetText(" ");
-					itemPanel_->RemoveButtonFromArray((UIButton*)getPlantTable_[i]);
+					// ((UIText*)invTextTable_[i])->SetText(" ");
+					//itemPanel_->RemoveButtonFromArray((UIImage*)hasPlantTable_[i]);
 				}
 			}
 		}
 
-		for (auto ing : ingredientTable_) {
-			if (((UIButton*)ing)->GetImageFilePath() != "Models/tentativeFlowers/BlankFlowerImage.png") {
-				itemPanel_->PushButtonToArray((UIButton*)ing);
+		for (auto ing : cuttingBoardPlants_) {
+			if (((UIImage*)ing)->GetImageFilePath() != "Models/tentativeFlowers/BlankFlowerImage.png") {
 			}
 		}
 	}
@@ -390,15 +414,15 @@ namespace UIInventory {
 
 	void Release()
 	{
-		getPlantTable_.clear();
+		hasPlantTable_.clear();
 		invTable_.clear();
 		invTextTable_.clear();
-		ingredientTable_.clear();
+		cuttingBoardButtons_.clear();
 		countedPlant.clear();
 		allPlantData.clear();
 		selectedPlant_.clear();
 
-		for (auto deleteobj : getPlantTable_) {
+		for (auto deleteobj : hasPlantTable_) {
 			itemPanel_->DeleteUIObject(deleteobj);
 		}
 		for (auto deleteobj : invTable_) {
@@ -407,7 +431,7 @@ namespace UIInventory {
 		for (auto deleteobj : invTextTable_) {
 			itemPanel_->DeleteUIObject(deleteobj);
 		}
-		for (auto deleteobj : ingredientTable_) {
+		for (auto deleteobj : cuttingBoardButtons_) {
 			itemPanel_->DeleteUIObject(deleteobj);
 		}
 
@@ -492,7 +516,7 @@ namespace UIInventory {
 			{
 				--countedPlant[itr.name_];
 				selectedPlant_.push_back(itr.name_);
-				for (auto& ingredient : ingredientTable_) {
+				for (auto& ingredient : cuttingBoardButtons_) {
 					if (((UIButton*)ingredient)->GetImageFilePath() == "Models/tentativeFlowers/BlankFlowerImage.png")
 					{
 						((UIButton*)ingredient)->SetImage(itr.imageFilePath_);
