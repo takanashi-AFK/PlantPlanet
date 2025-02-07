@@ -82,7 +82,11 @@ float4 PS(VS_OUT inData) : SV_Target
 		speculer = pow(saturate(dot(R, inData.eye)), g_shuniness) * g_vecSpeculer;	//ハイライトを求める
 	}
 
+    float4 dmgcol = diffuse * float4(0.8f, 0, 0, 1);
+	
 	//最終的な色
-    return diffuse * float4(0.8f,0,0,1);
+    dmgcol = dmgcol.r < 0.2f ? float4(0.7f, 0, 0, 1) : dmgcol;
+	
+    return dmgcol;
     
 }

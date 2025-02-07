@@ -412,6 +412,7 @@ void Component_PlayerBehavior::Update()
 	case PLAYER_STATE_WALK:					Walk();         break;  // 現在の状態がWALKの場合
 	case PLAYER_STATE_DODGE:				Dodge();         break;  // 現在の状態がDASHの場合
 	case PLAYER_STATE_DEAD:					Dead();         break;  // 現在の状態がDEADの場合
+	case PLAYER_STATE_BREAK:
 	case PLAYER_STATE_INTRACT:				Interact();      break;  // 現在の状態がINTRACTの場合
 	case PLAYER_STATE_MELEE:				Melee();     break;  // 現在の状態がMELEEの場合
 	case PLAYER_STATE_MADESALAD:			MadeSalad();     break;  // 現在の状態がMADESALADの場合
@@ -562,7 +563,8 @@ void Component_PlayerBehavior::Idle()
 	// Aボタン もしくは Eキー が押されていたら...インタラクト状態に遷移
 	else if (Input::IsKeyDown(DIK_E) && IsInteractable() || Input::IsPadButtonDown(XINPUT_GAMEPAD_A) && IsInteractable()) {
 	
-		SetState(PLAYER_STATE_INTRACT);
+		PlayerState state = GetNearestWall() ? PLAYER_STATE_BREAK : PLAYER_STATE_INTRACT;
+		SetState(state);
 	}
 	else if (nowState_ != PLAYER_STATE_DEAD && isEatSaladEnd_ == true) {
 		SetState(PLAYER_STATE_MADESALAD);
@@ -614,7 +616,9 @@ void Component_PlayerBehavior::Walk()
 	}
 	// Aボタン もしくは Eキー が押されていたら...インタラクト状態に遷移
 	else if (Input::IsKeyDown(DIK_E) && IsInteractable() || Input::IsPadButtonDown(XINPUT_GAMEPAD_A) && IsInteractable()) {
-		SetState(PLAYER_STATE_INTRACT);
+		
+		PlayerState state = GetNearestWall() ? PLAYER_STATE_BREAK : PLAYER_STATE_INTRACT;
+		SetState(state);
 	}
 	else if (nowState_ != PLAYER_STATE_DEAD && isEatSaladEnd_ == true) {
 		SetState(PLAYER_STATE_MADESALAD);
@@ -911,7 +915,9 @@ void Component_PlayerBehavior::Interact()
 
 	// UIProgressBarを取得
 	UIProgressCircle* interactTimeCircle = (UIProgressCircle*)UIPanel::GetInstance()->FindObject("interactTimeCircle");
-	interactTimeCircle->SetProgress(interactTimer->GetNowTime(), timeCollectPlant);
+
+	float progressCircleTime = nowState_ == PLAYER_STATE_BREAK ? defaultTime_BreakWall : defaultTime_CollectPlant;
+	interactTimeCircle->SetProgress(interactTimer->GetNowTime(),progressCircleTime );
 
 	UIImage* interactTimeCircleFrame = (UIImage*)UIPanel::GetInstance()->FindObject("interactTimeCircleFrame");
 
@@ -930,7 +936,7 @@ void Component_PlayerBehavior::Interact()
 		interactTimeCircleFrame->SetVisible(true);
 
 		//指定した秒数経過しているか
-		if (interactTimer->IsOnTime(timeCollectPlant)) {
+		if (interactTimer->IsOnTime(progressCircleTime)) {
 
 			// 最も近いオブジェクトを取得
 			nearestObject = GetNearestWall();
@@ -1277,7 +1283,7 @@ bool Component_PlayerBehavior::IsInteractable()
 	PlantData plantData;
 	Component_ReturnGate* returnGate;
 
-	return (GetNearestPlant(plantData) != nullptr || GetNearestWall() != nullptr || IsAbleToReturn(returnGate));
+	return (GetNearestPlant(plantData) != nullptr || (GetNearestWall() != nullptr && IsBreakableWall()) || IsAbleToReturn(returnGate));
 }
 
 XMVECTOR Component_PlayerBehavior::CalcShootDirection()
