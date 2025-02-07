@@ -3,6 +3,7 @@
 #include<list>
 #include<functional>
 #include<tuple>
+#include "../MotionComponent/Component_Motion.h"
 
 class Component_RunnigAwayEnemyBehavior : public Component
 {
@@ -54,5 +55,7 @@ private:
 
 	bool isFlowerSpawned_;
 	string dropFlowerName_;
+
+	MotionData running_;
 };
 

@@ -29,6 +29,9 @@ void Component_RunnigAwayEnemyBehavior::Initialize()
 	if (!FindChildComponent("HealthGauge")) AddChildComponent(CreateComponent("HealthGauge", HealthGauge, holder_, this));
 
 	destinationPointIterator_ = points_.begin();
+
+	//0,
+	//running_ = MotionData("Models/Enemy/Jab Cross Running.fbx");
 }
 
 void Component_RunnigAwayEnemyBehavior::Update()
