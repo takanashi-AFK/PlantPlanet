@@ -389,7 +389,7 @@ string UIObject::GetUITypeString(UIType _type)
 
 Transform UIObject::GetCalcTransform(Transform _transform)
 {
-	if (this->easing_.get())
+	if (this->easing_ && this->easing_.get())
 	{
 		easing_.get()->GetEasing()->val1_ = 1;
 		return this->easing_.get()->GetValue();

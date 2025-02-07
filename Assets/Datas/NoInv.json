@@ -108,9 +108,9 @@
     "isVisible_": true,
     "layerNumber_": 96,
     "objectName_": "INV-CuttingBoardPlant1",
-    "position_": [ 0.0, 0.0, 0.0 ],
+    "position_": [ -0.7149999737739563, 0.4000000059604645, 0.0 ],
     "rotate_": [ 0.0, 0.0, 0.0 ],
-    "scale_": [ 1.0, 1.0, 1.0 ],
+    "scale_": [ 0.05000000074505806, 0.05000000074505806, 0.5 ],
     "type_": 2
   },
   "INV-CuttingBoardPlant2": {
@@ -118,9 +118,9 @@
     "isVisible_": true,
     "layerNumber_": 97,
     "objectName_": "INV-CuttingBoardPlant2",
-    "position_": [ 0.0, 0.0, 0.0 ],
+    "position_": [ -0.49000000953674316, 0.4000000059604645, 0.0 ],
     "rotate_": [ 0.0, 0.0, 0.0 ],
-    "scale_": [ 1.0, 1.0, 1.0 ],
+    "scale_": [ 0.05000000074505806, 0.05000000074505806, 1.0 ],
     "type_": 2
   },
   "INV-CuttingBoardPlant3": {
@@ -128,9 +128,9 @@
     "isVisible_": true,
     "layerNumber_": 98,
     "objectName_": "INV-CuttingBoardPlant3",
-    "position_": [ 0.0, 0.0, 0.0 ],
+    "position_": [ -0.2750000059604645, 0.4000000059604645, 0.0 ],
     "rotate_": [ 0.0, 0.0, 0.0 ],
-    "scale_": [ 1.0, 1.0, 1.0 ],
+    "scale_": [ 0.05000000074505806, 0.05000000074505806, 1.0 ],
     "type_": 2
   },
   "INV-CuttingBoardTitleImage": {
@@ -172,6 +172,54 @@
     "rotate_": [ 0.0, 0.0, 0.0 ],
     "scale_": [ 0.27000001072883606, 0.27000001072883606, 1.0 ],
     "type_": 2
+  },
+  "INV-Effect-Text0": {
+    "FontData": {
+      "charSize": [ 16, 32 ],
+      "filePath": "Fonts/char.png",
+      "rowLength": 16
+    },
+    "isVisible_": false,
+    "layerNumber_": 77,
+    "objectName_": "INV-Effect-Text0",
+    "position_": [ 0.75, -0.800000011920929, 0.0 ],
+    "rotate_": [ 0.0, 0.0, 0.0 ],
+    "scale_": [ 1.0, 1.0, 1.0 ],
+    "size": 1.0,
+    "text": "aaa aaaa",
+    "type_": 3
+  },
+  "INV-Effect-Text1": {
+    "FontData": {
+      "charSize": [ 16, 32 ],
+      "filePath": "Fonts/char.png",
+      "rowLength": 16
+    },
+    "isVisible_": false,
+    "layerNumber_": 78,
+    "objectName_": "INV-Effect-Text1",
+    "position_": [ 0.75, -0.4000000059604645, 0.0 ],
+    "rotate_": [ 0.0, 0.0, 0.0 ],
+    "scale_": [ 1.0, 1.0, 1.0 ],
+    "size": 1.0,
+    "text": "aaaa",
+    "type_": 3
+  },
+  "INV-Effect-Text2": {
+    "FontData": {
+      "charSize": [ 16, 32 ],
+      "filePath": "Fonts/char.png",
+      "rowLength": 16
+    },
+    "isVisible_": false,
+    "layerNumber_": 79,
+    "objectName_": "INV-Effect-Text2",
+    "position_": [ 0.75, 0.0, 0.0 ],
+    "rotate_": [ 0.0, 0.0, 0.0 ],
+    "scale_": [ 1.0, 1.0, 1.0 ],
+    "size": 1.0,
+    "text": "a",
+    "type_": 3
   },
   "INV-History-Button": {
     "ArrayPlace_X": 1,
@@ -826,7 +874,7 @@
     "rotate_": [ 0.0, 0.0, 0.0 ],
     "scale_": [ 1.0, 1.0, 1.0 ],
     "size": 1.0,
-    "text": "x",
+    "text": "",
     "type_": 3
   },
   "INV-InventoryPlantText1-2": {
@@ -954,7 +1002,7 @@
     "rotate_": [ 0.0, 0.0, 0.0 ],
     "scale_": [ 1.0, 1.0, 1.0 ],
     "size": 1.0,
-    "text": "x",
+    "text": "",
     "type_": 3
   },
   "INV-InventoryPlantText2-2": {
@@ -1098,7 +1146,7 @@
     "rotate_": [ 0.0, 0.0, 0.0 ],
     "scale_": [ 1.0, 1.0, 1.0 ],
     "size": 1.0,
-    "text": "x",
+    "text": "",
     "type_": 3
   },
   "INV-InventoryPlantText3-2": {

@@ -1116,10 +1116,6 @@ void Component_PlayerBehavior::ApplyEffects()
 			//後ろでもっておく植物画像の更新
 			plantFilePath_[index] = PlantCollection::GetPlants().at(data.id).imageFilePath_;
 
-			historySaladPlant_[index]->SetImage(plantFilePath_[index]);
-			historySaladEffect_.images_[index]->SetImage(popUpInfo_.images_[index]->GetImageFilePath());
-			historySaladEffect_.texts_[index]->SetText(popUpInfo_.texts_[index]->GetText());
-
 			++index;
 		}
 
