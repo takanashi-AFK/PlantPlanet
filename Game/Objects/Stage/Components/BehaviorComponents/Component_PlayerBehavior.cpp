@@ -498,6 +498,7 @@ void Component_PlayerBehavior::AddReserchPoint(int point)
 		//ゲートを可視化し使用可能にする
 		rg->SetUsable(true);
 		rg->SetVisible(true);
+		rg->SetState(Component_ReturnGate::State::MESSAGE);
 
 		//次から初めてじゃないので,フラグを下げてここに入らないようにする
 		isFirstOverMAXReserchPoint = false;

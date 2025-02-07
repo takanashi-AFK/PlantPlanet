@@ -1,9 +1,20 @@
 #pragma once
 #include "../Component.h"
 #include "../../Stage.h"
+#include "../../../Engine/Global.h"
 
 class Component_ReturnGate : public Component
 {
+
+public:
+	enum class State
+	{
+		IDLE,
+		MESSAGE,
+
+		AMOUNT
+	};
+
 public:
 	Component_ReturnGate(string _name, StageObject* _holder, Component* _parent);
 	~Component_ReturnGate();
@@ -16,11 +27,14 @@ public:
 
 	void SetVisible(bool b);
 	void SetUsable(bool b);
+	void SetState(State state);
 
 	bool IsVisible();
 	bool IsUsable();
 
 	void DrawData()override;
+
+	State GetState()const;
 
 	void Save(json& _saveObj);
 	void Load(json& _loadObj);
@@ -32,7 +46,19 @@ private:
 	//シーンを変える
 	void SceneChange();
 
-	void (Component_ReturnGate::* nowFunc_)();
+	void BranchUpdateFunc(State state);
+
+	void FadeInPopUp();
+	void KeepPopUp();
+	void FadeOutPopUp();
+
+	void EasingUI(string uiName);
+
+	//Work()内で使う関数ポインタ
+	void (Component_ReturnGate::* workFunc_)();
+
+	//Update内で使う関数ポインタ
+	void (Component_ReturnGate::* updateFunc_)();
 
 private:
 
@@ -45,5 +71,14 @@ private:
 	/// 見えるかどうか
 	/// </summary>
 	bool isVisible_ : 1;
+
+	/// <summary>
+	/// 現在の状態
+	/// </summary>
+	State state_;
+	float fade_;
+	float keepingTime_;
+
+	static constexpr float KeepPopUpTime = 1.5 * FPS;
 };
 
