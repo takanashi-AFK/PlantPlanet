@@ -940,7 +940,6 @@ void Component_PlayerBehavior::Interact()
 			if (!nearestObject)
 			{
 				nearestObject = GetNearestPlant(plantData);
-				if (nearestObject != nullptr) return;
 				UserManager& um = UserManager::GetInstance();
 				um.UpdateLibraryStatus(um.GetLoggedInUser()->userName, plantData.id_);
 			}
@@ -978,7 +977,7 @@ void Component_PlayerBehavior::Interact()
 				effectModelTransform = EFFEKSEERLIB::gEfk->Play("get", t);
 
 			}
-			else if (nearestObject != nullptr && nearestObject->GetObjectType() == StageObject::TYPE_WALL /* && isBreakableWall_*/) {
+			else if (nearestObject != nullptr && nearestObject->GetObjectType() == StageObject::TYPE_WALL  && isBreakableWall_) {
 				// 壁オブジェクトを削除
 				Stage* pStage = ((Stage*)holder_->FindObject("Stage"));
 				pStage->DeleteStageObject(nearestObject);
