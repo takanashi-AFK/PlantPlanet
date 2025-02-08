@@ -69,7 +69,7 @@ namespace UIInventory {
 		}
 		// ingredient(上の選択中のボタン)をすべてblankにする
 		for (auto ingredient : cuttingBoardPlants_) {
-			((UIButton*)ingredient)->SetImage("Models/tentativeFlowers/BlankFlowerImage.png");
+			((UIImage*)ingredient)->SetImage("Models/tentativeFlowers/BlankFlowerImage.png");
 		}
 
 		prevSalad.effect_0 = PlantData::GetFunction(-1);
@@ -450,6 +450,7 @@ namespace UIInventory {
 		invTable_.clear();
 		invTextTable_.clear();
 		cuttingBoardButtons_.clear();
+		cuttingBoardPlants_.clear();
 		countedPlant.clear();
 		allPlantData.clear();
 		selectedPlant_.clear();

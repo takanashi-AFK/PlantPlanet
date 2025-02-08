@@ -304,7 +304,7 @@ void Scene_Play::UpdateAdventureMode(Component_PlayerBehavior* _playerBehavior, 
 		g_thisPlayGetPlantData.clear();
 		g_thisPlayGetPlantData = _playerBehavior->GetMyPlants();
 		UIInventory::Release();
-
+		isOpenInventoryUI_ = false;
 		SceneManager* sceneManager = (SceneManager*)FindObject("SceneManager");
 		sceneManager->ChangeScene(SCENE_ID_RESULT, TID_BLACKOUT);
 	}
