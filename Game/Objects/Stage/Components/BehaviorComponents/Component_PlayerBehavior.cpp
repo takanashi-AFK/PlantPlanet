@@ -940,7 +940,7 @@ void Component_PlayerBehavior::Interact()
 			if (!nearestObject)
 			{
 				nearestObject = GetNearestPlant(plantData);
-
+				if (nearestObject != nullptr) return;
 				UserManager& um = UserManager::GetInstance();
 				um.UpdateLibraryStatus(um.GetLoggedInUser()->userName, plantData.id_);
 			}

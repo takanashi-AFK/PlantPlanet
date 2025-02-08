@@ -34,7 +34,7 @@
     "type_": 2
   },
   "INV-CreateButton": {
-    "ArrayPlace_X": 1,
+    "ArrayPlace_X": 3,
     "ArrayPlace_Y": 1,
     "IsSelectable": true,
     "defaultImageFilePath_": "Images/playScene/ADV/02_inventory/06_makeButton.png",
@@ -42,7 +42,7 @@
     "isVisible_": true,
     "layerNumber_": 25,
     "objectName_": "INV-CreateButton",
-    "position_": [ 0.10000000149011612, 0.4699999988079071, 0.0 ],
+    "position_": [ 0.10000000149011612, 0.4749999940395355, 0.0 ],
     "rotate_": [ 0.0, 0.0, 0.0 ],
     "scale_": [ 0.26499998569488525, 0.26499998569488525, 1.0 ],
     "selectImageFilePath_": "",
@@ -59,7 +59,7 @@
     "type_": 2
   },
   "INV-CuttingBoardButton1": {
-    "ArrayPlace_X": 1,
+    "ArrayPlace_X": 0,
     "ArrayPlace_Y": 1,
     "IsSelectable": true,
     "defaultImageFilePath_": "Images/playScene/ADV/02_inventory/09_cuttingBoardBlock.png",
@@ -89,7 +89,7 @@
     "type_": 1
   },
   "INV-CuttingBoardButton3": {
-    "ArrayPlace_X": 1,
+    "ArrayPlace_X": 2,
     "ArrayPlace_Y": 1,
     "IsSelectable": true,
     "defaultImageFilePath_": "Images/playScene/ADV/02_inventory/09_cuttingBoardBlock.png",
@@ -222,8 +222,8 @@
     "type_": 3
   },
   "INV-History-Button": {
-    "ArrayPlace_X": 1,
-    "ArrayPlace_Y": 1,
+    "ArrayPlace_X": 3,
+    "ArrayPlace_Y": 0,
     "IsSelectable": true,
     "defaultImageFilePath_": "",
     "imageFilePath_": "Images/playScene/ADV/02_inventory/05_setPreviousPlantsButton.png",
@@ -237,8 +237,8 @@
     "type_": 1
   },
   "INV-InventoryFrameButton1-1": {
-    "ArrayPlace_X": 1,
-    "ArrayPlace_Y": 1,
+    "ArrayPlace_X": 0,
+    "ArrayPlace_Y": -1,
     "IsSelectable": true,
     "defaultImageFilePath_": "Images/playScene/ADV/02_inventory/07_belongingBlock.png",
     "imageFilePath_": "Images/playScene/ADV/02_inventory/07_belongingBlock.png",
@@ -253,7 +253,7 @@
   },
   "INV-InventoryFrameButton1-2": {
     "ArrayPlace_X": 1,
-    "ArrayPlace_Y": 1,
+    "ArrayPlace_Y": -1,
     "IsSelectable": true,
     "defaultImageFilePath_": "Images/playScene/ADV/02_inventory/07_belongingBlock.png",
     "imageFilePath_": "Images/playScene/ADV/02_inventory/07_belongingBlock.png",
@@ -267,8 +267,8 @@
     "type_": 1
   },
   "INV-InventoryFrameButton1-3": {
-    "ArrayPlace_X": 1,
-    "ArrayPlace_Y": 1,
+    "ArrayPlace_X": 2,
+    "ArrayPlace_Y": -1,
     "IsSelectable": true,
     "defaultImageFilePath_": "Images/playScene/ADV/02_inventory/07_belongingBlock.png",
     "imageFilePath_": "Images/playScene/ADV/02_inventory/07_belongingBlock.png",
@@ -282,8 +282,8 @@
     "type_": 1
   },
   "INV-InventoryFrameButton1-4": {
-    "ArrayPlace_X": 1,
-    "ArrayPlace_Y": 1,
+    "ArrayPlace_X": 3,
+    "ArrayPlace_Y": -1,
     "IsSelectable": true,
     "defaultImageFilePath_": "Images/playScene/ADV/02_inventory/07_belongingBlock.png",
     "imageFilePath_": "Images/playScene/ADV/02_inventory/07_belongingBlock.png",
@@ -297,8 +297,8 @@
     "type_": 1
   },
   "INV-InventoryFrameButton1-5": {
-    "ArrayPlace_X": 1,
-    "ArrayPlace_Y": 1,
+    "ArrayPlace_X": 4,
+    "ArrayPlace_Y": -1,
     "IsSelectable": true,
     "defaultImageFilePath_": "Images/playScene/ADV/02_inventory/07_belongingBlock.png",
     "imageFilePath_": "Images/playScene/ADV/02_inventory/07_belongingBlock.png",
@@ -312,8 +312,8 @@
     "type_": 1
   },
   "INV-InventoryFrameButton1-6": {
-    "ArrayPlace_X": 1,
-    "ArrayPlace_Y": 1,
+    "ArrayPlace_X": 5,
+    "ArrayPlace_Y": -1,
     "IsSelectable": true,
     "defaultImageFilePath_": "Images/playScene/ADV/02_inventory/07_belongingBlock.png",
     "imageFilePath_": "Images/playScene/ADV/02_inventory/07_belongingBlock.png",
@@ -327,8 +327,8 @@
     "type_": 1
   },
   "INV-InventoryFrameButton1-7": {
-    "ArrayPlace_X": 1,
-    "ArrayPlace_Y": 1,
+    "ArrayPlace_X": 6,
+    "ArrayPlace_Y": -1,
     "IsSelectable": true,
     "defaultImageFilePath_": "Images/playScene/ADV/02_inventory/07_belongingBlock.png",
     "imageFilePath_": "Images/playScene/ADV/02_inventory/07_belongingBlock.png",
@@ -342,8 +342,8 @@
     "type_": 1
   },
   "INV-InventoryFrameButton1-8": {
-    "ArrayPlace_X": 1,
-    "ArrayPlace_Y": 1,
+    "ArrayPlace_X": 7,
+    "ArrayPlace_Y": -1,
     "IsSelectable": true,
     "defaultImageFilePath_": "Images/playScene/ADV/02_inventory/07_belongingBlock.png",
     "imageFilePath_": "Images/playScene/ADV/02_inventory/07_belongingBlock.png",
@@ -357,8 +357,8 @@
     "type_": 1
   },
   "INV-InventoryFrameButton2-1": {
-    "ArrayPlace_X": 1,
-    "ArrayPlace_Y": 1,
+    "ArrayPlace_X": 0,
+    "ArrayPlace_Y": -2,
     "IsSelectable": true,
     "defaultImageFilePath_": "Images/playScene/ADV/02_inventory/07_belongingBlock.png",
     "imageFilePath_": "Images/playScene/ADV/02_inventory/07_belongingBlock.png",
@@ -373,7 +373,7 @@
   },
   "INV-InventoryFrameButton2-2": {
     "ArrayPlace_X": 1,
-    "ArrayPlace_Y": 1,
+    "ArrayPlace_Y": -2,
     "IsSelectable": true,
     "defaultImageFilePath_": "Images/playScene/ADV/02_inventory/07_belongingBlock.png",
     "imageFilePath_": "Images/playScene/ADV/02_inventory/07_belongingBlock.png",
@@ -387,8 +387,8 @@
     "type_": 1
   },
   "INV-InventoryFrameButton2-3": {
-    "ArrayPlace_X": 1,
-    "ArrayPlace_Y": 1,
+    "ArrayPlace_X": 2,
+    "ArrayPlace_Y": -2,
     "IsSelectable": true,
     "defaultImageFilePath_": "Images/playScene/ADV/02_inventory/07_belongingBlock.png",
     "imageFilePath_": "Images/playScene/ADV/02_inventory/07_belongingBlock.png",
@@ -402,8 +402,8 @@
     "type_": 1
   },
   "INV-InventoryFrameButton2-4": {
-    "ArrayPlace_X": 1,
-    "ArrayPlace_Y": 1,
+    "ArrayPlace_X": 3,
+    "ArrayPlace_Y": -2,
     "IsSelectable": true,
     "defaultImageFilePath_": "Images/playScene/ADV/02_inventory/07_belongingBlock.png",
     "imageFilePath_": "Images/playScene/ADV/02_inventory/07_belongingBlock.png",
@@ -417,8 +417,8 @@
     "type_": 1
   },
   "INV-InventoryFrameButton2-5": {
-    "ArrayPlace_X": 1,
-    "ArrayPlace_Y": 1,
+    "ArrayPlace_X": 4,
+    "ArrayPlace_Y": -2,
     "IsSelectable": true,
     "defaultImageFilePath_": "Images/playScene/ADV/02_inventory/07_belongingBlock.png",
     "imageFilePath_": "Images/playScene/ADV/02_inventory/07_belongingBlock.png",
@@ -432,8 +432,8 @@
     "type_": 1
   },
   "INV-InventoryFrameButton2-6": {
-    "ArrayPlace_X": 1,
-    "ArrayPlace_Y": 1,
+    "ArrayPlace_X": 5,
+    "ArrayPlace_Y": -2,
     "IsSelectable": true,
     "defaultImageFilePath_": "Images/playScene/ADV/02_inventory/07_belongingBlock.png",
     "imageFilePath_": "Images/playScene/ADV/02_inventory/07_belongingBlock.png",
@@ -447,8 +447,8 @@
     "type_": 1
   },
   "INV-InventoryFrameButton2-7": {
-    "ArrayPlace_X": 1,
-    "ArrayPlace_Y": 1,
+    "ArrayPlace_X": 6,
+    "ArrayPlace_Y": -2,
     "IsSelectable": true,
     "defaultImageFilePath_": "Images/playScene/ADV/02_inventory/07_belongingBlock.png",
     "imageFilePath_": "Images/playScene/ADV/02_inventory/07_belongingBlock.png",
@@ -462,13 +462,13 @@
     "type_": 1
   },
   "INV-InventoryFrameButton2-8": {
-    "ArrayPlace_X": 1,
-    "ArrayPlace_Y": 1,
+    "ArrayPlace_X": 7,
+    "ArrayPlace_Y": -2,
     "IsSelectable": true,
     "defaultImageFilePath_": "Images/playScene/ADV/02_inventory/07_belongingBlock.png",
     "imageFilePath_": "Images/playScene/ADV/02_inventory/07_belongingBlock.png",
     "isVisible_": true,
-    "layerNumber_": 45,
+    "layerNumber_": 44,
     "objectName_": "INV-InventoryFrameButton2-8",
     "position_": [ 0.0899999737739563, -0.5600000023841858, 0.0 ],
     "rotate_": [ 0.0, 0.0, 0.0 ],
@@ -477,13 +477,13 @@
     "type_": 1
   },
   "INV-InventoryFrameButton2-9": {
-    "ArrayPlace_X": 1,
-    "ArrayPlace_Y": 1,
+    "ArrayPlace_X": 8,
+    "ArrayPlace_Y": -2,
     "IsSelectable": true,
     "defaultImageFilePath_": "Images/playScene/ADV/02_inventory/07_belongingBlock.png",
     "imageFilePath_": "Images/playScene/ADV/02_inventory/07_belongingBlock.png",
     "isVisible_": true,
-    "layerNumber_": 44,
+    "layerNumber_": 45,
     "objectName_": "INV-InventoryFrameButton2-9",
     "position_": [ 0.21999996900558472, -0.5600000023841858, 0.0 ],
     "rotate_": [ 0.0, 0.0, 0.0 ],
@@ -492,8 +492,8 @@
     "type_": 1
   },
   "INV-InventoryFrameButton3-1": {
-    "ArrayPlace_X": 1,
-    "ArrayPlace_Y": 1,
+    "ArrayPlace_X": 0,
+    "ArrayPlace_Y": -3,
     "IsSelectable": true,
     "defaultImageFilePath_": "Images/playScene/ADV/02_inventory/07_belongingBlock.png",
     "imageFilePath_": "Images/playScene/ADV/02_inventory/07_belongingBlock.png",
@@ -508,7 +508,7 @@
   },
   "INV-InventoryFrameButton3-2": {
     "ArrayPlace_X": 1,
-    "ArrayPlace_Y": 1,
+    "ArrayPlace_Y": -3,
     "IsSelectable": true,
     "defaultImageFilePath_": "Images/playScene/ADV/02_inventory/07_belongingBlock.png",
     "imageFilePath_": "Images/playScene/ADV/02_inventory/07_belongingBlock.png",
@@ -522,8 +522,8 @@
     "type_": 1
   },
   "INV-InventoryFrameButton3-3": {
-    "ArrayPlace_X": 1,
-    "ArrayPlace_Y": 1,
+    "ArrayPlace_X": 2,
+    "ArrayPlace_Y": -3,
     "IsSelectable": true,
     "defaultImageFilePath_": "Images/playScene/ADV/02_inventory/07_belongingBlock.png",
     "imageFilePath_": "Images/playScene/ADV/02_inventory/07_belongingBlock.png",
@@ -537,8 +537,8 @@
     "type_": 1
   },
   "INV-InventoryFrameButton3-4": {
-    "ArrayPlace_X": 1,
-    "ArrayPlace_Y": 1,
+    "ArrayPlace_X": 3,
+    "ArrayPlace_Y": -3,
     "IsSelectable": true,
     "defaultImageFilePath_": "Images/playScene/ADV/02_inventory/07_belongingBlock.png",
     "imageFilePath_": "Images/playScene/ADV/02_inventory/07_belongingBlock.png",
@@ -552,8 +552,8 @@
     "type_": 1
   },
   "INV-InventoryFrameButton3-5": {
-    "ArrayPlace_X": 1,
-    "ArrayPlace_Y": 1,
+    "ArrayPlace_X": 4,
+    "ArrayPlace_Y": -3,
     "IsSelectable": true,
     "defaultImageFilePath_": "Images/playScene/ADV/02_inventory/07_belongingBlock.png",
     "imageFilePath_": "Images/playScene/ADV/02_inventory/07_belongingBlock.png",
@@ -567,8 +567,8 @@
     "type_": 1
   },
   "INV-InventoryFrameButton3-6": {
-    "ArrayPlace_X": 1,
-    "ArrayPlace_Y": 1,
+    "ArrayPlace_X": 5,
+    "ArrayPlace_Y": -3,
     "IsSelectable": true,
     "defaultImageFilePath_": "Images/playScene/ADV/02_inventory/07_belongingBlock.png",
     "imageFilePath_": "Images/playScene/ADV/02_inventory/07_belongingBlock.png",
@@ -582,8 +582,8 @@
     "type_": 1
   },
   "INV-InventoryFrameButton3-7": {
-    "ArrayPlace_X": 1,
-    "ArrayPlace_Y": 1,
+    "ArrayPlace_X": 6,
+    "ArrayPlace_Y": -3,
     "IsSelectable": true,
     "defaultImageFilePath_": "Images/playScene/ADV/02_inventory/07_belongingBlock.png",
     "imageFilePath_": "Images/playScene/ADV/02_inventory/07_belongingBlock.png",
@@ -597,8 +597,8 @@
     "type_": 1
   },
   "INV-InventoryFrameButton3-8": {
-    "ArrayPlace_X": 1,
-    "ArrayPlace_Y": 1,
+    "ArrayPlace_X": 7,
+    "ArrayPlace_Y": -3,
     "IsSelectable": true,
     "defaultImageFilePath_": "Images/playScene/ADV/02_inventory/07_belongingBlock.png",
     "imageFilePath_": "Images/playScene/ADV/02_inventory/07_belongingBlock.png",

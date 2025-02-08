@@ -64,7 +64,8 @@ namespace UIInventory {
 				else if (item->GetObjectName().starts_with("INV-InventoryFrameButton"))hasPlantButtons_.push_back(item);
 
 				else if (item->GetObjectName() == "INV-CreateButton")makeButton_ = static_cast<UIButton*>(item);
-				else if (item->GetObjectName() == "INV-History-Button")makeFromHistoryButton_ = static_cast<UIButton*>(item);
+				else if (item->GetObjectName() == "INV-History-Button")
+					makeFromHistoryButton_ = static_cast<UIButton*>(item);
 			}
 		}
 		// ingredient(上の選択中のボタン)をすべてblankにする
@@ -86,6 +87,16 @@ namespace UIInventory {
 
 		// 選択できるボタンをすべてリセット
 		itemPanel_->ResetArrayOfButton();
+
+		itemPanel_->PushButtonToArray(makeButton_);
+		itemPanel_->PushButtonToArray(makeFromHistoryButton_);
+
+		for (auto& button : hasPlantButtons_) {
+			itemPanel_->PushButtonToArray((UIButton*)button);
+		}
+		for (auto& button : cuttingBoardButtons_) {
+			itemPanel_->PushButtonToArray((UIButton*)button);
+		}
 
 	}
 
@@ -162,14 +173,14 @@ namespace UIInventory {
 					}
 
 					// 一番arrayのXが若いボタンを選択
-					itemPanel_->SetButtonArrayIndex(lowestX, 0);
+					itemPanel_->SetButtonArrayIndex(lowestX, 1);
 				}
 				else
 					itemPanel_->SelectorMove(UIPanel::SELECTOR_MOVE_TO::UP);
 			}
 			if (Input::IsPadButtonDown(XINPUT_GAMEPAD_DPAD_DOWN)) {
 				if (isFirstSelectButton_ == true && itemPanel_->GetArrayList().size() != 0) {
-					itemPanel_->SetButtonArrayIndex(3, 0);
+					itemPanel_->SetButtonArrayIndex(0, -1);
 					isFirstSelectButton_ = false;
 				}
 				else if (y == 0) {
@@ -195,7 +206,7 @@ namespace UIInventory {
 			}
 			// インベントリを表示する
 			if (Input::IsPadButtonDown(XINPUT_GAMEPAD_B)) {
-				ShowInventory(false);
+				ShowInventory(true);
 				isFirstSelectButton_ = true;
 			}
 
@@ -297,18 +308,12 @@ namespace UIInventory {
 						// ingredientの画像を差し替え
 						image->SetImage("Models/tentativeFlowers/BlankFlowerImage.png");
 						// からの画像が入っているボタンを選択可能リストから排除
-						itemPanel_->RemoveButtonFromArray((UIButton*)ingre);
 						break;
 					}
 				}
 				// 更新
 				InventoryDataSet();
 			}
-		}
-
-		for (auto a : selectedPlant_) {
-		
-			ImGui::Text("%s", a.c_str());
 		}
 
 		// サラダを作るボタンが押された場合
@@ -343,7 +348,7 @@ namespace UIInventory {
 			ShowInventory(false);
 		}
 
-		if (makeFromHistoryButton_->OnClick())
+		if (Confirm(makeFromHistoryButton_))
 		{
 			MakeFromHistory();
 		}
@@ -359,23 +364,19 @@ namespace UIInventory {
 			inv->SetVisible(isShow);
 		}
 		showInventory_ = isShow;
-		makeButton_->SetVisible(isShow);
 
 		// 履歴が揃っているか確認
 		for (auto i = 0; i < MakeSalad::NEED_PLANT_NUM; ++i)
 		{
 			if (prevRecipe_[i].id_ == -1)	isShow = false;
 		}
-		makeFromHistoryButton_->SetVisible(isShow);
 	}
 
 	void InventoryDataSet()
 	{
 		if (pStage_ == nullptr)return;
 
-		itemPanel_->ResetArrayOfButton();
-
-		itemPanel_->PushButtonToArray(makeButton_);
+	
 
 		// プレイヤー情報を取得
 		{
@@ -413,14 +414,14 @@ namespace UIInventory {
 						PlantData plantData = p.second;
 						((UIImage*)hasPlantTable_[i])->SetImage(plantData.imageFilePath_);
 						((UIText*)invTextTable_[i])->SetText("x" + std::to_string(plantCount));
-						//itemPanel_->PushButtonToArray((UIImage*)hasPlantTable_[i]);
+						//itemPanel_->PushButtonToArray((UIButton*)hasPlantButtons_[i]);
 						break;
 					}
 				}
 				if (plantCount <= 0) {
 					((UIImage*)hasPlantTable_[i])->SetImage("Models/tentativeFlowers/BlankFlowerImage.png");
 					((UIText*)invTextTable_[i])->SetText("");
-					//itemPanel_->RemoveButtonFromArray((UIImage*)hasPlantTable_[i]);
+					//itemPanel_->RemoveButtonFromArray((UIButton*)hasPlantButtons_[i]);
 				}
 			}
 			else {
@@ -429,15 +430,20 @@ namespace UIInventory {
 					((UIImage*)hasPlantTable_[i])->SetImage("Models/tentativeFlowers/BlankFlowerImage.png");
 
 					((UIText*)invTextTable_[i])->SetText(" ");
-					//itemPanel_->RemoveButtonFromArray((UIImage*)hasPlantTable_[i]);
+					//itemPanel_->RemoveButtonFromArray((UIButton*)hasPlantButtons_[i]);
 				}
 			}
 		}
 
-		for (auto ing : cuttingBoardPlants_) {
-			if (((UIImage*)ing)->GetImageFilePath() != "Models/tentativeFlowers/BlankFlowerImage.png") {
-			}
-		}
+		//// 持っている植物のボタンを選択可能リストに追加
+		//for (auto ing : cuttingBoardPlants_) {
+		//	if (((UIImage*)ing)->GetImageFilePath() != "Models/tentativeFlowers/BlankFlowerImage.png") {
+		//		for (auto& button : hasPlantButtons_)
+		//			if (((UIImage*)ing)->GetImageFilePath() == ((UIButton*)button)->GetImageFilePath())
+		//		itemPanel_->PushButtonToArray((UIButton*)ing);
+		//		
+		//	}
+		//}
 	}
 	void SetStage(Stage* pStage)
 	{
