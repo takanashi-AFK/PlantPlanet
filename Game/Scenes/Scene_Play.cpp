@@ -358,7 +358,8 @@ void Scene_Play::UpdateNormalUI(Component_PlayerBehavior* _playerBehavior, Compo
 	fade_ = std::clamp(fade_, 0.f, 1.f);
 
 	// インベントリUIを開く(表示する)処理
-	if (Input::IsKeyDown(DIK_Q) || Input::IsPadButtonDown(XINPUT_GAMEPAD_B)) OpenInventoryUI();
+	if (Input::IsKeyDown(DIK_Q) || Input::IsPadButtonDown(XINPUT_GAMEPAD_B))
+		OpenInventoryUI();
 }
 
 void Scene_Play::CloseInventoryUI()

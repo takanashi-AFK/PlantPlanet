@@ -454,20 +454,7 @@ namespace UIInventory {
 		countedPlant.clear();
 		allPlantData.clear();
 		selectedPlant_.clear();
-
-		for (auto deleteobj : hasPlantTable_) {
-			itemPanel_->DeleteUIObject(deleteobj);
-		}
-		for (auto deleteobj : invTable_) {
-			itemPanel_->DeleteUIObject(deleteobj);
-		}
-		for (auto deleteobj : invTextTable_) {
-			itemPanel_->DeleteUIObject(deleteobj);
-		}
-		for (auto deleteobj : cuttingBoardButtons_) {
-			itemPanel_->DeleteUIObject(deleteobj);
-		}
-
+		hasPlantButtons_.clear();
 	}
 
 	bool Check()
