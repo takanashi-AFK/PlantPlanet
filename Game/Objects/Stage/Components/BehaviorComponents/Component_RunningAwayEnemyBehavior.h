@@ -4,12 +4,12 @@
 #include<functional>
 #include<tuple>
 
-class Component_RunnigAwayEnemyBehavior : public Component
+class Component_RunningAwayEnemyBehavior : public Component
 {
 public:
 
-	Component_RunnigAwayEnemyBehavior(string _name, StageObject* _holder, Component* _parent);
-	~Component_RunnigAwayEnemyBehavior();
+	Component_RunningAwayEnemyBehavior(string _name, StageObject* _holder, Component* _parent);
+	~Component_RunningAwayEnemyBehavior();
 	void Initialize() override;
 	void Update() override;
 	void Release() override;
@@ -20,7 +20,18 @@ public:
 	void DrawData() override;
 	void OnCollision(GameObject* _target, Collider* _collider) override;
 
+	enum class STATE
+	{
+		RUNNING,
+		DEATH,
+
+		AMOUNT
+	};
+
 public:
+
+	STATE GetState() { return state_; }
+	void SetState(STATE state) { state_ = state; }
 
 private:
 
@@ -54,5 +65,7 @@ private:
 
 	bool isFlowerSpawned_;
 	string dropFlowerName_;
+
+	STATE state_;
 };
 

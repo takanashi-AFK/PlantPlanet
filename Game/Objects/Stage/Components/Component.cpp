@@ -37,7 +37,8 @@
 #include "TeleporterComponent/Component_ReturnGate.h"
 #include "DetectorComponents/Component_RectangleDetector.h"
 #include "BreakableWallComponents/Component_BreakableWall.h"
-#include "BehaviorComponents/Component_RunnigAwayEnemyBehavior.h"
+#include "BehaviorComponents/Component_RunningAwayEnemyBehavior.h"
+#include "MotionComponent/Component_RunningAwayEnemyMotion.h"
 
 Component::Component(StageObject* _holder, string _name,ComponentType _type)
     :holder_(_holder), name_(_name),type_(_type),childComponents_(),parent_(nullptr),isActive_(false),killMe_(false)
@@ -262,10 +263,11 @@ Component* CreateComponent(string _name, ComponentType _type, StageObject* _hold
 		case Accessory: comp = new Component_Accessory(_name, _holder, _parent); break;
 		case WeakRangeEnemy: comp = new Component_RangeEnemyBehavior(_name, _holder, _parent); break;
 		case MeleeEnemyBehavior: comp = new Component_MeleeEnemyBehavior(_name, _holder, _parent); break;
-		case RunningawayEnemy : comp = new Component_RunnigAwayEnemyBehavior(_name, _holder, _parent); break;
+		case RunningawayEnemy : comp = new Component_RunningAwayEnemyBehavior(_name, _holder, _parent); break;
 		case ReturnGate: comp = new Component_ReturnGate(_name, _holder, _parent); break;		
 		case RectangleDetector: comp = new Component_RectangleDetector(_name, _holder, _parent); break;
 		case BreakableWall: comp = new Component_BreakableWall(_name, _holder, _parent); break;
+		case RunningawayEnemyMotion: comp = new Component_RunningAwayEnemyMotion(_name, _holder, _parent); break;
 		default: /* その他コンポーネントを追加する時は上記のように追加 */ break;
 	}
 	return comp;
@@ -313,6 +315,7 @@ string ComponentTypeToString(ComponentType _type)
 	case RectangleDetector: return "RectangleDetectorComponent";
 	case BreakableWall: return "BreakableWallComponent";
 	case RunningawayEnemy: return "RunningAwayEnemy";
+	case RunningawayEnemyMotion: return "RunningAwayEnemyMotion";
 		// その他コンポーネントを追加する時は上記のように追加
 
 	default: return "None";
