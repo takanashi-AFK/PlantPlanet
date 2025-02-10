@@ -10,6 +10,7 @@
 #include "../../../../Plants/PlantCollection.h"
 #include "../PlantComponents/Component_Plant.h"
 #include<algorithm>
+#include"../MotionComponent/Component_RunningAwayEnemyMotion.h"
 
 Component_RunningAwayEnemyBehavior::Component_RunningAwayEnemyBehavior(string _name, StageObject* _holder, Component* _parent)
 	:Component(_holder, _name, RunningawayEnemy, _parent), points_{}, isFlowerSpawned_(false), destinationPointIterator_{},moveAmount_{}
@@ -27,6 +28,7 @@ void Component_RunningAwayEnemyBehavior::Initialize()
 	holder_->SetObjectType(StageObject::TYPE_ENEMY);
 
 	if (!FindChildComponent("HealthGauge")) AddChildComponent(CreateComponent("HealthGauge", HealthGauge, holder_, this));
+	if (FindChildComponent("Motion") == false)AddChildComponent(CreateComponent("Motion", RunningawayEnemyMotion, holder_, this));
 
 	destinationPointIterator_ = points_.begin();
 

@@ -12,7 +12,7 @@ void Component_RunningAwayEnemyMotion::Initialize()
 	modelHandleList_[Component_RunningAwayEnemyBehavior::STATE::RUNNING]
 		= MotionData("Models/Enemies/Jab Cross Running.fbx" , 0, endRunningFrame_, 1, true);
 	modelHandleList_[Component_RunningAwayEnemyBehavior::STATE::DEATH]
-		= MotionData("Models/Enemies/Jab Cross Running.fbx", 0, endRunningFrame_, 1, false);
+		= MotionData("Models/Enemies/Jab Cross Running.fbx", 0, endRunningFrame_, 1, true);
 }
 
 void Component_RunningAwayEnemyMotion::Update()
