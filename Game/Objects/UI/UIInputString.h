@@ -7,12 +7,15 @@ class Text;
 class UIInputString : public UIObject
 {
 private:
-	string currentInput;				// 入力された文字列
-	bool isComplete = false;			// 入力完了フラグ
-	std::map<int, char> keyToCharMap;	// スキャンコードと対応する文字
+	string currentInput_;				// 入力された文字列
+	bool isComplete_;					// 入力完了フラグ
+	std::map<int, char> keyToCharMap_;	// スキャンコードと対応する文字
 
 	Text* pText_;						// テキストオブジェクト
 	float size_;						// テキストのサイズ
+	bool isOpenChangeFontWindow_;		// フォント変更ウィンドウを開くかどうか
+
+	struct FontData { string filePath; XMINT2 charSize; int rowLength; } fontData_;	// フォントデータ
 
 public:
 	/// <summary> コンストラクタ </summary>
@@ -45,10 +48,10 @@ setter :*/
 	void SetSize(float size) { size_ = size; }
 
 	/// <summary> 入力完了フラグを設定 </summary>
-	void SetComplete(bool isComplete) { this->isComplete = isComplete; }
+	void SetComplete(bool isComplete) { this->isComplete_ = isComplete; }
 
 	/// <summary> 入力された文字列を設定 </summary>
-	void SetInputString(string input) { currentInput = input; }
+	void SetInputString(string input) { currentInput_ = input; }
 
 /*
 getter :*/
@@ -56,14 +59,20 @@ getter :*/
 	float GetSize() const { return size_; }
 
 	/// <summary> 入力された文字列を取得 </summary>
-	string GetInputString() const { return currentInput; }
+	string GetInputString() const { return currentInput_; }
 
 /*
 predicate :*/
 	/// <summary> 入力完了フラグを取得 </summary>
-	bool IsComplete() const{ return isComplete; }
+	bool IsComplete() const{ return isComplete_; }
 
 private:
+	/// <summary> フォント変更ウィンドウ </summary>
+	void ChangeFontWindow();
+
+	/// <summary> フォントファイルパスをエクスプローラから取得 </summary>
+	bool GetFontFilePathFromExplorer(string& _filePath) const;
+
 	/// <summary> キーマッピングの初期化 </summary>
 	void InitializeKeyMapping();
 };

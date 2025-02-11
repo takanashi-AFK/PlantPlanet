@@ -33,6 +33,7 @@
 #include "ImGui/imgui.h"
 #include "ImGui/imgui_impl_dx11.h"
 #include "ImGui/imgui_impl_win32.h"
+#include "../Game/Constants.h"
 
 #pragma comment(lib,"Winmm.lib")
 
@@ -320,7 +321,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 	{
 	//ウィンドウを閉じた
 	case WM_DESTROY:
-		UserManager::GetInstance().SaveUser("Datas/UserData.json");
+		UserManager::GetInstance().SaveUser(Constants::USER_DATA_JSON);
 		PostQuitMessage(0);	//プログラム終了
 		return 0;
 

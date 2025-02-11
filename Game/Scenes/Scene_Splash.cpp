@@ -2,9 +2,10 @@
 
 // インクルード
 #include "../../Engine/Global.h"
+#include "../../Engine/Json/JsonReader.h"
 #include "../../Engine/SceneManager.h"
-#include "../Objects/UI/UIPanel.h"
 #include "../Constants.h"
+#include "../Objects/UI/UIPanel.h"
 #include "../Plants/PlantCollection.h"
 
 using namespace Constants;
@@ -24,10 +25,9 @@ void Scene_Splash::Initialize()
 	// UIパネル & レイアウトの読み込み
 	json loadData;
 	if (JsonReader::Load(SPLASH_SCENE_UI_LAYOUT_JSON, loadData))UIPanel::GetInstance()->Load(loadData);
-	// 植物データの読み込み
-	JsonReader::Load("Datas/PlantData/TentativeFlowers.json", loadData);
-	PlantCollection::Load(loadData);
 
+	// 植物データの読み込み
+	if(JsonReader::Load(PLANT_DATA_JSON, loadData))PlantCollection::Load(loadData);
 }
 
 void Scene_Splash::Update()

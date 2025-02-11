@@ -11,7 +11,7 @@ namespace Constants {
 
 // 各種Jsonファイルのパス //////////////////////////////////////////////
 	// UIレイアウト
-	const string TITLE_SCENE_UI_LAYOUT_JSON = "Datas/UILayouts/alpha_titleScene_layout.json";
+	//const string TITLE_SCENE_UI_LAYOUT_JSON = "Datas/UILayouts/alpha_titleScene_layout.json";
 	const string DIFFICULTY_SELECT_SCENE_UI_LAYOUT_JSON = "Datas/UILayouts/difficultySelectScene_layout.json";
 	const string PLAY_SCENE_UI_LAYOUT_JSON = "Datas/無題.json";
 	const string RESULT_SCENE_UI_LAYOUT_JSON = "Datas/UILayouts/resultScene_layout.json";
@@ -86,5 +86,14 @@ namespace Constants {
 
 // 2025/02/11 以降追加分ファイルパス定数
 namespace Constants {
-	const string SPLASH_SCENE_UI_LAYOUT_JSON = "00_datas/00_sceneLayouts/00_splashSceneLayouts/00_splashSceneUILayout.json";
+
+// スプラッシュ使用ファイルパス //////////////////////////////////////////
+	const string SPLASH_SCENE_UI_LAYOUT_JSON = "00_datas/01_sceneLayouts/00_splashSceneLayouts/00_splashSceneUILayout.json";
+
+// タイトル使用ファイルパス ////////////////////////////////////////////
+	const string TITLE_SCENE_UI_LAYOUT_JSON = "00_datas/01_sceneLayouts/01_titleSceneLayouts/00_titleSceneUILayout.json";
+
+// その他使用ファイルパス //////////////////////////////////////////////
+	const string USER_DATA_JSON = "00_datas/00_others/00_userData.json";
+	const string PLANT_DATA_JSON = "00_datas/00_others/01_plantData.json";
 }

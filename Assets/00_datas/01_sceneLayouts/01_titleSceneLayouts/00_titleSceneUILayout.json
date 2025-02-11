@@ -1,0 +1,220 @@
+{
+  "background": {
+    "imageFilePath_": "01_images/01_titleSceneUI/00_titleBackground.png",
+    "isVisible_": true,
+    "layerNumber_": 1,
+    "objectName_": "background",
+    "position_": [ 0.0, 0.0, 0.0 ],
+    "rotate_": [ 0.0, 0.0, 0.0 ],
+    "scale_": [ 1.0, 1.0, 1.0 ],
+    "type_": 2
+  },
+  "continueButton": {
+    "ArrayPlace_X": 1,
+    "ArrayPlace_Y": 0,
+    "defaultImageFilePath_": "01_images/01_titleSceneUI/05_continuedButton.png",
+    "imageFilePath_": "01_images/01_titleSceneUI/05_continuedButton.png",
+    "isVisible_": true,
+    "layerNumber_": 4,
+    "objectName_": "continueButton",
+    "position_": [ 0.4000000059604645, -0.6499999761581421, 0.0 ],
+    "rotate_": [ 0.0, 0.0, 0.0 ],
+    "scale_": [ 1.0, 1.0, 1.0 ],
+    "selectImageFilePath_": "01_images/01_titleSceneUI/06_continuedButtonSelected.png",
+    "type_": 1
+  },
+  "inputForm": {
+    "imageFilePath_": "01_images/01_titleSceneUI/02_inputForm.png",
+    "isVisible_": true,
+    "layerNumber_": 3,
+    "objectName_": "inputForm",
+    "position_": [ 0.0, -0.25, 0.0 ],
+    "rotate_": [ 0.0, 0.0, 0.0 ],
+    "scale_": [ 1.0, 1.0, 1.0 ],
+    "type_": 2
+  },
+  "noButton": {
+    "ArrayPlace_X": 1,
+    "ArrayPlace_Y": 1,
+    "defaultImageFilePath_": "01_images/01_titleSceneUI/10_noButton.png",
+    "imageFilePath_": "01_images/01_titleSceneUI/10_noButton.png",
+    "isVisible_": false,
+    "layerNumber_": 9,
+    "objectName_": "noButton",
+    "position_": [ 0.2800000011920929, -0.5799999833106995, 0.0 ],
+    "rotate_": [ 0.0, 0.0, 0.0 ],
+    "scale_": [ 1.0, 1.0, 1.0 ],
+    "selectImageFilePath_": "01_images/01_titleSceneUI/11_noButtonSelected.png",
+    "type_": 1
+  },
+  "okButton": {
+    "ArrayPlace_X": 0,
+    "ArrayPlace_Y": 1,
+    "defaultImageFilePath_": "01_images/01_titleSceneUI/08_okButton.png",
+    "imageFilePath_": "01_images/01_titleSceneUI/08_okButton.png",
+    "isVisible_": false,
+    "layerNumber_": 8,
+    "objectName_": "okButton",
+    "position_": [ -0.2800000011920929, -0.5799999833106995, 0.0 ],
+    "rotate_": [ 0.0, 0.0, 0.0 ],
+    "scale_": [ 1.0, 1.0, 1.0 ],
+    "selectImageFilePath_": "01_images/01_titleSceneUI/09_okButtonSelected.png",
+    "type_": 1
+  },
+  "pop-upWindowBackground": {
+    "Easing_Goal": 1.0,
+    "Easing_Pile": 0.0,
+    "Easing_Ratio": 0.0,
+    "Easing_Start": 0.0,
+    "Easing_Type": 2,
+    "Second_position_": [ 0.0, 0.0, 0.0 ],
+    "Second_rotate": [ 0.0, 0.0, 0.0 ],
+    "Second_scale": [ 1.0, 1.0, 1.0 ],
+    "imageFilePath_": "01_images/01_titleSceneUI/07_pop-upWindowBackground.png",
+    "isVisible_": false,
+    "layerNumber_": 7,
+    "objectName_": "pop-upWindowBackground",
+    "position_": [ 0.0, 0.0, 0.0 ],
+    "rotate_": [ 0.0, 0.0, 0.0 ],
+    "scale_": [ 1.0, 1.0, 1.0 ],
+    "type_": 2
+  },
+  "startButton": {
+    "ArrayPlace_X": 0,
+    "ArrayPlace_Y": 0,
+    "defaultImageFilePath_": "01_images/01_titleSceneUI/03_startButton.png",
+    "imageFilePath_": "01_images/01_titleSceneUI/03_startButton.png",
+    "isVisible_": true,
+    "layerNumber_": 5,
+    "objectName_": "startButton",
+    "position_": [ -0.4000000059604645, -0.6499999761581421, 0.0 ],
+    "rotate_": [ 0.0, 0.0, 0.0 ],
+    "scale_": [ 1.0, 1.0, 1.0 ],
+    "selectImageFilePath_": "01_images/01_titleSceneUI/04_startButtonSelected.png",
+    "type_": 1
+  },
+  "text-libraryStatus": {
+    "FontData": {
+      "charSize": [ 16, 32 ],
+      "filePath": "02_fonts/04_ds-dijital-white.png",
+      "rowLength": 16
+    },
+    "isVisible_": false,
+    "layerNumber_": 17,
+    "objectName_": "text-libraryStatus",
+    "position_": [ 0.0, 0.11, 0.0 ],
+    "rotate_": [ 0.0, 0.0, 0.0 ],
+    "scale_": [ 1.0, 1.0, 1.0 ],
+    "size": 1.2,
+    "text": "",
+    "type_": 3
+  },
+  "text-playTotalTime": {
+    "FontData": {
+      "charSize": [ 16, 32 ],
+      "filePath": "02_fonts/04_ds-dijital-white.png",
+      "rowLength": 16
+    },
+    "isVisible_": false,
+    "layerNumber_": 16,
+    "objectName_": "text-playTotalTime",
+    "position_": [ 0.0, 0.245, 0.0 ],
+    "rotate_": [ 0.0, 0.0, 0.0 ],
+    "scale_": [ 1.0, 1.0, 1.0 ],
+    "size": 1.2,
+    "text": "00:00:00",
+    "type_": 3
+  },
+  "text-userName": {
+    "FontData": {
+      "charSize": [ 128, 128 ],
+      "filePath": "02_fonts/02_mplus-2p-white.png",
+      "rowLength": 16
+    },
+    "isVisible_": false,
+    "layerNumber_": 15,
+    "objectName_": "text-userName",
+    "position_": [ -0.27000001072883606, -0.10000000149011612, 0.0 ],
+    "rotate_": [ 0.0, 0.0, 0.0 ],
+    "scale_": [ 1.0, 1.0, 1.0 ],
+    "size": 0.4,
+    "text": "",
+    "type_": 3
+  },
+  "text0": {
+    "imageFilePath_": "01_images/01_titleSceneUI/12_text0.png",
+    "isVisible_": false,
+    "layerNumber_": 10,
+    "objectName_": "text0",
+    "position_": [ 0.0, 0.0, 0.0 ],
+    "rotate_": [ 0.0, 0.0, 0.0 ],
+    "scale_": [ 1.0, 1.0, 1.0 ],
+    "type_": 2
+  },
+  "text1": {
+    "imageFilePath_": "01_images/01_titleSceneUI/13_text1.png",
+    "isVisible_": false,
+    "layerNumber_": 11,
+    "objectName_": "text1",
+    "position_": [ 0.0, 0.0, 0.0 ],
+    "rotate_": [ 0.0, 0.0, 0.0 ],
+    "scale_": [ 1.0, 1.0, 1.0 ],
+    "type_": 2
+  },
+  "text2": {
+    "imageFilePath_": "01_images/01_titleSceneUI/14_text2.png",
+    "isVisible_": false,
+    "layerNumber_": 12,
+    "objectName_": "text2",
+    "position_": [ 0.0, 0.0, 0.0 ],
+    "rotate_": [ 0.0, 0.0, 0.0 ],
+    "scale_": [ 1.0, 1.0, 1.0 ],
+    "type_": 2
+  },
+  "text3": {
+    "imageFilePath_": "01_images/01_titleSceneUI/15_text3.png",
+    "isVisible_": false,
+    "layerNumber_": 14,
+    "objectName_": "text3",
+    "position_": [ 0.0, 0.0, 0.0 ],
+    "rotate_": [ 0.0, 0.0, 0.0 ],
+    "scale_": [ 1.0, 1.0, 1.0 ],
+    "type_": 2
+  },
+  "text4": {
+    "imageFilePath_": "01_images/01_titleSceneUI/16_text4.png",
+    "isVisible_": false,
+    "layerNumber_": 13,
+    "objectName_": "text4",
+    "position_": [ 0.0, 0.0, 0.0 ],
+    "rotate_": [ 0.0, 0.0, 0.0 ],
+    "scale_": [ 1.0, 1.0, 1.0 ],
+    "type_": 2
+  },
+  "titleLogo": {
+    "imageFilePath_": "01_images/01_titleSceneUI/01_titleLogo.png",
+    "isVisible_": true,
+    "layerNumber_": 2,
+    "objectName_": "titleLogo",
+    "position_": [ 0.0, 0.25, 0.0 ],
+    "rotate_": [ 0.0, 0.0, 0.0 ],
+    "scale_": [ 1.0, 1.0, 1.0 ],
+    "type_": 2
+  },
+  "userNameInput": {
+    "FontData": {
+      "charSize": [ 128, 128 ],
+      "filePath": "02_fonts/02_mplus-2p-white.png",
+      "rowLength": 16
+    },
+    "isVisible_": true,
+    "layerNumber_": 6,
+    "objectName_": "userNameInput",
+    "position_": [ -0.699999988079071, 0.25, 0.0 ],
+    "rotate_": [ 0.0, 0.0, 0.0 ],
+    "scale_": [ 1.0, 1.0, 1.0 ],
+    "size": 0.4,
+    "text": "",
+    "type_": 7
+  }
+}

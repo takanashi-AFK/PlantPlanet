@@ -19,7 +19,6 @@ namespace {
 	// UI名定数
 	const string BUTTON_NAME_START		= "startButton";
 	const string BUTTON_NAME_CONTINUE	= "continueButton";
-	const string BUTTON_NAME_END		= "EndButton";
 
 	const string BUTTON_NAME_OK			= "okButton";
 	const string BUTTON_NAME_NO			= "noButton";
@@ -43,11 +42,12 @@ Scene_Title::Scene_Title(GameObject* parent)
 
 void Scene_Title::Initialize()
 {
-	UserManager::GetInstance().LoadUser("Datas/userData.json");
+	// ユーザー情報の読込
+	UserManager::GetInstance().LoadUser(USER_DATA_JSON);
 
 	// UIパネル & レイアウトの読込
 	json loadData;
-	if (JsonReader::Load("Datas/SceneLayout/title.json", loadData)) UIPanel::GetInstance()->Load(loadData);
+	if (JsonReader::Load(TITLE_SCENE_UI_LAYOUT_JSON, loadData)) UIPanel::GetInstance()->Load(loadData);
 
 	UIPanel* uiPanel = UIPanel::GetInstance(); {
 		// ボタン配列の初期化
@@ -57,10 +57,6 @@ void Scene_Title::Initialize()
 		uiPanel->PushButtonToArray((UIButton*)uiPanel->GetUIObject(BUTTON_NAME_START));
 		uiPanel->PushButtonToArray((UIButton*)uiPanel->GetUIObject(BUTTON_NAME_CONTINUE));
 	}
-
-	// 植物情報を読込
-	json plantData;
-	if (JsonReader::Load("Datas/PlantData/TentativeFlowers.json", plantData))PlantCollection::Load(plantData);
 }
 
 void Scene_Title::Update()
@@ -75,8 +71,8 @@ void Scene_Title::Update()
 	UIInputString* uiInputString = (UIInputString*)uiPanel->GetUIObject(UIType::UI_INPUTSTRING)[0];
 	if (uiInputString == nullptr) return;
 
-	// debug code
-	ImGui::Begin("userData"); {
+	// debug code:ユーザーデータ操作
+	/*ImGui::Begin("userData"); {
 		UserManager& um = UserManager::GetInstance();
 
 		for (auto& userData : um.GetAllUsers()) {
@@ -94,9 +90,9 @@ void Scene_Title::Update()
 		if (ImGui::Button("-")) um.DeleteUser(uiInputString->GetInputString());
 		if (ImGui::Button("login")) um.LoginUser(uiInputString->GetInputString()); ImGui::SameLine();
 		if (ImGui::Button("logout")) um.LogoutUser();
-		if (ImGui::Button("save")) um.SaveUser("Datas/userData.json"); ImGui::SameLine();
-		if (ImGui::Button("load")) um.LoadUser("Datas/userData.json");
-	} ImGui::End();
+		if (ImGui::Button("save")) um.SaveUser(USER_DATA_JSON); ImGui::SameLine();
+		if (ImGui::Button("load")) um.LoadUser(USER_DATA_JSON);
+	} ImGui::End();*/
 }
 
 void Scene_Title::Draw()
@@ -163,7 +159,6 @@ void Scene_Title::HandleUIInput(UIPanel* _uiPanel, bool& _isFirstSelectButton)
 	}
 	
 	// ボタンのシェーダーを変更
-	
 	selectingButton->SelectShader();
 	
 	// パッドのAボタンが押下された場合...
@@ -351,12 +346,6 @@ void Scene_Title::ProcessButtonAction(UIPanel* _uiPanel,string _buttonName, stri
 		_uiPanel->RemoveButtonFromArray((UIButton*)_uiPanel->GetUIObject(BUTTON_NAME_NO));
 		SetSelectableButton_ContinueAndStart(true);
 		ClosePopup(_uiPanel);
-	}
-
-	else if (_buttonName == BUTTON_NAME_END) {
-
-		// ゲームを終了する
-		PostQuitMessage(0);
 	}
 }
 

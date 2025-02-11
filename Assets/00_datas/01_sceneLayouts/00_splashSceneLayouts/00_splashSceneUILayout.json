@@ -1,0 +1,30 @@
+{
+  "00_splashBackground": {
+    "imageFilePath_": "01_images/00_splashSceneUI/00_splashBackground.png",
+    "isVisible_": true,
+    "layerNumber_": 1,
+    "objectName_": "00_splashBackground",
+    "position_": [ 0.0, 0.0, 0.0 ],
+    "rotate_": [ 0.0, 0.0, 0.0 ],
+    "scale_": [ 1.0, 1.0, 1.0 ],
+    "type_": 2
+  },
+  "01_teamLogo": {
+    "Easing_Goal": 1.0,
+    "Easing_Pile": 0.0,
+    "Easing_Ratio": 0.0020000000949949026,
+    "Easing_Start": 0.0,
+    "Easing_Type": 1,
+    "Second_position_": [ 0.0, 0.0, 0.0 ],
+    "Second_rotate": [ 0.0, 0.0, 0.0 ],
+    "Second_scale": [ 1.0, 1.0, 1.0 ],
+    "imageFilePath_": "01_images/00_splashSceneUI/01_teamLogo.png",
+    "isVisible_": true,
+    "layerNumber_": 2,
+    "objectName_": "01_teamLogo",
+    "position_": [ 0.0, 1.5, 0.0 ],
+    "rotate_": [ 0.0, 0.0, 0.0 ],
+    "scale_": [ 1.0, 1.0, 1.0 ],
+    "type_": 2
+  }
+}
