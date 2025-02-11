@@ -11,7 +11,6 @@ namespace Constants {
 
 // 各種Jsonファイルのパス //////////////////////////////////////////////
 	// UIレイアウト
-	const string SPLASH_SCENE_UI_LAYOUT_JSON = "Datas/UILayouts/splashScene_layout.json";
 	const string TITLE_SCENE_UI_LAYOUT_JSON = "Datas/UILayouts/alpha_titleScene_layout.json";
 	const string DIFFICULTY_SELECT_SCENE_UI_LAYOUT_JSON = "Datas/UILayouts/difficultySelectScene_layout.json";
 	const string PLAY_SCENE_UI_LAYOUT_JSON = "Datas/無題.json";
@@ -83,4 +82,9 @@ namespace Constants {
 	const string RANKING_DATA_JSON = "Datas/ranking.json";
 
 ////////////////////////////////////////////////////////////////////////
+}
+
+// 2025/02/11 以降追加分ファイルパス定数
+namespace Constants {
+	const string SPLASH_SCENE_UI_LAYOUT_JSON = "00_datas/00_sceneLayouts/00_splashSceneLayouts/00_splashSceneUILayout.json";
 }
