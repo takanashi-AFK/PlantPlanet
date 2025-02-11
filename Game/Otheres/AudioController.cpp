@@ -42,6 +42,10 @@ namespace {
 	// タイトルシーンBGM
 	const string TITLE_BGM = "03_audios/00_BGM/00_titleSceneBGM/プレゼントコーナー.wav";
 	const float TITLE_BGM_VOLUME = 1.f;
+
+	// メニューシーンBGM
+	const string MENU_BGM = "03_audios/00_BGM/01_menuSceneBGM/ニワトリダンス.wav";
+	const float MENU_BGM_VOLUME = 0.5f;
 }
 
 void AudioController::Update(GameObject* _root)
@@ -87,6 +91,16 @@ void AudioController::Update(GameObject* _root)
 		// シーンを切り替える時のSE再生処理
 			// ※ タイトルシーン 427行目あたり に記述　修正予定
 		//
+	}
+
+// メニューシーン //////////////////////////////////////////////
+	else if (sceneManager->IsCurrentScene(SCENE_ID_MENU)) {
+
+		// タイトルBGMの停止
+		Audio::Stop(Audio::Load(TITLE_BGM, true));
+
+		// メニューシーンのBGM再生
+		Audio::Play(Audio::Load(MENU_BGM, true), MENU_BGM_VOLUME);
 	}
 
 	//if (sceneManager->IsCurrentScene(SCENE_ID_PLAY)) {

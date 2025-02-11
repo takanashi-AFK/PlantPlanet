@@ -42,12 +42,10 @@ void Scene_Menu::Initialize()
 	// カメラの初期化
 	Camera::SetPosition(0.f, 2.7f, 7.f);
 	Camera::SetTarget(0.f, 2.7f, 0.f);
-
 }
 
 void Scene_Menu::Update()
 {
-
 	// タブボタンの操作
 	MouseTabMove();
 	GamePadTabMove();

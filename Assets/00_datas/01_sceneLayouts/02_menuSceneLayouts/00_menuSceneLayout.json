@@ -612,15 +612,15 @@
   "OPTION-GameEndButton": {
     "ArrayPlace_X": 1,
     "ArrayPlace_Y": 1,
-    "defaultImageFilePath_": "",
-    "imageFilePath_": "Images/MenuScene/returnButton.png",
+    "defaultImageFilePath_": "01_images/02_menuSceneUI/04_optionContents/00_exitButton.png",
+    "imageFilePath_": "01_images/02_menuSceneUI/04_optionContents/00_exitButton.png",
     "isVisible_": false,
     "layerNumber_": 99,
     "objectName_": "OPTION-GameEndButton",
     "position_": [ 0.699999988079071, -0.6000000238418579, 0.0 ],
     "rotate_": [ 0.0, 0.0, 0.0 ],
-    "scale_": [ 0.5, 0.5, 1.0 ],
-    "selectImageFilePath_": "",
+    "scale_": [ 1.0,1.0, 1.0 ],
+    "selectImageFilePath_": "01_images/02_menuSceneUI/04_optionContents/01_exitButtonSelected.png",
     "type_": 1
   },
   "PLAY-POPUP-BACKGROUND": {
@@ -692,15 +692,15 @@
   "PLAY-PlayButton": {
     "ArrayPlace_X": 1,
     "ArrayPlace_Y": 1,
-    "defaultImageFilePath_": "Images/MenuScene/01_playContents/00_playButton.png",
-    "imageFilePath_": "Images/MenuScene/01_playContents/00_playButton.png",
+    "defaultImageFilePath_": "01_images/02_menuSceneUI/01_playContents/00_playButton.png",
+    "imageFilePath_": "01_images/02_menuSceneUI/01_playContents/00_playButton.png",
     "isVisible_": true,
     "layerNumber_": 2,
     "objectName_": "PLAY-PlayButton",
     "position_": [ -0.699999988079071, -0.699999988079071, 0.0 ],
     "rotate_": [ 0.0, 0.0, 0.0 ],
     "scale_": [ 1.0, 1.0, 1.0 ],
-    "selectImageFilePath_": "Images/MenuScene/01_playContents/01_playButtonSelected.png",
+    "selectImageFilePath_": "01_images/02_menuSceneUI/01_playContents/01_playButtonSelected.png",
     "type_": 1
   },
   "RANKING-NameFrame1": {
