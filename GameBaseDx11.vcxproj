@@ -247,6 +247,7 @@
     <ClCompile Include="Game\Objects\Stage\MakeSalad.cpp" />
     <ClCompile Include="Game\Scenes\Scene_Menu.cpp" />
     <ClCompile Include="Game\Otheres\UserManager.cpp" />
+    <ClCompile Include="Game\Objects\Stage\MenuCharacter.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game\Objects\Stage\Components\BehaviorComponents\Component_RunnigAwayEnemyBehavior.h" />
@@ -360,6 +361,7 @@
     <ClInclude Include="Game\Objects\Stage\Salad.h" />
     <ClInclude Include="Game\Scenes\Scene_Menu.h" />
     <ClInclude Include="Game\Otheres\UserManager.h" />
+    <ClInclude Include="Game\Objects\Stage\MenuCharacter.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Assets\Shader\Area.hlsl">

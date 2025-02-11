@@ -196,3 +196,17 @@ T* Instantiate(GameObject* pParent)
 	return pNewObject;
 }
 
+//オブジェクトを作成するテンプレート
+template <class T>
+T* Instantiate_front(GameObject* pParent)
+{
+	T* pNewObject = new T(pParent);
+	if (pParent != nullptr)
+	{
+		pParent->PushFrontChild(pNewObject);
+	}
+	pNewObject->Initialize();
+	return pNewObject;
+}
+
+

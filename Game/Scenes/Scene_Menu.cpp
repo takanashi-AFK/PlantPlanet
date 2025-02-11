@@ -9,6 +9,10 @@
 #include "../Otheres/RankingManager.h"
 #include "../Objects/UI/UIText.h"
 #include "../Otheres/UserManager.h"
+#include "../Objects/Stage/SkySphere.h"
+#include "../../Engine/ResourceManager/Image.h"
+#include "../Objects/Stage/MenuCharacter.h"
+#include "../../Engine/GameObject/Camera.h"
 
 using namespace Constants;
 
@@ -26,31 +30,19 @@ Scene_Menu::Scene_Menu(GameObject* _parent)
 
 void Scene_Menu::Initialize()
 {
-	// UIパネルを取得
-	panel = UIPanel::GetInstance();
+	// UIパネル & レイアウトの読込
+	InitUIPanel();
 
-	// UILayout_jsonファイルを読み込む
-	json loadData;
-	if (JsonReader::Load(MENU_SCENE_UI_LAYOUT_JSON, loadData)) 
-		panel->Load(loadData);
+	// プレイヤーを配置
+	Instantiate<MenuCharacter>(this);
 
-	// UIObjectを取得
-	uiObject_ = panel->GetUIObjects();
+	// 臨時※　背景画像の読み込み
+	imageHandle_ = Image::Load("01_images/02_menuSceneUI/00_common/00_menuBackground.png");
 
-	// すべてのオブジェクトを各リストに打ち分ける
-	for (auto uiItem : uiObject_) {
-		uiItem->SetVisible(true);
-		if ((uiItem)->GetObjectName().starts_with("TAB")) { tabButtonList.push_back(((UIButton*)uiItem));  }
-		else if (uiItem->GetObjectName() == "INDEX-DescriptionImage") { descriptionImage = (UIImage*)uiItem; }
-		else if (uiItem->GetObjectName().starts_with("PLAY")) { playUIList_.push_back(uiItem);  }
-		else if (uiItem->GetObjectName().starts_with("INDEX")) { indexUIList_.push_back(uiItem);  }
-		else if (uiItem->GetObjectName().starts_with("RANKING")) { rankingUIList_.push_back(uiItem);  }
-		else if (uiItem->GetObjectName().starts_with("OPTION")) { optionUIList_.push_back(uiItem); }
-		else if (uiItem->GetObjectName() == "BackGround") { backGround = (UIImage*)uiItem; }
-	}
+	// カメラの初期化
+	Camera::SetPosition(0.f, 2.7f, 7.f);
+	Camera::SetTarget(0.f, 2.7f, 0.f);
 
-	panel->ResetSelectedButton();
-	isFirstSelectButton_ = true;
 }
 
 void Scene_Menu::Update()
@@ -76,6 +68,8 @@ void Scene_Menu::Update()
 
 void Scene_Menu::Draw()
 {
+	Image::SetTransform(imageHandle_, transform_);
+	Image::Draw(imageHandle_);
 }
 
 void Scene_Menu::Release()
@@ -615,4 +609,28 @@ void Scene_Menu::UpdateTabButtonImages(MenuType _menuType)
 bool Scene_Menu::ConfirmButton(UIButton* _button)
 {
 	return _button->OnClick() || panel->GetSelectingButton() == _button && Input::IsPadButtonDown(XINPUT_GAMEPAD_A);
+}
+
+void Scene_Menu::InitUIPanel()
+{
+	// UIパネルを設定
+	panel = UIPanel::GetInstance();
+	json loadData;
+	if (JsonReader::Load(MENU_SCENE_UI_LAYOUT_JSON, loadData))panel->Load(loadData);
+
+	// UIObjectを各種項目に分ける
+	if(panel != nullptr)for (auto uiItem : panel->GetUIObjects()) {
+		uiItem->SetVisible(true);
+		if ((uiItem)->GetObjectName().starts_with("TAB"))				{ tabButtonList.push_back(((UIButton*)uiItem)); }
+		else if (uiItem->GetObjectName() == "INDEX-DescriptionImage")	{ descriptionImage = (UIImage*)uiItem; }
+		else if (uiItem->GetObjectName().starts_with("PLAY"))			{ playUIList_.push_back(uiItem); }
+		else if (uiItem->GetObjectName().starts_with("INDEX"))			{ indexUIList_.push_back(uiItem); }
+		else if (uiItem->GetObjectName().starts_with("RANKING"))		{ rankingUIList_.push_back(uiItem); }
+		else if (uiItem->GetObjectName().starts_with("OPTION"))			{ optionUIList_.push_back(uiItem); }
+		else if (uiItem->GetObjectName() == "BackGround")				{ backGround = (UIImage*)uiItem; }
+	}
+
+	// 選択中のボタンをリセット & 初期化
+	panel->ResetSelectedButton();
+	isFirstSelectButton_ = true;
 }

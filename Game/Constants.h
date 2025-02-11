@@ -17,8 +17,7 @@ namespace Constants {
 	const string RESULT_SCENE_UI_LAYOUT_JSON = "Datas/UILayouts/resultScene_layout.json";
 	const string END_SCENE_UI_LAYOUT_JSON = "Datas/UILayouts/endScene_layout.json";
 	const string RANKING_SCENE_UI_LAYOUT_JSON = "Datas/UILayouts/rankingScene_layout.json";
-	const string MENU_SCENE_UI_LAYOUT_JSON = "Datas/SceneLayout/MenuScene/MenuSceneLayout2.json";
-
+	
 	// ステージレイアウト
 	const string STAGE_EASY_JSON = "Datas/StageLayouts/stage_easy.json";
 	const string STAGE_NORMAL_JSON = "Datas/StageLayouts/stage_normal.json";
@@ -92,6 +91,9 @@ namespace Constants {
 
 // タイトル使用ファイルパス ////////////////////////////////////////////
 	const string TITLE_SCENE_UI_LAYOUT_JSON = "00_datas/01_sceneLayouts/01_titleSceneLayouts/00_titleSceneUILayout.json";
+
+// メニュー使用ファイルパス ////////////////////////////////////////////
+	const string MENU_SCENE_UI_LAYOUT_JSON = "00_datas/01_sceneLayouts/02_menuSceneLayouts/00_menuSceneLayout.json";
 
 // その他使用ファイルパス //////////////////////////////////////////////
 	const string USER_DATA_JSON = "00_datas/00_others/00_userData.json";

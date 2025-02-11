@@ -1,23 +1,18 @@
 #pragma once
 #include "../../Engine/GameObject/GameObject.h"
-#include <vector>
 #include "../Objects/UI/UIImage.h"
 #include "../Plants/Plant.h"
+#include <vector>
+
 class UIButton;
 class UIPanel;
 class UIObject;
+
 class Scene_Menu : public GameObject
 {
 private:
+	enum MenuType { PLAY, INDEX, RANKING, OPTION, MAX, }currentMenuType;	// メニュータイプ
 
-	enum MenuType
-	{
-		PLAY = 0,
-		INDEX,
-		RANKING,
-		OPTION,
-		MAX,
-	}currentMenuType;
 	UIPanel* panel;
 	UIButton* playButton;
 	UIButton* playReturnButton;
@@ -46,15 +41,23 @@ private:
 	bool isPopUpModeFirst_;
 
 	int frameCount_;
+
+	// 臨時変数 (background画像)のみ背景に持っていきたいから
+	int imageHandle_;
+
 public:
 	/// <summary> コンストラクタ </summary>
 	Scene_Menu(GameObject* _parent);
+
 	/// <summary> 初期化 </summary>
 	void Initialize() override;
+
 	/// <summary> 更新 </summary>
 	void Update() override;
+
 	/// <summary> 描画 </summary>
 	void Draw() override;
+
 	/// <summary> 解放 </summary>
 	void Release() override;
 
@@ -87,5 +90,9 @@ private:
 	void UpdateTabButtonImages(MenuType _menuType);
 
 	bool ConfirmButton(UIButton* _button);
+
+/*
+initialize :*/
+	void InitUIPanel();
 };
 
