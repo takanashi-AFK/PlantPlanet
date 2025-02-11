@@ -42,6 +42,9 @@ void UIInputString::Update()
     if (Input::IsKeyDown(DIK_RETURN)) {
         isComplete_ = true;
     }
+
+	// テキストの更新
+	prevInput_ = currentInput_;
 }
 
 void UIInputString::Draw()

@@ -12,6 +12,7 @@
 
 #include "../Otheres/UserManager.h"
 #include "../Objects/UI/UIText.h"
+#include "../../Engine/ResourceManager/Audio.h"
 
 using namespace Constants;
 
@@ -125,7 +126,14 @@ void Scene_Title::HandleUIInput(UIPanel* _uiPanel, bool& _isFirstSelectButton)
 
 			// ボタンの選択位置を左に移動
 			else _uiPanel->SelectorMove(UIPanel::SELECTOR_MOVE_TO::LEFT);
-			
+
+			// ボタン移動SEを再生
+			{
+				// タイトルシーンSE(ボタン選択移動時)
+				const string BUTTONMOVE_SE = "03_audios/01_SE/01_titleSceneSE/決定ボタンを押す44.wav";
+				Audio::Play(Audio::Load(BUTTONMOVE_SE, false));
+			}
+
 		}
 		else if (Input::IsPadButtonDown(XINPUT_GAMEPAD_DPAD_RIGHT)) {
 
@@ -141,16 +149,24 @@ void Scene_Title::HandleUIInput(UIPanel* _uiPanel, bool& _isFirstSelectButton)
 
 			// ボタンの選択位置を右に移動
 			else _uiPanel->SelectorMove(UIPanel::SELECTOR_MOVE_TO::RIGHT);
+
+			// ボタン移動SEを再生
+			{
+				// タイトルシーンSE(ボタン選択移動時)
+				const string BUTTONMOVE_SE = "03_audios/01_SE/01_titleSceneSE/決定ボタンを押す44.wav";
+				Audio::Play(Audio::Load(BUTTONMOVE_SE, false));
+			}
 		}
 	}
 
 	// 現在、選択中 かつ レイヤーが一番上のボタンを取得
 	UIButton* selectingButton = UIButton::GetTopSelectingUI(_uiPanel->GetUIObject(UIType::UI_BUTTON));
 
-	// UIボタンが押下された場合...
-	if (selectingButton != nullptr && selectingButton->OnClick())
+	// マウスによりUIボタンが押下された場合...
+	if (selectingButton != nullptr && selectingButton->OnClick()) {
 		ProcessButtonAction(_uiPanel, selectingButton->GetObjectName(), uiInputString->GetInputString());
-	
+	}
+
 	selectingButton = _uiPanel->GetSelectingButton();
 	if (selectingButton == nullptr || !Input::IsPadConnected(0))
 	{
@@ -213,6 +229,13 @@ void Scene_Title::ProcessButtonAction(UIPanel* _uiPanel,string _buttonName, stri
 			SetSelectableButton_ContinueAndStart(false);
 
 			status_ = 0;
+			
+			// ボタンクリックSEを再生
+			{
+				// タイトルシーンSE(ボタンクリック時)
+				const string BUTTONCLICK_SE = "03_audios/01_SE/01_titleSceneSE/決定ボタンを押す44.wav";
+				Audio::Play(Audio::Load(BUTTONCLICK_SE, false));
+			}
 		}
 
 		// ユーザー名が入力されている場合...
@@ -229,6 +252,13 @@ void Scene_Title::ProcessButtonAction(UIPanel* _uiPanel,string _buttonName, stri
 				SetSelectableButton_ContinueAndStart(false);
 
 				status_ = 1;
+
+				// ボタンクリックSEを再生
+				{
+					// タイトルシーンSE(ボタンクリック時)
+					const string BUTTONCLICK_SE = "03_audios/01_SE/01_titleSceneSE/決定ボタンを押す44.wav";
+					Audio::Play(Audio::Load(BUTTONCLICK_SE, false));
+				}
 			}
 
 			// 既存ユーザー名として登録されていない場合...
@@ -243,6 +273,13 @@ void Scene_Title::ProcessButtonAction(UIPanel* _uiPanel,string _buttonName, stri
 				SetSelectableButton_ContinueAndStart(false);
 
 				status_ = 2;
+
+				// ボタンクリックSEを再生
+				{
+					// タイトルシーンSE(ボタンクリック時)
+					const string BUTTONCLICK_SE = "03_audios/01_SE/01_titleSceneSE/決定ボタンを押す44.wav";
+					Audio::Play(Audio::Load(BUTTONCLICK_SE, false));
+				}
 			}
 		}
 	}
@@ -260,6 +297,13 @@ void Scene_Title::ProcessButtonAction(UIPanel* _uiPanel,string _buttonName, stri
 			SetSelectableButton_ContinueAndStart(false);
 
 			status_ = 0;
+
+			// ボタンクリックSEを再生
+			{
+				// タイトルシーンSE(ボタンクリック時)
+				const string BUTTONCLICK_SE = "03_audios/01_SE/01_titleSceneSE/決定ボタンを押す44.wav";
+				Audio::Play(Audio::Load(BUTTONCLICK_SE, false));
+			}
 		}
 
 		// ユーザー名が入力されている場合...
@@ -305,6 +349,14 @@ void Scene_Title::ProcessButtonAction(UIPanel* _uiPanel,string _buttonName, stri
 				// OKボタン,NOボタンを配列に追加
 
 				status_ = 3;
+
+				// ボタンクリックSEを再生
+				{
+					// タイトルシーンSE(ボタンクリック時)
+					const string BUTTONCLICK_SE = "03_audios/01_SE/01_titleSceneSE/決定ボタンを押す44.wav";
+					Audio::Play(Audio::Load(BUTTONCLICK_SE, false));
+				}
+
 			}
 
 			// 既存ユーザー名として登録されていない場合...
@@ -316,6 +368,13 @@ void Scene_Title::ProcessButtonAction(UIPanel* _uiPanel,string _buttonName, stri
 				_uiPanel->SetButtonArrayIndex(failerButtonX, failerButtonY);
 				SetSelectableButton_ContinueAndStart(false);
 				status_ = 4;
+
+				// ボタンクリックSEを再生
+				{
+					// タイトルシーンSE(ボタンクリック時)
+					const string BUTTONCLICK_SE = "03_audios/01_SE/01_titleSceneSE/決定ボタンを押す44.wav";
+					Audio::Play(Audio::Load(BUTTONCLICK_SE, false));
+				}
 			}
 		}
 	}
@@ -360,6 +419,13 @@ void Scene_Title::GameStart(UserManager* _userManager, string _userName, bool _i
 	// シーンを切り替える
 	SceneManager* sceneManager = static_cast<SceneManager*>(FindObject("SceneManager"));
 	sceneManager->ChangeScene(SCENE_ID_MENU, TID_BLACKOUT);
+
+	// ボタンクリックSEを再生
+	{
+		// タイトルシーンSE(ボタンクリック時)
+		const string BUTTONCLICK_SE = "03_audios/01_SE/01_titleSceneSE/決定ボタンを押す41.wav";
+		Audio::Play(Audio::Load(BUTTONCLICK_SE, false));
+	}
 }
 
 void Scene_Title::SetUIVisible(UIPanel* _uiPanel, vector<string> _uiObjectNames, bool _visible)
@@ -385,4 +451,11 @@ void Scene_Title::ClosePopup(UIPanel* _uiPanel)
 		TEXT_LIBRARY_STATUS,
 		TEXT_PLAY_TOTAL_TIME
 	}, false);
+
+	// ボタンクリックSEを再生
+	{
+		// タイトルシーンSE(ボタンクリック時)
+		const string BUTTONCLICK_SE = "03_audios/01_SE/01_titleSceneSE/決定ボタンを押す44.wav";
+		Audio::Play(Audio::Load(BUTTONCLICK_SE, false));
+	}
 }

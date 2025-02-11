@@ -54,3 +54,13 @@ void Scene_Splash::Draw()
 void Scene_Splash::Release()
 {
 }
+
+bool Scene_Splash::IsChangeScene() const
+{	
+	return count_ >= LIMIT_TIME * FPS;
+}
+
+bool Scene_Splash::IsCountNow(float _sec) const
+{
+	return count_ == _sec * FPS;
+}

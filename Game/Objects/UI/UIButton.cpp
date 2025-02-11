@@ -401,7 +401,7 @@ bool UIButton::OnClick()
 	ConvertToImageCoordinates(mousePos);
 
 	//マウスのポジションが画像の領域に入っているかつ左クリックが押されたら
-	return IsMouseOver(mousePos) && Input::IsMouseButtonDown(0) && this->isVisible_;
+	return IsMouseOver(mousePos) && this->isVisible_ && (Input::IsMouseButtonDown(0) || Input::IsPadButtonDown(XINPUT_GAMEPAD_A));
 }
 
 bool UIButton::IsMouseOver(XMFLOAT2 _mousePosition)

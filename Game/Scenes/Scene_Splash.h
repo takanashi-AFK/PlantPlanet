@@ -23,5 +23,17 @@ public:
 
 	/// <summary> 解放 </summary>
 	void Release() override;
-};
 
+	/*
+	getter :*/
+	/// <summary> 経過時間の取得 </summary>
+	float GetCount() const { return count_; }
+
+	/*
+	predicate :*/
+	/// <summary> シーン切替可能か </summary>
+	bool IsChangeScene() const;
+
+	/// <summary> 指定時間経過したか(秒) </summary>
+	bool IsCountNow(float _sec) const;
+};

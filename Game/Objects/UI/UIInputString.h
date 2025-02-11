@@ -8,6 +8,7 @@ class UIInputString : public UIObject
 {
 private:
 	string currentInput_;				// 入力された文字列
+	string prevInput_;					// 1フレーム前の入力文字列
 	bool isComplete_;					// 入力完了フラグ
 	std::map<int, char> keyToCharMap_;	// スキャンコードと対応する文字
 
@@ -61,10 +62,15 @@ getter :*/
 	/// <summary> 入力された文字列を取得 </summary>
 	string GetInputString() const { return currentInput_; }
 
+	std::map<int, char>& GetKeyToCharMap() { return keyToCharMap_; }
+
 /*
 predicate :*/
 	/// <summary> 入力完了フラグを取得 </summary>
 	bool IsComplete() const{ return isComplete_; }
+
+	/// <summary> キー入力があるかどうか </summary>
+	bool IsKeyInput() const { return currentInput_ != prevInput_; }
 
 private:
 	/// <summary> フォント変更ウィンドウ </summary>

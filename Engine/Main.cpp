@@ -191,7 +191,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 				pUIPanel_->UpdateSub();
 
 				// オーディオの更新
-				//AudioController::Update(pRootObject);
+				AudioController::Update(pRootObject);
 
 				//カメラを更新
 				Camera::Update();
