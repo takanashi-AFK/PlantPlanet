@@ -149,27 +149,27 @@ void Component_PlantGenerator::Save(json& _saveObj)
 void Component_PlantGenerator::Load(json& _loadObj)
 {
 	// 半径を読込
-	radius_ = _loadObj["radius_"];
+	if(_loadObj.contains("radius_"))radius_ = _loadObj["radius_"];
 
 	// 生成数を読込
-	plantNum_ = _loadObj["plantNum_"];
+	if (_loadObj.contains("plantNum_"))plantNum_ = _loadObj["plantNum_"];
 
 	// 最大稀少度を読込
-	maxRarity_ = _loadObj["maxRarity_"];
+	if (_loadObj.contains("maxRarity_"))maxRarity_ = _loadObj["maxRarity_"];
 
 	// 最小稀少度を読込
-	minRarity_ = _loadObj["minRarity_"];
+	if (_loadObj.contains("minRarity_"))minRarity_ = _loadObj["minRarity_"];
 
 	// 出現エリアを読込
-	areaId_ = _loadObj["areaId_"];
+	if (_loadObj.contains("areaId_"))areaId_ = _loadObj["areaId_"];
 
 	// 重みを読込
-	rare1Weight_ = _loadObj["rare1Weight_"];
-	rare2Weight_ = _loadObj["rare2Weight_"];
-	rare3Weight_ = _loadObj["rare3Weight_"];
+	if (_loadObj.contains("rare1Weight_"))rare1Weight_ = _loadObj["rare1Weight_"];
+	if (_loadObj.contains("rare2Weight_"))rare2Weight_ = _loadObj["rare2Weight_"];
+	if (_loadObj.contains("rare3Weight_"))rare3Weight_ = _loadObj["rare3Weight_"];
 
 	// 制限植物のIDリストを読込
-	restrictedPlantIds_ = _loadObj.at("restrictedPlantIds_").get<std::vector<int>>();
+	if (_loadObj.contains("restrictedPlantIds_"))restrictedPlantIds_ = _loadObj.at("restrictedPlantIds_").get<std::vector<int>>();
 }
 
 void Component_PlantGenerator::DrawData()
