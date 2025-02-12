@@ -107,47 +107,47 @@ void AudioController::Update(GameObject* _root)
 		//
 	}
 
-	//if (sceneManager->IsCurrentScene(SCENE_ID_PLAY)) {
+	if (sceneManager->IsCurrentScene(SCENE_ID_PLAY)) {
 
-	//	// 背景音楽の再生
-	//	Audio::Play(Audio::Load(ScoreManager::userName != "insane" ? PLAY_BGM : "Audios/ここは通さねえぜ！.wav", true), VOLUME);
-	//	Audio::Stop(Audio::Load(TITLE_BGM, true));
+		// 背景音楽の再生
+		//Audio::Play(Audio::Load(ScoreManager::userName != "insane" ? PLAY_BGM : "Audios/ここは通さねえぜ！.wav", true), VOLUME);
+		Audio::Play(Audio::Load(TITLE_BGM, true));
 
-	//	// カウントダウンの音の再生
-	//	CountDown* countDown = (CountDown*)_root->FindObject("CountDown");
-	//	if (countDown->IsActive())Audio::Play(Audio::Load(COUNTDOWN_SE, false));
+		// カウントダウンの音の再生
+		CountDown* countDown = (CountDown*)_root->FindObject("CountDown");
+		if(countDown != nullptr)if (countDown->IsActive())Audio::Play(Audio::Load(COUNTDOWN_SE, false));
 
-	//	// ステージを取得
-	//	Stage* stage = (Stage*)_root->FindObject("Stage");
+		// ステージを取得
+		Stage* stage = (Stage*)_root->FindObject("Stage");
 
-	//	// ダメージを受けた時の音の再生
-	//	for (auto hg : stage->FindComponents(HealthGauge)) {
-	//		if (((Component_HealthGauge*)hg)->IsUnlockAndReduce()) Audio::Play(Audio::Load(DAMAGE_SE, false));
-	//		if (((Component_HealthGauge*)hg)->IsLockAndReduce())
-	//		{
-	//			Audio::Play(Audio::Load(JUST_DODGE_SE, false));
-	//		}
-	//	}
+		// ダメージを受けた時の音の再生
+		for (auto hg : stage->FindComponents(HealthGauge)) {
+			if (((Component_HealthGauge*)hg)->IsUnlockAndReduce()) Audio::Play(Audio::Load(DAMAGE_SE, false));
+			if (((Component_HealthGauge*)hg)->IsLockAndReduce())
+			{
+				Audio::Play(Audio::Load(JUST_DODGE_SE, false));
+			}
+		}
 
-	//	for (auto pb : stage->FindComponents(PlayerBehavior)) {
-	//		
-	//		// プレイヤーがシュートをした時の音の再生
-	//		if(((Component_PlayerBehavior*)pb)->IsShootStart()) Audio::Play(Audio::Load(SHOOT_SE, false));
+		for (auto pb : stage->FindComponents(PlayerBehavior)) {
+			
+			// プレイヤーがシュートをした時の音の再生
+			if(((Component_PlayerBehavior*)pb)->IsShootStart()) Audio::Play(Audio::Load(SHOOT_SE, false));
 
-	//		// プレイヤーが回避をした時の音の再生
-	//		if(((Component_PlayerBehavior*)pb)->IsDodgeStart()) Audio::Play(Audio::Load(DODGE_SE, false));
+			// プレイヤーが回避をした時の音の再生
+			if(((Component_PlayerBehavior*)pb)->IsDodgeStart()) Audio::Play(Audio::Load(DODGE_SE, false));
 
-	//		// プレイヤーが歩いている時の音の再生
-	//		if(((Component_PlayerBehavior*)pb)->IsState(PLAYER_STATE_WALK)) Audio::Play(Audio::Load(WALK_SE, true));
-	//		else Audio::Stop(Audio::Load(WALK_SE, true));
-	//	}
-	//}
+			// プレイヤーが歩いている時の音の再生
+			if(((Component_PlayerBehavior*)pb)->IsState(PLAYER_STATE_WALK)) Audio::Play(Audio::Load(WALK_SE, true));
+			else Audio::Stop(Audio::Load(WALK_SE, true));
+		}
+	}
 
 	//else 
 	//{
-	//	// タイトルシーン以外のシーンであれば、タイトルBGMを再生
-	//	if(!sceneManager->IsCurrentScene(SCENE_ID_SPLASH) && !sceneManager->IsCurrentScene(SCENE_ID_END))Audio::Play(Audio::Load(TITLE_BGM, true), VOLUME);
-	//	Audio::Stop(Audio::Load(PLAY_BGM, true));
+		// タイトルシーン以外のシーンであれば、タイトルBGMを再生
+		if(!sceneManager->IsCurrentScene(SCENE_ID_SPLASH) && !sceneManager->IsCurrentScene(SCENE_ID_END))Audio::Play(Audio::Load(TITLE_BGM, true), VOLUME);
+		Audio::Stop(Audio::Load(PLAY_BGM, true));
 
 	//	if(Input::IsPadButtonDown()) Audio::Play(Audio::Load(BUTTON_SE, false));
 	//}
@@ -155,9 +155,9 @@ void AudioController::Update(GameObject* _root)
 	// ボタンがクリックされた時のSE再生処理
 	/*for (auto button : UIPanel::GetInstance()->GetUIObject(UI_BUTTON)) {
 		if (((UIButton*)button)->OnClick()) Audio::Play(Audio::Load(BUTTON_SE, false));
-	}
+	}*/
 
 	for (auto timer : uiPanel->GetUIObject(UI_TIMER)) {
 		if (((UITimer*)timer)->GetSeconds() <= 15.f) Audio::SetPlaybackSpeed(Audio::Load(PLAY_BGM, true), 1.2f);
-	}*/
+	}
 }

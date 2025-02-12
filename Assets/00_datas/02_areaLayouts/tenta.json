@@ -1,0 +1,14 @@
+{
+  "area": {
+    "fallSpeed_": 1.0,
+    "isColliding_": true,
+    "isCollisionWall_": false,
+    "isOnGround_": false,
+    "modelFilePath_": "Models/Area/area_202501301427.fbx",
+    "onGroundOffset_": [ 0.0, 0.0, 0.0 ],
+    "position_": [ 0.0, 0.0, 0.0 ],
+    "rotate_": [ 0.0, 0.0, 0.0 ],
+    "scale_": [ 0.5, 0.5, 0.5 ],
+    "shaderType_": 12
+  }
+}

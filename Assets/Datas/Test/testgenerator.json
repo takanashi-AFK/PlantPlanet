@@ -1,0 +1,29 @@
+{
+  "generator01": {
+    "fallSpeed_": 1.0,
+    "isColliding_": false,
+    "isCollisionWall_": false,
+    "isOnGround_": false,
+    "modelFilePath_": "Models/DebugCollision/BoxCollider.fbx",
+    "myComponents_": {
+      "generator01": {
+        "areaId_": 1,
+        "maxRarity_": 3,
+        "minRarity_": 1,
+        "name_": "generator01",
+        "plantNum_": 20,
+        "radius_": 8.0,
+        "rare1Weight_": 0.5,
+        "rare2Weight_": 0.45,
+        "rare3Weight_": 0.05,
+        "restrictedPlantIds_": [ 1,2 ],
+        "type_": 23
+      }
+    },
+    "onGroundOffset_": [ 0.0, 0.0, 0.0 ],
+    "position_": [ 0.0, 0.0, 130.0 ],
+    "rotate_": [ 0.0, 0.0, 0.0 ],
+    "scale_": [ 1.0, 1.0, 1.0 ],
+    "shaderType_": 3
+  }
+}

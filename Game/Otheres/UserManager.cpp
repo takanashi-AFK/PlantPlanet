@@ -99,7 +99,7 @@ void UserManager::UpdatePlayTotalTime(const string& _userName, int _time)
 void UserManager::UpdateBestScore(const string& _userName, int _score)
 {
 	// ベストスコアを更新
-	registeredUsers_[_userName]->bestScore = _score;
+	if (registeredUsers_[_userName]->bestScore < _score)registeredUsers_[_userName]->bestScore = _score;
 }
 
 UserInfo* UserManager::GetUser(int _rank)

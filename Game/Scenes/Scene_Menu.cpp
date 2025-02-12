@@ -428,6 +428,10 @@ void Scene_Menu::Option()
 	}
 
 	if(ConfirmButton(gameEndButton_)){
+
+		// ユーザーデータを保存
+		UserManager::GetInstance().SaveUser(USER_DATA_JSON);
+
 		SceneManager* sceneManager = (SceneManager*)FindObject("SceneManager");
 		sceneManager->ChangeScene(SCENE_ID_END, TID_BLACKOUT);
 	}

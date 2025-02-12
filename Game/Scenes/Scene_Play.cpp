@@ -241,7 +241,7 @@ void Scene_Play::InitAdventureMode()
 	InitStage(ADVENTURE_AREA_JSON);
 
 	// ステージ上に植物をランダムに生成
-	if (pStage_ != nullptr)for (auto pg : (pStage_->GetStageObject("generator"))->FindComponent(ComponentType::PlantGenerator))pg->Execute();
+	if (pStage_ != nullptr)for (auto pg : (pStage_->FindComponents(ComponentType::PlantGenerator)))pg->Execute();
 
 	// カメラの初期化処理
 	InitCamera();
@@ -309,7 +309,7 @@ void Scene_Play::UpdateAdventureMode(Component_PlayerBehavior* _playerBehavior, 
 void Scene_Play::UpdateInventoryUI()
 {
 	// インベントリUIを閉じる(非表示にする)処理
-	if (Input::IsKeyDown(DIK_Q) || Input::IsPadButtonDown(XINPUT_GAMEPAD_B) || UIInventory::IsShowInventory() == false) CloseInventoryUI();
+	if (Input::IsKeyDown(DIK_Q) || Input::IsPadButtonDown(XINPUT_GAMEPAD_Y) || UIInventory::IsShowInventory() == false) CloseInventoryUI();
 
 	// UIインベントリの更新、フェード処理
 	UIInventory::SetFade(fade_);
@@ -354,7 +354,7 @@ void Scene_Play::UpdateNormalUI(Component_PlayerBehavior* _playerBehavior, Compo
 	fade_ = std::clamp(fade_, 0.f, 1.f);
 
 	// インベントリUIを開く(表示する)処理
-	if (Input::IsKeyDown(DIK_Q) || Input::IsPadButtonDown(XINPUT_GAMEPAD_B))
+	if (Input::IsKeyDown(DIK_Q) || Input::IsPadButtonDown(XINPUT_GAMEPAD_Y))
 		OpenInventoryUI();
 }
 

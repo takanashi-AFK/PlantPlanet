@@ -43,6 +43,21 @@ void Scene_Result::Initialize()
 	// カーソルの表示状態を切り替える
 	UICursor::ToHide(false);
 
+	// スカイスフィアの生成
+	Instantiate<SkySphere>(this);
+	// ※ スカイスフィアの時間帯をランダムで設定する処理を追記予定
+
+	// ステージデータの読み込み
+	json loadData;
+	if (JsonReader::Load("00_datas/02_areaLayouts/tenta.json", loadData)) {
+
+		// ステージを生成
+		Stage* pStage = Instantiate<Stage>(this);
+
+		// ステージの読み込み
+		pStage->Load(loadData);
+	}
+
 
 	UserManager& um = UserManager::GetInstance();
 }
@@ -182,6 +197,11 @@ void Scene_Result::UpdateAdventureResult()
 	
 	// キー入力があった場合
 	if (Input::IsKeyDown(DIK_SPACE) || Input::IsPadButtonDown(XINPUT_GAMEPAD_A)) {
+
+		// ユーザーデータを保存
+		UserManager& um = UserManager::GetInstance();
+		um.SaveUser(USER_DATA_JSON);
+
 		SceneManager* sceneManager = (SceneManager*)FindObject("SceneManager");
 		sceneManager->ChangeScene(SCENE_ID_MENU, TID_BLACKOUT);
 	}
@@ -288,7 +308,6 @@ void Scene_Result::UpdateValues()
 	static_cast<UIText*>(uiPanel->GetUIObject("Value_justAvoidanceAmount"))->SetText(to_string(ScoreManager::justAvoidance));
 	static_cast<UIText*>(uiPanel->GetUIObject("Value_dealtDamageAmount"))->SetText(to_string(ScoreManager::dealtDMG));
 	static_cast<UIText*>(uiPanel->GetUIObject("Value_remainingTime"))->SetText(to_string(ScoreManager::time));
-
 }
 
 void Scene_Result::UpdateTotalScore()
@@ -367,6 +386,11 @@ void Scene_Result::UpdateWaitingForReturn()
 
 	if (Input::IsKeyDown(DIK_SPACE) || Input::IsPadButtonDown(XINPUT_GAMEPAD_A))
 	{
+		// ユーザーデータを保存
+		UserManager& um = UserManager::GetInstance();
+		um.UpdateBestScore(um.GetLoggedInUser()->userName, totalScore_);
+		um.SaveUser(USER_DATA_JSON);
+
 		SceneManager* sceneManager = (SceneManager*)FindObject("SceneManager");
 		sceneManager->ChangeScene(SCENE_ID_MENU, TID_BLACKOUT);
 	}

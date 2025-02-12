@@ -94,5 +94,101 @@
     "rarity_": 1,
     "textImageFilePath_": "01_images/05_plantDatas/08_mushroom/mushroom_defaultText.png",
     "textImageFilePath_seclet": "01_images/05_plantDatas/08_mushroom/mushroom_secletText.png"
+  },
+  {
+    "areaId_": 1,
+    "id_": 8,
+    "imageFilePath_": "01_images/05_plantDatas/09_aconite/aconite_default.png",
+    "imageFilePath_seclet": "01_images/05_plantDatas/09_aconite/aconite_seclet.png",
+    "isSpawn_": true,
+    "modelFilePath_": "04_models/01_plants/09_aconite.fbx",
+    "name_": "09_aconite",
+    "rarity_": 2,
+    "textImageFilePath_": "01_images/05_plantDatas/09_aconite/aconite_defaultText.png",
+    "textImageFilePath_seclet": "01_images/05_plantDatas/09_aconite/aconite_secletText.png"
+  },
+  {
+    "areaId_": 1,
+    "id_": 9,
+    "imageFilePath_": "01_images/05_plantDatas/10_cosmos/cosmos_default.png",
+    "imageFilePath_seclet": "01_images/05_plantDatas/10_cosmos/cosmos_seclet.png",
+    "isSpawn_": true,
+    "modelFilePath_": "04_models/01_plants/10_cosmos.fbx",
+    "name_": "10_cosmos",
+    "rarity_": 1,
+    "textImageFilePath_": "01_images/05_plantDatas/10_cosmos/cosmos_defaultText.png",
+    "textImageFilePath_seclet": "01_images/05_plantDatas/10_cosmos/cosmos_secletText.png"
+  },
+  {
+    "areaId_": 1,
+    "id_": 10,
+    "imageFilePath_": "01_images/05_plantDatas/11_hoozuki/hoozuki_default.png",
+    "imageFilePath_seclet": "01_images/05_plantDatas/11_hoozuki/hoozuki_seclet.png",
+    "isSpawn_": true,
+    "modelFilePath_": "04_models/01_plants/11_hoozuki.fbx",
+    "name_": "11_hoozuki",
+    "rarity_": 3,
+    "textImageFilePath_": "01_images/05_plantDatas/11_hoozuki/hoozuki_defaultText.png",
+    "textImageFilePath_seclet": "01_images/05_plantDatas/11_hoozuki/hoozuki_secletText.png"
+  },
+  {
+    "areaId_": 1,
+    "id_": 11,
+    "imageFilePath_": "01_images/05_plantDatas/12_waterLily/waterLily_default.png",
+    "imageFilePath_seclet": "01_images/05_plantDatas/12_waterLily/waterLily_seclet.png",
+    "isSpawn_": true,
+    "modelFilePath_": "04_models/01_plants/12_waterLily.fbx",
+    "name_": "12_waterLily",
+    "rarity_": 1,
+    "textImageFilePath_": "01_images/05_plantDatas/12_waterLily/waterLily_defaultText.png",
+    "textImageFilePath_seclet": "01_images/05_plantDatas/12_waterLily/waterLily_secletText.png"
+  },
+  {
+    "areaId_": 1,
+    "id_": 12,
+    "imageFilePath_": "01_images/05_plantDatas/13_melon/melon_default.png",
+    "imageFilePath_seclet": "01_images/05_plantDatas/13_melon/melon_seclet.png",
+    "isSpawn_": true,
+    "modelFilePath_": "04_models/01_plants/13_melon.fbx",
+    "name_": "13_melon",
+    "rarity_": 2,
+    "textImageFilePath_": "01_images/05_plantDatas/13_melon/melon_defaultText.png",
+    "textImageFilePath_seclet": "01_images/05_plantDatas/13_melon/melon_secletText.png"
+  },
+  {
+    "areaId_": 1,
+    "id_": 13,
+    "imageFilePath_": "01_images/05_plantDatas/14_waterMelon/waterMelon_default.png",
+    "imageFilePath_seclet": "01_images/05_plantDatas/14_waterMelon/waterMelon_seclet.png",
+    "isSpawn_": true,
+    "modelFilePath_": "04_models/01_plants/14_waterMelon.fbx",
+    "name_": "14_waterMelon",
+    "rarity_": 3,
+    "textImageFilePath_": "01_images/05_plantDatas/14_waterMelon/waterMelon_defaultText.png",
+    "textImageFilePath_seclet": "01_images/05_plantDatas/14_waterMelon/waterMelon_secletText.png"
+  },
+  {
+    "areaId_": 1,
+    "id_": 15,
+    "imageFilePath_": "01_images/05_plantDatas/16_whiteRadish/whiteRadish_default.png",
+    "imageFilePath_seclet": "01_images/05_plantDatas/16_whiteRadish/whiteRadish_seclet.png",
+    "isSpawn_": true,
+    "modelFilePath_": "04_models/01_plants/16_whiteRadish.fbx",
+    "name_": "16_whiteRadish",
+    "rarity_": 1,
+    "textImageFilePath_": "01_images/05_plantDatas/16_whiteRadish/whiteRadish_defaultText.png",
+    "textImageFilePath_seclet": "01_images/05_plantDatas/16_whiteRadish/whiteRadish_secletText.png"
+  },
+  {
+    "areaId_": 1,
+    "id_": 16,
+    "imageFilePath_": "01_images/05_plantDatas/17_carrot/carrot_default.png",
+    "imageFilePath_seclet": "01_images/05_plantDatas/17_carrot/carrot_seclet.png",
+    "isSpawn_": true,
+    "modelFilePath_": "04_models/01_plants/17_carrot.fbx",
+    "name_": "17_carrot",
+    "rarity_": 1,
+    "textImageFilePath_": "01_images/05_plantDatas/17_carrot/carrot_defaultText.png",
+    "textImageFilePath_seclet": "01_images/05_plantDatas/17_carrot/carrot_secletText.png"
   }
 ]
