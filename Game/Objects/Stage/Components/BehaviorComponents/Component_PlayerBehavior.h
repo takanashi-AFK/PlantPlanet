@@ -16,6 +16,7 @@
 class CountDown;
 class Component_BossBehavior;
 class Salad;
+class Component_Accessory;
 
 enum PlayerState {
 	PLAYER_STATE_IDLE = 0,
@@ -51,6 +52,7 @@ private:
 	float shootHeight_;					// 射撃の高さ
 	XMFLOAT3 prevAngles_;				// 前フレームの回転
 	Component_BossBehavior* bossBehavior;
+	Component_Accessory* handItem_;		//手に持っているアイテム
 	int invincibilityFrame_;			// 無敵フレーム
 	int walkingFrame_;					// 連続して歩いている時間
 	int lockRotateFrame_;				// 回転を固定する時間
@@ -58,6 +60,7 @@ private:
 	int researchPoint_;
 	vector<PlantData> myPlants_;
 	std::list<std::function<PlantData::FuncValue(Component_PlayerBehavior*)>> saladEffects_;
+	
 
 	// effekseer: 変形行列
 	std::shared_ptr<EFFEKSEERLIB::EFKTransform> effectModelTransform;

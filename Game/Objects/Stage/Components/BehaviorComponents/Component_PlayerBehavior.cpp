@@ -27,6 +27,7 @@
 #include "../AttackComponents/Component_MeleeAttack.h"
 #include "../AttackComponents/Component_ShootAttack.h"
 #include "../MotionComponent/Component_PlayerMotion.h"
+#include "../MotionComponent/Component_Accessory.h"
 #include "../MoveComponents/Component_TackleMove.h"
 #include "../MoveComponents/Component_WASDInputMove.h"
 #include "../TimerComponent/Component_Timer.h"
@@ -314,6 +315,8 @@ void Component_PlayerBehavior::Initialize()
 	}
 
 	easingPickUpPlantImage = [this]() {PUPlantPutImageScreenOut(); };
+
+	handItem_ = static_cast<Component_Accessory*>(holder_->FindComponent("HandGun"));
 }
 
 void Component_PlayerBehavior::Update()
@@ -1075,7 +1078,7 @@ void Component_PlayerBehavior::MadeSalad()
 	Component_WASDInputMove* move = (Component_WASDInputMove*)(GetChildComponent("InputMove"));
 	if (move == nullptr) [[unlikely]] return;
 
-	
+	handItem_->ExchangeModel("04_models/03_salad/salad.fbx");
 
 	move->Stop();
 	if (motion->IsEnd() == true) {
@@ -1090,6 +1093,8 @@ void Component_PlayerBehavior::MadeSalad()
 		move->Execute();
 		isEatSaladEnd_ = false;
 		IsWASDKey() ? SetState(PLAYER_STATE_WALK) : SetState(PLAYER_STATE_IDLE);
+
+		handItem_->ExchangeModel("04_models/00_player/blasterA.fbx");
 	}
 }
 
