@@ -63,8 +63,19 @@ void Component_PlantGenerator::Update()
 	while (randomPlants.size() < plantNum_) {
 
 		// プラントを重み付けで選択
-		randomPlants.push_back(WeightedPickPlants(PlantCollection::GetPlants()));
-		
+		if (restrictedPlantIds_.empty() == false) {
+
+			// 制限植物のIDリストを元に植物データを取得
+			unordered_map<int, PlantData> restrictedPlants;
+			for (auto id : restrictedPlantIds_) {
+				restrictedPlants[id] = PlantCollection::GetPlant(id);
+			}
+
+			// 重み付けで植物を選択
+			randomPlants.push_back(WeightedPickPlants(restrictedPlants));
+		}
+		else
+			randomPlants.push_back(WeightedPickPlants(PlantCollection::GetPlants()));
 	}
 
 	// 植物オブジェクトをステージ上に生成
@@ -130,6 +141,9 @@ void Component_PlantGenerator::Save(json& _saveObj)
 	_saveObj["rare1Weight_"] = rare1Weight_;
 	_saveObj["rare2Weight_"] = rare2Weight_;
 	_saveObj["rare3Weight_"] = rare3Weight_;
+
+	// 制限植物のIDリストを保存
+	_saveObj["restrictedPlantIds_"] = restrictedPlantIds_;
 }
 
 void Component_PlantGenerator::Load(json& _loadObj)
@@ -153,40 +167,72 @@ void Component_PlantGenerator::Load(json& _loadObj)
 	rare1Weight_ = _loadObj["rare1Weight_"];
 	rare2Weight_ = _loadObj["rare2Weight_"];
 	rare3Weight_ = _loadObj["rare3Weight_"];
+
+	// 制限植物のIDリストを読込
+	restrictedPlantIds_ = _loadObj.at("restrictedPlantIds_").get<std::vector<int>>();
 }
 
 void Component_PlantGenerator::DrawData()
 {
-	bool isExecute = true;
-	// 半径を設定
-	ImGui::DragFloat("radius_", &radius_);
-
-	// 生成数を設定
-	ImGui::DragInt("plantNum_", &plantNum_);
-
-	// 最大稀少度を設定
-	ImGui::DragInt("maxRarity_", &maxRarity_);
-
-	// 最小稀少度を設定
-	ImGui::DragInt("minRarity_", &minRarity_);
-
-	// 出現エリアを設定
-	ImGui::DragInt("areaId_", &areaId_);
-
-	ImGui::Separator();
-
-	// 確率の設定
-	ImGui::DragFloat("rare1Weight_", &rare1Weight_, 0.01f, 0.f, 1.f - (rare2Weight_ + rare3Weight_));
-	ImGui::DragFloat("rare2Weight_", &rare2Weight_, 0.01f, 0.f, 1.f - (rare1Weight_ + rare3Weight_));
-	ImGui::DragFloat("rare3Weight_", &rare3Weight_, 0.01f, 0.f, 1.f - (rare1Weight_ + rare2Weight_));
-
-	// 合計が1じゃなかったら怒る
-	if (rare1Weight_ + rare2Weight_ + rare3Weight_ != 1.f) {
-		ImGui::Text("Please set so that the total is 1");
-		isExecute = false;
+	// 基本設定(※設定すべきもの)
+	if(ImGui::TreeNode("default setting")){
+		ImGui::PushItemWidth(100); // 幅を50pxに設定
+		ImGui::DragFloat("radius_", &radius_);		// 半径を設定
+		ImGui::DragInt("plantNum_", &plantNum_);	// 生成数を設定
+		ImGui::DragInt("max rarity", &maxRarity_);	// 最大稀少度を設定
+		ImGui::DragInt("min rarity", &minRarity_);	// 最小稀少度を設定
+		ImGui::DragInt("areaId_", &areaId_);		// 出現エリアを設定
+		ImGui::PopItemWidth(); // 設定を元に戻す
+		ImGui::TreePop();
 	}
-	// ボタンを表示
-	if (ImGui::Button("Generate") && isExecute)Execute();
+
+	// レアリティの重み付け設定
+	bool isRarityWeightSumValid = true;
+	if (ImGui::TreeNode("rarityWeight setting")) {
+
+		ImGui::PushItemWidth(100); // 幅を50pxに設定
+		ImGui::DragFloat("rare1Weight_", &rare1Weight_, 0.01f, 0.f, 1.f - (rare2Weight_ + rare3Weight_));
+		ImGui::DragFloat("rare2Weight_", &rare2Weight_, 0.01f, 0.f, 1.f - (rare1Weight_ + rare3Weight_));
+		ImGui::DragFloat("rare3Weight_", &rare3Weight_, 0.01f, 0.f, 1.f - (rare1Weight_ + rare2Weight_));
+		
+		// レアリティの重み付けの合計が1を超えているかを確認
+		if (rare1Weight_ + rare2Weight_ + rare3Weight_ != 1.f) isRarityWeightSumValid = false;
+		
+		// レアリティの重み付けの合計が1を超えている場合、警告を表示
+		if (isRarityWeightSumValid == false) ImGui::TextColored(ImVec4(1, 0, 0, 1), "The sum of the rarity weights must be 1 or less.");
+		ImGui::PopItemWidth(); // 設定を元に戻す
+		ImGui::TreePop();
+	}
+
+	// 植物を名前で制限する設定
+	
+	if (ImGui::TreeNode("restrictedPlant setting")) {
+
+		// 出現する植物のリストを表示
+		ImGui::Text("restrictedPlants"); ImGui::SameLine();
+
+		static int selectedPlantId = 0;
+		ImGui::PushItemWidth(50); // ドラッグで調整できる整数の入力欄の幅を 100px に設定
+		ImGui::DragInt("plantId", &selectedPlantId);
+
+		// 「+」ボタンを押すと、選択したPlantIdをリストに追加
+		ImGui::SameLine();
+		if (ImGui::Button("+")) restrictedPlantIds_.push_back(selectedPlantId);
+		
+		// 「clear」ボタンを押すと、リストをクリア
+		ImGui::SameLine();
+		if (ImGui::Button("clear")) restrictedPlantIds_.clear();
+
+		// 制限対象の植物IDリストを表示
+		ImGui::BeginChild("restrictedPlants", ImVec2(0, 100), true); // 高さ100pxで枠を作る
+		for (auto plantId : restrictedPlantIds_) ImGui::Text("%s", PlantCollection::GetPlants()[plantId].name_.c_str());
+		
+		ImGui::EndChild();
+		ImGui::TreePop();
+	};
+
+	// 生成処理実行ボタン
+	if (ImGui::Button("Generate") && isRarityWeightSumValid == true)Execute();
 }
 
 XMFLOAT3 Component_PlantGenerator::GenerateRandomPosition()
