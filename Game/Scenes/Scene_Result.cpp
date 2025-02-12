@@ -179,6 +179,7 @@ void Scene_Result::UpdateScoreAttackResult()
 
 void Scene_Result::UpdateAdventureResult()
 {
+	
 	// キー入力があった場合
 	if (Input::IsKeyDown(DIK_SPACE) || Input::IsPadButtonDown(XINPUT_GAMEPAD_A)) {
 		SceneManager* sceneManager = (SceneManager*)FindObject("SceneManager");
