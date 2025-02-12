@@ -1,1 +1,74 @@
-[{"areaId_":1,"id_":0,"imageFilePath_":"01_images/05_plantDatas/01_tulip/tulip_default.png","imageFilePath_seclet":"01_images/05_plantDatas/01_tulip/tulip_secret.png","isSpawn_":true,"modelFilePath_":"04_models/01_plants/01_tulip.fbx","name_":"01_tulip","rarity_":1,"textImageFilePath_":"01_images/05_plantDatas/01_tulip/tulip_defaultText.png","textImageFilePath_seclet":"01_images/05_plantDatas/01_tulip/tulip_secretText.png"},{"areaId_":1,"id_":1,"imageFilePath_":"01_images/05_plantDatas/02_dandelion/dandelion_default.png","imageFilePath_seclet":"01_images/05_plantDatas/02_dandelion/dandelion_seclet.png","isSpawn_":true,"modelFilePath_":"04_models/01_plants/02_dandelion.fbx","name_":"02_dandelion","rarity_":1,"textImageFilePath_":"01_images/05_plantDatas/02_dandelion/dandelion_defaultText.png","textImageFilePath_seclet":"01_images/05_plantDatas/02_dandelion/dandelion_secletText.png"},{"areaId_":1,"id_":2,"imageFilePath_":"01_images/05_plantDatas/03_whiteClover/whiteClover_default.png","imageFilePath_seclet":"01_images/05_plantDatas/03_whiteClover/whiteClover_seclet.png","isSpawn_":true,"modelFilePath_":"04_models/01_plants/03_whiteClover.fbx","name_":"03_whiteClover","rarity_":1,"textImageFilePath_":"01_images/05_plantDatas/03_whiteClover/whiteClover_defaultText.png","textImageFilePath_seclet":"01_images/05_plantDatas/03_whiteClover/whiteClover_secletText.png"},{"areaId_":1,"id_":3,"imageFilePath_":"01_images/05_plantDatas/04_rose/rose_default.png","imageFilePath_seclet":"01_images/05_plantDatas/04_rose/rose_seclet.png","isSpawn_":true,"modelFilePath_":"04_models/01_plants/04_rose.fbx","name_":"04_rose","rarity_":3,"textImageFilePath_":"01_images/05_plantDatas/04_rose/rose_defaultText.png","textImageFilePath_seclet":"01_images/05_plantDatas/04_rose/rose_secletText.png"},{"areaId_":1,"id_":4,"imageFilePath_":"01_images/05_plantDatas/05_corn/corn_default.png","imageFilePath_seclet":"01_images/05_plantDatas/05_corn/corn_seclet.png","isSpawn_":true,"modelFilePath_":"04_models/01_plants/05_corn.fbx","name_":"05_corn","rarity_":1,"textImageFilePath_":"01_images/05_plantDatas/05_corn/corn_defaultText.png","textImageFilePath_seclet":"01_images/05_plantDatas/05_corn/corn_secletText.png"},{"areaId_":1,"id_":5,"imageFilePath_":"01_images/05_plantDatas/06_beanSprout/beanSprout_default.png","imageFilePath_seclet":"01_images/05_plantDatas/06_beanSprout/beanSprout_seclet.png","isSpawn_":true,"modelFilePath_":"04_models/01_plants/06_beanSprout.fbx","name_":"06_beanSprout","rarity_":2,"textImageFilePath_":"01_images/05_plantDatas/06_beanSprout/beanSprout_defaultText.png","textImageFilePath_seclet":"01_images/05_plantDatas/06_beanSprout/beanSprout_secletText.png"}]
+[
+	{
+		"areaId_": 1,
+		"id_": 0,
+		"imageFilePath_": "01_images/05_plantDatas/01_tulip/tulip_default.png",
+		"imageFilePath_seclet": "01_images/05_plantDatas/01_tulip/tulip_secret.png",
+		"isSpawn_": true,
+		"modelFilePath_": "04_models/01_plants/01_tulip.fbx",
+		"name_": "01_tulip",
+		"rarity_": 1,
+		"textImageFilePath_": "01_images/05_plantDatas/01_tulip/tulip_defaultText.png",
+		"textImageFilePath_seclet": "01_images/05_plantDatas/01_tulip/tulip_secretText.png"
+	},
+	{
+		"areaId_": 1,
+		"id_": 1,
+		"imageFilePath_": "01_images/05_plantDatas/02_dandelion/dandelion_default.png",
+		"imageFilePath_seclet": "01_images/05_plantDatas/02_dandelion/dandelion_seclet.png",
+		"isSpawn_": true,
+		"modelFilePath_": "04_models/01_plants/02_dandelion.fbx",
+		"name_": "02_dandelion",
+		"rarity_": 1,
+		"textImageFilePath_": "01_images/05_plantDatas/02_dandelion/dandelion_defaultText.png",
+		"textImageFilePath_seclet": "01_images/05_plantDatas/02_dandelion/dandelion_secletText.png"
+	},
+	{
+		"areaId_": 1,
+		"id_": 2,
+		"imageFilePath_": "01_images/05_plantDatas/03_whiteClover/whiteClover_default.png",
+		"imageFilePath_seclet": "01_images/05_plantDatas/03_whiteClover/whiteClover_seclet.png",
+		"isSpawn_": true,
+		"modelFilePath_": "04_models/01_plants/03_whiteClover.fbx",
+		"name_": "03_whiteClover",
+		"rarity_": 1,
+		"textImageFilePath_": "01_images/05_plantDatas/03_whiteClover/whiteClover_defaultText.png",
+		"textImageFilePath_seclet": "01_images/05_plantDatas/03_whiteClover/whiteClover_secletText.png"
+	},
+	{
+		"areaId_": 1,
+		"id_": 3,
+		"imageFilePath_": "01_images/05_plantDatas/04_rose/rose_default.png",
+		"imageFilePath_seclet": "01_images/05_plantDatas/04_rose/rose_seclet.png",
+		"isSpawn_": true,
+		"modelFilePath_": "04_models/01_plants/04_rose.fbx",
+		"name_": "04_rose",
+		"rarity_": 3,
+		"textImageFilePath_": "01_images/05_plantDatas/04_rose/rose_defaultText.png",
+		"textImageFilePath_seclet": "01_images/05_plantDatas/04_rose/rose_secletText.png"
+	},
+	{
+		"areaId_": 1,
+		"id_": 4,
+		"imageFilePath_": "01_images/05_plantDatas/05_corn/corn_default.png",
+		"imageFilePath_seclet": "01_images/05_plantDatas/05_corn/corn_seclet.png",
+		"isSpawn_": true,
+		"modelFilePath_": "04_models/01_plants/05_corn.fbx",
+		"name_": "05_corn",
+		"rarity_": 1,
+		"textImageFilePath_": "01_images/05_plantDatas/05_corn/corn_defaultText.png",
+		"textImageFilePath_seclet": "01_images/05_plantDatas/05_corn/corn_secletText.png"
+	},
+	{
+		"areaId_": 1,
+		"id_": 5,
+		"imageFilePath_": "01_images/05_plantDatas/06_beanSprout/beanSprout_default.png",
+		"imageFilePath_seclet": "01_images/05_plantDatas/06_beanSprout/beanSprout_seclet.png",
+		"isSpawn_": true,
+		"modelFilePath_": "04_models/01_plants/06_beanSprout.fbx",
+		"name_": "06_beanSprout",
+		"rarity_": 2,
+		"textImageFilePath_": "01_images/05_plantDatas/06_beanSprout/beanSprout_defaultText.png",
+		"textImageFilePath_seclet": "01_images/05_plantDatas/06_beanSprout/beanSprout_secletText.png"
+	}
+]
