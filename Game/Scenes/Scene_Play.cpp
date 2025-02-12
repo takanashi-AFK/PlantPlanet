@@ -282,7 +282,7 @@ void Scene_Play::UpdateAdventureMode(Component_PlayerBehavior* _playerBehavior, 
 			isSceneChange = true;
 		
 		// debug 終了ボタンが押された場合...
-		if (Input::IsKeyDown(DIK_ESCAPE) || Input::IsPadButtonDown(XINPUT_GAMEPAD_START))isSceneChange = true;
+		//if (Input::IsKeyDown(DIK_ESCAPE) || Input::IsPadButtonDown(XINPUT_GAMEPAD_START))isSceneChange = true;
 	}
 
 	// シーン遷移処理
@@ -421,6 +421,7 @@ void Scene_Play::InitScoreAttackMode()
 
 void Scene_Play::UpdateScoreAttackMode(Component_PlayerBehavior* _playerBehavior, Component_BossBehavior* _bossBehavior)
 {
+
 	Component_HealthGauge* playerHealthGauge = (Component_HealthGauge*)_playerBehavior->GetChildComponent("PlayerHealthGauge");
 	UIProgressBar* playerHPBar = (UIProgressBar*)UIPanel::GetInstance()->FindObject("HPBar");
 	if (playerHPBar != nullptr && playerHealthGauge != nullptr)playerHPBar->SetProgress(playerHealthGauge->now_, playerHealthGauge->max_);

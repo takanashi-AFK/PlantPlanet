@@ -324,6 +324,10 @@ void Component_PlayerBehavior::Update()
 
 	easingPickUpPlantImage();
 
+	if (Input::IsKeyDown(DIK_ESCAPE) || Input::IsPadButtonDown(XINPUT_GAMEPAD_START))
+		holder_->SetPosition({0,0,0});
+	
+
 	// ＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝ //
 	// カウント制御されている場合の処理 //
 	// ＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝ //
