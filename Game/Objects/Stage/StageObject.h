@@ -137,6 +137,7 @@ setter :*/
   
 	void SetRayCastDirection(XMFLOAT3 dir) { this->raycastDirection_ = dir; };
 
+	/// <summary> 描画するかどうかを設定 </summary>
 	void SetVisible(bool flag) { this->isDrawing_ = flag; };
 /*
 predicate :*/

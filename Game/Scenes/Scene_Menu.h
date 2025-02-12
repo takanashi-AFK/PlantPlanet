@@ -7,6 +7,7 @@
 class UIButton;
 class UIPanel;
 class UIObject;
+class MenuCharacter;
 
 class Scene_Menu : public GameObject
 {
@@ -20,6 +21,8 @@ private:
 	UIImage* backGround;
 	UIImage* playBackGround;
 	UIImage* descriptionImage;
+	UIImage* descriptionPlantImage;
+
 
 	std::vector<PlantData> countedPlantData_;
 	std::vector<UIButton*> plantFrameButtonList;
@@ -42,8 +45,9 @@ private:
 
 	int frameCount_;
 
-	// 臨時変数 (background画像)のみ背景に持っていきたいから
-	int imageHandle_;
+	// 臨時変数 
+	int imageHandle_; // (background画像)のみ背景に持っていきたいから
+	MenuCharacter* menuCharacter_; // キャラクター
 
 public:
 	/// <summary> コンストラクタ </summary>

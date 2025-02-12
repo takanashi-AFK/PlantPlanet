@@ -34,7 +34,7 @@ void Scene_Menu::Initialize()
 	InitUIPanel();
 
 	// プレイヤーを配置
-	Instantiate<MenuCharacter>(this);
+	menuCharacter_ = Instantiate<MenuCharacter>(this);
 
 	// 臨時※　背景画像の読み込み
 	imageHandle_ = Image::Load("01_images/02_menuSceneUI/00_common/00_menuBackground.png");
@@ -106,6 +106,9 @@ void Scene_Menu::Play()
 		panel->ResetArrayOfButton();
 
 		panel->PushButtonToArray(playButton);
+
+		// キャラクターを表示
+		menuCharacter_->SetVisible(true);
 
 		isFirstChange_ = false;
 
@@ -222,6 +225,9 @@ void Scene_Menu::Index()
 		isFirstChange_ = false;
 		isPopUpMode_ = false;
 
+		// キャラクターを非表示
+		menuCharacter_->SetVisible(false);
+
 		panel->SetButtonArrayIndex(0, 0);
 	}
 
@@ -273,29 +279,22 @@ void Scene_Menu::Index()
 			}
 
 			// 植物の説明画像を表示
-			if (playerHasPlant == true) descriptionImage->SetImage(PlantCollection::GetPlant(plantId).imageFilePath_);
-			else if (playerHasPlant == false) descriptionImage->SetImage(PlantCollection::GetPlant(plantId).imageFilePath_seclet);
-			descriptionImage->SetVisible(true);
+			if (playerHasPlant == true) {
+				// 通常の画像を表示
+				descriptionImage->SetImage(PlantCollection::GetPlant(plantId).textImageFilePath_);
+				descriptionPlantImage->SetImage(PlantCollection::GetPlant(plantId).imageFilePath_);
+			}
+			else if (playerHasPlant == false) {
+				// 未所持の場合は隠し画像を表示
+				descriptionImage->SetImage(PlantCollection::GetPlant(plantId).textImageFilePath_seclet);
+				descriptionPlantImage->SetImage(PlantCollection::GetPlant(plantId).imageFilePath_seclet);
+			}
 
+			// 上記画僧を可視化
+			descriptionImage->SetVisible(true);
+			descriptionPlantImage->SetVisible(true);
 		}
 	}
-
-	//// 折り返す処理 うまくいかなに
-	//int x, y;
-	//panel->GetButtonIndex(&x, &y);
-	//if(panel->GetSelectingButton() != nullptr){
-	//	if (x == 4 && y == 0 && panel->GetSelectingButton()->GetObjectName() == "INDEX-Plant4" && Input::IsPadButtonDown(XINPUT_GAMEPAD_DPAD_RIGHT)) {
-	//		//panel->SelectorMove(UIPanel::SELECTOR_MOVE_TO::LEFT);
-	//		//panel->SetSelectingButton(0, -1);
-	//	}
-	//	else if (x == 0 && y == -1 && Input::IsPadButtonDown(XINPUT_GAMEPAD_DPAD_LEFT)) {
-	//		panel->SelectorMove(UIPanel::SELECTOR_MOVE_TO::RIGHT);
-	//		panel->SetSelectingButton(4, 0);
-	//	}
-	//
-	//ImGui::Text("x:%d y:%d", x, y);
-	//ImGui::Text("%s", panel->GetSelectingButton()->GetObjectName().c_str());
-	//}
 }
 
 void Scene_Menu::Ranking()
@@ -378,6 +377,9 @@ void Scene_Menu::Ranking()
 			}
 		}
 
+		// キャラクターを非表示
+		menuCharacter_->SetVisible(false);
+
 		isFirstChange_ = false;
 	}
 }
@@ -409,6 +411,8 @@ void Scene_Menu::Option()
 		if(gameEndButton_ != nullptr)
 		panel->PushButtonToArray(gameEndButton_);
 
+		// キャラクターを表示
+		menuCharacter_->SetVisible(true);
 	}
 	// endにフォーカスする
 	if (isInputDPad_ == true) {
@@ -419,9 +423,7 @@ void Scene_Menu::Option()
 	if(ConfirmButton(gameEndButton_)){
 		SceneManager* sceneManager = (SceneManager*)FindObject("SceneManager");
 		sceneManager->ChangeScene(SCENE_ID_END, TID_BLACKOUT);
-
 	}
-
 }
 
 void Scene_Menu::PopUpMode()
@@ -611,13 +613,14 @@ void Scene_Menu::InitUIPanel()
 	// UIObjectを各種項目に分ける
 	if(panel != nullptr)for (auto uiItem : panel->GetUIObjects()) {
 		uiItem->SetVisible(true);
-		if ((uiItem)->GetObjectName().starts_with("TAB"))				{ tabButtonList.push_back(((UIButton*)uiItem)); }
-		else if (uiItem->GetObjectName() == "INDEX-DescriptionImage")	{ descriptionImage = (UIImage*)uiItem; }
-		else if (uiItem->GetObjectName().starts_with("PLAY"))			{ playUIList_.push_back(uiItem); }
-		else if (uiItem->GetObjectName().starts_with("INDEX"))			{ indexUIList_.push_back(uiItem); }
-		else if (uiItem->GetObjectName().starts_with("RANKING"))		{ rankingUIList_.push_back(uiItem); }
-		else if (uiItem->GetObjectName().starts_with("OPTION"))			{ optionUIList_.push_back(uiItem); }
-		else if (uiItem->GetObjectName() == "BackGround")				{ backGround = (UIImage*)uiItem; }
+		if ((uiItem)->GetObjectName().starts_with("TAB"))					{ tabButtonList.push_back(((UIButton*)uiItem)); }
+		else if (uiItem->GetObjectName() == "INDEX-DescriptionImage")		{ descriptionImage = (UIImage*)uiItem; }
+		else if (uiItem->GetObjectName() == "INDEX-DescriptionPlantImage")  { descriptionPlantImage = (UIImage*)uiItem; }
+		else if (uiItem->GetObjectName().starts_with("PLAY"))				{ playUIList_.push_back(uiItem); }
+		else if (uiItem->GetObjectName().starts_with("INDEX"))				{ indexUIList_.push_back(uiItem); }
+		else if (uiItem->GetObjectName().starts_with("RANKING"))			{ rankingUIList_.push_back(uiItem); }
+		else if (uiItem->GetObjectName().starts_with("OPTION"))				{ optionUIList_.push_back(uiItem); }
+		else if (uiItem->GetObjectName() == "BackGround")					{ backGround = (UIImage*)uiItem; }
 	}
 
 	// 選択中のボタンをリセット & 初期化

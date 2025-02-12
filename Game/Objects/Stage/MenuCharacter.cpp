@@ -21,6 +21,8 @@ void MenuCharacter::Update()
 
 void MenuCharacter::Draw()
 {
+	if(isDrawing_ == false) return;
+
 	Direct3D::SetShader(Direct3D::SHADER_SKY);
 	Model::SetTransform(modelHandle_, transform_);
 	Model::Draw(modelHandle_);
