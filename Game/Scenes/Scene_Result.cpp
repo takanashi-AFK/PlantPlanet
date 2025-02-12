@@ -126,7 +126,7 @@ void Scene_Result::InitializeAdventureResult()
 	UIPanel* uiPanel = UIPanel::GetInstance();
 
 	// UIパネル情報を読み込む
-	if (JsonReader::Load("00_datas/01_sceneLayouts/03_resultSceneLayouts/adventureResultSceneLayout.json", loadData)) uiPanel->Load(loadData);
+	if (JsonReader::Load(ADVENTURE_RESULT_SCENE_UI_LAYOUT_JSON, loadData)) uiPanel->Load(loadData);
 
 	std::unordered_map<int, PlantData>allPlantData = PlantCollection::GetPlants();
 

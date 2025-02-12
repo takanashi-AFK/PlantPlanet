@@ -96,6 +96,13 @@ namespace Constants {
 // メニュー使用ファイルパス ////////////////////////////////////////////
 	const string MENU_SCENE_UI_LAYOUT_JSON = "00_datas/01_sceneLayouts/02_menuSceneLayouts/00_menuSceneLayout.json";
 
+// ゲーム使用ファイルパス ////////////////////////////////////////////
+	const string ADVENTURE_PLAY_SCENE_UI_LAYOUT_JSON = "00_datas/01_sceneLayouts/03_playSceneLayouts/00_adventurePlaySceneUILayout.json";
+	const string SCOREATTACK_PLAY_SCENE_UI_LAYOUT_JSON = "00_datas/01_sceneLayouts/03_playSceneLayouts/01_scoreAttackPlaySceneUILayout.json";
+
+// リザルト使用ファイルパス //////////////////////////////////////////
+	const string ADVENTURE_RESULT_SCENE_UI_LAYOUT_JSON = "00_datas/01_sceneLayouts/04_resultSceneLayouts/00_adventureResultSceneUILayout.json";
+
 // その他使用ファイルパス //////////////////////////////////////////////
 	const string USER_DATA_JSON = "00_datas/00_others/00_userData.json";
 	const string PLANT_DATA_JSON = "00_datas/00_others/01_plantData.json";

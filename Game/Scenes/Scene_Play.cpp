@@ -185,7 +185,7 @@ void Scene_Play::DrawDebugDataEditWindow()
 		playerBehavior->GetChildComponent("StaminaGauge");
 	if (playerStaminaGauge == nullptr)return;
 
-	ImGui::Begin("Debug Mode"); {
+	/*ImGui::Begin("Debug Mode"); {
 		ImGui::Text("Player param Edit");
 		ImGui::Text("Player HP : %f / %f", playerHealthGauge->now_, playerHealthGauge->max_);
 		ImGui::Text("Player ST : %f / %f", playerStaminaGauge->now_, playerStaminaGauge->max_);
@@ -233,13 +233,13 @@ void Scene_Play::DrawDebugDataEditWindow()
 		ImGui::DragFloat("Camera Sensitivity", &sens, 0.01f, 0.0f, 1.0f);
 		if (ImGui::Button("Apply Camera Sensitivity"))tpsCamera_->SetSensitivity(sens);
 	}
-	ImGui::End();
+	ImGui::End();*/
 }
 
 void Scene_Play::InitAdventureMode()
 {
 	// UIパネルの初期化処理 ※アドベンチャーモード用
-	InitUIPanel(ADVENTURE_MODE_UI_LAYOUT_JSON);
+	InitUIPanel(ADVENTURE_PLAY_SCENE_UI_LAYOUT_JSON);
 
 	// ステージの初期化処理 ※アドベンチャーモード用
 	InitStage(ADVENTURE_MODE_STAGE_JSON);
@@ -403,7 +403,7 @@ void Scene_Play::OpenInventoryUI()
 void Scene_Play::InitScoreAttackMode()
 {
 	// UIパネルの初期化
-	InitUIPanel(SCOREATTACK_MODE_UI_LAYOUT_JSON);
+	InitUIPanel(SCOREATTACK_PLAY_SCENE_UI_LAYOUT_JSON);
 
 	// ステージの初期化
 	InitStage(SCOREATTACK_MODE_STAGE_JSON);
