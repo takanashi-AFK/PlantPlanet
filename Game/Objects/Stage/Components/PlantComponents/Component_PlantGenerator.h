@@ -18,6 +18,11 @@ private:
 	float rare1Weight_;
 	float rare2Weight_;
 	float rare3Weight_;
+
+	// 出現させる植物を固有名で制限する処理に使用
+	bool useRestrictedPlants_;		 // 制限植物を使用するか
+	vector<int> restrictedPlantIds_; // 制限植物のIDリスト
+
 public:
 	/// <summary> コンストラクタ </summary>
 	Component_PlantGenerator(string _name, StageObject* _holder, Component* _parent);

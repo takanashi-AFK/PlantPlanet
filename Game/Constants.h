@@ -100,6 +100,9 @@ namespace Constants {
 	const string ADVENTURE_PLAY_SCENE_UI_LAYOUT_JSON = "00_datas/01_sceneLayouts/03_playSceneLayouts/00_adventurePlaySceneUILayout.json";
 	const string SCOREATTACK_PLAY_SCENE_UI_LAYOUT_JSON = "00_datas/01_sceneLayouts/03_playSceneLayouts/01_scoreAttackPlaySceneUILayout.json";
 
+	const string ADVENTURE_AREA_JSON = "00_datas/02_areaLayouts/00_adventureAreaLayout.json";
+	const string SCOREATTACK_AREA_JSON = "00_datas/02_areaLayouts/01_scoreAttackAreaLayout.json";
+
 // リザルト使用ファイルパス //////////////////////////////////////////
 	const string ADVENTURE_RESULT_SCENE_UI_LAYOUT_JSON = "00_datas/01_sceneLayouts/04_resultSceneLayouts/00_adventureResultSceneUILayout.json";
 

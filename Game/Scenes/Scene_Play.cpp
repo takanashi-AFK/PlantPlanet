@@ -27,10 +27,6 @@ namespace {
 	// UIレイアウトのjsonファイルパス
 	const string ADVENTURE_MODE_UI_LAYOUT_JSON = "Datas/NoInv.json";
 	const string SCOREATTACK_MODE_UI_LAYOUT_JSON = "Datas/SceneLayout/PlayScene/scoreAttackMode.json";
-
-	// ステージのjsonファイルパス
-	const string ADVENTURE_MODE_STAGE_JSON = "Datas/Test/TentativeGameData20241210.json";
-	const string SCOREATTACK_MODE_STAGE_JSON = "Datas/StageLayouts/stage_normal.json";
 }
 
 using namespace Constants;
@@ -242,7 +238,7 @@ void Scene_Play::InitAdventureMode()
 	InitUIPanel(ADVENTURE_PLAY_SCENE_UI_LAYOUT_JSON);
 
 	// ステージの初期化処理 ※アドベンチャーモード用
-	InitStage(ADVENTURE_MODE_STAGE_JSON);
+	InitStage(ADVENTURE_AREA_JSON);
 
 	// ステージ上に植物をランダムに生成
 	if (pStage_ != nullptr)for (auto pg : (pStage_->GetStageObject("generator"))->FindComponent(ComponentType::PlantGenerator))pg->Execute();
@@ -406,7 +402,7 @@ void Scene_Play::InitScoreAttackMode()
 	InitUIPanel(SCOREATTACK_PLAY_SCENE_UI_LAYOUT_JSON);
 
 	// ステージの初期化
-	InitStage(SCOREATTACK_MODE_STAGE_JSON);
+	InitStage(SCOREATTACK_AREA_JSON);
 
 	// カメラの初期化
 	InitCamera();
