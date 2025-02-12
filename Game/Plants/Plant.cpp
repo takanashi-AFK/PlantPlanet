@@ -215,7 +215,7 @@ std::function<PlantData::FuncValue(Component_PlayerBehavior*)> PlantData::GetFun
 		};
 
 		  //•às‘¬“x‘‰Á(50%)
-	case 7: return[&,time = SecToFrame(100),isFirst = true](Component_PlayerBehavior* pb) mutable ->PlantData::FuncValue
+	case 7: return[&,time = SecToFrame(100),isFirst = true,id](Component_PlayerBehavior* pb) mutable ->PlantData::FuncValue
 		{
 			ret.isUsable = false;
 			ret.time = time / FPS;

@@ -1128,6 +1128,8 @@ void Component_PlayerBehavior::ApplyEffects()
 			popUpInfo_.time = (3 + 0.5 * 2) * FPS;
 
 			//後ろでもっておく植物画像の更新
+			auto a = PlantCollection::GetPlants();
+			auto b = a.at(data.id);
 			plantFilePath_[index] = PlantCollection::GetPlants().at(data.id).imageFilePath_;
 
 			++index;
