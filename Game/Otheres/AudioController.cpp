@@ -101,6 +101,10 @@ void AudioController::Update(GameObject* _root)
 
 		// メニューシーンのBGM再生
 		Audio::Play(Audio::Load(MENU_BGM, true), MENU_BGM_VOLUME);
+
+		// ボタンがクリックされた時のSE再生処理
+			// ※ メニューシーン575行目あたり に記述　修正予定
+		//
 	}
 
 	//if (sceneManager->IsCurrentScene(SCENE_ID_PLAY)) {

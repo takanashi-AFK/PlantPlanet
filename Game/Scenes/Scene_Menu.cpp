@@ -13,6 +13,7 @@
 #include "../Otheres/UserManager.h"
 #include "../Plants/PlantCollection.h"
 #include "Scene_Menu.h"
+#include "../../Engine/ResourceManager/Audio.h"
 
 using namespace Constants;
 
@@ -62,6 +63,9 @@ void Scene_Menu::Update()
 	case OPTION:Option();break;
 	}
 
+	// 常時、下記オブジェクトを可視化
+	if(panel->GetUIObject("LB") != nullptr) panel->GetUIObject("LB")->SetVisible(true);
+	if(panel->GetUIObject("RB") != nullptr) panel->GetUIObject("RB")->SetVisible(true);
 }
 
 void Scene_Menu::Draw()
@@ -92,7 +96,10 @@ void Scene_Menu::Play()
 			if (std::find(tabButtonList.begin(), tabButtonList.end(), item) == tabButtonList.end() &&
 				std::find(playUIList_.begin(), playUIList_.end(), item) == playUIList_.end() &&
 				item != backGround ||
-				item->GetObjectName().starts_with("PLAY-POPUP")) {
+				item->GetObjectName().starts_with("PLAY-POPUP") ||
+				item->GetObjectName() == "LB" ||
+				item->GetObjectName() == "RB")
+			{
 				item->SetVisible(false);
 			}
 			else {
@@ -472,6 +479,13 @@ void Scene_Menu::PopUpMode()
 				// モードをADVに変更
 				g_gameMode = GameMode::MODE_ADVENTURE;
 
+				// ボタンクリックSEを再生
+				{
+					// タイトルシーンSE(ボタンクリック時)
+					const string BUTTONCLICK_SE = "03_audios/01_SE/01_titleSceneSE/決定ボタンを押す41.wav";
+					Audio::Play(Audio::Load(BUTTONCLICK_SE, false));
+				}
+
 				// シーンを切り替える
 				SceneManager* sceneManager = (SceneManager*)FindObject("SceneManager");
 				sceneManager->ChangeScene(SCENE_ID_PLAY, TID_BLACKOUT);
@@ -487,6 +501,13 @@ void Scene_Menu::PopUpMode()
 
 				// モードをSCAに変更
 				g_gameMode = GameMode::MODE_SCOREATTACK;
+
+				// ボタンクリックSEを再生
+				{
+					// タイトルシーンSE(ボタンクリック時)
+					const string BUTTONCLICK_SE = "03_audios/01_SE/01_titleSceneSE/決定ボタンを押す41.wav";
+					Audio::Play(Audio::Load(BUTTONCLICK_SE, false));
+				}
 
 				// シーンを切り替える
 				SceneManager* sceneManager = (SceneManager*)FindObject("SceneManager");
@@ -521,18 +542,46 @@ void Scene_Menu::DPadMove()
 	if (Input::IsPadButtonDown(XINPUT_GAMEPAD_DPAD_UP)) { // 上
 		panel->SelectorMove(UIPanel::SELECTOR_MOVE_TO::UP);
 		isInputDPad_ = true;
+
+		// タブボタン移動SEを再生
+		{
+			// メニューシーンSE(タブボタン移動時)
+			const string BUTTONMOVE_SE = "03_audios/01_SE/01_titleSceneSE/決定ボタンを押す44.wav";
+			Audio::Play(Audio::Load(BUTTONMOVE_SE, false));
+		}
 	}
 	else if (Input::IsPadButtonDown(XINPUT_GAMEPAD_DPAD_DOWN)) { // 下
 		panel->SelectorMove(UIPanel::SELECTOR_MOVE_TO::BOTTOM);
 		isInputDPad_ = true;
+
+		// タブボタン移動SEを再生
+		{
+			// メニューシーンSE(タブボタン移動時)
+			const string BUTTONMOVE_SE = "03_audios/01_SE/01_titleSceneSE/決定ボタンを押す44.wav";
+			Audio::Play(Audio::Load(BUTTONMOVE_SE, false));
+		}
 	}
 	else if (Input::IsPadButtonDown(XINPUT_GAMEPAD_DPAD_LEFT)) { // 左
 		panel->SelectorMove(UIPanel::SELECTOR_MOVE_TO::LEFT);
 		isInputDPad_ = true;
+
+		// タブボタン移動SEを再生
+		{
+			// メニューシーンSE(タブボタン移動時)
+			const string BUTTONMOVE_SE = "03_audios/01_SE/01_titleSceneSE/決定ボタンを押す44.wav";
+			Audio::Play(Audio::Load(BUTTONMOVE_SE, false));
+		}
 	}
 	else if (Input::IsPadButtonDown(XINPUT_GAMEPAD_DPAD_RIGHT)) { // 右
 		panel->SelectorMove(UIPanel::SELECTOR_MOVE_TO::RIGHT);
 		isInputDPad_ = true;
+
+		// タブボタン移動SEを再生
+		{
+			// メニューシーンSE(タブボタン移動時)
+			const string BUTTONMOVE_SE = "03_audios/01_SE/01_titleSceneSE/決定ボタンを押す44.wav";
+			Audio::Play(Audio::Load(BUTTONMOVE_SE, false));
+		}
 	}
 }
 
@@ -544,11 +593,25 @@ void Scene_Menu::GamePadTabMove()
 		if (currentMenuType != PLAY) {
 			SetMenuType((MenuType)((currentMenuType - 1)));
 		}
+
+		// タブボタン移動SEを再生
+		{
+			// メニューシーンSE(タブボタン移動時)
+			const string BUTTONMOVE_SE = "03_audios/01_SE/01_titleSceneSE/決定ボタンを押す44.wav";
+			Audio::Play(Audio::Load(BUTTONMOVE_SE, false));
+		}
 	}
 	if (Input::IsPadButtonDown(XINPUT_GAMEPAD_RIGHT_SHOULDER)) {
 		// オプション(一番右)の場合、右には移動しない
 		if (currentMenuType != OPTION) {
 			SetMenuType((MenuType)((currentMenuType + 1)));
+		}
+
+		// タブボタン移動SEを再生
+		{
+			// メニューシーンSE(タブボタン移動時)
+			const string BUTTONMOVE_SE = "03_audios/01_SE/01_titleSceneSE/決定ボタンを押す44.wav";
+			Audio::Play(Audio::Load(BUTTONMOVE_SE, false));
 		}
 	}
 }
@@ -557,25 +620,24 @@ void Scene_Menu::MouseTabMove()
 {
 	// タブボタンの変更(マウスでの操作)
 	for (auto tabButton : tabButtonList) {
+
+		// タブボタンがクリックされた場合
 		if (tabButton->OnClick()) {
-			const std::string& objectName = tabButton->GetObjectName();
 
-
-			if (objectName == "TAB-PlayButton" && currentMenuType != PLAY) {
-				SetMenuType(PLAY);
-			}
-			else if (objectName == "TAB-IndexButton" && currentMenuType != INDEX) {
-				SetMenuType(INDEX);
-			}
-			else if (objectName == "TAB-RankingButton" && currentMenuType != RANKING) {
-				SetMenuType(RANKING);
-			}
-			else if (objectName == "TAB-OptionButton" && currentMenuType != OPTION) {
-				SetMenuType(OPTION);
+			// タブボタンの種類によって処理を分岐
+			if (tabButton->GetObjectName() == "TAB-PlayButton" && currentMenuType != PLAY)				SetMenuType(PLAY);
+			else if (tabButton->GetObjectName() == "TAB-IndexButton" && currentMenuType != INDEX)		SetMenuType(INDEX);
+			else if (tabButton->GetObjectName() == "TAB-RankingButton" && currentMenuType != RANKING)	SetMenuType(RANKING);
+			else if (tabButton->GetObjectName() == "TAB-OptionButton" && currentMenuType != OPTION)		SetMenuType(OPTION);
+			
+			// タブボタン移動SEを再生
+			{
+				// メニューシーンSE(タブボタン移動時)
+				const string BUTTONMOVE_SE = "03_audios/01_SE/01_titleSceneSE/決定ボタンを押す44.wav";
+				Audio::Play(Audio::Load(BUTTONMOVE_SE, false));
 			}
 		}
 	}
-
 }
 
 void Scene_Menu::UpdateTabButtonImages(MenuType _menuType)

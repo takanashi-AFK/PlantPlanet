@@ -1096,5 +1096,25 @@
     "scale_": [ 1.0, 1.0, 1.0 ],
     "selectImageFilePath_": "",
     "type_": 1
+  },
+  "RB": {
+    "imageFilePath_": "01_images/02_menuSceneUI/00_common/09_xboxRB.png",
+    "isVisible_": true,
+    "layerNumber_": 154,
+    "objectName_": "RB",
+    "position_": [ 0.9, 0.87, 0.0 ],
+    "rotate_": [ 0.0, 0.0, 0.0 ],
+    "scale_": [ 1.0, 1.0, 1.0 ],
+    "type_": 2
+  },
+  "LB": {
+    "imageFilePath_": "01_images/02_menuSceneUI/00_common/10_xboxLB.png",
+    "isVisible_": true,
+    "layerNumber_": 155,
+    "objectName_": "LB",
+    "position_": [ -0.9, 0.87, 0.0 ],
+    "rotate_": [ 0.0, 0.0, 0.0 ],
+    "scale_": [ 1.0, 1.0, 1.0 ],
+    "type_": 2
   }
 }
