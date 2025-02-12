@@ -4,7 +4,7 @@
     "isColliding_": true,
     "isCollisionWall_": false,
     "isOnGround_": false,
-    "modelFilePath_": "Models/Enemies/Cactan/cactan.fbx",
+    "modelFilePath_": "Models/Enemies/plantsEnemy.fbx",
     "myComponents_": {
       "bossBehavior": {
         "childComponents_": {
@@ -29,7 +29,7 @@
             "bulletColliderRadius_": 0.10000000894069672,
             "bulletLifeTime_": 3.0,
             "name_": "ShootAttack",
-            "power_": 120,
+            "power_": 60,
             "shootingDirection_": [ 1.0, 0.0, 0.0 ],
             "shootingSpeed_": 0.150000001788139343,
             "type_": 17
@@ -53,7 +53,7 @@
         "shootHeight_": -1.2000000476837158,
         "shotInterval_": 0.08000000074505806,
         "stateChangeDelay_": 3,
-        "tackleDamage_": 180,
+        "tackleDamage_": 40,
         "target_": "00_player",
         "type_": 0
       },
@@ -69,7 +69,7 @@
     "onGroundOffset_": [ 0.0, 1.5, 0.0 ],
     "position_": [ 0.0, 1.5, 0.0 ],
     "rotate_": [ 0.0, 0.0, 0.0 ],
-    "scale_": [ 3.0, 3.0, 3.0 ],
+    "scale_": [ 1.0, 1.0, 1.0 ],
     "shaderType_": 8
   },
   "00_player": {
@@ -79,6 +79,26 @@
     "isOnGround_": true,
     "modelFilePath_": "Models/Player/Silly Dancing.fbx",
     "myComponents_": {
+      "HandGun": {
+        "Accessory ModelPath": "Models/Player/blasterA.fbx",
+        "Accessory Original Position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "Accessory Original Rotate": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "Accessory Original Scale": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "name_": "HandGun",
+        "type_": 26
+      },
       "PlayerBehavior": {
         "childComponents_": {
           "InputMove": {
@@ -106,7 +126,7 @@
             "bulletColliderRadius_": 0.20000000298023224,
             "bulletLifeTime_": 1.0,
             "name_": "ShootAttack",
-            "power_": 100,
+            "power_": 25,
             "shootingDirection_": [ 0.0, -50.0, 40.0 ],
             "shootingSpeed_": 0.20000000298023224,
             "type_": 17
@@ -131,7 +151,7 @@
     "rotate_": [ 0.0, 0.0, 0.0 ],
     "scale_": [ 0.5, 0.5, 0.5 ],
     "shaderType_": 0
-      
+
   },
   "blue01": {
     "fallSpeed_": 1.0,
@@ -143,7 +163,7 @@
     "position_": [ 0.0, 0.0, -3.0 ],
     "rotate_": [ 0.0, 0.0, 0.0 ],
     "scale_": [ 1.0, 1.0, 1.0 ],
-    "shaderType_": 4
+    "shaderType_": 12
   },
   "cliff_cornerInnerTop_rock01": {
     "fallSpeed_": 1.0,
@@ -155,7 +175,7 @@
     "position_": [ -20.0, -1.0, 30.0 ],
     "rotate_": [ 0.0, 180.0, 0.0 ],
     "scale_": [ 1.0, 1.0, 1.0 ],
-    "shaderType_": 0
+    "shaderType_": 12
   },
   "cliff_cornerInnerTop_rock02": {
     "fallSpeed_": 1.0,
@@ -167,7 +187,7 @@
     "position_": [ -30.0, -1.0, 20.0 ],
     "rotate_": [ 0.0, 180.0, 0.0 ],
     "scale_": [ 1.0, 1.0, 1.0 ],
-    "shaderType_": 0
+    "shaderType_": 12
   },
   "cliff_cornerInnerTop_rock03": {
     "fallSpeed_": 1.0,
@@ -179,7 +199,7 @@
     "position_": [ 20.0, -1.0, 30.0 ],
     "rotate_": [ 0.0, 270.0, 0.0 ],
     "scale_": [ 1.0, 1.0, 1.0 ],
-    "shaderType_": 0
+    "shaderType_": 12
   },
   "cliff_cornerInnerTop_rock04": {
     "fallSpeed_": 1.0,
@@ -191,7 +211,7 @@
     "position_": [ 30.0, -1.0, 20.0 ],
     "rotate_": [ 0.0, 270.0, 0.0 ],
     "scale_": [ 1.0, 1.0, 1.0 ],
-    "shaderType_": 0
+    "shaderType_": 12
   },
   "cliff_cornerInnerTop_rock05": {
     "fallSpeed_": 1.0,
@@ -203,7 +223,7 @@
     "position_": [ 30.0, -1.0, -20.0 ],
     "rotate_": [ 0.0, 0.0, 0.0 ],
     "scale_": [ 1.0, 1.0, 1.0 ],
-    "shaderType_": 0
+    "shaderType_": 12
   },
   "cliff_cornerInnerTop_rock06": {
     "fallSpeed_": 1.0,
@@ -215,7 +235,7 @@
     "position_": [ 20.0, -1.0, -30.0 ],
     "rotate_": [ 0.0, 0.0, 0.0 ],
     "scale_": [ 1.0, 1.0, 1.0 ],
-    "shaderType_": 0
+    "shaderType_": 12
   },
   "cliff_cornerInnerTop_rock07": {
     "fallSpeed_": 1.0,
@@ -227,7 +247,7 @@
     "position_": [ -30.0, -1.0, -20.0 ],
     "rotate_": [ 0.0, 90.0, 0.0 ],
     "scale_": [ 1.0, 1.0, 1.0 ],
-    "shaderType_": 0
+    "shaderType_": 12
   },
   "cliff_cornerInnerTop_rock08": {
     "fallSpeed_": 1.0,
@@ -239,7 +259,7 @@
     "position_": [ -20.0, -1.0, -30.0 ],
     "rotate_": [ 0.0, 90.0, 0.0 ],
     "scale_": [ 1.0, 1.0, 1.0 ],
-    "shaderType_": 0
+    "shaderType_": 12
   },
   "cliff_cornerTop_rock01": {
     "fallSpeed_": 1.0,
@@ -251,7 +271,7 @@
     "position_": [ -20.0, -1.0, 20.0 ],
     "rotate_": [ 0.0, 180.0, 0.0 ],
     "scale_": [ 1.0, 1.0, 1.0 ],
-    "shaderType_": 0
+    "shaderType_": 12
   },
   "cliff_cornerTop_rock02": {
     "fallSpeed_": 1.0,
@@ -263,7 +283,7 @@
     "position_": [ 20.0, -1.0, 20.0 ],
     "rotate_": [ 0.0, 270.0, 0.0 ],
     "scale_": [ 1.0, 1.0, 1.0 ],
-    "shaderType_": 0
+    "shaderType_": 12
   },
   "cliff_cornerTop_rock03": {
     "fallSpeed_": 1.0,
@@ -275,7 +295,7 @@
     "position_": [ 20.0, -1.0, -20.0 ],
     "rotate_": [ 0.0, 0.0, 0.0 ],
     "scale_": [ 1.0, 1.0, 1.0 ],
-    "shaderType_": 0
+    "shaderType_": 12
   },
   "cliff_cornerTop_rock04": {
     "fallSpeed_": 1.0,
@@ -287,7 +307,7 @@
     "position_": [ -20.0, -1.0, -20.0 ],
     "rotate_": [ 0.0, 90.0, 0.0 ],
     "scale_": [ 1.0, 1.0, 1.0 ],
-    "shaderType_": 0
+    "shaderType_": 12
   },
   "cliff_top_rock01": {
     "fallSpeed_": 1.0,
@@ -299,7 +319,7 @@
     "position_": [ -10.0, -1.0, 30.0 ],
     "rotate_": [ 0.0, 180.0, 0.0 ],
     "scale_": [ 1.0, 1.0, 1.0 ],
-    "shaderType_": 0
+    "shaderType_": 12
   },
   "cliff_top_rock02": {
     "fallSpeed_": 1.0,
@@ -311,7 +331,7 @@
     "position_": [ -30.0, -1.0, 10.0 ],
     "rotate_": [ 0.0, 90.0, 0.0 ],
     "scale_": [ 1.0, 1.0, 1.0 ],
-    "shaderType_": 0
+    "shaderType_": 12
   },
   "cliff_top_rock03": {
     "fallSpeed_": 1.0,
@@ -323,7 +343,7 @@
     "position_": [ -30.0, -1.0, 0.0 ],
     "rotate_": [ 0.0, 90.0, 0.0 ],
     "scale_": [ 1.0, 1.0, 1.0 ],
-    "shaderType_": 0
+    "shaderType_": 12
   },
   "cliff_top_rock04": {
     "fallSpeed_": 1.0,
@@ -335,7 +355,7 @@
     "position_": [ -30.0, -1.0, -10.0 ],
     "rotate_": [ 0.0, 90.0, 0.0 ],
     "scale_": [ 1.0, 1.0, 1.0 ],
-    "shaderType_": 0
+    "shaderType_": 12
   },
   "cliff_top_rock05": {
     "fallSpeed_": 1.0,
@@ -347,7 +367,7 @@
     "position_": [ -10.0, -1.0, -30.0 ],
     "rotate_": [ 0.0, 0.0, 0.0 ],
     "scale_": [ 1.0, 1.0, 1.0 ],
-    "shaderType_": 0
+    "shaderType_": 12
   },
   "cliff_top_rock06": {
     "fallSpeed_": 1.0,
@@ -359,7 +379,7 @@
     "position_": [ 0.0, -1.0, -30.0 ],
     "rotate_": [ 0.0, 0.0, 0.0 ],
     "scale_": [ 1.0, 1.0, 1.0 ],
-    "shaderType_": 0
+    "shaderType_": 12
   },
   "cliff_top_rock07": {
     "fallSpeed_": 1.0,
@@ -371,7 +391,7 @@
     "position_": [ 10.0, -1.0, 30.0 ],
     "rotate_": [ 0.0, 180.0, 0.0 ],
     "scale_": [ 1.0, 1.0, 1.0 ],
-    "shaderType_": 0
+    "shaderType_": 12
   },
   "cliff_top_rock08": {
     "fallSpeed_": 1.0,
@@ -383,7 +403,7 @@
     "position_": [ 30.0, -1.0, 10.0 ],
     "rotate_": [ 0.0, 270.0, 0.0 ],
     "scale_": [ 1.0, 1.0, 1.0 ],
-    "shaderType_": 0
+    "shaderType_": 12
   },
   "cliff_top_rock09": {
     "fallSpeed_": 1.0,
@@ -395,7 +415,7 @@
     "position_": [ 10.0, -1.0, -30.0 ],
     "rotate_": [ 0.0, 0.0, 0.0 ],
     "scale_": [ 1.0, 1.0, 1.0 ],
-    "shaderType_": 0
+    "shaderType_": 12
   },
   "cliff_top_rock10": {
     "fallSpeed_": 1.0,
@@ -407,7 +427,7 @@
     "position_": [ 30.0, -1.0, -10.0 ],
     "rotate_": [ 0.0, 270.0, 0.0 ],
     "scale_": [ 1.0, 1.0, 1.0 ],
-    "shaderType_": 0
+    "shaderType_": 12
   },
   "cliff_waterfallTop_rock01": {
     "fallSpeed_": 1.0,
@@ -419,7 +439,7 @@
     "position_": [ 0.0, -1.0, 30.0 ],
     "rotate_": [ 0.0, 180.0, 0.0 ],
     "scale_": [ 1.0, 1.0, 1.0 ],
-    "shaderType_": 0
+    "shaderType_": 12
   },
   "cliff_waterfallTop_rock02": {
     "fallSpeed_": 1.0,
@@ -431,7 +451,7 @@
     "position_": [ 30.0, -1.0, 0.0 ],
     "rotate_": [ 0.0, 270.0, 0.0 ],
     "scale_": [ 1.0, 1.0, 1.0 ],
-    "shaderType_": 0
+    "shaderType_": 12
   },
   "flowerBlue1-01": {
     "fallSpeed_": 1.0,
@@ -491,7 +511,7 @@
     "position_": [ 0.0, 0.0, 0.0 ],
     "rotate_": [ 0.0, 0.0, 0.0 ],
     "scale_": [ 1.0, 1.0, 1.0 ],
-    "shaderType_": 0
+    "shaderType_": 12
   },
   "ground_grass00": {
     "fallSpeed_": 1.0,
@@ -503,7 +523,7 @@
     "position_": [ 0.0, 0.0, 0.0 ],
     "rotate_": [ 0.0, 0.0, 0.0 ],
     "scale_": [ 1.0, 1.0, 1.0 ],
-    "shaderType_": 0
+    "shaderType_": 12
   },
   "ground_grass01": {
     "fallSpeed_": 1.0,
@@ -515,7 +535,7 @@
     "position_": [ 10.0, 0.0, 0.0 ],
     "rotate_": [ 0.0, 0.0, 0.0 ],
     "scale_": [ 1.0, 1.0, 1.0 ],
-    "shaderType_": 0
+    "shaderType_": 12
   },
   "ground_grass02": {
     "fallSpeed_": 1.0,
@@ -527,7 +547,7 @@
     "position_": [ 10.0, 0.0, 10.0 ],
     "rotate_": [ 0.0, 0.0, 0.0 ],
     "scale_": [ 1.0, 1.0, 1.0 ],
-    "shaderType_": 0
+    "shaderType_": 12
   },
   "ground_grass03": {
     "fallSpeed_": 1.0,
@@ -539,7 +559,7 @@
     "position_": [ 0.0, 0.0, 10.0 ],
     "rotate_": [ 0.0, 0.0, 0.0 ],
     "scale_": [ 1.0, 1.0, 1.0 ],
-    "shaderType_": 0
+    "shaderType_": 12
   },
   "ground_grass04": {
     "fallSpeed_": 1.0,
@@ -551,7 +571,7 @@
     "position_": [ -10.0, 0.0, 10.0 ],
     "rotate_": [ 0.0, 0.0, 0.0 ],
     "scale_": [ 1.0, 1.0, 1.0 ],
-    "shaderType_": 0
+    "shaderType_": 12
   },
   "ground_grass05": {
     "fallSpeed_": 1.0,
@@ -563,7 +583,7 @@
     "position_": [ -10.0, 0.0, 0.0 ],
     "rotate_": [ 0.0, 0.0, 0.0 ],
     "scale_": [ 1.0, 1.0, 1.0 ],
-    "shaderType_": 0
+    "shaderType_": 12
   },
   "ground_grass06": {
     "fallSpeed_": 1.0,
@@ -575,7 +595,7 @@
     "position_": [ -10.0, 0.0, -10.0 ],
     "rotate_": [ 0.0, 0.0, 0.0 ],
     "scale_": [ 1.0, 1.0, 1.0 ],
-    "shaderType_": 0
+    "shaderType_": 12
   },
   "ground_grass07": {
     "fallSpeed_": 1.0,
@@ -587,7 +607,7 @@
     "position_": [ 0.0, 0.0, -10.0 ],
     "rotate_": [ 0.0, 0.0, 0.0 ],
     "scale_": [ 1.0, 1.0, 1.0 ],
-    "shaderType_": 0
+    "shaderType_": 12
   },
   "ground_grass08": {
     "fallSpeed_": 1.0,
@@ -599,7 +619,7 @@
     "position_": [ 10.0, 0.0, -10.0 ],
     "rotate_": [ 0.0, 0.0, 0.0 ],
     "scale_": [ 1.0, 1.0, 1.0 ],
-    "shaderType_": 0
+    "shaderType_": 12
   },
   "ground_grass09": {
     "fallSpeed_": 1.0,
@@ -611,7 +631,7 @@
     "position_": [ 20.0, 0.0, 0.0 ],
     "rotate_": [ 0.0, 0.0, 0.0 ],
     "scale_": [ 1.0, 1.0, 1.0 ],
-    "shaderType_": 0
+    "shaderType_": 12
   },
   "ground_grass10": {
     "fallSpeed_": 1.0,
@@ -623,7 +643,7 @@
     "position_": [ 20.0, 0.0, 10.0 ],
     "rotate_": [ 0.0, 0.0, 0.0 ],
     "scale_": [ 1.0, 1.0, 1.0 ],
-    "shaderType_": 0
+    "shaderType_": 12
   },
   "ground_grass11": {
     "fallSpeed_": 1.0,
@@ -635,7 +655,7 @@
     "position_": [ 10.0, 0.0, 20.0 ],
     "rotate_": [ 0.0, 0.0, 0.0 ],
     "scale_": [ 1.0, 1.0, 1.0 ],
-    "shaderType_": 0
+    "shaderType_": 12
   },
   "ground_grass12": {
     "fallSpeed_": 1.0,
@@ -647,7 +667,7 @@
     "position_": [ 0.0, 0.0, 20.0 ],
     "rotate_": [ 0.0, 0.0, 0.0 ],
     "scale_": [ 1.0, 1.0, 1.0 ],
-    "shaderType_": 0
+    "shaderType_": 12
   },
   "ground_grass13": {
     "fallSpeed_": 1.0,
@@ -659,7 +679,7 @@
     "position_": [ -10.0, 0.0, 20.0 ],
     "rotate_": [ 0.0, 0.0, 0.0 ],
     "scale_": [ 1.0, 1.0, 1.0 ],
-    "shaderType_": 0
+    "shaderType_": 12
   },
   "ground_grass14": {
     "fallSpeed_": 1.0,
@@ -671,7 +691,7 @@
     "position_": [ -20.0, 0.0, 10.0 ],
     "rotate_": [ 0.0, 0.0, 0.0 ],
     "scale_": [ 1.0, 1.0, 1.0 ],
-    "shaderType_": 0
+    "shaderType_": 12
   },
   "ground_grass15": {
     "fallSpeed_": 1.0,
@@ -683,7 +703,7 @@
     "position_": [ -20.0, 0.0, 0.0 ],
     "rotate_": [ 0.0, 0.0, 0.0 ],
     "scale_": [ 1.0, 1.0, 1.0 ],
-    "shaderType_": 0
+    "shaderType_": 12
   },
   "ground_grass16": {
     "fallSpeed_": 1.0,
@@ -695,7 +715,7 @@
     "position_": [ -20.0, 0.0, -10.0 ],
     "rotate_": [ 0.0, 0.0, 0.0 ],
     "scale_": [ 1.0, 1.0, 1.0 ],
-    "shaderType_": 0
+    "shaderType_": 12
   },
   "ground_grass17": {
     "fallSpeed_": 1.0,
@@ -707,7 +727,7 @@
     "position_": [ -10.0, 0.0, -20.0 ],
     "rotate_": [ 0.0, 0.0, 0.0 ],
     "scale_": [ 1.0, 1.0, 1.0 ],
-    "shaderType_": 0
+    "shaderType_": 12
   },
   "ground_grass18": {
     "fallSpeed_": 1.0,
@@ -719,7 +739,7 @@
     "position_": [ 0.0, 0.0, -20.0 ],
     "rotate_": [ 0.0, 0.0, 0.0 ],
     "scale_": [ 1.0, 1.0, 1.0 ],
-    "shaderType_": 0
+    "shaderType_": 12
   },
   "ground_grass19": {
     "fallSpeed_": 1.0,
@@ -731,7 +751,7 @@
     "position_": [ 10.0, 0.0, -20.0 ],
     "rotate_": [ 0.0, 0.0, 0.0 ],
     "scale_": [ 1.0, 1.0, 1.0 ],
-    "shaderType_": 0
+    "shaderType_": 12
   },
   "ground_grass20": {
     "fallSpeed_": 1.0,
@@ -743,7 +763,7 @@
     "position_": [ 20.0, 0.0, -10.0 ],
     "rotate_": [ 0.0, 0.0, 0.0 ],
     "scale_": [ 1.0, 1.0, 1.0 ],
-    "shaderType_": 0
+    "shaderType_": 12
   },
   "ground_riverCorner01": {
     "fallSpeed_": 1.0,
@@ -755,7 +775,7 @@
     "position_": [ 20.0, 0.0, 20.0 ],
     "rotate_": [ 0.0, 180.0, 0.0 ],
     "scale_": [ 1.0, 1.0, 1.0 ],
-    "shaderType_": 0
+    "shaderType_": 12
   },
   "ground_riverCorner02": {
     "fallSpeed_": 1.0,
@@ -767,7 +787,7 @@
     "position_": [ -20.0, 0.0, 20.0 ],
     "rotate_": [ 0.0, 90.0, 0.0 ],
     "scale_": [ 1.0, 1.0, 1.0 ],
-    "shaderType_": 0
+    "shaderType_": 12
   },
   "ground_riverCorner03": {
     "fallSpeed_": 1.0,
@@ -779,7 +799,7 @@
     "position_": [ -20.0, 0.0, -20.0 ],
     "rotate_": [ 0.0, 0.0, 0.0 ],
     "scale_": [ 1.0, 1.0, 1.0 ],
-    "shaderType_": 0
+    "shaderType_": 12
   },
   "ground_riverCorner04": {
     "fallSpeed_": 1.0,
@@ -791,7 +811,7 @@
     "position_": [ 20.0, 0.0, -20.0 ],
     "rotate_": [ 0.0, 270.0, 0.0 ],
     "scale_": [ 1.0, 1.0, 1.0 ],
-    "shaderType_": 0
+    "shaderType_": 12
   },
   "ground_riverCornerSmall01": {
     "fallSpeed_": 1.0,
@@ -803,7 +823,7 @@
     "position_": [ 20.0, 0.0, 30.0 ],
     "rotate_": [ 0.0, 90.0, 0.0 ],
     "scale_": [ 1.0, 1.0, 1.0 ],
-    "shaderType_": 0
+    "shaderType_": 12
   },
   "ground_riverCornerSmall02": {
     "fallSpeed_": 1.0,
@@ -815,7 +835,7 @@
     "position_": [ 30.0, 0.0, 20.0 ],
     "rotate_": [ 0.0, 90.0, 0.0 ],
     "scale_": [ 1.0, 1.0, 1.0 ],
-    "shaderType_": 0
+    "shaderType_": 12
   },
   "ground_riverCornerSmall03": {
     "fallSpeed_": 1.0,
@@ -827,7 +847,7 @@
     "position_": [ -20.0, 0.0, 30.0 ],
     "rotate_": [ 0.0, 0.0, 0.0 ],
     "scale_": [ 1.0, 1.0, 1.0 ],
-    "shaderType_": 0
+    "shaderType_": 12
   },
   "ground_riverCornerSmall04": {
     "fallSpeed_": 1.0,
@@ -839,7 +859,7 @@
     "position_": [ -30.0, 0.0, 20.0 ],
     "rotate_": [ 0.0, 0.0, 0.0 ],
     "scale_": [ 1.0, 1.0, 1.0 ],
-    "shaderType_": 0
+    "shaderType_": 12
   },
   "ground_riverCornerSmall05": {
     "fallSpeed_": 1.0,
@@ -851,7 +871,7 @@
     "position_": [ -30.0, 0.0, -20.0 ],
     "rotate_": [ 0.0, 270.0, 0.0 ],
     "scale_": [ 1.0, 1.0, 1.0 ],
-    "shaderType_": 0
+    "shaderType_": 12
   },
   "ground_riverCornerSmall06": {
     "fallSpeed_": 1.0,
@@ -863,7 +883,7 @@
     "position_": [ -20.0, 0.0, -30.0 ],
     "rotate_": [ 0.0, 270.0, 0.0 ],
     "scale_": [ 1.0, 1.0, 1.0 ],
-    "shaderType_": 0
+    "shaderType_": 12
   },
   "ground_riverCornerSmall07": {
     "fallSpeed_": 1.0,
@@ -875,7 +895,7 @@
     "position_": [ 20.0, 0.0, -30.0 ],
     "rotate_": [ 0.0, 180.0, 0.0 ],
     "scale_": [ 1.0, 1.0, 1.0 ],
-    "shaderType_": 0
+    "shaderType_": 12
   },
   "ground_riverCornerSmall08": {
     "fallSpeed_": 1.0,
@@ -887,7 +907,7 @@
     "position_": [ 30.0, 0.0, -20.0 ],
     "rotate_": [ 0.0, 180.0, 0.0 ],
     "scale_": [ 1.0, 1.0, 1.0 ],
-    "shaderType_": 0
+    "shaderType_": 12
   },
   "ground_riverSide01": {
     "fallSpeed_": 1.0,
@@ -899,7 +919,7 @@
     "position_": [ 30.0, 0.0, 0.0 ],
     "rotate_": [ 0.0, 270.0, 0.0 ],
     "scale_": [ 1.0, 1.0, 1.0 ],
-    "shaderType_": 0
+    "shaderType_": 12
   },
   "ground_riverSide02": {
     "fallSpeed_": 1.0,
@@ -911,7 +931,7 @@
     "position_": [ 30.0, 0.0, 10.0 ],
     "rotate_": [ 0.0, 270.0, 0.0 ],
     "scale_": [ 1.0, 1.0, 1.0 ],
-    "shaderType_": 0
+    "shaderType_": 12
   },
   "ground_riverSide03": {
     "fallSpeed_": 1.0,
@@ -923,7 +943,7 @@
     "position_": [ 30.0, 0.0, -10.0 ],
     "rotate_": [ 0.0, 270.0, 0.0 ],
     "scale_": [ 1.0, 1.0, 1.0 ],
-    "shaderType_": 0
+    "shaderType_": 12
   },
   "ground_riverSide04": {
     "fallSpeed_": 1.0,
@@ -935,7 +955,7 @@
     "position_": [ 10.0, 0.0, 30.0 ],
     "rotate_": [ 0.0, 180.0, 0.0 ],
     "scale_": [ 1.0, 1.0, 1.0 ],
-    "shaderType_": 0
+    "shaderType_": 12
   },
   "ground_riverSide05": {
     "fallSpeed_": 1.0,
@@ -947,7 +967,7 @@
     "position_": [ 0.0, 0.0, 30.0 ],
     "rotate_": [ 0.0, 180.0, 0.0 ],
     "scale_": [ 1.0, 1.0, 1.0 ],
-    "shaderType_": 0
+    "shaderType_": 12
   },
   "ground_riverSide06": {
     "fallSpeed_": 1.0,
@@ -959,7 +979,7 @@
     "position_": [ -10.0, 0.0, 30.0 ],
     "rotate_": [ 0.0, 180.0, 0.0 ],
     "scale_": [ 1.0, 1.0, 1.0 ],
-    "shaderType_": 0
+    "shaderType_": 12
   },
   "ground_riverSide07": {
     "fallSpeed_": 1.0,
@@ -971,7 +991,7 @@
     "position_": [ -30.0, 0.0, 0.0 ],
     "rotate_": [ 0.0, 90.0, 0.0 ],
     "scale_": [ 1.0, 1.0, 1.0 ],
-    "shaderType_": 0
+    "shaderType_": 12
   },
   "ground_riverSide08": {
     "fallSpeed_": 1.0,
@@ -983,7 +1003,7 @@
     "position_": [ -30.0, 0.0, 10.0 ],
     "rotate_": [ 0.0, 90.0, 0.0 ],
     "scale_": [ 1.0, 1.0, 1.0 ],
-    "shaderType_": 0
+    "shaderType_": 12
   },
   "ground_riverSide10": {
     "fallSpeed_": 1.0,
@@ -995,7 +1015,7 @@
     "position_": [ -30.0, 0.0, -10.0 ],
     "rotate_": [ 0.0, 90.0, 0.0 ],
     "scale_": [ 1.0, 1.0, 1.0 ],
-    "shaderType_": 0
+    "shaderType_": 12
   },
   "ground_riverSide11": {
     "fallSpeed_": 1.0,
@@ -1007,7 +1027,7 @@
     "position_": [ 0.0, 0.0, -30.0 ],
     "rotate_": [ 0.0, 0.0, 0.0 ],
     "scale_": [ 1.0, 1.0, 1.0 ],
-    "shaderType_": 0
+    "shaderType_": 12
   },
   "ground_riverSide12": {
     "fallSpeed_": 1.0,
@@ -1019,7 +1039,7 @@
     "position_": [ 10.0, 0.0, -30.0 ],
     "rotate_": [ 0.0, 0.0, 0.0 ],
     "scale_": [ 1.0, 1.0, 1.0 ],
-    "shaderType_": 0
+    "shaderType_": 12
   },
   "ground_riverSide13": {
     "fallSpeed_": 1.0,
@@ -1031,7 +1051,7 @@
     "position_": [ -10.0, 0.0, -30.0 ],
     "rotate_": [ 0.0, 0.0, 0.0 ],
     "scale_": [ 1.0, 1.0, 1.0 ],
-    "shaderType_": 0
+    "shaderType_": 12
   },
   "tree_thin_dark01": {
     "fallSpeed_": 1.0,
@@ -1043,7 +1063,7 @@
     "position_": [ -10.0, 0.0, -23.700000762939453 ],
     "rotate_": [ 0.0, 0.0, 0.0 ],
     "scale_": [ 0.800000011920929, 0.800000011920929, 0.800000011920929 ],
-    "shaderType_": 0
+    "shaderType_": 12
   },
   "tree_thin_dark02": {
     "fallSpeed_": 1.0,
@@ -1055,7 +1075,7 @@
     "position_": [ 20.399999618530273, 0.0, 7.0 ],
     "rotate_": [ 0.0, 45.0, 0.0 ],
     "scale_": [ 0.800000011920929, 0.800000011920929, 0.800000011920929 ],
-    "shaderType_": 0
+    "shaderType_": 12
   },
   "tree_thin_fall01": {
     "fallSpeed_": 1.0,
@@ -1067,7 +1087,7 @@
     "position_": [ -20.0, 0.0, 10.0 ],
     "rotate_": [ 0.0, 0.0, 0.0 ],
     "scale_": [ 0.800000011920929, 0.800000011920929, 0.800000011920929 ],
-    "shaderType_": 0
+    "shaderType_": 12
   },
   "tree_thin_fall02": {
     "fallSpeed_": 1.0,
@@ -1079,6 +1099,6 @@
     "position_": [ 10.0, 0.0, -20.0 ],
     "rotate_": [ 0.0, -64.0, 0.0 ],
     "scale_": [ 0.800000011920929, 0.800000011920929, 0.800000011920929 ],
-    "shaderType_": 0
+    "shaderType_": 12
   }
 }

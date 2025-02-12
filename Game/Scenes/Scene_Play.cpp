@@ -421,6 +421,15 @@ void Scene_Play::InitScoreAttackMode()
 
 void Scene_Play::UpdateScoreAttackMode(Component_PlayerBehavior* _playerBehavior, Component_BossBehavior* _bossBehavior)
 {
+	Component_HealthGauge* playerHealthGauge = (Component_HealthGauge*)_playerBehavior->GetChildComponent("PlayerHealthGauge");
+	UIProgressBar* playerHPBar = (UIProgressBar*)UIPanel::GetInstance()->FindObject("HPBar");
+	if (playerHPBar != nullptr && playerHealthGauge != nullptr)playerHPBar->SetProgress(playerHealthGauge->now_, playerHealthGauge->max_);
+
+	// プレイヤーのスタミナ情報を取得 & 反映
+	Component_StaminaGauge* playerStaminaGauge = (Component_StaminaGauge*)_playerBehavior->GetChildComponent("StaminaGauge");
+	UIProgressBar* playerSTBar = (UIProgressBar*)UIPanel::GetInstance()->FindObject("STBar");
+	if (playerSTBar != nullptr && playerStaminaGauge != nullptr)playerSTBar->SetProgress(playerStaminaGauge->now_, playerStaminaGauge->max_);
+
 	// タイマーの取得
 	UITimer* uiTimer = (UITimer*)UIPanel::GetInstance()->FindObject(PLAY_SCENE_TIMER_NAME);
 

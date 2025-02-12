@@ -42,7 +42,9 @@ private:
 	float size_;				// テキストのサイズ
 	
 	CircleGauge circleGauge_;	// ゲージ
+	bool isOpenChangeFontWindow_;
 
+	struct FontData { string filePath; XMINT2 charSize; int rowLength; } fontData_;	// フォントデータ
 
 public:
 	/// <summary> コンストラクタ </summary>
@@ -117,5 +119,10 @@ private:
 
 	/// <summary> ファイルパスから画像を取得 </summary>
 	bool GetImageFilePathFromExplorer(string& _filePath) const;
+
+	/// <summary> フォントファイルパスをエクスプローラから取得 </summary>
+	bool GetFontFilePathFromExplorer(string& _filePath) const;
+	void ChangeFontWindow();
+
 };
 

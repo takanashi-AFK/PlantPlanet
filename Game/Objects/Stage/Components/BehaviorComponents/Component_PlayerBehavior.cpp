@@ -58,8 +58,8 @@ namespace {
 
 	constexpr int STAMINA_DECREASE_SHOOT = 10;
 	constexpr int STAMINA_DECREASE_MELEE = 20;
-	constexpr int STAMINA_DECREASE_DODGE = 30;
-	constexpr float STAMINA_RECOVERY = 0.17f;
+	constexpr int STAMINA_DECREASE_DODGE = 5;
+	//constexpr float STAMINA_RECOVERY = 0.17f;
 	constexpr float STAMINA_MAX = 100.f;
 
 	const int INCLEACE_RESEARCH_POINT_RARITY_3 = 30;
@@ -184,9 +184,9 @@ Component_PlayerBehavior::Component_PlayerBehavior(string _name, StageObject* _h
 	researchPoint_(0),
 	myPlants_(),
 	isMeleeStart_(true),
-	stamina_decrease_dodge_(30),
-	stamina_decrease_melee_(20),
-	stamina_decrease_shoot_(10),
+	stamina_decrease_dodge_(STAMINA_DECREASE_DODGE),
+	stamina_decrease_melee_(STAMINA_DECREASE_MELEE),
+	stamina_decrease_shoot_(STAMINA_DECREASE_SHOOT),
 	timeCollectPlant(defaultTime_CollectPlant),
 	saladEffects_{},
 	isEatSaladEnd_(false),
