@@ -851,8 +851,8 @@
   },
   "RANKING-rank_scoreNum1": {
     "FontData": {
-      "charSize": [ 16, 32 ],
-      "filePath": "Fonts/char.png",
+      "charSize": [ 128, 128 ],
+      "filePath": "02_fonts/02_mplus-2p-white.png",
       "rowLength": 16
     },
     "isVisible_": false,
@@ -861,14 +861,14 @@
     "position_": [ 0.05000000074505806, -0.30000001192092896, 0.0 ],
     "rotate_": [ 0.0, 0.0, 0.0 ],
     "scale_": [ 1.0, 1.0, 1.0 ],
-    "size": 1.5,
-    "text": "11111111111",
+    "size": 0.4,
+    "text": "",
     "type_": 3
   },
   "RANKING-rank_scoreNum2": {
     "FontData": {
-      "charSize": [ 16, 32 ],
-      "filePath": "Fonts/char.png",
+      "charSize": [ 128, 128 ],
+      "filePath": "02_fonts/02_mplus-2p-white.png",
       "rowLength": 16
     },
     "isVisible_": false,
@@ -877,14 +877,14 @@
     "position_": [ 0.05000000074505806, -0.125, 0.0 ],
     "rotate_": [ 0.0, 0.0, 0.0 ],
     "scale_": [ 1.0, 1.0, 1.0 ],
-    "size": 1.5,
-    "text": "22222222222",
+    "size": 0.4,
+    "text": "",
     "type_": 3
   },
   "RANKING-rank_scoreNum3": {
     "FontData": {
-      "charSize": [ 16, 32 ],
-      "filePath": "Fonts/char.png",
+      "charSize": [ 128, 128 ],
+      "filePath": "02_fonts/02_mplus-2p-white.png",
       "rowLength": 16
     },
     "isVisible_": false,
@@ -893,14 +893,14 @@
     "position_": [ 0.05000000074505806, 0.05000000074505806, 0.0 ],
     "rotate_": [ 0.0, 0.0, 0.0 ],
     "scale_": [ 1.0, 1.0, 1.0 ],
-    "size": 1.5,
-    "text": "33333333333",
+    "size": 0.4,
+    "text": "",
     "type_": 3
   },
   "RANKING-rank_scoreNum4": {
     "FontData": {
-      "charSize": [ 16, 32 ],
-      "filePath": "Fonts/char.png",
+      "charSize": [ 128, 128 ],
+      "filePath": "02_fonts/02_mplus-2p-white.png",
       "rowLength": 16
     },
     "isVisible_": false,
@@ -909,14 +909,14 @@
     "position_": [ 0.05000000074505806, 0.23000000417232513, 0.0 ],
     "rotate_": [ 0.0, 0.0, 0.0 ],
     "scale_": [ 1.0, 1.0, 1.0 ],
-    "size": 1.5,
-    "text": "44444444444",
+    "size": 0.4,
+    "text": "",
     "type_": 3
   },
   "RANKING-rank_scoreNum5": {
     "FontData": {
-      "charSize": [ 16, 32 ],
-      "filePath": "Fonts/char.png",
+      "charSize": [ 128, 128 ],
+      "filePath": "02_fonts/02_mplus-2p-white.png",
       "rowLength": 16
     },
     "isVisible_": false,
@@ -925,14 +925,30 @@
     "position_": [ 0.05000000074505806, 0.4000000059604645, 0.0 ],
     "rotate_": [ 0.0, 0.0, 0.0 ],
     "scale_": [ 1.0, 1.0, 1.0 ],
-    "size": 1.5,
-    "text": "55555555555",
+    "size": 0.4,
+    "text": "",
+    "type_": 3
+  },
+  "RANKING-rank_scoreNumYOU": {
+    "FontData": {
+      "charSize": [ 128, 128 ],
+      "filePath": "02_fonts/02_mplus-2p-white.png",
+      "rowLength": 16
+    },
+    "isVisible_": false,
+    "layerNumber_": 98,
+    "objectName_": "RANKING-rank_scoreNumYOU",
+    "position_": [ 0.05000000074505806, 0.75, 0.0 ],
+    "rotate_": [ 0.0, 0.0, 0.0 ],
+    "scale_": [ 1.0, 1.0, 1.0 ],
+    "size": 0.4,
+    "text": "",
     "type_": 3
   },
   "RANKING-rank_userName1": {
     "FontData": {
-      "charSize": [ 16, 32 ],
-      "filePath": "Fonts/char.png",
+      "charSize": [ 128, 128 ],
+      "filePath": "02_fonts/02_mplus-2p-white.png",
       "rowLength": 16
     },
     "isVisible_": false,
@@ -941,14 +957,14 @@
     "position_": [ -0.6499999761581421, -0.30000001192092896, 0.0 ],
     "rotate_": [ 0.0, 0.0, 0.0 ],
     "scale_": [ 1.0, 1.0, 1.0 ],
-    "size": 2.0,
-    "text": "aaaaaaaaaaa",
+    "size": 0.4,
+    "text": "",
     "type_": 3
   },
   "RANKING-rank_userName2": {
     "FontData": {
-      "charSize": [ 16, 32 ],
-      "filePath": "Fonts/char.png",
+      "charSize": [ 128, 128 ],
+      "filePath": "02_fonts/02_mplus-2p-white.png",
       "rowLength": 16
     },
     "isVisible_": false,
@@ -957,30 +973,30 @@
     "position_": [ -0.6499999761581421, -0.11999999731779099, 0.0 ],
     "rotate_": [ 0.0, 0.0, 0.0 ],
     "scale_": [ 1.0, 1.0, 1.0 ],
-    "size": 2.0,
-    "text": "aaaaaaaaaaa",
+    "size": 0.4,
+    "text": "",
     "type_": 3
   },
   "RANKING-rank_userName3": {
     "FontData": {
-      "charSize": [ 16, 32 ],
-      "filePath": "Fonts/char.png",
+      "charSize": [ 128, 128 ],
+      "filePath": "02_fonts/02_mplus-2p-white.png",
       "rowLength": 16
     },
     "isVisible_": false,
     "layerNumber_": 83,
     "objectName_": "RANKING-rank_userName3",
-    "position_": [ -0.6499999761581421, 0.03999999910593033, 0.0 ],
+    "position_": [ -0.6499999761581421, 0.05, 0.0 ],
     "rotate_": [ 0.0, 0.0, 0.0 ],
     "scale_": [ 1.0, 1.0, 1.0 ],
-    "size": 2.0,
-    "text": "aaaaaaaaaaa",
+    "size": 0.4,
+    "text": "",
     "type_": 3
   },
   "RANKING-rank_userName4": {
     "FontData": {
-      "charSize": [ 16, 32 ],
-      "filePath": "Fonts/char.png",
+      "charSize": [ 128, 128 ],
+      "filePath": "02_fonts/02_mplus-2p-white.png",
       "rowLength": 16
     },
     "isVisible_": false,
@@ -989,14 +1005,14 @@
     "position_": [ -0.6499999761581421, 0.2199999988079071, 0.0 ],
     "rotate_": [ 0.0, 0.0, 0.0 ],
     "scale_": [ 1.0, 1.0, 1.0 ],
-    "size": 2.0,
-    "text": "aaaaaaaaaaa",
+    "size": 0.4,
+    "text": "",
     "type_": 3
   },
   "RANKING-rank_userName5": {
     "FontData": {
-      "charSize": [ 16, 32 ],
-      "filePath": "Fonts/char.png",
+      "charSize": [ 128, 128 ],
+      "filePath": "02_fonts/02_mplus-2p-white.png",
       "rowLength": 16
     },
     "isVisible_": false,
@@ -1005,8 +1021,24 @@
     "position_": [ -0.6499999761581421, 0.4000000059604645, 0.0 ],
     "rotate_": [ 0.0, 0.0, 0.0 ],
     "scale_": [ 1.0, 1.0, 1.0 ],
-    "size": 2.0,
-    "text": "aaaaaaaaaaa",
+    "size": 0.4,
+    "text": "",
+    "type_": 3
+  },
+  "RANKING-rank_userNameYOU": {
+    "FontData": {
+      "charSize": [ 128, 128 ],
+      "filePath": "02_fonts/02_mplus-2p-white.png",
+      "rowLength": 16
+    },
+    "isVisible_": false,
+    "layerNumber_": 86,
+    "objectName_": "RANKING-rank_userNameYOU",
+    "position_": [ -0.6499999761581421, 0.75, 0.0 ],
+    "rotate_": [ 0.0, 0.0, 0.0 ],
+    "scale_": [ 1.0, 1.0, 1.0 ],
+    "size": 0.4,
+    "text": "",
     "type_": 3
   },
   "TAB-IndexButton": {

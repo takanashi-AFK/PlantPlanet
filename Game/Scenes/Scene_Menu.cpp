@@ -1,18 +1,18 @@
-#include "Scene_Menu.h"
-#include "../Objects/UI/UIPanel.h"
-#include "../Objects/UI/UIButton.h"
-#include "../Constants.h"
-#include "../../Engine/SceneManager.h"
-#include "../Plants/PlantCollection.h"
-#include "../../Engine/ImGui/ImGui.h"
 #include "../../Engine/DirectX/Input.h"
-#include "../Otheres/RankingManager.h"
-#include "../Objects/UI/UIText.h"
-#include "../Otheres/UserManager.h"
-#include "../Objects/Stage/SkySphere.h"
-#include "../../Engine/ResourceManager/Image.h"
-#include "../Objects/Stage/MenuCharacter.h"
 #include "../../Engine/GameObject/Camera.h"
+#include "../../Engine/ImGui/ImGui.h"
+#include "../../Engine/ResourceManager/Image.h"
+#include "../../Engine/SceneManager.h"
+#include "../Constants.h"
+#include "../Objects/Stage/MenuCharacter.h"
+#include "../Objects/Stage/SkySphere.h"
+#include "../Objects/UI/UIButton.h"
+#include "../Objects/UI/UIPanel.h"
+#include "../Objects/UI/UIText.h"
+#include "../Otheres/RankingManager.h"
+#include "../Otheres/UserManager.h"
+#include "../Plants/PlantCollection.h"
+#include "Scene_Menu.h"
 
 using namespace Constants;
 
@@ -359,7 +359,7 @@ void Scene_Menu::Ranking()
 			// ユーザーネームを取得
 			{
 				// UIテキストを取得
-				std::string name = "RANKING-rank_userNameYou";
+				std::string name = "RANKING-rank_userNameYOU";
 				UIText* text = (UIText*)panel->GetUIObject(name);
 
 				// テキストにユーザーネームを設定
@@ -369,7 +369,7 @@ void Scene_Menu::Ranking()
 			// スコアを取得
 			{
 				// UIテキスト名を取得
-				std::string name = "RANKING-rank_scoreNumYou";
+				std::string name = "RANKING-rank_scoreNumYOU";
 				UIText* text = (UIText*)panel->GetUIObject(name);
 
 				// テキストにスコアを設定
