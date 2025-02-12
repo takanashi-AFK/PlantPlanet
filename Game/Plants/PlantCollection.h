@@ -28,5 +28,8 @@ namespace PlantCollection
 
 	/// <summary> ‘S‚Ä‚ÌA•¨î•ñ‚ğæ“¾ </summary>
 	unordered_map<int, PlantData> GetPlants();
+
+	/// <summary> A•¨î•ñ‚ğæ“¾ </summary>
+	PlantData GetPlant(int _id);
 };
 

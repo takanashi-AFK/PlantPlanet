@@ -1,0 +1,58 @@
+{
+  "aha": {
+    "frameImage_": { "filePath_": "Images/defaults/Bar_Frame.png" },
+    "gaugeImage_": {
+      "color_": [ 0.8705882430076599, 0.3019607961177826, 0.32156863808631897 ],
+      "filePath_": "Images/defaults/Bar_Gauge.png"
+    },
+    "isVisible_": true,
+    "layerNumber_": 1,
+    "objectName_": "aha",
+    "position_": [ 0.0, 0.0, 0.0 ],
+    "rotate_": [ 0.0, 0.0, 0.0 ],
+    "scale_": [ 1.0, 1.0, 1.0 ],
+    "type_": 4
+  },
+  "ahaga": {
+    "frameImage_": { "filePath_": "Images/defaults/Bar_Frame.png" },
+    "gaugeImage_": {
+      "color_": [ 0.29411765933036804, 0.686274528503418, 0.3019607961177826 ],
+      "filePath_": "Images/defaults/Bar_Gauge.png"
+    },
+    "isVisible_": true,
+    "layerNumber_": 2,
+    "objectName_": "ahaga",
+    "position_": [ 0.0, 0.0, 0.0 ],
+    "rotate_": [ 0.0, 0.0, 0.0 ],
+    "scale_": [ 1.0, 1.0, 1.0 ],
+    "type_": 4
+  },
+  "ahagaga": {
+    "frameImage_": { "filePath_": "Images/defaults/Bar_Frame.png" },
+    "gaugeImage_": {
+      "color_": [ 0.8980392217636108, 0.7372549176216125, 0.0 ],
+      "filePath_": "Images/defaults/Bar_Gauge.png"
+    },
+    "isVisible_": true,
+    "layerNumber_": 3,
+    "objectName_": "ahagaga",
+    "position_": [ 0.0, 0.0, 0.0 ],
+    "rotate_": [ 0.0, 0.0, 0.0 ],
+    "scale_": [ 1.0, 1.0, 1.0 ],
+    "type_": 4
+  },
+  "ahagagaga": {
+    "frameImage_": { "filePath_": "Images/defaults/Bar_Frame.png" },
+    "gaugeImage_": {
+      "color_": [ 0.0, 0.6901960968971252, 0.9411764740943909 ],
+      "filePath_": "Images/defaults/Bar_Gauge.png"
+    },
+    "isVisible_": true,
+    "layerNumber_": 4,
+    "objectName_": "ahagagaga",
+    "position_": [ 0.0, 0.0, 0.0 ],
+    "rotate_": [ 0.0, 0.0, 0.0 ],
+    "scale_": [ 1.0, 1.0, 1.0 ],
+    "type_": 4
+  }
+}

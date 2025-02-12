@@ -353,7 +353,7 @@ void GameEditor::DrawPlantDatails()
 		ImGui::Checkbox("isSpawn", &PlantCollection::GetPlants()[selectEditPlantIndex_].isSpawn_);
 		ImGui::Text("modelFilePath:%s",PlantCollection::GetPlants()[selectEditPlantIndex_].modelFilePath_.c_str());
 		ImGui::Text("imageFilePath:%s",PlantCollection::GetPlants()[selectEditPlantIndex_].imageFilePath_.c_str());
-		ImGui::Text("descriptionImageFilePath_Complete:%s",PlantCollection::GetPlants()[selectEditPlantIndex_].descriptionImageFilePath_Complete_.c_str());
+		ImGui::Text("descriptionImageFilePath_Complete:%s",PlantCollection::GetPlants()[selectEditPlantIndex_].textImageFilePath_.c_str());
 	}
 	else ImGui::Text("No object selected");
 }
@@ -950,29 +950,49 @@ void GameEditor::DrawAddPlantWindow()
 	ImGui::Checkbox(":setting isSpawn", &isSpawn);
 
 	// モデルファイルパス入力ボックス
-	static string modelFilePath = "defaultPlant.fbx";
-	ImGui::InputText(":setting modelFilePath", &modelFilePath[0], modelFilePath.size());
-	ImGui::SameLine();
-	if (ImGui::Button(":set Model")) modelFilePath = GetFBXFilePath();
-
+	static string modelFilePath = "none.fbx"; {
+		ImGui::InputText(":setting modelFilePath", &modelFilePath[0], modelFilePath.size());
+		ImGui::SameLine();
+		if (ImGui::Button(":set Model")) modelFilePath = GetFBXFilePath();
+	}
+	
 	// 画像ファイルパス入力ボックス
-	static string imageFilePath = "defaultPlant.png";
-	ImGui::InputText(":setting imageFilePath", &imageFilePath[0], imageFilePath.size());
-	ImGui::SameLine();
-	if (ImGui::Button(":set Image")) imageFilePath = GetPNGFilePath();
+	static string imageFilePath = "none.png";
+	static string imageFilePath_seclet = "none.png";
 
-	static string compDescriptionImageFilePath = "defaultPlant.png";
-	ImGui::InputText(":setting descriptionImageFilePath", &compDescriptionImageFilePath[0], compDescriptionImageFilePath.size());
-	ImGui::SameLine();
-	if (ImGui::Button(":set DescriptionImage")) compDescriptionImageFilePath = GetPNGFilePath();
+	if (ImGui::TreeNode("ImageFilePath")) {
+		 
+		// 通常時の画像ファイルパス入力ボックス
+		ImGui::InputText(":default", &imageFilePath[0], imageFilePath.size());
+		ImGui::SameLine();
+		if (ImGui::Button(":set default")) imageFilePath = GetPNGFilePath();
+		
+		// 隠ぺい時の画像ファイルパス入力ボックス
+		ImGui::InputText(":seclet", &imageFilePath_seclet[0], imageFilePath_seclet.size());
+		ImGui::SameLine();
+		if (ImGui::Button(":set seclet")) imageFilePath_seclet = GetPNGFilePath();
+		
+		ImGui::TreePop();
+	}
 
-	static string incompleteDescriptionImageFilePath = "defaultPlant.png";
-	ImGui::InputText(":setting incompleteDescriptionImageFilePath", &incompleteDescriptionImageFilePath[0], incompleteDescriptionImageFilePath.size());
-	ImGui::SameLine();
-	if (ImGui::Button(":set IncompleteDescriptionImage")) incompleteDescriptionImageFilePath = GetPNGFilePath();
+	// 説明画像ファイルパス入力ボックス
+	static string textImageFilePath = "none.png";
+	static string textImageFilePath_seclet = "none.png";
 
+	if (ImGui::TreeNode("TextImageFilePath")) {
+		
+		// 通常時の説明画像ファイルパス入力ボックス
+		ImGui::InputText(":default", &textImageFilePath[0], textImageFilePath.size());
+		ImGui::SameLine();
+		if (ImGui::Button(":set default")) textImageFilePath = GetPNGFilePath();
 
-
+		// 隠ぺい時の説明画像ファイルパス入力ボックス
+		ImGui::InputText(":seclet", &textImageFilePath_seclet[0], textImageFilePath_seclet.size());
+		ImGui::SameLine();
+		if (ImGui::Button(":set seclet")) textImageFilePath_seclet = GetPNGFilePath();
+		
+		ImGui::TreePop();
+	}
 	ImGui::Separator();
 
 	// 「Add」ボタンを無効化する
@@ -985,8 +1005,9 @@ void GameEditor::DrawAddPlantWindow()
 			isSpawn,
 			modelFilePath,
 			imageFilePath,
-			compDescriptionImageFilePath,
-			incompleteDescriptionImageFilePath
+			imageFilePath_seclet,
+			textImageFilePath,
+			textImageFilePath_seclet
 			});
 	}
 	else if (!isValid) {

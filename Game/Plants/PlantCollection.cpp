@@ -25,6 +25,11 @@ unordered_map<int, PlantData> PlantCollection::GetPlants()
 	return plants_;
 }
 
+PlantData PlantCollection::GetPlant(int _id)
+{
+	return plants_[_id];
+}
+
 void PlantCollection::Save(json& _saveObj)
 {
 	// plants_Ç™ãÛÇÃèÍçáÇÕâΩÇ‡ÇµÇ»Ç¢
@@ -40,8 +45,8 @@ void PlantCollection::Save(json& _saveObj)
 		{"isSpawn_",plant.second.isSpawn_},
 		{"modelFilePath_",plant.second.modelFilePath_},
 		{"imageFilePath_",plant.second.imageFilePath_},
-		{"descriptionImageFilePath_Complete_",plant.second.descriptionImageFilePath_Complete_},
-		{"descriptionImageFilePath_InComplete_",plant.second.descriptionImageFilePath_InComplete_}
+		{"descriptionImageFilePath_Complete_",plant.second.textImageFilePath_},
+		{"descriptionImageFilePath_InComplete_",plant.second.textImageFilePath_seclet}
 	};
 }
 

@@ -1,6 +1,6 @@
 {
   "INDEX-DescriptionImage": {
-    "imageFilePath_": "01_images/05_plantDatas/00_none/none_text.png",
+    "imageFilePath_": "01_images/05_plantDatas/00_none/none_defaultText.png",
     "isVisible_": false,
     "layerNumber_": 8,
     "objectName_": "INDEX-DescriptionImage",
@@ -676,9 +676,6 @@
     "type_": 1
   },
   "PLAY-POPUP-MODE-TUT": {
-    "ArrayPlace_X": 2,
-    "ArrayPlace_Y": 0,
-    "defaultImageFilePath_": "01_images/02_menuSceneUI/01_playContents/07_tutorialSelectButton.png",
     "imageFilePath_": "01_images/02_menuSceneUI/01_playContents/07_tutorialSelectButton.png",
     "isVisible_": true,
     "layerNumber_": 7,
@@ -686,8 +683,7 @@
     "position_": [ 0.4000000059604645, -0.029999999329447746, 0.0 ],
     "rotate_": [ 0.0, 0.0, 0.0 ],
     "scale_": [ 1.0, 1.0, 1.0 ],
-    "selectImageFilePath_": "01_images/02_menuSceneUI/01_playContents/08_tutorialSelectButtonSelected.png",
-    "type_": 1
+    "type_": 2
   },
   "PLAY-PlayButton": {
     "ArrayPlace_X": 1,

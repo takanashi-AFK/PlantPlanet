@@ -13,11 +13,11 @@ struct PlantData {
 	string name_;			// 名前
 	int areaId_;			// 出現エリア
 	bool isSpawn_;
-	string modelFilePath_;	// モデルファイルパス
-	string imageFilePath_;	// 画像ファイルパス
-	string descriptionImageFilePath_Complete_;	// 図鑑用説明画像ファイルパス
-	string descriptionImageFilePath_InComplete_;	// 図鑑用説明画像ファイルパス
-
+	string modelFilePath_;				// モデルファイルパス
+	string imageFilePath_;				// 画像ファイルパス
+	string imageFilePath_seclet;		// 画像ファイルパス（隠し）
+	string textImageFilePath_;			// 図鑑用説明画像ファイルパス
+	string textImageFilePath_seclet;	// 図鑑用説明画像ファイルパス（隠し）
 
 	struct FuncValue
 	{

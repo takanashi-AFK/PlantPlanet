@@ -81,12 +81,10 @@ void Scene_Menu::Play()
 
 		// PopUp系かそれ以外かで分ける
 		for (auto playUI : playUIList_) {
-			if (playUI->GetObjectName() == "PLAY-PlayButton")
-				playButton = (UIButton*)playUI;
-			else if (playUI->GetObjectName() == "PLAY-POPUP-BACKGROUND")
-				playBackGround = (UIImage*)playUI;
-			else if (playUI->GetObjectName().starts_with("PLAY-POPUP"))
-				popUpUIList_.push_back(playUI);
+
+			if (playUI->GetObjectName() == "PLAY-PlayButton")			 playButton = (UIButton*)playUI;
+			else if (playUI->GetObjectName() == "PLAY-POPUP-BACKGROUND") playBackGround = (UIImage*)playUI;
+			else if (playUI->GetObjectName().starts_with("PLAY-POPUP"))  popUpUIList_.push_back(playUI);
 		}
 
 		// 背景とプレイボタン以外のUIを非表示にする
@@ -139,9 +137,8 @@ void Scene_Menu::Play()
 void Scene_Menu::Index()
 {
 	static string imageNameHead = "INDEX-FrameButton";
-	// StateがIndexに変わった時の処理
+	// StateがIndexに変わった瞬間の処理
 	if (isFirstChange_ == true) {
-
 
 		// 検証にあたり、コメントアウト
 		// globalから今まで取得したことのある植物のデータを取得
@@ -249,42 +246,37 @@ void Scene_Menu::Index()
 
 	if (plantButton != nullptr) {
 
+		// ※ リファクタ 菅原
+		// 選択中のボタン表示色を変更
 		plantButton->SelectShader();
-
+		
+		// ボタンが押される 又は 選択中の際、説明画像を表示
 		if (ConfirmButton(plantButton)) {
-			bool havePlantFlag = false;
-			std::string buttonName = ((UIButton*)plantButton)->GetObjectName();
 
-			std::string idString = buttonName.substr(imageNameHead.size());
+			// ボタン名からIDを取得（※参照元がボタンだから？）
+			string plantIdStr = plantButton->GetObjectName().substr(imageNameHead.size());
+			int plantId = std::stoi(plantIdStr);
 
-			int id = std::stoi(idString);
+			// プレイヤーが該当する植物を持っているか確認
+			bool playerHasPlant = false; {
 
-			if (g_playerPlantData.empty())
-				havePlantFlag = false;
-
-			for (auto havePlant : g_playerPlantData) {
-				if (havePlant.id_ == id) {
-					havePlantFlag = true;
-					break;
-				}
-				else {
-					havePlantFlag = false;
-				}
+				// プレイヤーの植物所持情報が空の場合はfalse
+				if (g_playerPlantData.empty()) playerHasPlant = false;
+				
+				// プレイヤーの植物所持情報がある場合は、IDが一致するか確認
+				else 
+					for (auto& plantData : g_playerPlantData) {
+						
+						// IDが一致した場合はtrue
+						if (plantData.id_ == plantId) playerHasPlant = true;
+					}
 			}
 
-			for (auto plants : PlantCollection::GetPlants()) {
-				if (plants.second.id_ == id) {
-					if (havePlantFlag == true) {
-						descriptionImage->SetImage(plants.second.descriptionImageFilePath_Complete_);
-						descriptionImage->SetVisible(true);
-					}
+			// 植物の説明画像を表示
+			if (playerHasPlant == true) descriptionImage->SetImage(PlantCollection::GetPlant(plantId).imageFilePath_);
+			else if (playerHasPlant == false) descriptionImage->SetImage(PlantCollection::GetPlant(plantId).imageFilePath_seclet);
+			descriptionImage->SetVisible(true);
 
-					else if (havePlantFlag == false) {
-						descriptionImage->SetImage(plants.second.descriptionImageFilePath_InComplete_);
-						descriptionImage->SetVisible(true);
-					}
-				}
-			}
 		}
 	}
 
