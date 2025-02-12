@@ -52,12 +52,6 @@ void Scene_Result::Update()
 	switch (g_gameMode) {
 	case MODE_ADVENTURE:
 		UpdateAdventureResult();
-		// ボタンが押されたら
-		if (((UIButton*)UIPanel::GetInstance()->GetUIObject("returnButton"))->OnClick() || Input::IsPadButtonDown(XINPUT_GAMEPAD_A)) {
-			SceneManager* sceneManager = (SceneManager*)FindObject("SceneManager");
-			sceneManager->ChangeScene(SCENE_ID_MENU, TID_BLACKOUT);
-		}
-
 		break;
 
 	case MODE_SCOREATTACK:
@@ -132,7 +126,7 @@ void Scene_Result::InitializeAdventureResult()
 	UIPanel* uiPanel = UIPanel::GetInstance();
 
 	// UIパネル情報を読み込む
-	if (JsonReader::Load("Datas/Test/resultTent.json", loadData)) uiPanel->Load(loadData);
+	if (JsonReader::Load("00_datas/01_sceneLayouts/03_resultSceneLayouts/adventureResultSceneLayout.json", loadData)) uiPanel->Load(loadData);
 
 	std::unordered_map<int, PlantData>allPlantData = PlantCollection::GetPlants();
 
@@ -185,6 +179,11 @@ void Scene_Result::UpdateScoreAttackResult()
 
 void Scene_Result::UpdateAdventureResult()
 {
+	// キー入力があった場合
+	if (Input::IsKeyDown(DIK_SPACE) || Input::IsPadButtonDown(XINPUT_GAMEPAD_A)) {
+		SceneManager* sceneManager = (SceneManager*)FindObject("SceneManager");
+		sceneManager->ChangeScene(SCENE_ID_MENU, TID_BLACKOUT);
+	}
 }
 
 void Scene_Result::CheckSkipScoreAttackResult()

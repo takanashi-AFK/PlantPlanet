@@ -236,6 +236,8 @@ void Component_MeleeEnemyBehavior::Dead()
 	t.speed = 0.1;
 	effectModelTransform = EFFEKSEERLIB::gEfk->Play("enemyDead", t);
 
+	holder_->KillMe();
+
 	for (auto& plant : plantData) {
 		if (plant.second.name_ == dropFlowerName_) {
 			// ‚»‚Ìê‚É‰Ô‚ğ¶¬
