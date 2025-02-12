@@ -41,6 +41,15 @@ VS_OUT VS(float4 pos : POSITION, float4 Normal : NORMAL, float2 Uv : TEXCOORD)
 //───────────────────────────────────────
 float4 PS(VS_OUT inData) : SV_Target
 {
+    static const float thresholdDepth = 0.0000001f;
+    
+    float depth = pow(inData.pos.z, 400);
+    float depth_chop = pow(inData.pos.z, 250);
+    
+    float alpha = depth < thresholdDepth ? depth / thresholdDepth : 1;
+    
+    Dithering(inData.pos.xy, alpha);
+    
     float4 diffuse;
 	//テクスチャ有無
     if (g_isTexture == true)
@@ -100,8 +109,7 @@ float4 PS(VS_OUT inData) : SV_Target
     
     float4 col = float4(diffuse.rgb * th + shade.rgb, 1);//beautiful shader
     //float4 col = float4(diffuse.rgb * th.rgb, 1);
-    float depth = pow(inData.pos.z ,400);
-    float depth_chop = pow(inData.pos.z, 250);
+
     
     float4 far_col = (depth * float4(depth * .5, depth * .7, depth, 1)) + (col * (1 - depth));
     float4 near_col = float4(col.r, col.g * (.3 * depth_chop + 1), col.b * (sin(depth*1.3)  + 1), 1);
@@ -109,7 +117,6 @@ float4 PS(VS_OUT inData) : SV_Target
     col = depth > 0.6 ? far_col : near_col;
     
     col.a = 1;
-    clip(depth < 0.0000001 ? -1 : 1);
     
     return float4(col);
 }

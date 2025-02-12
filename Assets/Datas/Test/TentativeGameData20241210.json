@@ -104,7 +104,7 @@
             "bulletColliderRadius_": 0.20000000298023224,
             "bulletLifeTime_": 1.0,
             "name_": "ShootAttack",
-            "power_": 10,
+            "power_": 7,
             "shootingDirection_": [
               0.0,
               -50.0,

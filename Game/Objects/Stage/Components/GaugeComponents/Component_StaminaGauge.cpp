@@ -3,7 +3,7 @@
 #include "../../../Engine/ImGui/imgui.h"
 
 namespace {
-	const float STAMINA_RECOVERY = 0.17f;
+	const float STAMINA_RECOVERY = 0.4f;
 	const float STAMINA_MAX = 100.f;
 }
 
@@ -23,7 +23,7 @@ void Component_StaminaGauge::Update()
 {
 	if(timer == nullptr)return;
 	if (isLock_ == true) {
-		timer->SetTime(3);
+		timer->SetTime(1);
 		timer->Start();
 
 		if (timer->GetIsEnd()) {
