@@ -324,7 +324,6 @@
     <ClCompile Include="Game\Otheres\UserManager.cpp" />
     <ClCompile Include="Game\Objects\Stage\Components\TeleporterComponent\Component_ReturnGate.cpp" />
     <ClCompile Include="Game\Objects\Stage\Components\BehaviorComponents\Component_RunnigAwayEnemyBehavior.cpp" />
-    <ClCompile Include="Game\Objects\Stage\MenuCharacter.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Collider\BoxCollider.h">
@@ -576,7 +575,6 @@
     <ClInclude Include="Game\Otheres\UserManager.h" />
     <ClInclude Include="Game\Objects\Stage\Components\TeleporterComponent\Component_ReturnGate.h" />
     <ClInclude Include="Game\Objects\Stage\Components\BehaviorComponents\Component_RunnigAwayEnemyBehavior.h" />
-    <ClInclude Include="Game\Objects\Stage\MenuCharacter.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Assets\Shader\Simple2D.hlsl">

@@ -140,7 +140,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Game\Objects\Stage\Components\BehaviorComponents\Component_RunnigAwayEnemyBehavior.cpp" />
+    <ClCompile Include="Game\Objects\Stage\Components\MotionComponent\Component_RunningAwayEnemyMotion.cpp" />
+    <ClCompile Include="Game\Objects\Stage\Components\BehaviorComponents\Component_RunningAwayEnemyBehavior.cpp" />
     <ClCompile Include="Game\Objects\Stage\Components\TeleporterComponent\Component_ReturnGate.cpp" />
     <ClCompile Include="Game\Objects\Stage\Components\BreakableWallComponents\Component_BreakableWall.cpp" />
     <ClCompile Include="Game\Objects\Stage\BreakableWall.cpp" />
@@ -250,7 +251,8 @@
     <ClCompile Include="Game\Objects\Stage\MenuCharacter.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Game\Objects\Stage\Components\BehaviorComponents\Component_RunnigAwayEnemyBehavior.h" />
+    <ClInclude Include="Game\Objects\Stage\Components\MotionComponent\Component_RunningAwayEnemyMotion.h" />
+    <ClInclude Include="Game\Objects\Stage\Components\BehaviorComponents\Component_RunningAwayEnemyBehavior.h" />
     <ClInclude Include="Game\Objects\Stage\Components\TeleporterComponent\Component_ReturnGate.h" />
     <ClInclude Include="Game\Objects\Stage\Components\BreakableWallComponents\Component_BreakableWall.h" />
     <ClInclude Include="Game\Objects\Stage\BreakableWall.h" />

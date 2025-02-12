@@ -1,4 +1,4 @@
-#include "Component_RunnigAwayEnemyBehavior.h"
+#include "Component_RunningAwayEnemyBehavior.h"
 
 #include "../../../../../Engine/Global.h"
 #include "../../../../../Engine/ImGui/imgui.h"
@@ -10,38 +10,43 @@
 #include "../../../../Plants/PlantCollection.h"
 #include "../PlantComponents/Component_Plant.h"
 #include<algorithm>
+#include"../MotionComponent/Component_RunningAwayEnemyMotion.h"
 
-Component_RunnigAwayEnemyBehavior::Component_RunnigAwayEnemyBehavior(string _name, StageObject* _holder, Component* _parent)
+Component_RunningAwayEnemyBehavior::Component_RunningAwayEnemyBehavior(string _name, StageObject* _holder, Component* _parent)
 	:Component(_holder, _name, RunningawayEnemy, _parent), points_{}, isFlowerSpawned_(false), destinationPointIterator_{},moveAmount_{}
 {
 	nowProcess_ = [this]() {RunawayProcess(); };
 }
 
-Component_RunnigAwayEnemyBehavior::~Component_RunnigAwayEnemyBehavior()
+Component_RunningAwayEnemyBehavior::~Component_RunningAwayEnemyBehavior()
 {
 }
 
-void Component_RunnigAwayEnemyBehavior::Initialize()
+void Component_RunningAwayEnemyBehavior::Initialize()
 {
 	holder_->AddCollider(new SphereCollider({ 0,0,0 }, 1.f));
 	holder_->SetObjectType(StageObject::TYPE_ENEMY);
 
 	if (!FindChildComponent("HealthGauge")) AddChildComponent(CreateComponent("HealthGauge", HealthGauge, holder_, this));
+	if (FindChildComponent("Motion") == false)AddChildComponent(CreateComponent("Motion", RunningawayEnemyMotion, holder_, this));
 
 	destinationPointIterator_ = points_.begin();
+
+	//0,
+	//running_ = MotionData("Models/Enemy/Jab Cross Running.fbx");
 }
 
-void Component_RunnigAwayEnemyBehavior::Update()
+void Component_RunningAwayEnemyBehavior::Update()
 {
 	if (IsDead()) nowProcess_ = [this]() {DeadProcess(); };
 	nowProcess_();
 }
 
-void Component_RunnigAwayEnemyBehavior::Release()
+void Component_RunningAwayEnemyBehavior::Release()
 {
 }
 
-void Component_RunnigAwayEnemyBehavior::Save(json& _saveObj)
+void Component_RunningAwayEnemyBehavior::Save(json& _saveObj)
 {
 	_saveObj["MoveAmount"] = moveAmount_;
 	_saveObj["Point_Num"] = points_.size();
@@ -54,7 +59,7 @@ void Component_RunnigAwayEnemyBehavior::Save(json& _saveObj)
 	}
 }
 
-void Component_RunnigAwayEnemyBehavior::Load(json& _loadObj)
+void Component_RunningAwayEnemyBehavior::Load(json& _loadObj)
 {
 	if (_loadObj.contains("MoveAmount")) moveAmount_ = _loadObj["MoveAmount"].get<float>();
 	if (_loadObj.contains("DropFlowerName"))	dropFlowerName_ = _loadObj["DropFlowerName"].get<string>();
@@ -80,7 +85,7 @@ void Component_RunnigAwayEnemyBehavior::Load(json& _loadObj)
 	destinationPointIterator_ = points_.begin();
 }
 
-void Component_RunnigAwayEnemyBehavior::DrawData()
+void Component_RunningAwayEnemyBehavior::DrawData()
 {
 	ImGui::Checkbox("isActive_", &isActive_);
 	
@@ -156,11 +161,11 @@ void Component_RunnigAwayEnemyBehavior::DrawData()
 
 }
 
-void Component_RunnigAwayEnemyBehavior::OnCollision(GameObject* _target, Collider* _collider)
+void Component_RunningAwayEnemyBehavior::OnCollision(GameObject* _target, Collider* _collider)
 {
 }
 
-void Component_RunnigAwayEnemyBehavior::RunawayProcess()
+void Component_RunningAwayEnemyBehavior::RunawayProcess()
 {
 	//目的地が未設定なら処理を終える
 	if (destinationPointIterator_ == points_.end())
@@ -180,7 +185,7 @@ void Component_RunnigAwayEnemyBehavior::RunawayProcess()
 	CheckDestination();
 }
 
-void Component_RunnigAwayEnemyBehavior::DeadProcess()
+void Component_RunningAwayEnemyBehavior::DeadProcess()
 {
 	Stage* pStage = (Stage*)(holder_->FindObject("Stage"));
 	if (pStage == nullptr)return;
@@ -227,7 +232,7 @@ void Component_RunnigAwayEnemyBehavior::DeadProcess()
 	}
 }
 
-void Component_RunnigAwayEnemyBehavior::CheckDestination()
+void Component_RunningAwayEnemyBehavior::CheckDestination()
 {
 	using std::next;
 	//現在地と目的地が違うなら抜ける
@@ -238,12 +243,12 @@ void Component_RunnigAwayEnemyBehavior::CheckDestination()
 		next(destinationPointIterator_) : points_.begin();
 }
 
-void Component_RunnigAwayEnemyBehavior::MoveTo(XMFLOAT3 vec, float amount)
+void Component_RunningAwayEnemyBehavior::MoveTo(XMFLOAT3 vec, float amount)
 {
 	holder_->SetPosition(holder_->GetPosition() + (vec * amount));
 }
 
-std::tuple<float, XMFLOAT3> Component_RunnigAwayEnemyBehavior::GetLengthAndVectorToDestination()
+std::tuple<float, XMFLOAT3> Component_RunningAwayEnemyBehavior::GetLengthAndVectorToDestination()
 {
 	using std::pow;
 	using std::sqrtf;
@@ -259,7 +264,7 @@ std::tuple<float, XMFLOAT3> Component_RunnigAwayEnemyBehavior::GetLengthAndVecto
 	return { length,vec };
 }
 
-bool Component_RunnigAwayEnemyBehavior::IsDead()
+bool Component_RunningAwayEnemyBehavior::IsDead()
 {
 	Component_HealthGauge* hp = dynamic_cast<Component_HealthGauge*>(GetChildComponent("HealthGauge"));
 	if (!hp)return false;
@@ -269,7 +274,7 @@ bool Component_RunnigAwayEnemyBehavior::IsDead()
 	return false;
 }
 
-void Component_RunnigAwayEnemyBehavior::ExchangeRotate(XMFLOAT3 vec)
+void Component_RunningAwayEnemyBehavior::ExchangeRotate(XMFLOAT3 vec)
 {
 	holder_->SetRotateY(XMConvertToDegrees(std::atan2f(vec.x, vec.z)));
 }
