@@ -136,7 +136,8 @@ void Scene_Result::InitializeAdventureResult()
 		countedPlant[plant.name_]++;
 	}
 
-	for (int i = 0; i <= 9; i++) {
+	const int plantBoxNum = 14;
+	for (int i = 0; i < plantBoxNum; i++) {
 		// カウントした植物の数を取得
 		int plantSize = countedPlant.size();
 
