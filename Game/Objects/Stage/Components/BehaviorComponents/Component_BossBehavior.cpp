@@ -434,5 +434,6 @@ void Component_BossBehavior::Dead()
 		
 		// サウンドを再生
 		Audio::Play(Audio::Load("Audios/爆発1.wav", false));
+		holder_, KillMe();
 	}
 }

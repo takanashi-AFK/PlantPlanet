@@ -48,7 +48,7 @@ namespace {
 	constexpr XMFLOAT3 PLAYER_COLLIDER_POSITION = { 0,0.5,0 };
 	constexpr XMVECTOR INITIALIZE_DIRECTION_Z = { 0,0,1,0 };
 
-	constexpr float DODGE_DISTANCE = 5.0f;
+
 	constexpr float DODGE_RAY_OFFSET = 0.5f;
 	constexpr float DODGE_DISTANCE_LIMIT = 0.7;
 
@@ -192,7 +192,8 @@ Component_PlayerBehavior::Component_PlayerBehavior(string _name, StageObject* _h
 	saladEffects_{},
 	isEatSaladEnd_(false),
 	isFirstOverMAXReserchPoint(true),
-	checkLogoBreakableWall_{nullptr}
+	checkLogoBreakableWall_{nullptr},
+	dodgeDistance_(defaultDodge_Distance)
 {
 }
 
@@ -327,7 +328,8 @@ void Component_PlayerBehavior::Update()
 
 	easingPickUpPlantImage();
 
-	if (Input::IsKeyDown(DIK_ESCAPE) || Input::IsPadButtonDown(XINPUT_GAMEPAD_START))
+	if ((Input::IsKeyDown(DIK_ESCAPE) && Input::IsKey(DIK_SPACE)) ||
+		(Input::IsPadButtonDown(XINPUT_GAMEPAD_START) && Input::IsPadButton(XINPUT_GAMEPAD_Y)))
 		holder_->SetPosition({0,0,0});
 	
 
@@ -488,6 +490,7 @@ void Component_PlayerBehavior::EatSalad(Salad salad)
 	static_cast<Component_ShootAttack*>(GetChildComponent("ShootAttack"))->SetPower(defaultPow_Range);
 	static_cast<Component_WASDInputMove*>(GetChildComponent("InputMove"))->SetSpeed(defaultSpeed_Walk);
 	static_cast<Component_StaminaGauge*>(GetChildComponent("StaminaGauge"))->SetRecoverValue(defaultStamina_Recovery);
+	dodgeDistance_ = defaultDodge_Distance;
 }
 
 void Component_PlayerBehavior::AddReserchPoint(int point)
@@ -728,7 +731,6 @@ void Component_PlayerBehavior::Dodge()
 	if (sg == nullptr)return;
 
 	static float frameCount = 0;
-	static float dodgeDistance = DODGE_DISTANCE;
 
 	// プレイヤーのHPゲージコンポーネントを取得
 	Component_HealthGauge* hg = (Component_HealthGauge*)(GetChildComponent("PlayerHealthGauge"));
@@ -758,7 +760,7 @@ void Component_PlayerBehavior::Dodge()
 
 		// 突進方向を設定
 		tackle->SetDirection(dir);
-
+		
 		// ステージ情報を取得
 		Stage* pStage = (Stage*)(holder_->FindObject("Stage"));
 		if (pStage == nullptr) [[unlikely]] return;
@@ -783,24 +785,24 @@ void Component_PlayerBehavior::Dodge()
 			}
 
 			// レイが何かに当たったら且つ、その距離が突進距離以下だったら突進距離の再設定
-			if (tackleRayData.hit && tackleRayData.dist <= dodgeDistance) {
+			if (tackleRayData.hit && tackleRayData.dist <= dodgeDistance_) {
 
 				// 近すぎたら0にする
 				if (tackleRayData.dist <= DODGE_DISTANCE_LIMIT) {
-					dodgeDistance = 0;
+					tackle->SetDistance(0);
+
 					break;
 				}
 				else {
-					dodgeDistance = tackleRayData.dist;
+					tackle->SetDistance(tackleRayData.dist);
 					break;
 				}
 			}
 			else
-				dodgeDistance = DODGE_DISTANCE;
+			{
+				tackle->SetDistance(dodgeDistance_);
+			}
 		}
-
-		// 突進距離を設定
-		tackle->SetDistance(dodgeDistance);
 
 		// 突進処理を実行
 		tackle->Execute();
@@ -893,8 +895,6 @@ void Component_PlayerBehavior::Dodge()
 
 		//移動を可能にする
 		move->Execute();
-
-		dodgeDistance = DODGE_DISTANCE;
 
 		sg->UseStamina(stamina_decrease_dodge_);
 

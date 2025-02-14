@@ -71,6 +71,8 @@ public:
 
 	XMVECTOR GetDirection() { return direction_; }
 
+	/// <summary>ˆÚ“®•ûŒü‚ðŽæ“¾</summary>
+	float GetDistance() { return distance_; }
 	/// <summary>
 	/// ImGuiƒpƒlƒ‹•\Ž¦
 	/// </summary>
