@@ -313,7 +313,6 @@ std::function<PlantData::FuncValue(Component_PlayerBehavior*)> PlantData::GetFun
 
 		};
 
-
 	default:return[&,id](Component_PlayerBehavior* pb)->PlantData::FuncValue 
 		{
 			ret.isUsable = false;
