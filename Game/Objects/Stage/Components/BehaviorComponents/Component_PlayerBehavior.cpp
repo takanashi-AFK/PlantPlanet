@@ -484,6 +484,7 @@ void Component_PlayerBehavior::EatSalad(Salad salad)
 	static_cast<Component_MeleeAttack*>(GetChildComponent("MeleeAttack"))->SetPower(defaultPow_Melee);
 	static_cast<Component_ShootAttack*>(GetChildComponent("ShootAttack"))->SetPower(defaultPow_Range);
 	static_cast<Component_WASDInputMove*>(GetChildComponent("InputMove"))->SetSpeed(defaultSpeed_Walk);
+	static_cast<Component_StaminaGauge*>(GetChildComponent("StaminaGauge"))->SetRecoverValue(defaultStamina_Recovery);
 }
 
 void Component_PlayerBehavior::AddReserchPoint(int point)

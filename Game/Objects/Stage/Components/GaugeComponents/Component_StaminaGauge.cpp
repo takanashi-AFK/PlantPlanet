@@ -2,13 +2,8 @@
 #include "../TimerComponent/Component_Timer.h"
 #include "../../../Engine/ImGui/imgui.h"
 
-namespace {
-	const float STAMINA_RECOVERY = 0.4f;
-	const float STAMINA_MAX = 100.f;
-}
-
 Component_StaminaGauge::Component_StaminaGauge(string _name, StageObject* _holder, Component* _parent)
-	:Component_Gauge(_holder, _name, StaminaGauge, _parent)
+	:Component_Gauge(_holder, _name, StaminaGauge, _parent), recovery_(STAMINA_RECOVERY_DEFAULT)
 {
 }
 
@@ -33,7 +28,7 @@ void Component_StaminaGauge::Update()
 	}
 	else
 	{
-		RecoverStamina(STAMINA_RECOVERY);
+		RecoverStamina(recovery_);
 	}
 }
 

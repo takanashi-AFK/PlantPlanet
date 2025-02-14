@@ -41,6 +41,7 @@ public :
 	static constexpr float defaultSpeed_Walk = .1f;
 	static constexpr float defaultTime_CollectPlant = 1;
 	static constexpr float defaultTime_BreakWall = (77.0f *2.f) / FPS;
+	static constexpr float defaultStamina_Recovery = .4f;
 	static constexpr int defaultMax_HP = 100;
 	static constexpr int defaultPow_Range = 10.f;
 	static constexpr int defaultPow_Melee = 20.f;
