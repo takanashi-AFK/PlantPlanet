@@ -119,8 +119,8 @@
           },
           "ShootAttack": {
             "EffectData": {
-              "name": "A_Salamander4",
-              "path": "Effects/A_Salamander4.efk",
+              "name": "shoot",
+              "path": "Effects/shoot.efk",
               "scale": [ 0.20000000298023224, 0.20000000298023224, 0.20000000298023224 ]
             },
             "bulletColliderRadius_": 0.20000000298023224,
@@ -128,7 +128,7 @@
             "name_": "ShootAttack",
             "power_": 25,
             "shootingDirection_": [ 0.0, -50.0, 40.0 ],
-            "shootingSpeed_": 0.20000000298023224,
+            "shootingSpeed_": 0.5,
             "type_": 17
           },
           "TackleMove": {

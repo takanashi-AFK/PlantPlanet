@@ -103,7 +103,7 @@
             },
             "max_": 100.0,
             "name_": "StaminaGauge",
-            "now_": 7.598135948181152,
+            "now_": 100.0,
             "type_": 25
           },
           "TackleMove": {
@@ -880,9 +880,9 @@
             "type_": 3
           },
           "HealthGauge": {
-            "max_": 600.0,
+            "max_": 300.0,
             "name_": "HealthGauge",
-            "now_": 600.0,
+            "now_": 300.0,
             "type_": 6
           },
           "ShootAttack": {
@@ -894,7 +894,7 @@
             "bulletColliderRadius_": 0.10000000894069672,
             "bulletLifeTime_": 3.0,
             "name_": "ShootAttack",
-            "power_": 60,
+            "power_": 5,
             "shootingDirection_": [ 1.0, 0.0, 0.0 ],
             "shootingSpeed_": 0.150000001788139343,
             "type_": 17
@@ -918,7 +918,7 @@
         "shootHeight_": -1.2000000476837158,
         "shotInterval_": 0.08000000074505806,
         "stateChangeDelay_": 3,
-        "tackleDamage_": 40,
+        "tackleDamage_": 5,
         "target_": "00_player",
         "type_": 0
       },

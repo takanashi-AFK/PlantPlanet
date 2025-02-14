@@ -89,7 +89,7 @@
             "name_": "ShootAttack",
             "power_": 10,
             "shootingDirection_": [ 143.0, -145.0, -163.0 ],
-            "shootingSpeed_": 0.20000000298023224,
+            "shootingSpeed_": 0.5,
             "type_": 17
           },
           "StaminaGauge": {

@@ -151,7 +151,7 @@ void Scene_Result::InitializeAdventureResult()
 		countedPlant[plant.name_]++;
 	}
 
-	for (int i = 0; i <= 9; i++) {
+	for (int i = 0; i <= 13; i++) {
 		// カウントした植物の数を取得
 		int plantSize = countedPlant.size();
 
@@ -183,6 +183,8 @@ void Scene_Result::InitializeAdventureResult()
 			((UIText*)text)->SetText("");
 		}
 	}
+	UIObject* time = uiPanel->GetUIObject("time");
+	((UIText*)time)->SetText(std::to_string(g_playTime / 60) + ":" + std::to_string(g_playTime % 60));
 
 	
 }

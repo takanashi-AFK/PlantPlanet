@@ -276,10 +276,30 @@ void Scene_Play::UpdateAdventureMode(Component_PlayerBehavior* _playerBehavior, 
 		constexpr int RESEARCH_POINT_MAX = 100;
 		if (_playerBehavior->GetResearchPoint() >= RESEARCH_POINT_MAX && _playerBehavior->IsExchangeScene())
 			isSceneChange = true;
-		
+
+
+		if (_playerBehavior->GetResearchPoint() >= RESEARCH_POINT_MAX) {
+			isRocketSpawned_ = true;
+		}
+
+		UIObject* rocket = UIPanel::GetInstance()->FindObject("SpawnRocketNotify");
+
+		if (isRocketSpawned_ == true) {
+			if (!hasShownNotification_) {
+				((UIImage*)rocket)->SetVisible(true);
+				hasShownNotification_ = true;  // 以降、SetVisible(true) を再度実行しない
+			}
+
+			notifyShowTimer++;
+			if (notifyShowTimer > 120) {
+				isRocketSpawned_ = false;
+				((UIImage*)rocket)->SetVisible(false);
+			}
+		}
 		// debug 終了ボタンが押された場合...
 		//if (Input::IsKeyDown(DIK_ESCAPE) || Input::IsPadButtonDown(XINPUT_GAMEPAD_START))isSceneChange = true;
 	}
+
 
 	// シーン遷移処理
 	if (isSceneChange == true) {
@@ -316,6 +336,12 @@ void Scene_Play::UpdateInventoryUI()
 	UIInventory::Update();
 	fade_ -= FADESPEED;
 	fade_ = std::clamp(fade_, 0.f, 1.f);
+
+	StageObject* player = pStage_->GetStageObject("00_player");
+	if (player == nullptr) return;
+
+	if (Input::IsKeyDown(DIK_ESCAPE) || Input::IsPadButtonDown(XINPUT_GAMEPAD_START))
+		player->SetPosition({ 0,0,0 });
 }
 
 void Scene_Play::UpdateNormalUI(Component_PlayerBehavior* _playerBehavior, Component_BossBehavior* _bossBehavior)

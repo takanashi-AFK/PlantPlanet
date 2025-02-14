@@ -29,9 +29,14 @@ private:
 	bool isShowInventoryFirstTime_:1;	// インベントリを初めて表示するかのフラグ
  	bool isOpenInventoryUI_ :1;			// インベントリUIを開いているかのフラグ
 
+	bool isRocketSpawned_ : 1;			// ロケットが生成されたかのフラグ
+
 	float fade_;
 
 	static constexpr float FADESPEED = 0.1f;
+
+	int notifyShowTimer = 0;
+	bool hasShownNotification_;
 
 public:
 	/// <summary> コンストラクタ </summary>

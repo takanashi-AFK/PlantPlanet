@@ -1500,6 +1500,16 @@
     "scale_": [ 0.9850000143051147, 0.4000000059604645, 1.0 ],
     "type_": 4
   },
+  "SpawnRocketNotify": {
+    "imageFilePath_": "01_images/03_playSceneUI/01_normal/SpawnRocket.png",
+    "isVisible_": false,
+    "layerNumber_": 113,
+    "objectName_": "SpawnRocketNotify",
+    "position_": [ 0.0, 0.20000000298023224, 0.0 ],
+    "rotate_": [ 0.0, 0.0, 0.0 ],
+    "scale_": [ 1.0, 1.0, 1.0 ],
+    "type_": 2
+  },
   "StatusGaugeFrame": {
     "imageFilePath_": "Images/playScene/ADV/01_normal/01_gaugeFrameAdventureMode.png",
     "isVisible_": true,

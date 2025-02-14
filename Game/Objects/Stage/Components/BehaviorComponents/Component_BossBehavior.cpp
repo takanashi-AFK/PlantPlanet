@@ -278,7 +278,7 @@ void Component_BossBehavior::Shot()
 		XMFLOAT3 shootPosition = holder_->GetPosition();
 		shootPosition.y += shootHeight_;
 		shoot->SetShootingPosition(shootPosition);
-
+		shoot->SetBulletLifeTime(1);
 		// 発射
 		shoot->Execute();
 		Audio::Play(Audio::Load("Audios/風魔法1.wav",false));
@@ -434,5 +434,12 @@ void Component_BossBehavior::Dead()
 		
 		// サウンドを再生
 		Audio::Play(Audio::Load("Audios/爆発1.wav", false));
+
+		// ステージ情報を取得
+		Stage* pStage = (Stage*)(holder_->FindObject("Stage"));
+
+		// 所有者を削除
+		pStage->DeleteStageObject(holder_);
+
 	}
 }

@@ -326,9 +326,6 @@ void Component_PlayerBehavior::Update()
 	DrawPopUp();
 
 	easingPickUpPlantImage();
-
-	if (Input::IsKeyDown(DIK_ESCAPE) || Input::IsPadButtonDown(XINPUT_GAMEPAD_START))
-		holder_->SetPosition({0,0,0});
 	
 
 	// ＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝ //
@@ -549,7 +546,7 @@ void Component_PlayerBehavior::Idle()
 		isShootAttack_ = true;
 	}
 	// スペースキーが押されていたら...ダッシュ状態に遷移
-	else if (Input::IsKeyDown(DIK_SPACE) || Input::IsPadTriggerDownL(0)) {
+	else if (Input::IsKeyDown(DIK_SPACE) || Input::IsPadButtonDown(XINPUT_GAMEPAD_LEFT_SHOULDER)) {
 		if (!sg->CanUseStamina(STAMINA_DECREASE_DODGE)) {
 
 			// 状態を遷移
@@ -603,7 +600,7 @@ void Component_PlayerBehavior::Walk()
 		isShootAttack_ = true;
 	}
 	// スペースキーが押されていたら...ダッシュ状態に遷移
-	else if (Input::IsKeyDown(DIK_SPACE) || Input::IsPadTriggerDownL(0)) {
+	else if (Input::IsKeyDown(DIK_SPACE) || Input::IsPadButtonDown(XINPUT_GAMEPAD_LEFT_SHOULDER)) {
 		if (!sg->CanUseStamina(STAMINA_DECREASE_DODGE)) {
 
 			// 状態を遷移
@@ -692,7 +689,7 @@ void Component_PlayerBehavior::Shoot()
 	// NOTE: 終了するためのフラグ
 	bool isEnd = false;
 
-	if (Input::IsKeyDown(DIK_SPACE) || Input::IsPadTriggerDownL(0)) {
+	if (Input::IsKeyDown(DIK_SPACE) || Input::IsPadButtonDown(XINPUT_GAMEPAD_LEFT_SHOULDER)) {
 		if (!sg->CanUseStamina(STAMINA_DECREASE_DODGE)) {
 
 			// 状態を遷移
