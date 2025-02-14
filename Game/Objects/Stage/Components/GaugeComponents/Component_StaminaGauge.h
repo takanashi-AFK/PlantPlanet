@@ -7,6 +7,7 @@ private:
 	bool isLock_;	//ロックフラグ
 	bool isUseStamina_;	//スタミナを使用したか
 	Component_Timer* timer;
+	float recovery_;
 
 public:
 	/// <summary> コンストラクタ </summary>
@@ -39,6 +40,14 @@ public:
 	/// <summary> アンロック </summary>
 	void RecoverUnlock() { isLock_ = false; }
 
+	/// <summary> 1フレームごとに回復するスタミナ量の設定 </summary>
+	void SetRecoverValue(float _recoverValue) { recovery_= _recoverValue; }
+
+	/// <summary> 1フレームごとに回復するスタミナ量の取得 </summary>
+	float GetRecoverValue() { return recovery_; }
+public:
+	static constexpr float STAMINA_RECOVERY_DEFAULT = 0.4f;
+	static constexpr float STAMINA_MAX = 100.f;
 
 };
 

@@ -42,6 +42,8 @@ public :
 	static constexpr float defaultSpeed_Walk = .1f;
 	static constexpr float defaultTime_CollectPlant = 1;
 	static constexpr float defaultTime_BreakWall = (77.0f *2.f) / FPS;
+	static constexpr float defaultStamina_Recovery = .4f;
+	static constexpr float defaultDodge_Distance = 5.0f;
 	static constexpr int defaultMax_HP = 100;
 	static constexpr int defaultPow_Range = 10.f;
 	static constexpr int defaultPow_Melee = 20.f;
@@ -91,6 +93,7 @@ private:
 	float stamina_decrease_shoot_;
 
 	float timeCollectPlant;
+	float dodgeDistance_;
 
 	struct PopUpInfo
 	{
@@ -183,6 +186,8 @@ public:
 
 	void SetPickUpPlantImage(string imagePath);
 
+	float SetDodgeDistance(float _distance) { return dodgeDistance_ = _distance; }
+
 	/// <returns> プレイヤーの状態 </returns>
 	PlayerState GetState() const { return nowState_; }
 
@@ -210,6 +215,7 @@ public:
 	float GetStaminaDecrease_Shoot() { return stamina_decrease_shoot_; }
 	float GetStaminaDecrease_Dodge() { return stamina_decrease_dodge_; }
 	float GetStaminaDecrease_Melee() { return stamina_decrease_melee_; }
+	float GetDodgeDistance() { return dodgeDistance_; }
 
 	float GetTimeCollectPlant();
 /*

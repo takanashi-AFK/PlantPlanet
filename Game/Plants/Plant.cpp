@@ -3,8 +3,10 @@
 #include "../Objects/Stage/Components/AttackComponents/Component_ShootAttack.h"
 #include "../Objects/Stage/Components/AttackComponents/Component_MeleeAttack.h"
 #include "../Objects/Stage/Components/MoveComponents/Component_WASDInputMove.h"
-
+#include "../Objects/Stage/Components/GaugeComponents/Component_StaminaGauge.h"
+#include "../Objects/Stage/Components/MoveComponents/Component_TackleMove.h"
 #include "Plant.h"
+#include"../../Engine/DirectX/Direct3D.h"
 
 PlantData::FuncValue PlantData::Effect(Component_PlayerBehavior* pb)
 {
@@ -215,7 +217,7 @@ std::function<PlantData::FuncValue(Component_PlayerBehavior*)> PlantData::GetFun
 		};
 
 		  //歩行速度増加(50%)
-	case 7: return[&,time = SecToFrame(100),isFirst = true,id](Component_PlayerBehavior* pb) mutable ->PlantData::FuncValue
+	case 7: return[&,time = SecToFrame(10),isFirst = true,id](Component_PlayerBehavior* pb) mutable ->PlantData::FuncValue
 		{
 			ret.isUsable = false;
 			ret.time = time / FPS;
@@ -239,7 +241,7 @@ std::function<PlantData::FuncValue(Component_PlayerBehavior*)> PlantData::GetFun
 			else if (time > 0)
 			{
 				--time;
-				ret.isUsable = false;
+				ret.isUsable = true;
 			}
 
 			else
@@ -278,7 +280,7 @@ std::function<PlantData::FuncValue(Component_PlayerBehavior*)> PlantData::GetFun
 			ret.time = time / FPS;
 			ret.id = id;
 			ret.filePath = "Images/SaladEffectLogo/MeleeUp.png";
-			ret.amount = 20;
+			ret.amount = 100;
 
 			auto* mel = static_cast<Component_MeleeAttack*>(pb->GetChildComponent("MeleeAttack"));
 			if (!mel)	return ret;
@@ -309,10 +311,252 @@ std::function<PlantData::FuncValue(Component_PlayerBehavior*)> PlantData::GetFun
 			}
 			return ret;
 
+		};
+
+		  //スタミナ回復量増加(100%)
+	case 10: return[&, time = SecToFrame(30), id, isFirst = true](Component_PlayerBehavior* pb) mutable ->PlantData::FuncValue
+		{
+			ret.isUsable = false;
+			ret.time = time / FPS;
+			ret.id = id;
+			ret.filePath = "Images/SaladEffectLogo/StaminaUp.png";
+			ret.amount = 100;
+
+			auto* st = static_cast<Component_StaminaGauge*>(pb->GetChildComponent("StaminaGauge"));
+			if (!st)	return ret;
+
+			if (isFirst)
+			{
+				auto effect = Component_StaminaGauge::STAMINA_RECOVERY_DEFAULT * 1.0f;
+				auto force = st->GetRecoverValue() + effect;
+				st->SetRecoverValue(force);
+				--time;
+
+				ret.isUsable = true;
+				isFirst = false;
+			}
+
+			else if (time > 0)
+			{
+				--time;
+				ret.isUsable = true;
+			}
+
+			else
+			{
+				auto effect = Component_StaminaGauge::STAMINA_RECOVERY_DEFAULT * 1.0f;
+				auto force = st->GetRecoverValue() - effect;
+				st->SetRecoverValue(force);
+				ret.isUsable = false;
+			}
 			return ret;
 
 		};
 
+		   //スタミナ回復量増加(30%)
+	case 11: return[&, time = SecToFrame(30), id, isFirst = true](Component_PlayerBehavior* pb) mutable ->PlantData::FuncValue
+		{
+			ret.isUsable = false;
+			ret.time = time / FPS;
+			ret.id = id;
+			ret.filePath = "Images/SaladEffectLogo/StaminaUp.png";
+			ret.amount = 30;
+
+			auto* st = static_cast<Component_StaminaGauge*>(pb->GetChildComponent("StaminaGauge"));
+			if (!st)	return ret;
+
+			if (isFirst)
+			{
+				auto effect = Component_StaminaGauge::STAMINA_RECOVERY_DEFAULT * .3f;
+				auto force = st->GetRecoverValue() + effect;
+				st->SetRecoverValue(force);
+				--time;
+
+				ret.isUsable = true;
+				isFirst = false;
+			}
+
+			else if (time > 0)
+			{
+				--time;
+				ret.isUsable = true;
+			}
+
+			else
+			{
+				auto effect = Component_StaminaGauge::STAMINA_RECOVERY_DEFAULT * .3f;
+				auto force = st->GetRecoverValue() - effect;
+				st->SetRecoverValue(force);
+				ret.isUsable = false;
+			}
+			return ret;
+
+		};
+
+		   //スライディング距離増加(30%)
+	case 12: return[&, time = SecToFrame(30), id, isFirst = true](Component_PlayerBehavior* pb) mutable ->PlantData::FuncValue
+		{
+			ret.isUsable = false;
+			ret.time = time / FPS;
+			ret.id = id;
+			ret.filePath = "Images/SaladEffectLogo/SlidingUp.png";
+			ret.amount = 80;
+
+			if (isFirst)
+			{
+				auto effect = Component_PlayerBehavior::defaultDodge_Distance * .3f;
+				auto force = pb->GetDodgeDistance() + effect;
+				pb->SetDodgeDistance(force);
+				--time;
+
+				ret.isUsable = true;
+				isFirst = false;
+			}
+
+			else if (time > 0)
+			{
+				--time;
+				ret.isUsable = true;
+			}
+
+			else
+			{
+				auto effect = Component_PlayerBehavior::defaultDodge_Distance * .3f;
+				auto force = pb->GetDodgeDistance() - effect;
+				pb->SetDodgeDistance(force);
+				ret.isUsable = false;
+			}
+			return ret;
+
+
+		};
+
+		   //超強化(30秒)
+	case 13: return[&, time = SecToFrame(30), id, isFirst = true](Component_PlayerBehavior* pb) mutable ->PlantData::FuncValue
+		{
+			ret.isUsable = true;
+			ret.time = time / FPS;
+			ret.id = id;
+			ret.filePath = "Images/SaladEffectLogo/Special.png";
+			ret.amount = 100;
+
+			if (isFirst)
+			{
+				auto* hp = static_cast<Component_HealthGauge*>(pb->GetChildComponent("PlayerHealthGauge"));
+				hp->SetNow(hp->GetMax());
+				isFirst = false;
+			}
+
+			pb->GetHolder()->SetShader(Direct3D::SHADER_RAREFLOWER);
+			pb->SetDodgeDistance(10.f);
+			static_cast<Component_StaminaGauge*>(pb->GetChildComponent("StaminaGauge"))->SetRecoverValue(10.f);
+			static_cast<Component_WASDInputMove*>(pb->GetChildComponent("InputMove"))->SetSpeed(.16f);
+			static_cast<Component_MeleeAttack*>(pb->GetChildComponent("MeleeAttack"))->SetPower(140.f);
+			static_cast<Component_ShootAttack*>(pb->GetChildComponent("ShootAttack"))->SetPower(80.f);
+
+			if (time > SecToFrame(10))
+			{
+				pb->GetHolder()->SetShader(Direct3D::SHADER_RAREFLOWER);
+			}
+
+			else if (time > SecToFrame(3))
+			{
+				pb->GetHolder()->SetShader(Direct3D::SHADER_BOSS);
+			}
+
+			else
+			{
+				pb->GetHolder()->SetShader(Direct3D::SHADER_3D);
+				pb->SetDodgeDistance(Component_PlayerBehavior::defaultDodge_Distance);
+				static_cast<Component_StaminaGauge*>(pb->GetChildComponent("StaminaGauge"))
+					->SetRecoverValue(Component_PlayerBehavior::defaultStamina_Recovery);
+				static_cast<Component_WASDInputMove*>(pb->GetChildComponent("InputMove"))
+					->SetSpeed(Component_PlayerBehavior::defaultSpeed_Walk);
+				static_cast<Component_MeleeAttack*>(pb->GetChildComponent("MeleeAttack"))
+					->SetPower(Component_PlayerBehavior::defaultPow_Melee);
+				static_cast<Component_ShootAttack*>(pb->GetChildComponent("ShootAttack"))
+					->SetPower(Component_PlayerBehavior::defaultPow_Range);
+				ret.isUsable = false;
+			}
+
+			return ret;
+		};
+
+		   //スライディング距離増加(30%)
+	case 14: [[fallthrough]];
+	case 15: return[&, time = SecToFrame(15), id, isFirst = true](Component_PlayerBehavior* pb) mutable ->PlantData::FuncValue
+		{
+			ret.isUsable = false;
+			ret.time = time / FPS;
+			ret.id = id;
+			ret.filePath = "Images/SaladEffectLogo/SlidingUp.png";
+			ret.amount = 30;
+
+			if (isFirst)
+			{
+				auto effect = Component_PlayerBehavior::defaultDodge_Distance * .3f;
+				auto force = pb->GetDodgeDistance() + effect;
+				pb->SetDodgeDistance(force);
+				--time;
+
+				ret.isUsable = true;
+				isFirst = false;
+			}
+
+			else if (time > 0)
+			{
+				--time;
+				ret.isUsable = true;
+			}
+
+			else
+			{
+				auto effect = Component_PlayerBehavior::defaultDodge_Distance * .3f;
+				auto force = pb->GetDodgeDistance() - effect;
+				pb->SetDodgeDistance(force);
+				ret.isUsable = false;
+			}
+			return ret;
+
+		};
+
+		   //歩行速度増加(10%)
+	case 16: return[&, time = SecToFrame(30), id, isFirst = true](Component_PlayerBehavior* pb) mutable ->PlantData::FuncValue
+		{
+			ret.isUsable = false;
+			ret.time = time / FPS;
+			ret.id = id;
+			ret.filePath = "Images/SaladEffectLogo/SpeedUp.png";
+			ret.amount = 10;
+
+			auto* move = static_cast<Component_WASDInputMove*>(pb->GetChildComponent("InputMove"));
+			if (!move)	return ret;
+
+			if (isFirst)
+			{
+				auto effect = Component_PlayerBehavior::defaultSpeed_Walk * 0.1f;
+				auto speed = move->GetSpeed() + effect;
+				move->SetSpeed(speed);
+				--time;
+				ret.isUsable = true;
+				isFirst = false;
+			}
+
+			else if (time > 0)
+			{
+				--time;
+				ret.isUsable = false;
+			}
+
+			else
+			{
+				auto effect = Component_PlayerBehavior::defaultSpeed_Walk * 0.1f;
+				auto speed = move->GetSpeed() - effect;
+				move->SetSpeed(speed);
+				ret.isUsable = false;
+			}
+			return ret;
+		};
 
 	default:return[&,id](Component_PlayerBehavior* pb)->PlantData::FuncValue 
 		{
